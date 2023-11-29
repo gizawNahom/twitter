@@ -1,6 +1,6 @@
-import styles from './page.module.css';
+import styles from './index.module.css';
 
-export default async function Index() {
+export function Index() {
   /*
    * Replace the elements below with your own.
    *
@@ -13,7 +13,7 @@ export default async function Index() {
           <div id="welcome">
             <h1>
               <span> Hello there, </span>
-              Welcome twitter 👋
+              Welcome boss 👋
             </h1>
           </div>
 
@@ -414,3 +414,5 @@ export default async function Index() {
     </div>
   );
 }
+
+export default Index;
