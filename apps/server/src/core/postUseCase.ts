@@ -12,7 +12,7 @@ export class PostUseCase {
 
   async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
-    const user = this.extractUser(token);
+    const user = await this.extractUser(token);
     if (this.isUserValid(user))
       return this.buildResponse(
         await this.getSavedPost(this.sanitizeText(text), user as User)

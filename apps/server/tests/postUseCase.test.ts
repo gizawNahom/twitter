@@ -7,13 +7,13 @@ import { PostUseCase, PostUseCaseResponse } from '../src/core/postUseCase';
 
 class SuccessUserGatewayStub implements GateKeeper {
   static user: User = new User('123abc');
-  extractUser(): User | null {
+  async extractUser(): Promise<User | null> {
     return SuccessUserGatewayStub.user;
   }
 }
 
 class FailureUserGatewayStub implements GateKeeper {
-  extractUser(): User | null {
+  async extractUser(): Promise<User | null> {
     return null;
   }
 }
