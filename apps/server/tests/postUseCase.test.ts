@@ -4,31 +4,24 @@ import { User } from '../src/core/user';
 import { Post } from '../src/core/post';
 import { InMemoryPostRepository } from '../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { PostUseCase, PostUseCaseResponse } from '../src/core/postUseCase';
+import Context from '../src/context';
+import { DefaultGateKeeper } from '../src/defaultGateKeeper';
 
-class SuccessUserGatewayStub implements GateKeeper {
-  static user: User = new User('123abc');
-  async extractUser(): Promise<User | null> {
-    return SuccessUserGatewayStub.user;
-  }
-}
-
-class FailureUserGatewayStub implements GateKeeper {
+class FailureGateKeeperStub implements GateKeeper {
   async extractUser(): Promise<User | null> {
     return null;
   }
 }
 
 let uC: PostUseCase;
-let postRepository: PostRepository;
-const userId = SuccessUserGatewayStub.user.getId();
+const userId = DefaultGateKeeper.defaultUser.getId();
 
 function generateValidText() {
   return generateRandomString(280);
 }
 
-function createUseCase(userGateway: GateKeeper) {
-  postRepository = new InMemoryPostRepository();
-  return new PostUseCase(userGateway, postRepository);
+function createUseCase() {
+  return new PostUseCase(Context.gateKeeper, Context.postRepository);
 }
 
 function generateRandomString(length: number): string {
@@ -45,7 +38,7 @@ async function executeUseCaseWithText(text: string) {
 }
 
 async function getSavedPosts(): Promise<Post[]> {
-  const savedPosts = await postRepository.getAll(userId);
+  const savedPosts = await Context.postRepository.getAll(userId);
   return savedPosts as Post[];
 }
 
@@ -73,7 +66,12 @@ function removeSeconds(isoString: string) {
 }
 
 beforeEach(() => {
-  uC = createUseCase(new SuccessUserGatewayStub());
+  uC = createUseCase();
+});
+
+afterEach(() => {
+  Context.postRepository = new InMemoryPostRepository();
+  Context.gateKeeper = new DefaultGateKeeper();
 });
 
 test('throws validation error if text is more than 280 chars', () => {
@@ -84,7 +82,8 @@ test('throws validation error if text is more than 280 chars', () => {
 });
 
 test('throws if user is not valid', () => {
-  uC = createUseCase(new FailureUserGatewayStub());
+  Context.gateKeeper = new FailureGateKeeperStub();
+  uC = createUseCase();
 
   assertValidationErrorWithMessage(
     () => executeUseCaseWithText(generateValidText()),
