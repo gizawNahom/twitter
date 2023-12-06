@@ -10,11 +10,13 @@ export class PostUseCase {
     private postRepository: PostRepository
   ) {}
 
-  async execute(token: string, text: string): Promise<void> {
+  async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
     const user = this.extractUser(token);
     if (this.isUserValid(user))
-      await this.createNewPost(this.sanitizeText(text), user as User);
+      return this.buildResponse(
+        await this.getSavedPost(this.sanitizeText(text), user as User)
+      );
     else this.throwUserIsNotValidError();
   }
 
@@ -51,9 +53,10 @@ export class PostUseCase {
     return DOMPurify.sanitize(text);
   }
 
-  private async createNewPost(text: string, user: User) {
+  private async getSavedPost(text: string, user: User): Promise<Post> {
     const post = buildPost();
-    await this.postRepository.save(post);
+    await this.savePost(post);
+    return post;
 
     function buildPost() {
       const post = new Post();
@@ -63,6 +66,19 @@ export class PostUseCase {
     }
   }
 
+  private savePost(post: Post) {
+    return this.postRepository.save(post);
+  }
+
+  private buildResponse(post: Post) {
+    const response = new PostUseCaseResponse();
+    response.id = post.getId();
+    response.text = post.getText();
+    response.userId = post.getUserId();
+    response.createdAt = post.getCreatedAt().toISOString();
+    return response;
+  }
+
   private throwUserIsNotValidError() {
     throw this.createError('User is not valid');
   }
@@ -70,4 +86,11 @@ export class PostUseCase {
   private createError(message: string) {
     return new Error(message);
   }
+}
+
+export class PostUseCaseResponse {
+  id: string;
+  text: string;
+  userId: string;
+  createdAt: string;
 }

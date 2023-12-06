@@ -3,10 +3,14 @@ import { PostRepository } from '../src/core/postRepository';
 import { User } from '../src/core/user';
 import { Post } from '../src/core/post';
 import { InMemoryPostRepository } from '../src/adapter-persistance-inMemory/InMemoryPostRepository';
-import { PostUseCase } from '../src/core/postUseCase';
+import { PostUseCase, PostUseCaseResponse } from '../src/core/postUseCase';
 
 let uC: PostUseCase;
 let postRepository: PostRepository;
+
+function generateValidText() {
+  return generateRandomString(280);
+}
 
 function createSuccessUserGatewayStub(): GateKeeper {
   return new SuccessUserGatewayStub();
@@ -27,7 +31,7 @@ function generateRandomString(length: number): string {
 }
 
 async function executeUseCaseWithText(text: string) {
-  await uC.execute('userToken', text);
+  return await uC.execute('userToken', text);
 }
 
 async function getSavedPosts(): Promise<Post[]> {
@@ -41,6 +45,22 @@ async function assertValidationErrorWithMessage(
   errorMessage: string
 ) {
   await expect(task()).rejects.toThrow(errorMessage);
+}
+
+async function buildExpectedResponse() {
+  const savedPost = (await getSavedPosts())[0];
+  const expectedResponse = new PostUseCaseResponse();
+  expectedResponse.id = savedPost.getId();
+  expectedResponse.text = savedPost.getText();
+  expectedResponse.userId = savedPost.getUserId();
+  expectedResponse.createdAt = removeSeconds(
+    savedPost.getCreatedAt().toISOString()
+  );
+  return expectedResponse;
+}
+
+function removeSeconds(isoString: string) {
+  return isoString.slice(0, isoString.lastIndexOf(':'));
 }
 
 beforeEach(() => {
@@ -58,7 +78,7 @@ test('throws if user is not valid', () => {
   uC = createUseCase(new FailureUserGatewayStub());
 
   assertValidationErrorWithMessage(
-    () => executeUseCaseWithText(generateRandomString(280)),
+    () => executeUseCaseWithText(generateValidText()),
     'User is not valid'
   );
 });
@@ -71,7 +91,7 @@ test('throws if text is empty', () => {
 });
 
 test('saves post', async () => {
-  const text = generateRandomString(280);
+  const text = generateValidText();
   await executeUseCaseWithText(text);
 
   const savedPosts = await getSavedPosts();
@@ -87,6 +107,14 @@ test('sanitizes text', async () => {
 
   const savedPost = (await getSavedPosts())[0];
   expect(savedPost.getText()).toEqual('<img src="x">');
+});
+
+test('returns correct response', async () => {
+  const res = await executeUseCaseWithText(generateValidText());
+
+  const exRes = await buildExpectedResponse();
+  res.createdAt = removeSeconds(res.createdAt);
+  expect(res).toStrictEqual(exRes);
 });
 
 class SuccessUserGatewayStub implements GateKeeper {
