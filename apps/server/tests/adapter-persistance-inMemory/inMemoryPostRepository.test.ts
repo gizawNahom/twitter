@@ -1,5 +1,5 @@
-import { Post } from '../src/core/post';
-import { InMemoryPostRepository } from '../src/adapter-persistance-inMemory/InMemoryPostRepository';
+import { Post } from '../../src/core/post';
+import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 
 let repo: InMemoryPostRepository;
 

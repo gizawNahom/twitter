@@ -1,11 +1,11 @@
-import { GateKeeper } from '../src/core/gateKeeper';
-import { PostRepository } from '../src/core/postRepository';
-import { User } from '../src/core/user';
-import { Post } from '../src/core/post';
-import { InMemoryPostRepository } from '../src/adapter-persistance-inMemory/InMemoryPostRepository';
-import { PostUseCase, PostUseCaseResponse } from '../src/core/postUseCase';
-import Context from '../src/context';
-import { DefaultGateKeeper } from '../src/defaultGateKeeper';
+import { GateKeeper } from '../../src/core/gateKeeper';
+import { PostRepository } from '../../src/core/postRepository';
+import { User } from '../../src/core/user';
+import { Post } from '../../src/core/post';
+import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
+import { PostUseCase, PostUseCaseResponse } from '../../src/core/postUseCase';
+import Context from '../../src/context';
+import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 
 class FailureGateKeeperStub implements GateKeeper {
   async extractUser(): Promise<User | null> {
