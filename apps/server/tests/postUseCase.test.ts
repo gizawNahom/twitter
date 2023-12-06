@@ -5,15 +5,25 @@ import { Post } from '../src/core/post';
 import { InMemoryPostRepository } from '../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { PostUseCase, PostUseCaseResponse } from '../src/core/postUseCase';
 
+class SuccessUserGatewayStub implements GateKeeper {
+  static user: User = new User('123abc');
+  extractUser(): User | null {
+    return SuccessUserGatewayStub.user;
+  }
+}
+
+class FailureUserGatewayStub implements GateKeeper {
+  extractUser(): User | null {
+    return null;
+  }
+}
+
 let uC: PostUseCase;
 let postRepository: PostRepository;
+const userId = SuccessUserGatewayStub.user.getId();
 
 function generateValidText() {
   return generateRandomString(280);
-}
-
-function createSuccessUserGatewayStub(): GateKeeper {
-  return new SuccessUserGatewayStub();
 }
 
 function createUseCase(userGateway: GateKeeper) {
@@ -35,8 +45,7 @@ async function executeUseCaseWithText(text: string) {
 }
 
 async function getSavedPosts(): Promise<Post[]> {
-  const uId = SuccessUserGatewayStub.user.getId();
-  const savedPosts = await postRepository.getAll(uId);
+  const savedPosts = await postRepository.getAll(userId);
   return savedPosts as Post[];
 }
 
@@ -64,7 +73,7 @@ function removeSeconds(isoString: string) {
 }
 
 beforeEach(() => {
-  uC = createUseCase(createSuccessUserGatewayStub());
+  uC = createUseCase(new SuccessUserGatewayStub());
 });
 
 test('throws validation error if text is more than 280 chars', () => {
@@ -98,12 +107,12 @@ test('saves post', async () => {
   expect(savedPosts.length).toBe(1);
   const savedPost = savedPosts[0];
   expect(savedPost.getText()).toBe(text);
-  expect(savedPost.getUserId()).toBe(SuccessUserGatewayStub.user.getId());
+  expect(savedPost.getUserId()).toBe(userId);
 });
 
 test('sanitizes text', async () => {
-  const text = '<img src=x onerror=alert("XSS")>';
-  await executeUseCaseWithText(text);
+  const XSSText = '<img src=x onerror=alert("XSS")>';
+  await executeUseCaseWithText(XSSText);
 
   const savedPost = (await getSavedPosts())[0];
   expect(savedPost.getText()).toEqual('<img src="x">');
@@ -116,16 +125,3 @@ test('returns correct response', async () => {
   res.createdAt = removeSeconds(res.createdAt);
   expect(res).toStrictEqual(exRes);
 });
-
-class SuccessUserGatewayStub implements GateKeeper {
-  static user: User = new User('123abc');
-  extractUser(): User | null {
-    return SuccessUserGatewayStub.user;
-  }
-}
-
-class FailureUserGatewayStub implements GateKeeper {
-  extractUser(): User | null {
-    return null;
-  }
-}
