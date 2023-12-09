@@ -15,7 +15,17 @@ export class InMemoryPostRepository implements PostRepository {
   }
 
   async save(post: Post) {
+    if (this.isIdUndefined(post)) this.setId(post);
     post.setCreatedAt(new Date());
     this.posts.push(post);
+  }
+
+  private isIdUndefined(post: Post) {
+    return post.getId() == null;
+  }
+
+  private setId(post: Post) {
+    const idNum = this.posts.length + 1;
+    post.setId('postId' + idNum);
   }
 }

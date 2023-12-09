@@ -3,6 +3,7 @@ import { PostRepository } from './postRepository';
 import { User } from './user';
 import { Post } from './post';
 import DOMPurify from 'isomorphic-dompurify';
+import { ValidationError } from './errors';
 
 export class PostUseCase {
   constructor(
@@ -84,7 +85,7 @@ export class PostUseCase {
   }
 
   private createError(message: string) {
-    return new Error(message);
+    return new ValidationError(message);
   }
 }
 

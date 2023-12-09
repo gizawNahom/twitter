@@ -1,11 +1,11 @@
 import { GateKeeper } from '../../src/core/gateKeeper';
-import { PostRepository } from '../../src/core/postRepository';
 import { User } from '../../src/core/user';
-import { Post } from '../../src/core/post';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { PostUseCase, PostUseCaseResponse } from '../../src/core/postUseCase';
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { ValidationError } from '../../src/core/errors';
+import { ERROR_EMPTY_TEXT, getSavedPosts, removeSeconds } from '../utilities';
 
 class FailureGateKeeperStub implements GateKeeper {
   async extractUser(): Promise<User | null> {
@@ -37,16 +37,12 @@ async function executeUseCaseWithText(text: string) {
   return await uC.execute('userToken', text);
 }
 
-async function getSavedPosts(): Promise<Post[]> {
-  const savedPosts = await Context.postRepository.getAll(userId);
-  return savedPosts as Post[];
-}
-
 async function assertValidationErrorWithMessage(
   task: () => unknown,
   errorMessage: string
 ) {
   await expect(task()).rejects.toThrow(errorMessage);
+  await expect(task()).rejects.toThrow(ValidationError);
 }
 
 async function buildExpectedResponse() {
@@ -59,10 +55,6 @@ async function buildExpectedResponse() {
     savedPost.getCreatedAt().toISOString()
   );
   return expectedResponse;
-}
-
-function removeSeconds(isoString: string) {
-  return isoString.slice(0, isoString.lastIndexOf(':'));
 }
 
 beforeEach(() => {
@@ -94,7 +86,7 @@ test('throws if user is not valid', () => {
 test('throws if text is empty', () => {
   assertValidationErrorWithMessage(
     () => executeUseCaseWithText(''),
-    "Text can't be empty"
+    ERROR_EMPTY_TEXT
   );
 });
 

@@ -56,3 +56,17 @@ test('saves multiple posts for the same user', async () => {
   assertPostIsSaved(savedUsers, p1);
   assertPostIsSaved(savedUsers, p2);
 });
+
+test('creates post ids that sequential', async () => {
+  const p1 = new Post();
+  p1.setUserId('userId');
+  const p2 = new Post();
+  p2.setUserId('userId');
+
+  await savePost(p1);
+  await savePost(p2);
+
+  const savedUsers = (await repo.getAll('userId')) as Post[];
+  expect(savedUsers[0].getId()).toBe('postId1');
+  expect(savedUsers[1].getId()).toBe('postId2');
+});
