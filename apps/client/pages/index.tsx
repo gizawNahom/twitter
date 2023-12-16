@@ -1,3 +1,9 @@
+import { PostInput } from '../components/postInput';
+
 export default function Index() {
-  return <h1 className="text-xs">Hello World</h1>;
+  return (
+    <div>
+      <PostInput />
+    </div>
+  );
 }

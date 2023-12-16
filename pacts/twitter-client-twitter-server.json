@@ -1,0 +1,62 @@
+{
+  "consumer": {
+    "name": "twitter-client"
+  },
+  "interactions": [
+    {
+      "description": "a request to create a post",
+      "request": {
+        "body": {
+          "operationName": "createPost",
+          "query": "mutation createPost($text: String) {\n            createPost(text: $text) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "variables": {
+            "text": "Hello World"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "mutation\\s*createPost\\(\\$text:\\s*String\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.text": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": null,
+          "errors": [
+            {
+              "message": "Server error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
+    }
+  ],
+  "metadata": {
+    "pact-js": {
+      "version": "12.1.1"
+    },
+    "pactRust": {
+      "ffi": "0.4.9",
+      "models": "1.1.11"
+    },
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  },
+  "provider": {
+    "name": "twitter-server"
+  }
+}
