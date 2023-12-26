@@ -18,11 +18,11 @@ import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 
-const postId = 'postId1';
+const samplePostId = 'postId1';
 
 async function executeUseCase({
   token = sampleUserToken,
-  postId: pId = postId,
+  postId = samplePostId,
 }: {
   token?: string;
   postId?: string | null;
@@ -32,12 +32,12 @@ async function executeUseCase({
     Context.gateKeeper,
     Context.postRepository
   );
-  return await uC.execute(token, pId);
+  return await uC.execute(token, postId);
 }
 
 function createdSavedPost() {
   const savedPost = new Post();
-  savedPost.setId(postId);
+  savedPost.setId(samplePostId);
   savedPost.setText('post text');
   savedPost.setUserId('userId1');
   savedPost.setCreatedAt(new Date());
