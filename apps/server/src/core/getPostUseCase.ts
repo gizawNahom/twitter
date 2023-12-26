@@ -1,3 +1,4 @@
+import { checkUserAuthorization } from './domainServices';
 import { ValidationError } from './errors';
 import { GateKeeper } from './gateKeeper';
 import { LogMessages } from './logMessages';
@@ -19,7 +20,7 @@ export class GetPostUseCase {
   ): Promise<GetPostUseCaseResponse> {
     this.validateToken(token);
     this.validatePostId(postId);
-    await this.checkUserAuthorization(token);
+    await checkUserAuthorization(this.gateKeeper, this.logger, token);
     const post = await this.getSavedPost(postId);
     if (!this.exists(post)) this.throwInvalidPostIdError();
     return this.buildResponse(post);
@@ -31,21 +32,6 @@ export class GetPostUseCase {
 
   private validatePostId(postId: string) {
     if (postId === '' || postId == null) this.throwInvalidPostIdError();
-  }
-
-  private async checkUserAuthorization(token: string) {
-    if (!this.isUserAuthenticated(await this.getUser(token)))
-      this.throwValidationError(ValidationMessages.INVALID_USER);
-  }
-
-  private isUserAuthenticated(user) {
-    return user != null;
-  }
-
-  private async getUser(token: string) {
-    const user = await this.gateKeeper.extractUser(token);
-    this.logInfo(LogMessages.EXTRACTED_USER);
-    return user;
   }
 
   private async getSavedPost(postId: string): Promise<Post> {
