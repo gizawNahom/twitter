@@ -2,7 +2,7 @@ import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/I
 import {
   createPostUseCase,
   PostUseCaseResponse,
-} from '../../src/core/createPostUseCase';
+} from '../../src/core/useCases/createPostUseCase';
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { getSavedPosts, removeSeconds } from '../utilities/helpers';

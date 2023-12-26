@@ -1,4 +1,4 @@
-import { Logger } from '../../src/core/logger';
+import { Logger } from '../../src/core/ports/logger';
 
 export class LoggerSpy implements Logger {
   logInfoCalls: unknown[][] = [];

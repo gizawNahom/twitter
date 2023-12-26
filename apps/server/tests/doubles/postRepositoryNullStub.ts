@@ -1,5 +1,5 @@
-import { Post } from '../../src/core/post';
-import { PostRepository } from '../../src/core/postRepository';
+import { Post } from '../../src/core/entities/post';
+import { PostRepository } from '../../src/core/ports/postRepository';
 
 export class PostRepositoryNullStub implements PostRepository {
   async getAll(): Promise<Post[] | null> {

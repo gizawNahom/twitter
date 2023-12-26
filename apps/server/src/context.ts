@@ -1,7 +1,7 @@
 import { InMemoryPostRepository } from './adapter-persistance-inMemory/InMemoryPostRepository';
-import { GateKeeper } from './core/gateKeeper';
-import { Logger } from './core/logger';
-import { PostRepository } from './core/postRepository';
+import { GateKeeper } from './core/ports/gateKeeper';
+import { Logger } from './core/ports/logger';
+import { PostRepository } from './core/ports/postRepository';
 import { DefaultGateKeeper } from './defaultGateKeeper';
 
 export default class Context {

@@ -1,5 +1,5 @@
 import Context from '../../src/context';
-import { Post } from '../../src/core/post';
+import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 
 export function removeSeconds(isoString: string) {

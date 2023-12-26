@@ -1,10 +1,10 @@
-import { GateKeeper } from './gateKeeper';
-import { PostRepository } from './postRepository';
-import { User } from './user';
-import { Post } from './post';
+import { GateKeeper } from '../ports/gateKeeper';
+import { PostRepository } from '../ports/postRepository';
+import { User } from '../entities/user';
+import { Post } from '../entities/post';
 import DOMPurify from 'isomorphic-dompurify';
-import { ValidationError } from './errors';
-import { ValidationMessages } from './validationMessages';
+import { ValidationError } from '../errors';
+import { ValidationMessages } from '../validationMessages';
 
 export class createPostUseCase {
   constructor(

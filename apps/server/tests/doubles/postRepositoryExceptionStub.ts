@@ -1,5 +1,5 @@
-import { PostRepository } from '../../src/core/postRepository';
-import { Post } from '../../src/core/post';
+import { PostRepository } from '../../src/core/ports/postRepository';
+import { Post } from '../../src/core/entities/post';
 
 export class PostRepositoryExceptionStub implements PostRepository {
   getAll(): Promise<Post[] | null> {

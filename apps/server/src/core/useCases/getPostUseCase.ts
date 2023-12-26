@@ -1,11 +1,11 @@
-import { checkUserAuthorization } from './domainServices';
-import { ValidationError } from './errors';
-import { GateKeeper } from './gateKeeper';
-import { LogMessages } from './logMessages';
-import { Logger } from './logger';
-import { Post } from './post';
-import { PostRepository } from './postRepository';
-import { ValidationMessages } from './validationMessages';
+import { checkUserAuthorization } from '../domainServices';
+import { ValidationError } from '../errors';
+import { GateKeeper } from '../ports/gateKeeper';
+import { LogMessages } from '../logMessages';
+import { Logger } from '../ports/logger';
+import { Post } from '../entities/post';
+import { PostRepository } from '../ports/postRepository';
+import { ValidationMessages } from '../validationMessages';
 
 export class GetPostUseCase {
   constructor(

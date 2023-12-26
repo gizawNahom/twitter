@@ -1,4 +1,4 @@
-import { Post } from '../../src/core/post';
+import { Post } from '../../src/core/entities/post';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 
 let repo: InMemoryPostRepository;

@@ -1,5 +1,5 @@
-import { Post } from '../core/post';
-import { PostRepository } from '../core/postRepository';
+import { Post } from '../core/entities/post';
+import { PostRepository } from '../core/ports/postRepository';
 
 export class InMemoryPostRepository implements PostRepository {
   private posts: Array<Post> = [];

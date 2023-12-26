@@ -3,8 +3,8 @@ import Context from '../../src/context';
 import {
   GetPostUseCase,
   GetPostUseCaseResponse,
-} from '../../src/core/getPostUseCase';
-import { Post } from '../../src/core/post';
+} from '../../src/core/useCases/getPostUseCase';
+import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { PostRepositoryNullStub } from '../doubles/postRepositoryNullStub';

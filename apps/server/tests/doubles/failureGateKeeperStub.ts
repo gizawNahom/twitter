@@ -1,5 +1,5 @@
-import { User } from '../../src/core/user';
-import { GateKeeper } from '../../src/core/gateKeeper';
+import { User } from '../../src/core/entities/user';
+import { GateKeeper } from '../../src/core/ports/gateKeeper';
 
 export class FailureGateKeeperStub implements GateKeeper {
   async extractUser(): Promise<User | null> {

@@ -1,4 +1,4 @@
-import { Post } from './post';
+import { Post } from '../entities/post';
 
 export interface PostRepository {
   getAll(userId: string): Promise<Array<Post> | null>;

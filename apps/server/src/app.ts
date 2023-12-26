@@ -1,4 +1,4 @@
-import { createPostUseCase } from './core/createPostUseCase';
+import { createPostUseCase } from './core/useCases/createPostUseCase';
 import Context from './context';
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
