@@ -4,6 +4,7 @@ import { User } from './user';
 import { Post } from './post';
 import DOMPurify from 'isomorphic-dompurify';
 import { ValidationError } from './errors';
+import { ValidationMessages } from './validationMessages';
 
 export class PostUseCase {
   constructor(
@@ -81,7 +82,7 @@ export class PostUseCase {
   }
 
   private throwUserIsNotValidError() {
-    throw this.createError('User is not valid');
+    throw this.createError(ValidationMessages.INVALID_USER);
   }
 
   private createError(message: string) {

@@ -1,9 +1,9 @@
 import { app } from '../src/app';
 import request from 'supertest';
-import { ERROR_EMPTY_TEXT, getSavedPosts, removeSeconds } from './utilities';
-import { PostRepository } from '../src/core/postRepository';
-import { Post } from '../src/core/post';
 import Context from '../src/context';
+import { PostRepositoryExceptionStub } from './doubles/postRepositoryExceptionStub';
+import { getSavedPosts, removeSeconds } from './utilities/helpers';
+import { ERROR_EMPTY_TEXT } from './utilities/errorMessages';
 
 const validText = 'Hello, world!';
 
@@ -22,18 +22,6 @@ async function sendRequestWithText(text: string) {
     query,
     variables,
   });
-}
-
-class PostRepositoryExceptionStub implements PostRepository {
-  getAll(): Promise<Post[] | null> {
-    throw new Error('Method not implemented.');
-  }
-  getById(): Promise<Post | null> {
-    throw new Error('Method not implemented.');
-  }
-  save(): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
 }
 
 test('returns created post', async () => {

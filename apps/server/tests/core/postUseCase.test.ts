@@ -1,17 +1,14 @@
-import { GateKeeper } from '../../src/core/gateKeeper';
-import { User } from '../../src/core/user';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { PostUseCase, PostUseCaseResponse } from '../../src/core/postUseCase';
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
-import { ValidationError } from '../../src/core/errors';
-import { ERROR_EMPTY_TEXT, getSavedPosts, removeSeconds } from '../utilities';
-
-class FailureGateKeeperStub implements GateKeeper {
-  async extractUser(): Promise<User | null> {
-    return null;
-  }
-}
+import { getSavedPosts, removeSeconds } from '../utilities/helpers';
+import { FailureGateKeeperStub } from '../doubles/FailureGateKeeperStub';
+import {
+  ERROR_EMPTY_TEXT,
+  ERROR_INVALID_USER,
+} from '../utilities/errorMessages';
+import { assertValidationErrorWithMessage } from '../utilities/assertions';
 
 let uC: PostUseCase;
 const userId = DefaultGateKeeper.defaultUser.getId();
@@ -35,14 +32,6 @@ function generateRandomString(length: number): string {
 
 async function executeUseCaseWithText(text: string) {
   return await uC.execute('userToken', text);
-}
-
-async function assertValidationErrorWithMessage(
-  task: () => unknown,
-  errorMessage: string
-) {
-  await expect(task()).rejects.toThrow(errorMessage);
-  await expect(task()).rejects.toThrow(ValidationError);
 }
 
 async function buildExpectedResponse() {
@@ -79,7 +68,7 @@ test('throws if user is not valid', () => {
 
   assertValidationErrorWithMessage(
     () => executeUseCaseWithText(generateValidText()),
-    'User is not valid'
+    ERROR_INVALID_USER
   );
 });
 

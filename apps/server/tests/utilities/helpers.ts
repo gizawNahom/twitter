@@ -1,8 +1,6 @@
-import Context from '../src/context';
-import { Post } from '../src/core/post';
-import { DefaultGateKeeper } from '../src/defaultGateKeeper';
-
-export const ERROR_EMPTY_TEXT = "Text can't be empty";
+import Context from '../../src/context';
+import { Post } from '../../src/core/post';
+import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 
 export function removeSeconds(isoString: string) {
   return isoString.slice(0, isoString.lastIndexOf(':'));
