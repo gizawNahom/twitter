@@ -5,6 +5,7 @@ import { Post } from '../entities/post';
 import DOMPurify from 'isomorphic-dompurify';
 import { ValidationError } from '../errors';
 import { ValidationMessages } from '../validationMessages';
+import { Token } from '../valueObjects/token';
 
 export class createPostUseCase {
   constructor(
@@ -14,8 +15,7 @@ export class createPostUseCase {
 
   async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
-    this.validateToken(token);
-    const user = await this.extractUser(token);
+    const user = await this.extractUser(new Token(token).getToken());
     if (this.isUserValid(user))
       return this.buildResponse(
         await this.getSavedPost(this.sanitizeText(text), user as User)

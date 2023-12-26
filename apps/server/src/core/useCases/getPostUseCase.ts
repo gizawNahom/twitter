@@ -6,6 +6,7 @@ import { Logger } from '../ports/logger';
 import { Post } from '../entities/post';
 import { PostRepository } from '../ports/postRepository';
 import { ValidationMessages } from '../validationMessages';
+import { Token } from '../valueObjects/token';
 
 export class GetPostUseCase {
   constructor(
@@ -18,16 +19,15 @@ export class GetPostUseCase {
     token: string,
     postId: string | null
   ): Promise<GetPostUseCaseResponse> {
-    this.validateToken(token);
     this.validatePostId(postId);
-    await checkUserAuthorization(this.gateKeeper, this.logger, token);
+    await checkUserAuthorization(
+      this.gateKeeper,
+      this.logger,
+      new Token(token).getToken()
+    );
     const post = await this.getSavedPost(postId);
     if (!this.exists(post)) this.throwInvalidPostIdError();
     return this.buildResponse(post);
-  }
-
-  private validateToken(token: string) {
-    if (!token) this.throwValidationError(ValidationMessages.INVALID_TOKEN);
   }
 
   private validatePostId(postId: string) {
