@@ -15,13 +15,13 @@ import {
 } from '../utilities/errorMessages';
 import { removeSeconds } from '../utilities/helpers';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
-import { userToken } from '../utilities/constants';
+import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 
 const postId = 'postId1';
 
 async function executeUseCase({
-  token = userToken,
+  token = sampleUserToken,
   postId: pId = postId,
 }: {
   token?: string;

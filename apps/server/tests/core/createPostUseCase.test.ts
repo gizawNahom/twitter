@@ -12,7 +12,7 @@ import {
   ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
-import { userToken } from '../utilities/constants';
+import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 
 const userId = DefaultGateKeeper.defaultUser.getId();
@@ -32,7 +32,7 @@ function generateRandomString(length: number): string {
 }
 
 async function executeUseCaseWithText({
-  token = userToken,
+  token = sampleUserToken,
   text = validText,
 }: {
   token?: string;
