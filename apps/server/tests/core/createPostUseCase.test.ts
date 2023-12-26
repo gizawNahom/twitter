@@ -12,16 +12,14 @@ import {
   ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
+import { userToken } from '../utilities/constants';
+import { testInvalidToken } from '../utilities/tests';
 
-let uC: createPostUseCase;
 const userId = DefaultGateKeeper.defaultUser.getId();
+const validText = generateValidText();
 
 function generateValidText() {
   return generateRandomString(280);
-}
-
-function createUseCase() {
-  return new createPostUseCase(Context.gateKeeper, Context.postRepository);
 }
 
 function generateRandomString(length: number): string {
@@ -33,8 +31,15 @@ function generateRandomString(length: number): string {
   ).join('');
 }
 
-async function executeUseCaseWithText(text: string) {
-  return await uC.execute('userToken', text);
+async function executeUseCaseWithText({
+  token = userToken,
+  text = validText,
+}: {
+  token?: string;
+  text?: string;
+}) {
+  const uC = new createPostUseCase(Context.gateKeeper, Context.postRepository);
+  return await uC.execute(token, text);
 }
 
 async function buildExpectedResponse() {
@@ -50,59 +55,55 @@ async function buildExpectedResponse() {
 }
 
 beforeEach(() => {
-  uC = createUseCase();
-});
-
-afterEach(() => {
   Context.postRepository = new InMemoryPostRepository();
   Context.gateKeeper = new DefaultGateKeeper();
 });
 
 test('throws validation error if text is more than 280 chars', () => {
   assertValidationErrorWithMessage(
-    () => executeUseCaseWithText(generateRandomString(281)),
+    () => executeUseCaseWithText({ text: generateRandomString(281) }),
     "Text can't be more than 280 chars"
   );
 });
 
 test('throws if user is not valid', () => {
   Context.gateKeeper = new FailureGateKeeperStub();
-  uC = createUseCase();
 
   assertValidationErrorWithMessage(
-    () => executeUseCaseWithText(generateValidText()),
+    () => executeUseCaseWithText({}),
     ERROR_INVALID_USER
   );
 });
 
 test('throws if text is empty', () => {
   assertValidationErrorWithMessage(
-    () => executeUseCaseWithText(''),
+    () => executeUseCaseWithText({ text: '' }),
     ERROR_EMPTY_TEXT
   );
 });
 
+testInvalidToken((token) => executeUseCaseWithText({ token }));
+
 test('saves post', async () => {
-  const text = generateValidText();
-  await executeUseCaseWithText(text);
+  await executeUseCaseWithText({});
 
   const savedPosts = await getSavedPosts();
   expect(savedPosts.length).toBe(1);
   const savedPost = savedPosts[0];
-  expect(savedPost.getText()).toBe(text);
+  expect(savedPost.getText()).toBe(validText);
   expect(savedPost.getUserId()).toBe(userId);
 });
 
 test('sanitizes text', async () => {
   const XSSText = '<img src=x onerror=alert("XSS")>';
-  await executeUseCaseWithText(XSSText);
+  await executeUseCaseWithText({ text: XSSText });
 
   const savedPost = (await getSavedPosts())[0];
   expect(savedPost.getText()).toEqual('<img src="x">');
 });
 
 test('returns correct response', async () => {
-  const res = await executeUseCaseWithText(generateValidText());
+  const res = await executeUseCaseWithText({});
 
   const exRes = await buildExpectedResponse();
   res.createdAt = removeSeconds(res.createdAt);

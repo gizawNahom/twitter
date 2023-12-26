@@ -11,32 +11,27 @@ import { PostRepositoryNullStub } from '../doubles/postRepositoryNullStub';
 import { FailureGateKeeperStub } from '../doubles/FailureGateKeeperStub';
 import {
   ERROR_INVALID_POST_ID,
-  ERROR_INVALID_TOKEN,
   ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
 import { removeSeconds } from '../utilities/helpers';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import { userToken } from '../utilities/constants';
+import { testInvalidToken } from '../utilities/tests';
 
 const postId = 'postId1';
 
-function createUseCase() {
-  return new GetPostUseCase(
+async function executeUseCase({
+  token = userToken,
+  postId: pId = postId,
+}: {
+  token?: string;
+  postId?: string | null;
+}) {
+  const uC = new GetPostUseCase(
     Context.logger,
     Context.gateKeeper,
     Context.postRepository
   );
-}
-
-async function executeUseCase({
-  uC,
-  token = userToken,
-  postId: pId = postId,
-}: {
-  uC: GetPostUseCase;
-  token?: string;
-  postId?: string | null;
-}) {
   return await uC.execute(token, pId);
 }
 
@@ -75,42 +70,29 @@ beforeEach(() => {
 
 test('throws if user extraction fails', () => {
   Context.gateKeeper = new FailureGateKeeperStub();
-  const uC = createUseCase();
 
   assertValidationErrorWithMessage(
-    () => executeUseCase({ uC }),
+    () => executeUseCase({}),
     ERROR_INVALID_USER
   );
 });
 
-describe('throws with token-invalid error message', () => {
-  test.each([[''], [null]])('when the token is %s', (token) => {
-    const uC = createUseCase();
-
-    assertValidationErrorWithMessage(
-      () => executeUseCase({ uC, token: token as string }),
-      ERROR_INVALID_TOKEN
-    );
-  });
-});
+testInvalidToken((token) => executeUseCase({ token }));
 
 describe('throws with post-invalid error message', () => {
   test.each([[''], [null]])('when the post id is %s', (postId) => {
-    const uC = createUseCase();
-
     assertValidationErrorWithMessage(
-      () => executeUseCase({ uC, postId }),
+      () => executeUseCase({ postId }),
       ERROR_INVALID_POST_ID
     );
   });
 });
 
 test('gets saved post', async () => {
-  const uC = createUseCase();
   const savedPost = createdSavedPost();
   await Context.postRepository.save(savedPost);
 
-  const res = await executeUseCase({ uC });
+  const res = await executeUseCase({});
 
   const expectedRes = createdExpectedRes(savedPost);
   res.createdAt = removeSeconds(res.createdAt);
@@ -119,20 +101,18 @@ test('gets saved post', async () => {
 
 test('throws if post does not exist', async () => {
   Context.postRepository = new PostRepositoryNullStub();
-  const uC = createUseCase();
 
   assertValidationErrorWithMessage(
-    () => executeUseCase({ uC }),
+    () => executeUseCase({}),
     ERROR_INVALID_POST_ID
   );
 });
 
 test('logs info for happy path', async () => {
-  const uC = createUseCase();
   const savedPost = createdSavedPost();
   await Context.postRepository.save(savedPost);
 
-  await executeUseCase({ uC });
+  await executeUseCase({});
 
   const loggerSpy = Context.logger as LoggerSpy;
 

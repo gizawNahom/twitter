@@ -14,6 +14,7 @@ export class createPostUseCase {
 
   async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
+    this.validateToken(token);
     const user = await this.extractUser(token);
     if (this.isUserValid(user))
       return this.buildResponse(
@@ -25,6 +26,18 @@ export class createPostUseCase {
   private validateTextLength(textLength: number) {
     if (this.isLongerThan280(textLength)) this.throwTextTooLongError();
     if (this.is0(textLength)) this.throwTextTooShortError();
+  }
+
+  private validateToken(token: string) {
+    if (this.isTokenInvalid(token)) this.throwTokenInvalidError();
+  }
+
+  private isTokenInvalid(token: string) {
+    return token === '' || token == null;
+  }
+
+  private throwTokenInvalidError() {
+    throw this.createError(ValidationMessages.INVALID_TOKEN);
   }
 
   private isLongerThan280(textLength: number) {
