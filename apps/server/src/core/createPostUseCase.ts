@@ -6,7 +6,7 @@ import DOMPurify from 'isomorphic-dompurify';
 import { ValidationError } from './errors';
 import { ValidationMessages } from './validationMessages';
 
-export class PostUseCase {
+export class createPostUseCase {
   constructor(
     private gateKeeper: GateKeeper,
     private postRepository: PostRepository

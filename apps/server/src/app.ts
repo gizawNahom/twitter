@@ -1,4 +1,4 @@
-import { PostUseCase } from './core/postUseCase';
+import { createPostUseCase } from './core/createPostUseCase';
 import Context from './context';
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
@@ -37,7 +37,7 @@ const resolvers = {
       }
 
       async function tryCreatePost() {
-        return await new PostUseCase(
+        return await new createPostUseCase(
           Context.gateKeeper,
           Context.postRepository
         ).execute(contextValue.token, args.text);

@@ -1,5 +1,8 @@
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
-import { PostUseCase, PostUseCaseResponse } from '../../src/core/postUseCase';
+import {
+  createPostUseCase,
+  PostUseCaseResponse,
+} from '../../src/core/createPostUseCase';
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { getSavedPosts, removeSeconds } from '../utilities/helpers';
@@ -10,7 +13,7 @@ import {
 } from '../utilities/errorMessages';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 
-let uC: PostUseCase;
+let uC: createPostUseCase;
 const userId = DefaultGateKeeper.defaultUser.getId();
 
 function generateValidText() {
@@ -18,7 +21,7 @@ function generateValidText() {
 }
 
 function createUseCase() {
-  return new PostUseCase(Context.gateKeeper, Context.postRepository);
+  return new createPostUseCase(Context.gateKeeper, Context.postRepository);
 }
 
 function generateRandomString(length: number): string {
