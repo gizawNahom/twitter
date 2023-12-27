@@ -38,6 +38,7 @@ const resolvers = {
 
       async function tryCreatePost() {
         return await new createPostUseCase(
+          Context.logger,
           Context.gateKeeper,
           Context.postRepository
         ).execute(contextValue.token, args.text);

@@ -6,9 +6,12 @@ import DOMPurify from 'isomorphic-dompurify';
 import { ValidationError } from '../errors';
 import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
+import { Logger } from '../ports/logger';
+import { LogMessages } from '../logMessages';
 
 export class createPostUseCase {
   constructor(
+    private logger: Logger,
     private gateKeeper: GateKeeper,
     private postRepository: PostRepository
   ) {}
@@ -16,6 +19,7 @@ export class createPostUseCase {
   async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
     const user = await this.extractUser(new Token(token).getToken());
+    this.logInfo(LogMessages.EXTRACTED_USER, { userId: user?.getId() });
     if (this.isUserValid(user))
       return this.buildResponse(
         await this.getSavedPost(this.sanitizeText(text), user as User)
@@ -26,10 +30,6 @@ export class createPostUseCase {
   private validateTextLength(textLength: number) {
     if (this.isLongerThan280(textLength)) this.throwTextTooLongError();
     if (this.is0(textLength)) this.throwTextTooShortError();
-  }
-
-  private validateToken(token: string) {
-    if (this.isTokenInvalid(token)) this.throwTokenInvalidError();
   }
 
   private isTokenInvalid(token: string) {
@@ -71,6 +71,7 @@ export class createPostUseCase {
   private async getSavedPost(text: string, user: User): Promise<Post> {
     const post = buildPost();
     await this.savePost(post);
+    this.logInfo(LogMessages.SAVED_POST, { post });
     return post;
 
     function buildPost() {
@@ -79,6 +80,10 @@ export class createPostUseCase {
       post.setUserId(user.getId());
       return post;
     }
+  }
+
+  private logInfo(logMessage: LogMessages, object: object) {
+    this.logger.logInfo(logMessage, object);
   }
 
   private savePost(post: Post) {

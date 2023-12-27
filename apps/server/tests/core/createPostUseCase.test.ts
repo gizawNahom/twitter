@@ -14,6 +14,9 @@ import {
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
+import { LoggerSpy } from '../doubles/loggerSpy';
+import { LOG_EXTRACTED_USER, LOG_SAVED_POST } from '../utilities/logMessages';
+import { Post } from '../../src/core/entities/post';
 
 const userId = DefaultGateKeeper.defaultUser.getId();
 const validText = generateValidText();
@@ -38,7 +41,11 @@ async function executeUseCaseWithText({
   token?: string;
   text?: string;
 }) {
-  const uC = new createPostUseCase(Context.gateKeeper, Context.postRepository);
+  const uC = new createPostUseCase(
+    Context.logger,
+    Context.gateKeeper,
+    Context.postRepository
+  );
   return await uC.execute(token, text);
 }
 
@@ -57,6 +64,7 @@ async function buildExpectedResponse() {
 beforeEach(() => {
   Context.postRepository = new InMemoryPostRepository();
   Context.gateKeeper = new DefaultGateKeeper();
+  Context.logger = new LoggerSpy();
 });
 
 test('throws validation error if text is more than 280 chars', () => {
@@ -109,3 +117,24 @@ test('returns correct response', async () => {
   res.createdAt = removeSeconds(res.createdAt);
   expect(res).toStrictEqual(exRes);
 });
+
+test('logs info for happy path', async () => {
+  await executeUseCaseWithText({});
+
+  const loggerSpy = Context.logger as LoggerSpy;
+  expect(loggerSpy.logInfoCalls.length).toBe(2);
+  expect(loggerSpy.logInfoCalls[0][0]).toEqual(LOG_EXTRACTED_USER);
+  expect(loggerSpy.logInfoCalls[0][1]).toStrictEqual({ userId });
+  expect(loggerSpy.logInfoCalls[1][0]).toEqual(LOG_SAVED_POST);
+  const arg = loggerSpy.logInfoCalls[1][1] as { post: Post };
+  assertPostEquality(arg.post, (await getSavedPosts())[0]);
+});
+
+function assertPostEquality(post: Post, savedPost: Post) {
+  expect(post.getId()).toBe(savedPost.getId());
+  expect(post.getText()).toBe(savedPost.getText());
+  expect(post.getUserId()).toBe(savedPost.getUserId());
+  expect(removeSeconds(post.getCreatedAt().toISOString())).toBe(
+    removeSeconds(savedPost.getCreatedAt().toISOString())
+  );
+}
