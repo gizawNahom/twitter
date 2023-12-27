@@ -31,7 +31,11 @@ export class GetPostUseCase {
   }
 
   private validatePostId(postId: string) {
-    if (postId === '' || postId == null) this.throwInvalidPostIdError();
+    if (postId === '' || postId == null) this.throwPostIdRequiredError();
+  }
+
+  private throwPostIdRequiredError() {
+    this.throwValidationError(ValidationMessages.POST_ID_REQUIRED);
   }
 
   private async getSavedPost(postId: string): Promise<Post> {
