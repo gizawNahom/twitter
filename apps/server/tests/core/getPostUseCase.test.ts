@@ -14,7 +14,10 @@ import {
   ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
 import { removeSeconds } from '../utilities/helpers';
-import { assertValidationErrorWithMessage } from '../utilities/assertions';
+import {
+  assertPostEquality,
+  assertValidationErrorWithMessage,
+} from '../utilities/assertions';
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 import {
@@ -55,15 +58,6 @@ function createdExpectedRes(savedPost: Post) {
   expectedRes.userId = savedPost.getUserId();
   expectedRes.createdAt = removeSeconds(savedPost.getCreatedAt().toISOString());
   return expectedRes;
-}
-
-function assertPostEquality(post: Post, savedPost: Post) {
-  expect(post.getId()).toBe(savedPost.getId());
-  expect(post.getText()).toBe(savedPost.getText());
-  expect(post.getUserId()).toBe(savedPost.getUserId());
-  expect(removeSeconds(post.getCreatedAt().toISOString())).toBe(
-    removeSeconds(savedPost.getCreatedAt().toISOString())
-  );
 }
 
 beforeEach(() => {

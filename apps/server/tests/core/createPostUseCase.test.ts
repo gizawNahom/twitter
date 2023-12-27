@@ -11,7 +11,10 @@ import {
   ERROR_EMPTY_TEXT,
   ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
-import { assertValidationErrorWithMessage } from '../utilities/assertions';
+import {
+  assertPostEquality,
+  assertValidationErrorWithMessage,
+} from '../utilities/assertions';
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 import { LoggerSpy } from '../doubles/loggerSpy';
@@ -129,12 +132,3 @@ test('logs info for happy path', async () => {
   const arg = loggerSpy.logInfoCalls[1][1] as { post: Post };
   assertPostEquality(arg.post, (await getSavedPosts())[0]);
 });
-
-function assertPostEquality(post: Post, savedPost: Post) {
-  expect(post.getId()).toBe(savedPost.getId());
-  expect(post.getText()).toBe(savedPost.getText());
-  expect(post.getUserId()).toBe(savedPost.getUserId());
-  expect(removeSeconds(post.getCreatedAt().toISOString())).toBe(
-    removeSeconds(savedPost.getCreatedAt().toISOString())
-  );
-}
