@@ -1,9 +1,9 @@
-import { app } from '../src/app';
+import { app } from '../../src/app';
 import request from 'supertest';
-import Context from '../src/context';
-import { PostRepositoryExceptionStub } from './doubles/postRepositoryExceptionStub';
-import { getSavedPosts, removeSeconds } from './utilities/helpers';
-import { ERROR_EMPTY_TEXT } from './utilities/errorMessages';
+import Context from '../../src/context';
+import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
+import { getSavedPosts, removeSeconds } from '../utilities/helpers';
+import { ERROR_EMPTY_TEXT } from '../utilities/errorMessages';
 
 const validText = 'Hello, world!';
 
