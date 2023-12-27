@@ -18,14 +18,12 @@ import {
   assertPostEquality,
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
-import { sampleUserToken } from '../utilities/samples';
+import { samplePostId, sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 import {
   LOG_FETCHED_POST_WITH_ID,
   LOG_EXTRACTED_USER,
 } from '../utilities/logMessages';
-
-const samplePostId = 'postId1';
 
 async function executeUseCase({
   token = sampleUserToken,
