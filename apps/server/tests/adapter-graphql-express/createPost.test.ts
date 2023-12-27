@@ -46,7 +46,7 @@ test('passes errors', async () => {
   expect(res.body.errors[0].message).toBe(ERROR_EMPTY_TEXT);
 });
 
-test('handles none validation errors', async () => {
+test('handles non-validation errors', async () => {
   Context.postRepository = new PostRepositoryExceptionStub();
 
   const res = await sendRequestWithText(validText);
