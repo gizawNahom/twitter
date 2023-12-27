@@ -1,6 +1,8 @@
 import { ValidationError } from '../../src/core/errors';
 import { Post } from '../../src/core/entities/post';
 import { removeSeconds } from './helpers';
+import { LOG_EXTRACTED_USER } from './logMessages';
+import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 
 export async function assertValidationErrorWithMessage(
   task: () => unknown,
@@ -17,4 +19,11 @@ export function assertPostEquality(post1: Post, post2: Post) {
   expect(removeSeconds(post1.getCreatedAt().toISOString())).toBe(
     removeSeconds(post2.getCreatedAt().toISOString())
   );
+}
+
+export function assertUserExtractionLog(arg: unknown[]) {
+  expect(arg[0]).toEqual(LOG_EXTRACTED_USER);
+  expect(arg[1]).toStrictEqual({
+    userId: DefaultGateKeeper.defaultUser.getId(),
+  });
 }

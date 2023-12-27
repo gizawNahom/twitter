@@ -13,6 +13,7 @@ import {
 } from '../utilities/errorMessages';
 import {
   assertPostEquality,
+  assertUserExtractionLog,
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
 import { sampleUserToken } from '../utilities/samples';
@@ -126,8 +127,7 @@ test('logs info for happy path', async () => {
 
   const loggerSpy = Context.logger as LoggerSpy;
   expect(loggerSpy.logInfoCalls.length).toBe(2);
-  expect(loggerSpy.logInfoCalls[0][0]).toEqual(LOG_EXTRACTED_USER);
-  expect(loggerSpy.logInfoCalls[0][1]).toStrictEqual({ userId });
+  assertUserExtractionLog(loggerSpy.logInfoCalls[0]);
   expect(loggerSpy.logInfoCalls[1][0]).toEqual(LOG_SAVED_POST);
   const arg = loggerSpy.logInfoCalls[1][1] as { post: Post };
   assertPostEquality(arg.post, (await getSavedPosts())[0]);
