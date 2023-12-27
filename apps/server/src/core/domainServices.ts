@@ -13,7 +13,7 @@ export async function checkUserAuthorization(
 
   async function getUser(token: string) {
     const user = await gateKeeper.extractUser(token);
-    logInfo(LogMessages.EXTRACTED_USER);
+    logInfo(LogMessages.EXTRACTED_USER, { userId: user?.getId() });
     return user;
   }
 

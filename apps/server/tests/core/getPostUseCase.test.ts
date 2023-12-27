@@ -115,7 +115,10 @@ test('logs info for happy path', async () => {
   const loggerSpy = Context.logger as LoggerSpy;
 
   expect(loggerSpy.logInfoCalls.length).toBe(2);
-  expect(loggerSpy.logInfoCalls[0]).toEqual([LOG_EXTRACTED_USER]);
+  expect(loggerSpy.logInfoCalls[0][0]).toEqual(LOG_EXTRACTED_USER);
+  expect(loggerSpy.logInfoCalls[0][1]).toStrictEqual({
+    userId: DefaultGateKeeper.defaultUser.getId(),
+  });
   expect(loggerSpy.logInfoCalls[1][0]).toEqual(LOG_FETCHED_POST_WITH_ID);
   const arg = loggerSpy.logInfoCalls[1][1] as { id: string; post: Post };
   expect(arg.id).toBe(savedPost.getId());
