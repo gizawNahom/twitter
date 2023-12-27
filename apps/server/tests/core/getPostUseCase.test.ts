@@ -17,7 +17,10 @@ import { removeSeconds } from '../utilities/helpers';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
-import { LOG_EXTRACTED_USER } from '../utilities/logMessages';
+import {
+  LOG_FETCHED_POST_WITH_ID,
+  LOG_EXTRACTED_USER,
+} from '../utilities/logMessages';
 
 const samplePostId = 'postId1';
 
@@ -119,7 +122,7 @@ test('logs info for happy path', async () => {
 
   expect(loggerSpy.logInfoCalls.length).toBe(2);
   expect(loggerSpy.logInfoCalls[0]).toEqual([LOG_EXTRACTED_USER]);
-  expect(loggerSpy.logInfoCalls[1][0]).toEqual(`Fetched post using id`);
+  expect(loggerSpy.logInfoCalls[1][0]).toEqual(LOG_FETCHED_POST_WITH_ID);
   const arg = loggerSpy.logInfoCalls[1][1] as { id: string; post: Post };
   expect(arg.id).toBe(savedPost.getId());
   assertPostEquality(arg.post, savedPost);
