@@ -17,6 +17,7 @@ import { removeSeconds } from '../utilities/helpers';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
+import { LOG_EXTRACTED_USER } from '../utilities/logMessages';
 
 const samplePostId = 'postId1';
 
@@ -117,7 +118,7 @@ test('logs info for happy path', async () => {
   const loggerSpy = Context.logger as LoggerSpy;
 
   expect(loggerSpy.logInfoCalls.length).toBe(2);
-  expect(loggerSpy.logInfoCalls[0]).toEqual(['Extracted user from token']);
+  expect(loggerSpy.logInfoCalls[0]).toEqual([LOG_EXTRACTED_USER]);
   expect(loggerSpy.logInfoCalls[1][0]).toEqual(`Fetched post using id`);
   const arg = loggerSpy.logInfoCalls[1][1] as { id: string; post: Post };
   expect(arg.id).toBe(savedPost.getId());
