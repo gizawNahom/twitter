@@ -45,7 +45,7 @@ export class createPostUseCase {
   }
 
   private throwTextTooLongError() {
-    throw this.createError("Text can't be more than 280 chars");
+    throw this.createError(ValidationMessages.TEXT_TOO_LONG);
   }
 
   private is0(textLength: number) {
