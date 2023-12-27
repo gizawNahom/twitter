@@ -5,7 +5,7 @@ export class Token {
   private token: string;
 
   constructor(token: string) {
-    if (this.isTokenInvalid(token)) this.throwTokenInvalidError();
+    if (this.isTokenInvalid(token)) this.throwTokenRequiredError();
     this.token = token;
   }
 
@@ -13,8 +13,8 @@ export class Token {
     return token === '' || token == null;
   }
 
-  private throwTokenInvalidError() {
-    throw new ValidationError(ValidationMessages.INVALID_TOKEN);
+  private throwTokenRequiredError() {
+    throw new ValidationError(ValidationMessages.TOKEN_REQUIRED);
   }
 
   getToken(): string {
