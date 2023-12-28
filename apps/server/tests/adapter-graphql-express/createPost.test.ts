@@ -1,8 +1,6 @@
-import { app } from '../../src/app';
-import request from 'supertest';
 import Context from '../../src/context';
 import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
-import { getSavedPosts } from '../utilities/helpers';
+import { getSavedPosts, sendRequest } from '../utilities/helpers';
 import {
   handlesNonValidationErrorTest,
   passesValidationErrorTest,
@@ -12,7 +10,7 @@ import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 
 const validText = 'Hello, world!';
 
-async function sendRequestWithText(text: string) {
+async function sendCreatePostRequestWithText(text: string) {
   const query = `mutation($text: String) {
     createPost(text: $text) {
       id
@@ -23,10 +21,7 @@ async function sendRequestWithText(text: string) {
   }`;
   const variables = { text };
 
-  return await request(app).post('/graphql').send({
-    query,
-    variables,
-  });
+  return await sendRequest(query, variables);
 }
 
 beforeEach(() => {
@@ -34,16 +29,18 @@ beforeEach(() => {
 });
 
 test('returns created post', async () => {
-  const res = await sendRequestWithText(validText);
+  const res = await sendCreatePostRequestWithText(validText);
 
   expect(res.status).toBe(200);
   const savedPost = (await getSavedPosts())[0];
   assertPostResponseMatchesPostEntity(res.body.data.createPost, savedPost);
 });
 
-passesValidationErrorTest(async () => await sendRequestWithText(validText));
+passesValidationErrorTest(
+  async () => await sendCreatePostRequestWithText(validText)
+);
 
 handlesNonValidationErrorTest(async () => {
   Context.postRepository = new PostRepositoryExceptionStub();
-  return await sendRequestWithText(validText);
+  return await sendCreatePostRequestWithText(validText);
 });
