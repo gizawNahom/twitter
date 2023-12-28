@@ -23,22 +23,24 @@ export function testInvalidToken(useCaseExecution: (token: string) => void) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handlesValidationErrorTest(action: () => Promise<any>) {
-  test('passes validation errors', async () => {
-    Context.gateKeeper = new FailureGateKeeperStub();
-    const res = await action();
+  describe('expected errors', () => {
+    beforeEach(() => (Context.gateKeeper = new FailureGateKeeperStub()));
 
-    expect(res.body.errors.length).toBe(1);
-    expect(res.body.errors[0].message).toBe(ERROR_INVALID_USER);
-  });
+    test('passes validation errors', async () => {
+      const res = await action();
 
-  test('logs validation errors', async () => {
-    Context.logger = new LoggerSpy();
-    Context.gateKeeper = new FailureGateKeeperStub();
-    await action();
+      expect(res.body.errors.length).toBe(1);
+      expect(res.body.errors[0].message).toBe(ERROR_INVALID_USER);
+    });
 
-    expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
-      new ValidationError(ERROR_INVALID_USER)
-    );
+    test('logs validation errors', async () => {
+      Context.logger = new LoggerSpy();
+      await action();
+
+      expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
+        new ValidationError(ERROR_INVALID_USER)
+      );
+    });
   });
 }
 
