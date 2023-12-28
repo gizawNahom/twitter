@@ -12,7 +12,7 @@ import { FailureGateKeeperStub } from '../doubles/failureGateKeeperStub';
 import {
   ERROR_INVALID_POST_ID,
   ERROR_INVALID_USER,
-  ERROR_POST_ID_Required,
+  ERROR_POST_ID_REQUIRED,
 } from '../utilities/errorMessages';
 import { removeSeconds } from '../utilities/helpers';
 import {
@@ -78,7 +78,7 @@ describe('throws with post-invalid error message', () => {
   test.each([[''], [null]])('when the post id is %s', (postId) => {
     assertValidationErrorWithMessage(
       () => executeUseCase({ postId }),
-      ERROR_POST_ID_Required
+      ERROR_POST_ID_REQUIRED
     );
   });
 });
