@@ -2,12 +2,13 @@ import { app } from '../../src/app';
 import request from 'supertest';
 import Context from '../../src/context';
 import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
-import { getSavedPosts, removeSeconds } from '../utilities/helpers';
+import { getSavedPosts } from '../utilities/helpers';
 import {
   handlesNonValidationErrorTest,
   passesValidationErrorTest,
 } from '../utilities/tests';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 
 const validText = 'Hello, world!';
 
@@ -37,14 +38,7 @@ test('returns created post', async () => {
 
   expect(res.status).toBe(200);
   const savedPost = (await getSavedPosts())[0];
-  const post = res.body.data.createPost;
-  post.createdAt = removeSeconds(post.createdAt);
-  expect(post).toStrictEqual({
-    id: 'postId1',
-    text: savedPost.getText(),
-    createdAt: removeSeconds(savedPost.getCreatedAt().toISOString()),
-    userId: savedPost.getUserId(),
-  });
+  assertPostResponseMatchesPostEntity(res.body.data.createPost, savedPost);
 });
 
 passesValidationErrorTest(async () => await sendRequestWithText(validText));

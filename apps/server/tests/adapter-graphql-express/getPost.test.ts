@@ -2,13 +2,13 @@ import { app } from '../../src/app';
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
-import { removeSeconds } from '../utilities/helpers';
 import { samplePost, samplePostId } from '../utilities/samples';
 import request from 'supertest';
 import {
   handlesNonValidationErrorTest,
   passesValidationErrorTest,
 } from '../utilities/tests';
+import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 
 async function sendRequest(id = samplePostId) {
   const query = `query($id: ID!) {
@@ -36,14 +36,7 @@ test('returns post', async () => {
   const res = await sendRequest();
 
   expect(res.status).toBe(200);
-  const post = res.body.data.post;
-  post.createdAt = removeSeconds(post.createdAt);
-  expect(post).toStrictEqual({
-    id: samplePost.getId(),
-    text: samplePost.getText(),
-    createdAt: removeSeconds(samplePost.getCreatedAt().toISOString()),
-    userId: samplePost.getUserId(),
-  });
+  assertPostResponseMatchesPostEntity(res.body.data.post, samplePost);
 });
 
 passesValidationErrorTest(async () => {

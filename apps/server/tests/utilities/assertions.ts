@@ -27,3 +27,13 @@ export function assertUserExtractionLog(arg: unknown[]) {
     userId: DefaultGateKeeper.defaultUser.getId(),
   });
 }
+
+export function assertPostResponseMatchesPostEntity(postResponse, post: Post) {
+  postResponse.createdAt = removeSeconds(postResponse.createdAt);
+  expect(postResponse).toStrictEqual({
+    id: post.getId(),
+    text: post.getText(),
+    createdAt: removeSeconds(post.getCreatedAt().toISOString()),
+    userId: post.getUserId(),
+  });
+}
