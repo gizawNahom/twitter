@@ -5,8 +5,10 @@ import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionS
 import { removeSeconds } from '../utilities/helpers';
 import { samplePost, samplePostId } from '../utilities/samples';
 import request from 'supertest';
-import { passesValidationErrorTest } from '../utilities/tests';
-import { ERROR_GENERIC } from '../utilities/errorMessages';
+import {
+  handlesNonValidationErrorTest,
+  passesValidationErrorTest,
+} from '../utilities/tests';
 
 async function sendRequest(id = samplePostId) {
   const query = `query($id: ID!) {
@@ -49,10 +51,7 @@ passesValidationErrorTest(async () => {
   return await sendRequest();
 });
 
-test('handles non-validation errors', async () => {
+handlesNonValidationErrorTest(async () => {
   Context.postRepository = new PostRepositoryExceptionStub();
-  const res = await sendRequest();
-
-  expect(res.body.errors.length).toBe(1);
-  expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
+  return await sendRequest();
 });

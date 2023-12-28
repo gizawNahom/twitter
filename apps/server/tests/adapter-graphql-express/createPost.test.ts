@@ -3,9 +3,11 @@ import request from 'supertest';
 import Context from '../../src/context';
 import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
 import { getSavedPosts, removeSeconds } from '../utilities/helpers';
-import { passesValidationErrorTest } from '../utilities/tests';
+import {
+  handlesNonValidationErrorTest,
+  passesValidationErrorTest,
+} from '../utilities/tests';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
-import { ERROR_GENERIC } from '../utilities/errorMessages';
 
 const validText = 'Hello, world!';
 
@@ -47,11 +49,7 @@ test('returns created post', async () => {
 
 passesValidationErrorTest(async () => await sendRequestWithText(validText));
 
-test('handles non-validation errors', async () => {
+handlesNonValidationErrorTest(async () => {
   Context.postRepository = new PostRepositoryExceptionStub();
-
-  const res = await sendRequestWithText(validText);
-
-  expect(res.body.errors.length).toBe(1);
-  expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
+  return await sendRequestWithText(validText);
 });
