@@ -4,4 +4,7 @@ export class DummyLogger implements Logger {
   logInfo() {
     //
   }
+  logError() {
+    //
+  }
 }

@@ -5,4 +5,7 @@ export class LoggerSpy implements Logger {
   logInfo(message: string, obj?: object | undefined) {
     this.logInfoCalls.push([message, obj]);
   }
+  logError(error: Error) {
+    throw new Error('Method not implemented.');
+  }
 }
