@@ -8,7 +8,7 @@ import {
 } from './errorMessages';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { ValidationError } from '../../src/core/errors';
-import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
+import { PostRepositoryErrorStub } from '../doubles/postRepositoryErrorStub';
 
 export function testInvalidToken(useCaseExecution: (token: string) => void) {
   describe('throws with token-invalid error message', () => {
@@ -47,9 +47,7 @@ export function handlesExpectedErrorTest(action: () => Promise<any>) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handlesUnexpectedErrorTest(action: () => Promise<any>) {
   describe('Unexpected error', () => {
-    beforeAll(
-      () => (Context.postRepository = new PostRepositoryExceptionStub())
-    );
+    beforeAll(() => (Context.postRepository = new PostRepositoryErrorStub()));
 
     test('hides unexpected error', async () => {
       const res = await action();
@@ -62,7 +60,7 @@ export function handlesUnexpectedErrorTest(action: () => Promise<any>) {
       await action();
 
       expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
-        new Error(PostRepositoryExceptionStub.ERROR_MESSAGE)
+        new Error(PostRepositoryErrorStub.ERROR_MESSAGE)
       );
     });
   });
