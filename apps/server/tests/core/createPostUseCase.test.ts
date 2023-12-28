@@ -1,6 +1,6 @@
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import {
-  createPostUseCase,
+  CreatePostUseCase,
   PostUseCaseResponse,
 } from '../../src/core/useCases/createPostUseCase';
 import Context from '../../src/context';
@@ -45,7 +45,7 @@ async function executeUseCaseWithText({
   token?: string;
   text?: string;
 }) {
-  const uC = new createPostUseCase(
+  const uC = new CreatePostUseCase(
     Context.logger,
     Context.gateKeeper,
     Context.postRepository

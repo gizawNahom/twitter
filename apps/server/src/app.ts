@@ -1,4 +1,4 @@
-import { createPostUseCase } from './core/useCases/createPostUseCase';
+import { CreatePostUseCase } from './core/useCases/createPostUseCase';
 import { GetPostUseCase } from './core/useCases/getPostUseCase';
 import Context from './context';
 import express from 'express';
@@ -34,7 +34,7 @@ const resolvers = {
       contextValue: ServerContext
     ) => {
       return await tryResolve(async () => {
-        return await new createPostUseCase(
+        return await new CreatePostUseCase(
           Context.logger,
           Context.gateKeeper,
           Context.postRepository

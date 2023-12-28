@@ -9,7 +9,7 @@ import { Token } from '../valueObjects/token';
 import { Logger } from '../ports/logger';
 import { LogMessages } from '../logMessages';
 
-export class createPostUseCase {
+export class CreatePostUseCase {
   constructor(
     private logger: Logger,
     private gateKeeper: GateKeeper,
