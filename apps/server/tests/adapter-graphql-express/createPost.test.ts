@@ -1,8 +1,8 @@
 import Context from '../../src/context';
 import { getSavedPosts, sendRequest } from '../utilities/helpers';
 import {
-  handlesNonValidationErrorTest,
-  handlesValidationErrorTest,
+  handlesExpectedErrorTest,
+  handlesUnexpectedErrorTest,
 } from '../utilities/tests';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
@@ -35,10 +35,10 @@ test('returns created post', async () => {
   assertPostResponseMatchesPostEntity(res.body.data.createPost, savedPost);
 });
 
-handlesValidationErrorTest(
+handlesExpectedErrorTest(
   async () => await sendCreatePostRequestWithText(validText)
 );
 
-handlesNonValidationErrorTest(
+handlesUnexpectedErrorTest(
   async () => await sendCreatePostRequestWithText(validText)
 );

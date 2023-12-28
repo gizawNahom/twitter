@@ -22,18 +22,18 @@ export function testInvalidToken(useCaseExecution: (token: string) => void) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function handlesValidationErrorTest(action: () => Promise<any>) {
-  describe('expected errors', () => {
+export function handlesExpectedErrorTest(action: () => Promise<any>) {
+  describe('expected error', () => {
     beforeEach(() => (Context.gateKeeper = new FailureGateKeeperStub()));
 
-    test('passes validation errors', async () => {
+    test('passes expected error', async () => {
       const res = await action();
 
       expect(res.body.errors.length).toBe(1);
       expect(res.body.errors[0].message).toBe(ERROR_INVALID_USER);
     });
 
-    test('logs validation errors', async () => {
+    test('logs expected error', async () => {
       Context.logger = new LoggerSpy();
       await action();
 
@@ -45,7 +45,7 @@ export function handlesValidationErrorTest(action: () => Promise<any>) {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function handlesNonValidationErrorTest(action: () => Promise<any>) {
+export function handlesUnexpectedErrorTest(action: () => Promise<any>) {
   describe('Unexpected error', () => {
     beforeAll(
       () => (Context.postRepository = new PostRepositoryExceptionStub())
