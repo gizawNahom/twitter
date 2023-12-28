@@ -8,7 +8,7 @@ import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { PostRepositoryNullStub } from '../doubles/postRepositoryNullStub';
-import { FailureGateKeeperStub } from '../doubles/FailureGateKeeperStub';
+import { FailureGateKeeperStub } from '../doubles/failureGateKeeperStub';
 import {
   ERROR_INVALID_POST_ID,
   ERROR_INVALID_USER,
