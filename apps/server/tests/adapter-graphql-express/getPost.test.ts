@@ -1,6 +1,5 @@
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
-import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
 import { samplePost, samplePostId } from '../utilities/samples';
 import {
   handlesNonValidationErrorTest,
@@ -39,7 +38,4 @@ handlesValidationErrorTest(async () => {
   return await sendGetPostRequest();
 });
 
-handlesNonValidationErrorTest(async () => {
-  Context.postRepository = new PostRepositoryExceptionStub();
-  return await sendGetPostRequest();
-});
+handlesNonValidationErrorTest(async () => await sendGetPostRequest());

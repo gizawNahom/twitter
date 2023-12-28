@@ -8,6 +8,7 @@ import {
 } from './errorMessages';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { ValidationError } from '../../src/core/errors';
+import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
 
 export function testInvalidToken(useCaseExecution: (token: string) => void) {
   describe('throws with token-invalid error message', () => {
@@ -44,9 +45,21 @@ export function handlesValidationErrorTest(action: () => Promise<any>) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handlesNonValidationErrorTest(action: () => Promise<any>) {
   test('handles non-validation errors', async () => {
+    Context.postRepository = new PostRepositoryExceptionStub();
+
     const res = await action();
 
     expect(res.body.errors.length).toBe(1);
     expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
+  });
+
+  test('logs unexpected error', async () => {
+    Context.postRepository = new PostRepositoryExceptionStub();
+
+    await action();
+
+    expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
+      new Error(PostRepositoryExceptionStub.ERROR_MESSAGE)
+    );
   });
 }

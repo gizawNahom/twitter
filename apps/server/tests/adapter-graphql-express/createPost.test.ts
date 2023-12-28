@@ -1,5 +1,4 @@
 import Context from '../../src/context';
-import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
 import { getSavedPosts, sendRequest } from '../utilities/helpers';
 import {
   handlesNonValidationErrorTest,
@@ -40,7 +39,6 @@ handlesValidationErrorTest(
   async () => await sendCreatePostRequestWithText(validText)
 );
 
-handlesNonValidationErrorTest(async () => {
-  Context.postRepository = new PostRepositoryExceptionStub();
-  return await sendCreatePostRequestWithText(validText);
-});
+handlesNonValidationErrorTest(
+  async () => await sendCreatePostRequestWithText(validText)
+);
