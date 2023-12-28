@@ -4,7 +4,7 @@ import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionS
 import { samplePost, samplePostId } from '../utilities/samples';
 import {
   handlesNonValidationErrorTest,
-  passesValidationErrorTest,
+  handlesValidationErrorTest,
 } from '../utilities/tests';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 import { sendRequest } from '../utilities/helpers';
@@ -34,7 +34,7 @@ test('returns post', async () => {
   assertPostResponseMatchesPostEntity(res.body.data.post, samplePost);
 });
 
-passesValidationErrorTest(async () => {
+handlesValidationErrorTest(async () => {
   await Context.postRepository.save(samplePost);
   return await sendGetPostRequest();
 });

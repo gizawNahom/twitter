@@ -63,6 +63,7 @@ async function tryResolve(resolve: () => Promise<unknown>) {
   try {
     return await resolve();
   } catch (error) {
+    Context.logger.logError(error);
     if (isValidationError(error)) throw error;
     throwGenericError();
   }

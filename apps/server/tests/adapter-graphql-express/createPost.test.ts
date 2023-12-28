@@ -3,7 +3,7 @@ import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionS
 import { getSavedPosts, sendRequest } from '../utilities/helpers';
 import {
   handlesNonValidationErrorTest,
-  passesValidationErrorTest,
+  handlesValidationErrorTest,
 } from '../utilities/tests';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
@@ -36,7 +36,7 @@ test('returns created post', async () => {
   assertPostResponseMatchesPostEntity(res.body.data.createPost, savedPost);
 });
 
-passesValidationErrorTest(
+handlesValidationErrorTest(
   async () => await sendCreatePostRequestWithText(validText)
 );
 
