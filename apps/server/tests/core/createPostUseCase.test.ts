@@ -6,7 +6,7 @@ import {
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { getSavedPosts, removeSeconds } from '../utilities/helpers';
-import { FailureGateKeeperStub } from '../doubles/failureGateKeeperStub';
+import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import {
   ERROR_EMPTY_TEXT,
   ERROR_INVALID_USER,
@@ -79,7 +79,7 @@ test('throws validation error if text is more than 280 chars', () => {
 });
 
 test('throws if user is not valid', () => {
-  Context.gateKeeper = new FailureGateKeeperStub();
+  Context.gateKeeper = new GateKeeperFailureStub();
 
   assertValidationErrorWithMessage(
     () => executeUseCaseWithText({}),

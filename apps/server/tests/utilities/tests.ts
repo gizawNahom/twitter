@@ -1,5 +1,5 @@
 import Context from '../../src/context';
-import { FailureGateKeeperStub } from '../doubles/failureGateKeeperStub';
+import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { assertValidationErrorWithMessage } from './assertions';
 import {
   ERROR_GENERIC,
@@ -24,7 +24,7 @@ export function testInvalidToken(useCaseExecution: (token: string) => void) {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handlesExpectedErrorTest(action: () => Promise<any>) {
   describe('expected error', () => {
-    beforeEach(() => (Context.gateKeeper = new FailureGateKeeperStub()));
+    beforeEach(() => (Context.gateKeeper = new GateKeeperFailureStub()));
 
     test('passes expected error', async () => {
       const res = await action();

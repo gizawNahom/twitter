@@ -8,7 +8,7 @@ import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { DummyPostRepository } from '../doubles/dummyPostRepository';
-import { FailureGateKeeperStub } from '../doubles/failureGateKeeperStub';
+import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import {
   ERROR_INVALID_POST_ID,
   ERROR_INVALID_USER,
@@ -64,7 +64,7 @@ beforeEach(() => {
 });
 
 test('throws if user extraction fails', () => {
-  Context.gateKeeper = new FailureGateKeeperStub();
+  Context.gateKeeper = new GateKeeperFailureStub();
 
   assertValidationErrorWithMessage(
     () => executeUseCase({}),
