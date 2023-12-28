@@ -6,7 +6,7 @@ import {
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { getSavedPosts, removeSeconds } from '../utilities/helpers';
-import { FailureGateKeeperStub } from '../doubles/FailureGateKeeperStub';
+import { FailureGateKeeperStub } from '../doubles/failureGateKeeperStub';
 import {
   ERROR_EMPTY_TEXT,
   ERROR_INVALID_USER,
@@ -19,7 +19,7 @@ import {
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 import { LoggerSpy } from '../doubles/loggerSpy';
-import { LOG_EXTRACTED_USER, LOG_SAVED_POST } from '../utilities/logMessages';
+import { LOG_SAVED_POST } from '../utilities/logMessages';
 import { Post } from '../../src/core/entities/post';
 
 const userId = DefaultGateKeeper.defaultUser.getId();

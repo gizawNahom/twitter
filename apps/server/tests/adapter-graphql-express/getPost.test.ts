@@ -1,10 +1,11 @@
 import { app } from '../../src/app';
 import Context from '../../src/context';
+import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { PostRepositoryExceptionStub } from '../doubles/postRepositoryExceptionStub';
-import { ERROR_POST_ID_Required } from '../utilities/errorMessages';
 import { removeSeconds } from '../utilities/helpers';
 import { samplePost, samplePostId } from '../utilities/samples';
 import request from 'supertest';
+import { passesValidationErrorTest } from '../utilities/tests';
 
 async function sendRequest(id = samplePostId) {
   const query = `query($id: ID!) {
@@ -23,6 +24,10 @@ async function sendRequest(id = samplePostId) {
   return res;
 }
 
+beforeEach(() => {
+  Context.gateKeeper = new DefaultGateKeeper();
+});
+
 test('returns post', async () => {
   await Context.postRepository.save(samplePost);
   const res = await sendRequest();
@@ -38,12 +43,9 @@ test('returns post', async () => {
   });
 });
 
-test('passes validation errors', async () => {
+passesValidationErrorTest(async () => {
   await Context.postRepository.save(samplePost);
-  const res = await sendRequest('');
-
-  expect(res.body.errors.length).toBe(1);
-  expect(res.body.errors[0].message).toBe(ERROR_POST_ID_Required);
+  return await sendRequest();
 });
 
 test('handles non-validation errors', async () => {
