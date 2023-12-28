@@ -7,7 +7,7 @@ import {
 import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
-import { PostRepositoryNullStub } from '../doubles/postRepositoryNullStub';
+import { DummyPostRepository } from '../doubles/dummyPostRepository';
 import { FailureGateKeeperStub } from '../doubles/failureGateKeeperStub';
 import {
   ERROR_INVALID_POST_ID,
@@ -95,7 +95,7 @@ test('gets saved post', async () => {
 });
 
 test('throws if post does not exist', async () => {
-  Context.postRepository = new PostRepositoryNullStub();
+  Context.postRepository = new DummyPostRepository();
 
   assertValidationErrorWithMessage(
     () => executeUseCase({}),
