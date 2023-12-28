@@ -44,22 +44,24 @@ export function handlesValidationErrorTest(action: () => Promise<any>) {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function handlesNonValidationErrorTest(action: () => Promise<any>) {
-  test('handles non-validation errors', async () => {
-    Context.postRepository = new PostRepositoryExceptionStub();
-
-    const res = await action();
-
-    expect(res.body.errors.length).toBe(1);
-    expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
-  });
-
-  test('logs unexpected error', async () => {
-    Context.postRepository = new PostRepositoryExceptionStub();
-
-    await action();
-
-    expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
-      new Error(PostRepositoryExceptionStub.ERROR_MESSAGE)
+  describe('Unexpected error', () => {
+    beforeAll(
+      () => (Context.postRepository = new PostRepositoryExceptionStub())
     );
+
+    test('hides unexpected error', async () => {
+      const res = await action();
+
+      expect(res.body.errors.length).toBe(1);
+      expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
+    });
+
+    test('logs unexpected error', async () => {
+      await action();
+
+      expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
+        new Error(PostRepositoryExceptionStub.ERROR_MESSAGE)
+      );
+    });
   });
 }
