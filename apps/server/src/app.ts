@@ -1,4 +1,5 @@
 import { createPostUseCase } from './core/useCases/createPostUseCase';
+import { GetPostUseCase } from './core/useCases/getPostUseCase';
 import Context from './context';
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
@@ -6,11 +7,14 @@ import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import { ValidationError } from './core/errors';
 
+const GENERIC_ERROR_MESSAGE = 'Server Error';
+
 const app = express();
 
 const typeDefs = `#graphql
   type Query {
     hello: String
+    post(id: ID!): Post
   }
   type Mutation {
     createPost(text: String): Post
@@ -50,6 +54,24 @@ const resolvers = {
 
       function throwGenericError() {
         throw new Error('Server Error');
+      }
+    },
+  },
+  Query: {
+    post: async (
+      _: unknown,
+      { id }: { id: string },
+      contextValue: ServerContext
+    ) => {
+      try {
+        return await new GetPostUseCase(
+          Context.logger,
+          Context.gateKeeper,
+          Context.postRepository
+        ).execute(contextValue.token, id);
+      } catch (error) {
+        if (error instanceof ValidationError) throw error;
+        throw new Error(GENERIC_ERROR_MESSAGE);
       }
     },
   },
