@@ -7,3 +7,5 @@ export const ERROR_POST_ID_Required = 'Post id is required';
 
 export const ERROR_INVALID_TOKEN = 'Token is invalid';
 export const ERROR_TOKEN_REQUIRED = 'Token is required';
+
+export const ERROR_GENERIC = 'Server Error';

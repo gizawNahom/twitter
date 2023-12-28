@@ -6,6 +6,7 @@ import { removeSeconds } from '../utilities/helpers';
 import { samplePost, samplePostId } from '../utilities/samples';
 import request from 'supertest';
 import { passesValidationErrorTest } from '../utilities/tests';
+import { ERROR_GENERIC } from '../utilities/errorMessages';
 
 async function sendRequest(id = samplePostId) {
   const query = `query($id: ID!) {
@@ -53,5 +54,5 @@ test('handles non-validation errors', async () => {
   const res = await sendRequest();
 
   expect(res.body.errors.length).toBe(1);
-  expect(res.body.errors[0].message).toBe('Server Error');
+  expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
 });
