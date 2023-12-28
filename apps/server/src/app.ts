@@ -33,28 +33,13 @@ const resolvers = {
       args: { text: string },
       contextValue: ServerContext
     ) => {
-      try {
-        return await tryCreatePost();
-      } catch (error) {
-        if (isValidationError(error)) throw error;
-        throwGenericError();
-      }
-
-      async function tryCreatePost() {
+      return await tryResolve(async () => {
         return await new createPostUseCase(
           Context.logger,
           Context.gateKeeper,
           Context.postRepository
         ).execute(contextValue.token, args.text);
-      }
-
-      function isValidationError(error: Error) {
-        return error instanceof ValidationError;
-      }
-
-      function throwGenericError() {
-        throw new Error('Server Error');
-      }
+      });
     },
   },
   Query: {
@@ -63,19 +48,33 @@ const resolvers = {
       { id }: { id: string },
       contextValue: ServerContext
     ) => {
-      try {
+      return await tryResolve(async () => {
         return await new GetPostUseCase(
           Context.logger,
           Context.gateKeeper,
           Context.postRepository
         ).execute(contextValue.token, id);
-      } catch (error) {
-        if (error instanceof ValidationError) throw error;
-        throw new Error(GENERIC_ERROR_MESSAGE);
-      }
+      });
     },
   },
 };
+
+async function tryResolve(resolve: () => Promise<unknown>) {
+  try {
+    return await resolve();
+  } catch (error) {
+    if (isValidationError(error)) throw error;
+    throwGenericError();
+  }
+
+  function isValidationError(error: Error) {
+    return error instanceof ValidationError;
+  }
+
+  function throwGenericError() {
+    throw new Error(GENERIC_ERROR_MESSAGE);
+  }
+}
 
 interface ServerContext {
   token: string;
