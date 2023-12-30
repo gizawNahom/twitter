@@ -1,28 +1,46 @@
-import { useState } from 'react';
-import { Post, createPost } from '../utilities/httpClient';
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { createPostAsync, selectStatus } from '../lib/redux/slices/postSlice';
+import { useDispatch } from '../lib/redux';
 
 export function PostInput() {
+  const dispatch = useDispatch();
+
+  const status = useSelector(selectStatus);
+
   const [text, setText] = useState('');
-  const [isError, setError] = useState(false);
-  const [isLoading, setLoading] = useState(false);
-  const [post, setPost] = useState<Post>();
+
+  useEffect(() => {
+    if (isSucceeded(status)) setText('');
+  }, [status, setText]);
 
   return (
     <div>
-      {isError && <div>Something went wrong</div>}
+      {status === 'failed' && <div>Something went wrong</div>}
       <input
         placeholder="What's happening?"
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <button disabled={isLoading || isInvalid(text)} onClick={sendRequest}>
+      <button
+        disabled={
+          isInvalid(text) || status === 'loading' || isSucceeded(status)
+        }
+        onClick={() => {
+          dispatch(createPostAsync(text));
+        }}
+      >
         Post
       </button>
-      {post && <p>Your post was sent.</p>}
+      {status === 'succeeded' && <p>Your post was sent.</p>}
     </div>
   );
 
-  function isInvalid(text: string): boolean | undefined {
+  function isSucceeded(status: string): boolean {
+    return status === 'succeeded';
+  }
+
+  function isInvalid(text: string): boolean {
     if (isEmpty(text) || isLongerThan280(text) || isMadeUpOfWhiteSpace(text))
       return true;
     else return false;
@@ -37,17 +55,6 @@ export function PostInput() {
 
     function isMadeUpOfWhiteSpace(text: string): boolean {
       return text.trim().length === 0;
-    }
-  }
-
-  async function sendRequest() {
-    setLoading(true);
-    const [post, errors] = await createPost(text);
-    setLoading(false);
-    if (errors) setError(true);
-    else {
-      setText('');
-      setPost(post as Post);
     }
   }
 }
