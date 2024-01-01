@@ -42,6 +42,46 @@
         },
         "status": 200
       }
+    },
+    {
+      "description": "a request to fetch a post",
+      "request": {
+        "body": {
+          "operationName": "post",
+          "query": "query post($id: ID!) {\n            post(id: $id) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "variables": {
+            "id": "postId1"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "query\\s*post\\(\\$id:\\s*ID!\\)\\s*\\{\\s*post\\(id:\\s*\\$id\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.id": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": null,
+          "errors": [
+            {
+              "message": "Server error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "status": 200
+      }
     }
   ],
   "metadata": {
