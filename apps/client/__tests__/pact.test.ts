@@ -1,9 +1,9 @@
 import path from 'path';
 import { GraphQLInteraction, Pact } from '@pact-foundation/pact';
-import { createPost } from '../../utilities/httpClient';
+import { createPost } from '../lib/redux/slices/postSlice/createPost';
 import { like } from '@pact-foundation/pact/src/dsl/matchers';
-import { createPostResponse } from '../../mocks/values';
-import { resetClientStore, setCLient } from '../utilities';
+import { createPostResponse } from '../mocks/values';
+import { resetClientStore, setCLient } from './utilities';
 
 const baseUrl = new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
 const PORT = +baseUrl.port;

@@ -1,6 +1,6 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import fetch from 'cross-fetch';
-import { Client } from '../utilities/httpClient';
+import { Client } from '../utilities/client';
 
 export function setCLient() {
   Client.client = new ApolloClient({

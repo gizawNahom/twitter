@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Post } from '../../../../utilities/httpClient';
+import { Post } from '../../../../utilities/client';
 import { createPostAsync } from './thunks';
 
 const initialState: PostSliceState = {

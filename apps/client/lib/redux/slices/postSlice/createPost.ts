@@ -1,5 +1,6 @@
 import { ApolloError, gql } from '@apollo/client';
-import { Client, Post } from '../../../../utilities/httpClient';
+import { Client } from '../../../../utilities/client';
+import { Post } from './post';
 
 export async function createPost(
   text: string
