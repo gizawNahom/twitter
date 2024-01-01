@@ -1,9 +1,10 @@
 import path from 'path';
 import { GraphQLInteraction, Pact } from '@pact-foundation/pact';
 import { createPost } from '../lib/redux/slices/postSlice/createPost';
-import { like } from '@pact-foundation/pact/src/dsl/matchers';
+import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import { createPostResponse } from '../mocks/values';
 import { resetClientStore, setCLient } from './utilities';
+import { fetchPost } from '../lib/redux/slices/postSlice/fetchPost';
 
 const baseUrl = new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
 const PORT = +baseUrl.port;
@@ -30,6 +31,7 @@ describe('Create Post', () => {
   afterEach(async () => {
     await resetClientStore();
   });
+
   test('creates post', async () => {
     await addInteractionWithResponseBody({
       data: {
@@ -106,3 +108,84 @@ describe('Create Post', () => {
     await provider.addInteraction(interaction);
   }
 });
+
+describe('Fetch Post', () => {
+  beforeAll(() => {
+    setCLient();
+  });
+
+  afterEach(async () => {
+    await resetClientStore();
+  });
+
+  test('fetches post', async () => {
+    await addInteractionWithBody({
+      data: {
+        post: {
+          id: like(createPostResponse.id),
+          text: like(createPostResponse.text),
+          userId: like(createPostResponse.userId),
+          createdAt: like(createPostResponse.createdAt),
+          __typename: like(createPostResponse.__typename),
+        },
+      },
+    });
+
+    const post = await fetchPost(createPostResponse.id);
+
+    expect(post).toEqual({
+      id: createPostResponse.id,
+      text: createPostResponse.text,
+      userId: createPostResponse.userId,
+      createdAt: new Date(createPostResponse.createdAt),
+    });
+  });
+
+  test('handles error', async () => {
+    const errorMessage = 'Server error';
+    await addInteractionWithBody({
+      data: null,
+      errors: [
+        {
+          message: errorMessage,
+        },
+      ],
+    });
+
+    await expect(async () => {
+      await fetchPost(createPostResponse.id);
+    }).rejects.toThrow();
+  });
+});
+
+async function addInteractionWithBody(responseBody: AnyTemplate) {
+  const interaction = new GraphQLInteraction()
+    .uponReceiving('a request to fetch a post')
+    .withOperation('post')
+    .withMutation(
+      `query post($id: ID!) {
+          post(id: $id) {
+            id
+            text
+            userId
+            createdAt
+            __typename
+          }
+        }`
+    )
+    .withVariables({
+      id: like(createPostResponse.id),
+    })
+    .withRequest({
+      path: PATH_NAME,
+      method: 'POST',
+    })
+    .willRespondWith({
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+      body: responseBody,
+    });
+  await provider.addInteraction(interaction);
+}
