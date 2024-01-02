@@ -2,15 +2,15 @@ import { createSlice } from '@reduxjs/toolkit';
 import { Post } from './post';
 import { createPostAsync, fetchPostAsync } from './thunks';
 
-const initialState: PostSliceState = {
+const initialState: PostsSliceState = {
   createdPost: null,
   status: 'idle',
   fetchStatus: 'idle',
   fetchedPost: null,
 };
 
-export const postSlice = createSlice({
-  name: 'post',
+export const postsSlice = createSlice({
+  name: 'posts',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
@@ -40,7 +40,7 @@ export const postSlice = createSlice({
   },
 });
 
-export interface PostSliceState {
+export interface PostsSliceState {
   createdPost: Post | null;
   status: 'idle' | 'loading' | 'failed' | 'succeeded';
   fetchStatus: 'idle' | 'loading' | 'succeeded' | 'failed';

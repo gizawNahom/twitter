@@ -1,11 +1,11 @@
 import path from 'path';
 import { GraphQLInteraction, Pact } from '@pact-foundation/pact';
-import { createPost } from '../lib/redux/slices/postSlice/createPost';
+import { createPost } from '../lib/redux/slices/postsSlice/createPost';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import { createPostResponse } from '../mocks/values';
 import { setUpClient } from './utilities';
-import { fetchPost } from '../lib/redux/slices/postSlice/fetchPost';
-import { Post } from '../lib/redux/slices/postSlice/post';
+import { fetchPost } from '../lib/redux/slices/postsSlice/fetchPost';
+import { Post } from '../lib/redux/slices/postsSlice/post';
 
 const baseUrl = new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
 const PORT = +baseUrl.port;

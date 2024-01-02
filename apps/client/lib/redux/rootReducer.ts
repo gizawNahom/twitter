@@ -1,6 +1,6 @@
 /* Instruments */
-import { postSlice } from './slices/postSlice';
+import { postsSlice } from './slices/postsSlice';
 
 export const reducer = {
-  post: postSlice.reducer,
+  posts: postsSlice.reducer,
 };

@@ -1,4 +1,4 @@
-import { createAppAsyncThunk } from '../../../redux/createAppAsyncThunk';
+import { createAppAsyncThunk } from '../../createAppAsyncThunk';
 import { createPost } from './createPost';
 import { fetchPost } from './fetchPost';
 

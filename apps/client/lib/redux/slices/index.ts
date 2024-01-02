@@ -1,1 +1,1 @@
-export * from './postSlice';
+export * from './postsSlice';
