@@ -57,6 +57,46 @@ function renderSUT() {
   );
 }
 
+function assertWasCalled(value: boolean) {
+  expect(wasPostCalled).toBe(value);
+}
+
+function assertErrorMessageIsNotShown() {
+  expect(screen.queryByText(ERROR_MESSAGE)).toBeNull();
+}
+
+function assertPostIsNotShown() {
+  expect(queryPostText()).toBeNull();
+  expect(queryPostTime()).toBeNull();
+}
+
+function queryPostTime() {
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  };
+  const postTime = screen.queryByText(
+    new Intl.DateTimeFormat('en-US', options).format(
+      new Date(createPostResponse.createdAt)
+    )
+  );
+  return postTime;
+}
+
+function queryPostText(): HTMLElement | null {
+  return screen.queryByText(createPostResponse.text);
+}
+
+function assertLoadingIsNotShown(): void | Promise<void> {
+  expect(queryLoading()).toBeNull();
+}
+function queryLoading(): HTMLElement | null {
+  return screen.queryByText(LOADING);
+}
+
 beforeAll(() => {
   mockRouter();
 });
@@ -70,6 +110,7 @@ setUpMSW();
 test('initial state', async () => {
   renderSUT();
 
+  assertWasCalled(false);
   expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
   expect(screen.queryByRole('button', { name: BACK_BUTTON })).not.toBeNull();
   await waitFor(() => expect(queryLoading()).not.toBeNull());
@@ -89,22 +130,9 @@ test('success state', async () => {
   renderSUT();
 
   await waitFor(() => assertLoadingIsNotShown());
-  expect(wasPostCalled).toBe(true);
-  expect(screen.queryByText(createPostResponse.text)).not.toBeNull();
-  const options: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: 'numeric',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  };
-  expect(
-    screen.queryByText(
-      new Intl.DateTimeFormat('en-US', options).format(
-        new Date(createPostResponse.createdAt)
-      )
-    )
-  ).not.toBeNull();
+  assertWasCalled(true);
+  expect(queryPostText()).not.toBeNull();
+  expect(queryPostTime()).not.toBeNull();
   assertErrorMessageIsNotShown();
 });
 
@@ -117,32 +145,3 @@ test('error state', async () => {
   assertLoadingIsNotShown();
   assertPostIsNotShown();
 });
-
-function assertErrorMessageIsNotShown() {
-  expect(screen.queryByText(ERROR_MESSAGE)).toBeNull();
-}
-
-function assertPostIsNotShown() {
-  expect(screen.queryByText(createPostResponse.text)).toBeNull();
-  const options: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: 'numeric',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  };
-  expect(
-    screen.queryByText(
-      new Intl.DateTimeFormat('en-US', options).format(
-        new Date(createPostResponse.createdAt)
-      )
-    )
-  ).toBeNull();
-}
-
-function assertLoadingIsNotShown(): void | Promise<void> {
-  expect(queryLoading()).toBeNull();
-}
-function queryLoading(): HTMLElement | null {
-  return screen.queryByText(LOADING);
-}
