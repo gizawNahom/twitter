@@ -7,7 +7,7 @@ import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { server } from '../../mocks/server';
-import { resetClientStore, setCLient } from '../utilities';
+import { setUpClient } from '../utilities';
 import { createPostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
@@ -54,14 +54,11 @@ function renderSUT() {
 
 beforeAll(() => {
   mockRouter();
-  setCLient();
 });
 
 afterEach(() => jest.clearAllMocks());
 
-afterEach(async () => {
-  await resetClientStore();
-});
+setUpClient();
 
 setUpMSW();
 

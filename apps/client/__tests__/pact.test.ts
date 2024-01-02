@@ -3,7 +3,7 @@ import { GraphQLInteraction, Pact } from '@pact-foundation/pact';
 import { createPost } from '../lib/redux/slices/postSlice/createPost';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import { createPostResponse } from '../mocks/values';
-import { resetClientStore, setCLient } from './utilities';
+import { setUpClient } from './utilities';
 import { fetchPost } from '../lib/redux/slices/postSlice/fetchPost';
 import { Post } from '../lib/redux/slices/postSlice/post';
 
@@ -35,13 +35,7 @@ afterEach(async () => await provider.verify());
 
 afterAll(async () => await provider.finalize());
 
-beforeAll(() => {
-  setCLient();
-});
-
-afterEach(async () => {
-  await resetClientStore();
-});
+setUpClient();
 
 describe('Create Post', () => {
   test('creates post', async () => {

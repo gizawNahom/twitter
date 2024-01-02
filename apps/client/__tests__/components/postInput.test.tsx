@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { errorHandler, wasCreatePostCalled } from '../../mocks/handlers';
-import { resetClientStore, setCLient } from '../utilities';
+import { setUpClient } from '../utilities';
 import { PostInput } from '../../components/postInput';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
@@ -95,19 +95,13 @@ function generateRandomString(length: number) {
   return result.join('');
 }
 
-setUpMSW();
-
-beforeAll(() => {
-  setCLient();
-});
-
 beforeEach(() => {
   renderSUT();
 });
 
-afterEach(async () => {
-  await resetClientStore();
-});
+setUpMSW();
+
+setUpClient();
 
 test('Initial state', () => {
   assertEmptyInput();
