@@ -67,7 +67,7 @@ setUpClient();
 
 setUpMSW();
 
-test('Initial state', async () => {
+test('initial state', async () => {
   renderSUT();
 
   expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
@@ -83,7 +83,7 @@ test('return to previous page by clicking back', async () => {
   expect(back).toHaveBeenCalledTimes(1);
 });
 
-test('Success state', async () => {
+test('success state', async () => {
   renderSUT();
 
   await waitFor(() => expect(screen.queryByText(LOADING)).toBeNull());
