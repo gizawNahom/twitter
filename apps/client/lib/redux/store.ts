@@ -16,11 +16,12 @@ import { reducer } from './rootReducer';
 
 export const reduxStore = configureStore({
   reducer,
-  // middleware: (getDefaultMiddleware) => {
-  //   return getDefaultMiddleware({ serializableCheck: false }).concat(
-  //     middleware
-  //   );
-  // },
+  middleware: (getDefaultMiddleware) => {
+    // return getDefaultMiddleware({ serializableCheck: false }).concat(
+    //   middleware
+    // );
+    return getDefaultMiddleware({ serializableCheck: false });
+  },
 });
 export const useDispatch = () => useReduxDispatch<ReduxDispatch>();
 export const useSelector: TypedUseSelectorHook<ReduxState> = useReduxSelector;
