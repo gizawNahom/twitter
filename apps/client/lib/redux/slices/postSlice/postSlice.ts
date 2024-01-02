@@ -3,7 +3,7 @@ import { Post } from './post';
 import { createPostAsync, fetchPostAsync } from './thunks';
 
 const initialState: PostSliceState = {
-  post: null,
+  createdPost: null,
   status: 'idle',
   fetchStatus: 'idle',
   fetchedPost: null,
@@ -20,7 +20,7 @@ export const postSlice = createSlice({
       })
       .addCase(createPostAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.post = action.payload;
+        state.createdPost = action.payload;
       })
       .addCase(createPostAsync.rejected, (state, action) => {
         state.status = 'failed';
@@ -41,7 +41,7 @@ export const postSlice = createSlice({
 });
 
 export interface PostSliceState {
-  post: Post | null;
+  createdPost: Post | null;
   status: 'idle' | 'loading' | 'failed' | 'succeeded';
   fetchStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   fetchedPost: Post | null;
