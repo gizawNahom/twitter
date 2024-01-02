@@ -19,8 +19,6 @@ export const postSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(createPostAsync.fulfilled, (state, action) => {
-        // state.status = 'idle';
-        // state.post = action.payload;
         state.status = 'succeeded';
         state.post = action.payload;
       })
