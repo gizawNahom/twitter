@@ -2,7 +2,12 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { errorHandler, wasCreatePostCalled } from '../../mocks/handlers';
-import { addNewStore, renderElement, setUpClient } from '../utilities';
+import {
+  addNewStore,
+  renderElement,
+  setUpClient,
+  setUpMSW,
+} from '../utilities';
 import { PostInput } from '../../components/postInput';
 
 const POST_BUTTON_TEXT = /^post$/i;
@@ -12,16 +17,6 @@ const SUCCESS_MESSAGE = 'Your post was sent.';
 
 const validText = generateRandomString(280);
 const tooLongText = validText + '.';
-
-function setUpMSW() {
-  beforeAll(() =>
-    server.listen({
-      onUnhandledRequest: 'error',
-    })
-  );
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-}
 
 function renderSUT() {
   renderElement(addNewStore(<PostInput />));

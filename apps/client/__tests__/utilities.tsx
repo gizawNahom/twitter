@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import { reducer } from '../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { render } from '@testing-library/react';
+import { server } from '../mocks/server';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -44,4 +45,14 @@ export function addNewStore(component: JSX.Element) {
 
 export function renderElement(element: JSX.Element) {
   render(element);
+}
+
+export function setUpMSW() {
+  beforeAll(() =>
+    server.listen({
+      onUnhandledRequest: 'error',
+    })
+  );
+  afterEach(() => server.resetHandlers());
+  afterAll(() => server.close());
 }

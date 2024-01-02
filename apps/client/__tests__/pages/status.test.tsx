@@ -4,7 +4,12 @@ import userEvent from '@testing-library/user-event';
 import { errorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
-import { addNewStore, renderElement, setUpClient } from '../utilities';
+import {
+  addNewStore,
+  renderElement,
+  setUpClient,
+  setUpMSW,
+} from '../utilities';
 import { createPostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
@@ -17,16 +22,6 @@ const PAGE_TITLE = /post/i;
 const BACK_BUTTON = /back/i;
 const LOADING = /loading/i;
 const ERROR_MESSAGE = /something went wrong/i;
-
-function setUpMSW() {
-  beforeAll(() =>
-    server.listen({
-      onUnhandledRequest: 'error',
-    })
-  );
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
-}
 
 function mockRouter() {
   const router = useRouter as jest.Mock;
