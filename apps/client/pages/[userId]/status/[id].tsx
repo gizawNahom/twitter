@@ -8,7 +8,7 @@ import {
 } from '../../../lib/redux';
 import { useEffect } from 'react';
 
-export function Status() {
+export default function Status() {
   const dispatch = useDispatch();
 
   const fetchStatus = useSelector(selectFetchStatus);

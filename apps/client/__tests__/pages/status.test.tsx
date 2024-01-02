@@ -1,5 +1,5 @@
 import { screen, waitFor } from '@testing-library/react';
-import { Status } from '../../pages/[userId]/status/[id]';
+import Status from '../../pages/[userId]/status/[id]';
 import userEvent from '@testing-library/user-event';
 import { errorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
