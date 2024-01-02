@@ -10,7 +10,7 @@ import {
   setUpClient,
   setUpMSW,
 } from '../utilities';
-import { createPostResponse } from '../../mocks/values';
+import { samplePostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -60,14 +60,14 @@ function queryPostTime() {
   };
   const postTime = screen.queryByText(
     new Intl.DateTimeFormat('en-US', options).format(
-      new Date(createPostResponse.createdAt)
+      new Date(samplePostResponse.createdAt)
     )
   );
   return postTime;
 }
 
 function queryPostText(): HTMLElement | null {
-  return screen.queryByText(createPostResponse.text);
+  return screen.queryByText(samplePostResponse.text);
 }
 
 function assertLoadingIsNotShown(): void | Promise<void> {

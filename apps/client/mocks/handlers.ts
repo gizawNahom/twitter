@@ -1,5 +1,5 @@
 import { graphql } from 'msw';
-import { createPostResponse } from './values';
+import { samplePostResponse } from './values';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
@@ -11,11 +11,11 @@ export const handlers = [
       ctx.delay(),
       ctx.data({
         createPost: {
-          id: createPostResponse.id,
-          text: createPostResponse.text,
-          userId: createPostResponse.userId,
-          createdAt: createPostResponse.createdAt,
-          __typename: createPostResponse.__typename,
+          id: samplePostResponse.id,
+          text: samplePostResponse.text,
+          userId: samplePostResponse.userId,
+          createdAt: samplePostResponse.createdAt,
+          __typename: samplePostResponse.__typename,
         },
       })
     );
@@ -26,11 +26,11 @@ export const handlers = [
       ctx.delay(),
       ctx.data({
         post: {
-          id: createPostResponse.id,
-          text: createPostResponse.text,
-          userId: createPostResponse.userId,
-          createdAt: createPostResponse.createdAt,
-          __typename: createPostResponse.__typename,
+          id: samplePostResponse.id,
+          text: samplePostResponse.text,
+          userId: samplePostResponse.userId,
+          createdAt: samplePostResponse.createdAt,
+          __typename: samplePostResponse.__typename,
         },
       })
     );

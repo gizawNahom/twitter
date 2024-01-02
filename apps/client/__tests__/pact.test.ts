@@ -2,7 +2,7 @@ import path from 'path';
 import { GraphQLInteraction, Pact } from '@pact-foundation/pact';
 import { createPost } from '../lib/redux/slices/postsSlice/createPost';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
-import { createPostResponse } from '../mocks/values';
+import { samplePostResponse } from '../mocks/values';
 import { setUpClient } from './utilities';
 import { fetchPost } from '../lib/redux/slices/postsSlice/fetchPost';
 import { Post } from '../lib/redux/slices/postsSlice/post';
@@ -15,10 +15,10 @@ const ERROR_MESSAGE = 'Server error';
 
 function assertPostEquality(post: Post | null) {
   expect(post).toEqual({
-    id: createPostResponse.id,
-    text: createPostResponse.text,
-    userId: createPostResponse.userId,
-    createdAt: new Date(createPostResponse.createdAt),
+    id: samplePostResponse.id,
+    text: samplePostResponse.text,
+    userId: samplePostResponse.userId,
+    createdAt: new Date(samplePostResponse.createdAt),
   });
 }
 
@@ -42,16 +42,16 @@ describe('Create Post', () => {
     await addInteractionWithBody({
       data: {
         createPost: {
-          id: like(createPostResponse.id),
-          text: like(createPostResponse.text),
-          userId: like(createPostResponse.userId),
-          createdAt: like(createPostResponse.createdAt),
-          __typename: like(createPostResponse.__typename),
+          id: like(samplePostResponse.id),
+          text: like(samplePostResponse.text),
+          userId: like(samplePostResponse.userId),
+          createdAt: like(samplePostResponse.createdAt),
+          __typename: like(samplePostResponse.__typename),
         },
       },
     });
 
-    const [post, errors] = await createPost(createPostResponse.text);
+    const [post, errors] = await createPost(samplePostResponse.text);
 
     expect(errors).toBe(null);
     assertPostEquality(post);
@@ -67,7 +67,7 @@ describe('Create Post', () => {
       ],
     });
 
-    const [post, errors] = await createPost(createPostResponse.text);
+    const [post, errors] = await createPost(samplePostResponse.text);
 
     expect(errors).not.toBe(null);
     expect(errors?.length).toBe(1);
@@ -92,7 +92,7 @@ describe('Create Post', () => {
           }`
       )
       .withVariables({
-        text: like(createPostResponse.text),
+        text: like(samplePostResponse.text),
       });
     await provider.addInteraction(interaction);
   }
@@ -103,16 +103,16 @@ describe('Fetch Post', () => {
     await addInteractionWithBody({
       data: {
         post: {
-          id: like(createPostResponse.id),
-          text: like(createPostResponse.text),
-          userId: like(createPostResponse.userId),
-          createdAt: like(createPostResponse.createdAt),
-          __typename: like(createPostResponse.__typename),
+          id: like(samplePostResponse.id),
+          text: like(samplePostResponse.text),
+          userId: like(samplePostResponse.userId),
+          createdAt: like(samplePostResponse.createdAt),
+          __typename: like(samplePostResponse.__typename),
         },
       },
     });
 
-    const post = await fetchPost(createPostResponse.id);
+    const post = await fetchPost(samplePostResponse.id);
 
     assertPostEquality(post);
   });
@@ -128,7 +128,7 @@ describe('Fetch Post', () => {
     });
 
     await expect(async () => {
-      await fetchPost(createPostResponse.id);
+      await fetchPost(samplePostResponse.id);
     }).rejects.toThrow();
   });
 
@@ -148,7 +148,7 @@ describe('Fetch Post', () => {
           }`
       )
       .withVariables({
-        id: like(createPostResponse.id),
+        id: like(samplePostResponse.id),
       });
     await provider.addInteraction(interaction);
   }

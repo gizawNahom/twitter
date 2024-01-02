@@ -1,4 +1,4 @@
-export const createPostResponse = {
+export const samplePostResponse = {
   id: 'postId1',
   text: 'Hello World',
   userId: 'userId1',
