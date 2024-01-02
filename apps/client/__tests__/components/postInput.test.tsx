@@ -1,8 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { errorHandler, wasCreatePostCalled } from '../../mocks/handlers';
-import { addNewStore, setUpClient } from '../utilities';
+import { addNewStore, renderElement, setUpClient } from '../utilities';
 import { PostInput } from '../../components/postInput';
 
 const POST_BUTTON_TEXT = /^post$/i;
@@ -24,7 +24,7 @@ function setUpMSW() {
 }
 
 function renderSUT() {
-  render(addNewStore(<PostInput />));
+  renderElement(addNewStore(<PostInput />));
 }
 
 function queryPostButton() {

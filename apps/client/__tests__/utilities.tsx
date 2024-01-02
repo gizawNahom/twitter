@@ -4,6 +4,7 @@ import { Client } from '../utilities/client';
 import { Provider } from 'react-redux';
 import { reducer } from '../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
+import { render } from '@testing-library/react';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -39,4 +40,8 @@ export function addNewStore(component: JSX.Element) {
     },
   });
   return <Provider store={store}>{component}</Provider>;
+}
+
+export function renderElement(element: JSX.Element) {
+  render(element);
 }

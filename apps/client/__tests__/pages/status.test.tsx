@@ -1,10 +1,10 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { Status } from '../../pages/[userId]/status/[id]';
 import userEvent from '@testing-library/user-event';
 import { errorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
-import { addNewStore, setUpClient } from '../utilities';
+import { addNewStore, renderElement, setUpClient } from '../utilities';
 import { createPostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
@@ -39,7 +39,7 @@ function mockRouter() {
 }
 
 function renderSUT() {
-  render(addNewStore(<Status />));
+  renderElement(addNewStore(<Status />));
 }
 
 function assertWasCalled(value: boolean) {
