@@ -15,7 +15,6 @@ export function Status() {
   const fetchedPost = useSelector(selectFetchedPost);
 
   const router = useRouter();
-
   const id = router.query.id;
 
   useEffect(() => {
@@ -28,8 +27,13 @@ export function Status() {
         icon
       </button>
       <h1>Post</h1>
-      {fetchedPost && <p>{fetchedPost.text}</p>}
-      {fetchedPost && <p>{formatDate(fetchedPost.createdAt)}</p>}
+      {fetchedPost && (
+        <div>
+          <p>{fetchedPost.text}</p>
+          <p>{formatDate(fetchedPost.createdAt)}</p>
+        </div>
+      )}
+      {fetchStatus === 'failed' && 'Something went wrong'}
       {fetchStatus === 'loading' && 'loading'}
     </div>
   );

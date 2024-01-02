@@ -1,13 +1,13 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { Status } from '../../pages/[userId]/status/[id]';
 import userEvent from '@testing-library/user-event';
-import { wasPostCalled } from '../../mocks/handlers';
+import { errorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
 import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { server } from 'apps/client/mocks/server';
-import { setCLient } from '../utilities';
+import { server } from '../../mocks/server';
+import { resetClientStore, setCLient } from '../utilities';
 import { createPostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
@@ -59,6 +59,10 @@ beforeAll(() => {
 
 afterEach(() => jest.clearAllMocks());
 
+afterEach(async () => {
+  await resetClientStore();
+});
+
 setUpMSW();
 
 test('Initial state', async () => {
@@ -98,3 +102,13 @@ test('Success state', async () => {
     )
   ).not.toBeNull();
 });
+
+test('error state', async () => {
+  server.use(errorHandler);
+
+  renderSUT();
+
+  await waitFor(() =>
+    expect(screen.queryByText(/something went wrong/i)).not.toBeNull()
+  );
+}, 10000);

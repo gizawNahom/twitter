@@ -32,6 +32,9 @@ export const postSlice = createSlice({
       .addCase(fetchPostAsync.pending, (state) => {
         state.fetchStatus = 'loading';
       })
+      .addCase(fetchPostAsync.rejected, (state) => {
+        state.fetchStatus = 'failed';
+      })
       .addCase(fetchPostAsync.fulfilled, (state, action) => {
         state.fetchStatus = 'succeeded';
         state.fetchedPost = action.payload;
@@ -42,6 +45,6 @@ export const postSlice = createSlice({
 export interface PostSliceState {
   post: Post | null;
   status: 'idle' | 'loading' | 'failed' | 'succeeded';
-  fetchStatus: 'idle' | 'loading' | 'succeeded';
+  fetchStatus: 'idle' | 'loading' | 'succeeded' | 'failed';
   fetchedPost: Post | null;
 }
