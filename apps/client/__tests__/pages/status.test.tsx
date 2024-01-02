@@ -16,6 +16,11 @@ jest.mock('next/router', () => ({
 
 const back = jest.fn();
 
+const PAGE_TITLE = /post/i;
+const BACK_BUTTON = /back/i;
+const LOADING = /loading/i;
+const ERROR_MESSAGE = /something went wrong/i;
+
 function setUpMSW() {
   beforeAll(() =>
     server.listen({
@@ -65,15 +70,15 @@ setUpMSW();
 test('Initial state', async () => {
   renderSUT();
 
-  expect(screen.queryByText(/post/i)).not.toBeNull();
-  expect(screen.queryByRole('button', { name: /back/i })).not.toBeNull();
-  await waitFor(() => expect(screen.queryByText(/loading/i)).not.toBeNull());
+  expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
+  expect(screen.queryByRole('button', { name: BACK_BUTTON })).not.toBeNull();
+  await waitFor(() => expect(screen.queryByText(LOADING)).not.toBeNull());
 });
 
 test('return to previous page by clicking back', async () => {
   renderSUT();
 
-  await userEvent.click(screen.getByRole('button', { name: /back/i }));
+  await userEvent.click(screen.getByRole('button', { name: BACK_BUTTON }));
 
   expect(back).toHaveBeenCalledTimes(1);
 });
@@ -81,7 +86,7 @@ test('return to previous page by clicking back', async () => {
 test('Success state', async () => {
   renderSUT();
 
-  await waitFor(() => expect(screen.queryByText(/loading/i)).toBeNull());
+  await waitFor(() => expect(screen.queryByText(LOADING)).toBeNull());
   expect(wasPostCalled).toBe(true);
   expect(screen.queryByText(createPostResponse.text)).not.toBeNull();
   const options: Intl.DateTimeFormatOptions = {
@@ -105,7 +110,5 @@ test('error state', async () => {
 
   renderSUT();
 
-  await waitFor(() =>
-    expect(screen.queryByText(/something went wrong/i)).not.toBeNull()
-  );
-}, 10000);
+  await waitFor(() => expect(screen.queryByText(ERROR_MESSAGE)).not.toBeNull());
+});
