@@ -72,7 +72,9 @@ test('initial state', async () => {
 
   expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
   expect(screen.queryByRole('button', { name: BACK_BUTTON })).not.toBeNull();
-  await waitFor(() => expect(screen.queryByText(LOADING)).not.toBeNull());
+  await waitFor(() => expect(queryLoading()).not.toBeNull());
+  assertErrorMessageIsNotShown();
+  assertPostIsNotShown();
 });
 
 test('return to previous page by clicking back', async () => {
@@ -86,7 +88,7 @@ test('return to previous page by clicking back', async () => {
 test('success state', async () => {
   renderSUT();
 
-  await waitFor(() => expect(screen.queryByText(LOADING)).toBeNull());
+  await waitFor(() => assertLoadingIsNotShown());
   expect(wasPostCalled).toBe(true);
   expect(screen.queryByText(createPostResponse.text)).not.toBeNull();
   const options: Intl.DateTimeFormatOptions = {
@@ -103,6 +105,7 @@ test('success state', async () => {
       )
     )
   ).not.toBeNull();
+  assertErrorMessageIsNotShown();
 });
 
 test('error state', async () => {
@@ -111,4 +114,35 @@ test('error state', async () => {
   renderSUT();
 
   await waitFor(() => expect(screen.queryByText(ERROR_MESSAGE)).not.toBeNull());
+  assertLoadingIsNotShown();
+  assertPostIsNotShown();
 });
+
+function assertErrorMessageIsNotShown() {
+  expect(screen.queryByText(ERROR_MESSAGE)).toBeNull();
+}
+
+function assertPostIsNotShown() {
+  expect(screen.queryByText(createPostResponse.text)).toBeNull();
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  };
+  expect(
+    screen.queryByText(
+      new Intl.DateTimeFormat('en-US', options).format(
+        new Date(createPostResponse.createdAt)
+      )
+    )
+  ).toBeNull();
+}
+
+function assertLoadingIsNotShown(): void | Promise<void> {
+  expect(queryLoading()).toBeNull();
+}
+function queryLoading(): HTMLElement | null {
+  return screen.queryByText(LOADING);
+}
