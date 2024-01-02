@@ -3,11 +3,8 @@ import { Status } from '../../pages/[userId]/status/[id]';
 import userEvent from '@testing-library/user-event';
 import { errorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
-import { reducer } from '../../lib/redux/rootReducer';
-import { configureStore } from '@reduxjs/toolkit';
-import { Provider } from 'react-redux';
 import { server } from '../../mocks/server';
-import { setUpClient } from '../utilities';
+import { addNewStore, setUpClient } from '../utilities';
 import { createPostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
@@ -42,19 +39,7 @@ function mockRouter() {
 }
 
 function renderSUT() {
-  const store = configureStore({
-    reducer,
-    middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware({
-        serializableCheck: false,
-      });
-    },
-  });
-  render(
-    <Provider store={store}>
-      <Status />
-    </Provider>
-  );
+  render(addNewStore(<Status />));
 }
 
 function assertWasCalled(value: boolean) {

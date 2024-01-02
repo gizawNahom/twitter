@@ -1,6 +1,9 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import fetch from 'cross-fetch';
 import { Client } from '../utilities/client';
+import { Provider } from 'react-redux';
+import { reducer } from '../lib/redux/rootReducer';
+import { configureStore } from '@reduxjs/toolkit';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -24,4 +27,16 @@ export function setUpClient() {
   async function resetClientStore() {
     await Client.client.resetStore();
   }
+}
+
+export function addNewStore(component: JSX.Element) {
+  const store = configureStore({
+    reducer,
+    middleware: (getDefaultMiddleware) => {
+      return getDefaultMiddleware({
+        serializableCheck: false,
+      });
+    },
+  });
+  return <Provider store={store}>{component}</Provider>;
 }

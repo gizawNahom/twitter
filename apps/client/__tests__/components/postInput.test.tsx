@@ -2,11 +2,8 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { errorHandler, wasCreatePostCalled } from '../../mocks/handlers';
-import { setUpClient } from '../utilities';
+import { addNewStore, setUpClient } from '../utilities';
 import { PostInput } from '../../components/postInput';
-import { Provider } from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-import { reducer } from '../../lib/redux/rootReducer';
 
 const POST_BUTTON_TEXT = /^post$/i;
 const ERROR_MESSAGE = 'Something went wrong';
@@ -27,19 +24,7 @@ function setUpMSW() {
 }
 
 function renderSUT() {
-  const store = configureStore({
-    reducer,
-    middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware({
-        serializableCheck: false,
-      });
-    },
-  });
-  render(
-    <Provider store={store}>
-      <PostInput />
-    </Provider>
-  );
+  render(addNewStore(<PostInput />));
 }
 
 function queryPostButton() {
