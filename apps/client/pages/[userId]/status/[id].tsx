@@ -48,19 +48,19 @@ export default function Status() {
         <h1 className="grow text-xl font-medium">Post</h1>
       </div>
       {fetchedPost && (
-        <div className="h-min flex flex-col gap-y-3 pt-3">
-          <div className="flex gap-3 items-center">
+        <article className="h-min flex flex-col gap-y-3 pt-3">
+          <header className="flex gap-3 items-center">
             <div className="bg-slate-300 h-10 w-10 rounded-full border "></div>
             <div>
               <p className="font-bold text-lg">John Doe</p>
               <p className="text-slate-500 -mt-1">@john</p>
             </div>
-          </div>
+          </header>
           <p>{fetchedPost.text}</p>
-          <p className="text-slate-500 text-sm">
+          <time className="text-slate-500 text-sm">
             {formatDate(fetchedPost.createdAt)}
-          </p>
-        </div>
+          </time>
+        </article>
       )}
       <div className="min-h-[150px] flex justify-center items-center">
         {fetchStatus === 'loading' && (
