@@ -62,8 +62,8 @@ export default function Status() {
           </time>
         </article>
       )}
-      <div className="min-h-[150px] flex justify-center items-center">
-        {fetchStatus === 'loading' && (
+      {fetchStatus === 'loading' && (
+        <div className="min-h-[150px] flex justify-center items-center">
           <div
             className={
               'border-cyan-500 align-middle inline-block h-5 w-5 animate-spin rounded-full border-[3px] border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]'
@@ -74,11 +74,13 @@ export default function Status() {
               Loading...
             </span>
           </div>
-        )}
-        {fetchStatus === 'failed' && (
+        </div>
+      )}
+      {fetchStatus === 'failed' && (
+        <div className="min-h-[150px] flex justify-center items-center">
           <p className="text-slate-500">Something went wrong</p>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 
