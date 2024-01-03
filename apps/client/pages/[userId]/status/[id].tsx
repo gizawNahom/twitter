@@ -6,7 +6,7 @@ import {
   useDispatch,
   useSelector,
 } from '../../../lib/redux';
-import { useEffect } from 'react';
+import { ReactNode, useEffect } from 'react';
 
 export default function Status() {
   const dispatch = useDispatch();
@@ -63,7 +63,7 @@ export default function Status() {
         </article>
       )}
       {fetchStatus === 'loading' && (
-        <div className="min-h-[150px] flex justify-center items-center">
+        <Container>
           <div
             className={
               'border-cyan-500 align-middle inline-block h-5 w-5 animate-spin rounded-full border-[3px] border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]'
@@ -74,12 +74,12 @@ export default function Status() {
               Loading...
             </span>
           </div>
-        </div>
+        </Container>
       )}
       {fetchStatus === 'failed' && (
-        <div className="min-h-[150px] flex justify-center items-center">
+        <Container>
           <p className="text-slate-500">Something went wrong</p>
-        </div>
+        </Container>
       )}
     </div>
   );
@@ -94,5 +94,13 @@ export default function Status() {
     };
 
     return new Intl.DateTimeFormat('en-US', options).format(date);
+  }
+
+  function Container({ children }: { children: ReactNode }) {
+    return (
+      <div className="min-h-[150px] flex justify-center items-center">
+        {children}
+      </div>
+    );
   }
 }
