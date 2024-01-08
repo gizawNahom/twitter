@@ -1,4 +1,4 @@
-import { PostInput } from '../components/postInput';
+import { PostInput } from '../../components/postInput';
 
 export default function Index() {
   return (
