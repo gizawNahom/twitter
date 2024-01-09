@@ -5,7 +5,7 @@ export function Nav() {
   const router = useRouter();
 
   return (
-    <nav className=" basis-1/4 flex flex-col items-center pl-14 pt-14">
+    <nav className="hidden lg:basis-1/4 lg:flex lg:flex-col lg:items-center lg:pl-14 lg:pt-14">
       <ul>
         <Link href="/home">
           <li className=" text-xl flex gap-4 hover:bg-slate-200 rounded-full py-2 px-4 transition">

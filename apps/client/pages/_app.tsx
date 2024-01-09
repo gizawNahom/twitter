@@ -23,7 +23,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
       </Head>
       <main className="flex ">
         <Nav></Nav>
-        <div className=" basis-1/2">
+        <div className="grow lg:basis-1/2">
           <Component {...pageProps} />
         </div>
       </main>
