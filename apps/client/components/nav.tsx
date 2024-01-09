@@ -12,8 +12,8 @@ export function Nav() {
             <svg
               viewBox="0 0 24 24"
               aria-hidden="true"
-              className={`stroke-black stroke-2 w-7 h-7 ${
-                isHome() ? 'fill-black' : 'fill-white'
+              className={`stroke-black stroke-1 w-7 h-7 ${
+                isHome() ? 'fill-black' : 'fill-white stroke-2'
               }`}
             >
               <g>
