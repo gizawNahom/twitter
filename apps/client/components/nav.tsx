@@ -8,7 +8,7 @@ export function Nav() {
     <nav className="hidden sm:border-r-[1px] sm:basis-1/6 sm:flex sm:flex-col sm:items-center sm:pt-14 sm:h-screen lg:basis-1/4 lg:pl-12">
       <ul className="lg:w-full">
         <Link href="/home" aria-label="Home">
-          <li className="text-xl flex gap-4 hover:bg-slate-200 rounded-full py-2 px-4 transition lg:w-min">
+          <li className="text-xl flex gap-4 hover:bg-slate-200 rounded-full p-3 transition lg:w-min">
             <svg
               viewBox="0 0 24 24"
               aria-hidden="true"
