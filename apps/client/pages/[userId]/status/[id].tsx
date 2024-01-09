@@ -22,7 +22,7 @@ export default function Status() {
   }, [id, dispatch]);
 
   return (
-    <div className="px-3">
+    <div className="px-4">
       <div className="flex justify-between gap-x-8 items-center pt-2">
         <button
           aria-label="back"
