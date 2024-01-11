@@ -15,23 +15,27 @@ export function PostInput() {
   }, [status, setText]);
 
   return (
-    <div>
+    <div className="p-3 border-b-[1px]">
       {status === 'failed' && <div>Something went wrong</div>}
-      <input
-        placeholder="What's happening?"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <button
-        disabled={
-          isInvalid(text) || status === 'loading' || isSucceeded(status)
-        }
-        onClick={() => {
-          dispatch(createPostAsync(text));
-        }}
-      >
-        Post
-      </button>
+      <div className=" flex flex-col gap-3">
+        <input
+          placeholder="What's happening?"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          className="h-10 text-xl placeholder:text-slate-600 pb-6 border-b-transparent border-b-[1px] transition focus:outline-transparent focus:border-b-sky-400"
+        />
+        <button
+          disabled={
+            isInvalid(text) || status === 'loading' || isSucceeded(status)
+          }
+          onClick={() => {
+            dispatch(createPostAsync(text));
+          }}
+          className=" w-min bg-sky-500 self-end px-4 py-1 rounded-full text-white font-semibold"
+        >
+          Post
+        </button>
+      </div>
       {status === 'succeeded' && <p>Your post was sent.</p>}
     </div>
   );
