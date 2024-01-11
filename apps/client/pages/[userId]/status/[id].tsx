@@ -26,7 +26,10 @@ export default function Status() {
       <div className="flex justify-between gap-x-8 items-center pt-2">
         <button
           aria-label="back"
-          onClick={() => router.back()}
+          onClick={() => {
+            if (isFirstPageToBeLoaded()) router.push('/home');
+            else router.back();
+          }}
           className="h-5 w-5 -ml-[0.2rem] p-0 relative inline-block before:block before:absolute before:hover:bg-slate-200 before:active:bg-slate-300 before:w-full before:h-full before:-z-10 before:rounded-full before:p-4 before:-top-[6px] before:-left-[6px]"
         >
           <svg
@@ -83,6 +86,10 @@ export default function Status() {
       )}
     </div>
   );
+
+  function isFirstPageToBeLoaded() {
+    return window.history.length === 1;
+  }
 
   function formatDate(date: Date): string {
     const options: Intl.DateTimeFormatOptions = {

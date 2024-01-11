@@ -17,6 +17,8 @@ jest.mock('next/router', () => ({
 }));
 
 const back = jest.fn();
+const push = jest.fn();
+const windowHistorySpy = jest.spyOn(global.globalThis.window, 'history', 'get');
 
 const PAGE_TITLE = /post/i;
 const BACK_BUTTON = /back/i;
@@ -30,6 +32,7 @@ function mockRouter() {
     query: {
       id: 'id1',
     },
+    push: push,
   }));
 }
 
@@ -77,11 +80,13 @@ function queryLoading(): HTMLElement | null {
   return screen.queryByText(LOADING);
 }
 
-beforeAll(() => {
+beforeEach(() => {
   mockRouter();
 });
 
-afterEach(() => jest.clearAllMocks());
+afterEach(() => {
+  jest.resetAllMocks();
+});
 
 setUpClient();
 
@@ -98,12 +103,24 @@ test('initial state', async () => {
   assertPostIsNotShown();
 });
 
-test('return to previous page by clicking back', async () => {
+test('returns to previous page by clicking back', async () => {
+  // @ts-expect-error type not compatible
+  windowHistorySpy.mockImplementation(() => [1, 2, 3]);
   renderSUT();
 
   await userEvent.click(screen.getByRole('button', { name: BACK_BUTTON }));
 
   expect(back).toHaveBeenCalledTimes(1);
+});
+
+test('returns to home if there is no history', async () => {
+  // @ts-expect-error type not compatible
+  windowHistorySpy.mockImplementation(() => [1]);
+  renderSUT();
+
+  await userEvent.click(screen.getByRole('button', { name: BACK_BUTTON }));
+
+  expect(push).toHaveBeenCalledWith('/home');
 });
 
 test('success state', async () => {
