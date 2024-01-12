@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { createPostAsync, selectStatus } from '../lib/redux/slices/postsSlice';
+import {
+  createPostAsync,
+  selectCreateStatus,
+} from '../lib/redux/slices/postsSlice';
 import { useDispatch } from '../lib/redux';
 
 export function PostInput() {
   const dispatch = useDispatch();
 
-  const status = useSelector(selectStatus);
+  const status = useSelector(selectCreateStatus);
 
   const [text, setText] = useState('');
 
