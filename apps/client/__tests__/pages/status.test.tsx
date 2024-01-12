@@ -37,7 +37,7 @@ function renderSUT() {
   renderElement(addNewStore(<Status />));
 }
 
-function assertWasCalled(value: boolean) {
+function assertWasPostCalled(value: boolean) {
   expect(wasPostCalled).toBe(value);
 }
 
@@ -92,7 +92,7 @@ setUpMSW();
 test('initial state', async () => {
   renderSUT();
 
-  assertWasCalled(false);
+  assertWasPostCalled(false);
   expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
   await waitFor(() => expect(queryLoading()).not.toBeNull());
   assertErrorMessageIsNotShown();
@@ -104,7 +104,7 @@ test('success state', async () => {
   renderSUT();
 
   await waitFor(() => assertLoadingIsNotShown());
-  assertWasCalled(true);
+  assertWasPostCalled(true);
   expect(queryPostText()).not.toBeNull();
   expect(queryPostTime()).not.toBeNull();
   assertErrorMessageIsNotShown();
