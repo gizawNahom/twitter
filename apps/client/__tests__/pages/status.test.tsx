@@ -15,9 +15,6 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-const back = jest.fn();
-const push = jest.fn();
-
 const PAGE_TITLE = /post/i;
 const LOADING = /loading/i;
 const ERROR_MESSAGE = /something went wrong/i;
@@ -25,11 +22,9 @@ const ERROR_MESSAGE = /something went wrong/i;
 function mockRouter() {
   const router = useRouter as jest.Mock;
   router.mockImplementation(() => ({
-    back: back,
     query: {
       id: 'id1',
     },
-    push: push,
   }));
 }
 
