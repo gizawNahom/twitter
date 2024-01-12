@@ -1,6 +1,5 @@
 import { screen, waitFor } from '@testing-library/react';
 import Status from '../../pages/[userId]/status/[id]';
-import userEvent from '@testing-library/user-event';
 import { errorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
@@ -18,10 +17,8 @@ jest.mock('next/router', () => ({
 
 const back = jest.fn();
 const push = jest.fn();
-const windowHistorySpy = jest.spyOn(global.globalThis.window, 'history', 'get');
 
 const PAGE_TITLE = /post/i;
-const BACK_BUTTON = /back/i;
 const LOADING = /loading/i;
 const ERROR_MESSAGE = /something went wrong/i;
 
@@ -97,30 +94,10 @@ test('initial state', async () => {
 
   assertWasCalled(false);
   expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
-  expect(screen.queryByRole('button', { name: BACK_BUTTON })).not.toBeNull();
   await waitFor(() => expect(queryLoading()).not.toBeNull());
   assertErrorMessageIsNotShown();
   assertPostIsNotShown();
-});
-
-test('returns to previous page by clicking back', async () => {
-  // @ts-expect-error type not compatible
-  windowHistorySpy.mockImplementation(() => [1, 2, 3]);
-  renderSUT();
-
-  await userEvent.click(screen.getByRole('button', { name: BACK_BUTTON }));
-
-  expect(back).toHaveBeenCalledTimes(1);
-});
-
-test('returns to home if there is no history', async () => {
-  // @ts-expect-error type not compatible
-  windowHistorySpy.mockImplementation(() => [1]);
-  renderSUT();
-
-  await userEvent.click(screen.getByRole('button', { name: BACK_BUTTON }));
-
-  expect(push).toHaveBeenCalledWith('/home');
+  expect(screen.queryByTestId('back-button')).toBeVisible();
 });
 
 test('success state', async () => {
