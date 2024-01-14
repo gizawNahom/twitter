@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   createPostAsync,
@@ -6,16 +6,20 @@ import {
 } from '../lib/redux/slices/postsSlice';
 import { useDispatch } from '../lib/redux';
 
-export function PostInput() {
+export function PostInput({ autoFocus = false }: { autoFocus?: boolean }) {
   const dispatch = useDispatch();
-
   const status = useSelector(selectCreateStatus);
 
+  const inputRef = useRef<HTMLInputElement>(null);
   const [text, setText] = useState('');
 
   useEffect(() => {
     if (isSucceeded(status)) setText('');
   }, [status, setText]);
+
+  useEffect(() => {
+    if (autoFocus) inputRef.current?.focus();
+  }, [autoFocus]);
 
   return (
     <div className="p-3 border-b-[1px]" data-testid="post-input">
@@ -26,6 +30,7 @@ export function PostInput() {
           value={text}
           onChange={(e) => setText(e.target.value)}
           className="h-10 text-xl placeholder:text-slate-600 pb-6 border-b-transparent border-b-[1px] transition focus:outline-transparent focus:border-b-sky-400"
+          ref={inputRef}
         />
         <button
           disabled={

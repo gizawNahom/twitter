@@ -4,7 +4,7 @@ import { Page } from '../../components/page';
 export default function ComposeTweet() {
   return (
     <Page>
-      <PostInput />
+      <PostInput autoFocus={true} />
     </Page>
   );
 }
