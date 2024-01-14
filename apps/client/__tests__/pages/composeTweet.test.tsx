@@ -1,6 +1,10 @@
 import { screen } from '@testing-library/react';
 import ComposeTweet from '../../pages/compose/tweet';
-import { INPUT_PLACE_HOLDER, addNewStore, renderElement } from '../utilities';
+import {
+  POST_INPUT_PLACE_HOLDER_TEXT,
+  addNewStore,
+  renderElement,
+} from '../utilities';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -20,5 +24,7 @@ test('renders post input with input focused', () => {
   renderSUT();
 
   expect(screen.queryByTestId('post-input')).toBeVisible();
-  expect(screen.getByPlaceholderText(INPUT_PLACE_HOLDER)).toHaveFocus();
+  expect(
+    screen.getByPlaceholderText(POST_INPUT_PLACE_HOLDER_TEXT)
+  ).toHaveFocus();
 });

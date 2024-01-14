@@ -57,4 +57,4 @@ export function setUpMSW() {
   afterAll(() => server.close());
 }
 
-export const INPUT_PLACE_HOLDER = "What's happening?";
+export const POST_INPUT_PLACE_HOLDER_TEXT = "What's happening?";

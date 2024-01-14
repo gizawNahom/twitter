@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { errorHandler, wasCreatePostCalled } from '../../mocks/handlers';
 import {
-  INPUT_PLACE_HOLDER,
+  POST_INPUT_PLACE_HOLDER_TEXT,
   addNewStore,
   renderElement,
   setUpClient,
@@ -39,7 +39,7 @@ function clickPostButton() {
 }
 
 function assertEmptyInput() {
-  const input = screen.queryByPlaceholderText(INPUT_PLACE_HOLDER);
+  const input = screen.queryByPlaceholderText(POST_INPUT_PLACE_HOLDER_TEXT);
   assertVisibility(input);
   expect(input?.getAttribute('value')).toBe('');
 }
