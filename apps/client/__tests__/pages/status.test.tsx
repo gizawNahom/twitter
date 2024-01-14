@@ -8,7 +8,7 @@ import {
   renderElement,
   setUpClient,
   setUpMSW,
-} from '../utilities';
+} from '../utilities/helpers';
 import { samplePostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({

@@ -3,7 +3,7 @@ import { GraphQLInteraction, Pact } from '@pact-foundation/pact';
 import { createPost } from '../lib/redux/slices/postsSlice/createPost';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import { samplePostResponse } from '../mocks/values';
-import { setUpClient } from './utilities';
+import { setUpClient } from './utilities/helpers';
 import { fetchPost } from '../lib/redux/slices/postsSlice/fetchPost';
 import { Post } from '../lib/redux/slices/postsSlice/post';
 

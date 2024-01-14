@@ -1,11 +1,11 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import fetch from 'cross-fetch';
-import { Client } from '../utilities/client';
+import { Client } from '../../utilities/client';
 import { Provider } from 'react-redux';
-import { reducer } from '../lib/redux/rootReducer';
+import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { render } from '@testing-library/react';
-import { server } from '../mocks/server';
+import { server } from '../../mocks/server';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -56,5 +56,3 @@ export function setUpMSW() {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 }
-
-export const POST_INPUT_PLACE_HOLDER_TEXT = "What's happening?";

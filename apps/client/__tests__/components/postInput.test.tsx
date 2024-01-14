@@ -3,13 +3,13 @@ import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { errorHandler, wasCreatePostCalled } from '../../mocks/handlers';
 import {
-  POST_INPUT_PLACE_HOLDER_TEXT,
   addNewStore,
   renderElement,
   setUpClient,
   setUpMSW,
-} from '../utilities';
+} from '../utilities/helpers';
 import { PostInput } from '../../components/postInput';
+import { POST_INPUT_PLACE_HOLDER_TEXT } from '../utilities/texts';
 
 const POST_BUTTON_TEXT = /^post$/i;
 const ERROR_MESSAGE = 'Something went wrong';

@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { Nav } from '../../components/nav';
-import { renderElement } from '../utilities';
+import { renderElement } from '../utilities/helpers';
 
 const HOME_Link = '/home';
 
