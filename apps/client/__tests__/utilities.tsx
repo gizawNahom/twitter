@@ -56,3 +56,5 @@ export function setUpMSW() {
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
 }
+
+export const INPUT_PLACE_HOLDER = "What's happening?";

@@ -1,12 +1,10 @@
 import { screen } from '@testing-library/react';
 import ComposeTweet from '../../pages/compose/tweet';
-import { addNewStore, renderElement } from '../utilities';
+import { INPUT_PLACE_HOLDER, addNewStore, renderElement } from '../utilities';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
-
-const INPUT_PLACE_HOLDER = "What's happening?";
 
 function renderSUT() {
   renderElement(addNewStore(<ComposeTweet />));

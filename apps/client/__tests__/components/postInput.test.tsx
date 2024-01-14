@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { errorHandler, wasCreatePostCalled } from '../../mocks/handlers';
 import {
+  INPUT_PLACE_HOLDER,
   addNewStore,
   renderElement,
   setUpClient,
@@ -12,7 +13,6 @@ import { PostInput } from '../../components/postInput';
 
 const POST_BUTTON_TEXT = /^post$/i;
 const ERROR_MESSAGE = 'Something went wrong';
-const INPUT_PLACE_HOLDER = "What's happening?";
 const SUCCESS_MESSAGE = 'Your post was sent.';
 
 const validText = generateRandomString(280);
