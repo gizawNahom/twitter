@@ -3,12 +3,7 @@ import Status from '../../pages/[userId]/status/[id]';
 import { errorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
-import {
-  addNewStore,
-  renderElement,
-  setUpClient,
-  setUpMSW,
-} from '../utilities/helpers';
+import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
 import { samplePostResponse } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
@@ -29,7 +24,7 @@ function mockRouter() {
 }
 
 function renderSUT() {
-  renderElement(addNewStore(<Status />));
+  renderElement(<Status />);
 }
 
 function assertWasPostCalled(value: boolean) {

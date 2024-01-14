@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import ComposeTweet from '../../pages/compose/tweet';
-import { addNewStore, renderElement } from '../utilities/helpers';
+import { renderElement } from '../utilities/helpers';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../utilities/texts';
 
 jest.mock('next/router', () => ({
@@ -8,7 +8,7 @@ jest.mock('next/router', () => ({
 }));
 
 function renderSUT() {
-  renderElement(addNewStore(<ComposeTweet />));
+  renderElement(<ComposeTweet />);
 }
 
 test('renders back button', () => {

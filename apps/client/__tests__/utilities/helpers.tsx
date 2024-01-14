@@ -31,7 +31,11 @@ export function setUpClient() {
   }
 }
 
-export function addNewStore(component: JSX.Element) {
+export function renderElement(element: JSX.Element) {
+  render(addNewStore(element));
+}
+
+function addNewStore(component: JSX.Element) {
   const store = configureStore({
     reducer,
     middleware: (getDefaultMiddleware) => {
@@ -41,10 +45,6 @@ export function addNewStore(component: JSX.Element) {
     },
   });
   return <Provider store={store}>{component}</Provider>;
-}
-
-export function renderElement(element: JSX.Element) {
-  render(element);
 }
 
 export function setUpMSW() {
