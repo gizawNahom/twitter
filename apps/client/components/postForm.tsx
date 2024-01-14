@@ -6,7 +6,7 @@ import {
 } from '../lib/redux/slices/postsSlice';
 import { useDispatch } from '../lib/redux';
 
-export function PostInput({ autoFocus = false }: { autoFocus?: boolean }) {
+export function PostForm({ autoFocus = false }: { autoFocus?: boolean }) {
   const dispatch = useDispatch();
   const status = useSelector(selectCreateStatus);
 

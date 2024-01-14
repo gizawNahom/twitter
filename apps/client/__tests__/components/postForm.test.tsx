@@ -8,7 +8,7 @@ import {
   setUpClient,
   setUpMSW,
 } from '../utilities/helpers';
-import { PostInput } from '../../components/postInput';
+import { PostForm } from '../../components/postForm';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../utilities/texts';
 
 const POST_BUTTON_TEXT = /^post$/i;
@@ -19,7 +19,7 @@ const validText = generateRandomString(280);
 const tooLongText = validText + '.';
 
 function renderSUT() {
-  renderElement(addNewStore(<PostInput />));
+  renderElement(addNewStore(<PostForm />));
 }
 
 function queryPostButton() {

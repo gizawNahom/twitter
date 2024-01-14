@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { PostInput } from '../../components/postInput';
+import { PostForm } from '../../components/postForm';
 
 export default function Index() {
   const router = useRouter();
@@ -7,7 +7,7 @@ export default function Index() {
   return (
     <div>
       <div className="hidden sm:block">
-        <PostInput />
+        <PostForm />
       </div>
 
       <div className="sm:hidden absolute bottom-16 right-5">
