@@ -18,7 +18,7 @@ export function PostInput() {
   }, [status, setText]);
 
   return (
-    <div className="p-3 border-b-[1px]">
+    <div className="p-3 border-b-[1px]" data-testid="post-input">
       {status === 'failed' && <div>Something went wrong</div>}
       <div className=" flex flex-col gap-3">
         <input
