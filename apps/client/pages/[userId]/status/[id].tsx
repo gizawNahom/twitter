@@ -7,7 +7,7 @@ import {
   useSelector,
 } from '../../../lib/redux';
 import { ReactNode, useEffect } from 'react';
-import { BackButton } from '../../../components/backButton';
+import { Page } from 'apps/client/components/page';
 
 export default function Status() {
   const dispatch = useDispatch();
@@ -23,11 +23,7 @@ export default function Status() {
   }, [id, dispatch]);
 
   return (
-    <div className="px-4">
-      <div className="flex justify-between gap-x-8 items-center pt-2">
-        <BackButton />
-        <h1 className="grow text-xl font-medium">Post</h1>
-      </div>
+    <Page title={<h1 className="grow text-xl font-medium">Post</h1>}>
       {fetchedPost && (
         <article className="h-min flex flex-col gap-y-3 pt-3">
           <header className="flex gap-3 items-center">
@@ -62,7 +58,7 @@ export default function Status() {
           <p className="text-slate-500">Something went wrong</p>
         </Container>
       )}
-    </div>
+    </Page>
   );
 
   function formatDate(date: Date): string {
