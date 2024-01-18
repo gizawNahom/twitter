@@ -7,7 +7,7 @@ import {
   useSelector,
 } from '../../../lib/redux';
 import { ReactNode, useEffect } from 'react';
-import { Page } from 'apps/client/components/page';
+import { Page } from '../../../components/page';
 
 export default function Status() {
   const dispatch = useDispatch();
