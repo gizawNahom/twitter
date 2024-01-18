@@ -4,7 +4,7 @@ import './global.css';
 import { Client } from '../utilities/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { Providers } from '../lib/providers';
-import { Nav } from '../components/nav';
+import { App } from '../components/app';
 
 if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
   require('../mocks');
@@ -21,11 +21,10 @@ function CustomApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Welcome to twitter!</title>
       </Head>
-      <main className="flex ">
-        <Nav></Nav>
-        <div className="grow lg:basis-1/2">
+      <main>
+        <App>
           <Component {...pageProps} />
-        </div>
+        </App>
       </main>
     </Providers>
   );
