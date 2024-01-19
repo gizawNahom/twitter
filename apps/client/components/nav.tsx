@@ -8,9 +8,9 @@ export function Nav() {
   return (
     <nav
       data-testid="nav"
-      className="hidden sm:border-r-[1px] sm:basis-1/6 sm:flex sm:flex-col sm:items-center sm:pt-14 sm:h-screen lg:basis-1/4 lg:pl-12"
+      className="hidden sm:border-r-[1px] sm:basis-1/6 sm:flex sm:flex-col sm:items-center sm:pt-14 sm:h-screen md:items-end md:pr-5 xl:basis-1/4 xl:pl-12"
     >
-      <ul className="lg:w-full">
+      <ul className="xl:w-full">
         <Link href="/home" aria-label="Home">
           <li className="text-xl flex gap-4 hover:bg-slate-200 rounded-full p-3 transition lg:w-min">
             <svg
@@ -27,13 +27,13 @@ export function Nav() {
             <span
               className={`${
                 isHome() ? 'font-bold' : ''
-              } sm:hidden lg:inline-block`}
+              } sm:hidden xl:inline-block`}
             >
               Home
             </span>
           </li>
         </Link>
-        <div className="lg:hidden">
+        <div className="xl:hidden">
           <PostFAB />
         </div>
       </ul>
