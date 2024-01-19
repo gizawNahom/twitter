@@ -1,4 +1,5 @@
 import { App } from '../../components/app';
+import { NAV_TEST_ID } from '../utilities/testIds';
 import { renderElement } from '../utilities/helpers';
 import { screen } from '@testing-library/react';
 
@@ -17,6 +18,6 @@ test('initial', () => {
     </App>
   );
 
-  expect(screen.getByTestId('nav')).toBeVisible();
+  expect(screen.getByTestId(NAV_TEST_ID)).toBeVisible();
   expect(screen.getByText(sampleText)).toBeVisible();
 });

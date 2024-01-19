@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
 import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
 import { samplePostResponse } from '../../mocks/values';
+import { BACK_BUTTON_TEST_ID } from '../utilities/testIds';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -87,7 +88,7 @@ test('initial state', async () => {
   await waitFor(() => expect(queryLoading()).not.toBeNull());
   assertErrorMessageIsNotShown();
   assertPostIsNotShown();
-  expect(screen.queryByTestId('back-button')).toBeVisible();
+  expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
 });
 
 test('success state', async () => {
