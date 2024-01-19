@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { PostFAB } from './postFAB';
 
 export function Nav() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export function Nav() {
             </span>
           </li>
         </Link>
+        <PostFAB />
       </ul>
     </nav>
   );

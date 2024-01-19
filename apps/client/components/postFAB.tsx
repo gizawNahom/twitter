@@ -2,7 +2,11 @@ import Link from 'next/link';
 
 export function PostFAB() {
   return (
-    <Link href={'compose/tweet'} aria-label="Compose Tweet">
+    <Link
+      data-testid="post-FAB"
+      href={'compose/tweet'}
+      aria-label="Compose Tweet"
+    >
       <figure className=" bg-sky-400 w-14 h-14 rounded-full flex justify-center items-center shadow-lg active:bg-sky-700">
         <svg
           viewBox="0 0 24 24"
