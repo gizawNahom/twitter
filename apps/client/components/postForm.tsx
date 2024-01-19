@@ -22,7 +22,7 @@ export function PostForm({ autoFocus = false }: { autoFocus?: boolean }) {
   }, [autoFocus]);
 
   return (
-    <div className="p-3 border-b-[1px]" data-testid="post-input">
+    <div className="p-3 border-b-[1px]" data-testid="post-form">
       {status === 'failed' && <div>Something went wrong</div>}
       <div className=" flex flex-col gap-3">
         <input
