@@ -33,7 +33,9 @@ export function Nav() {
             </span>
           </li>
         </Link>
-        <PostFAB />
+        <div className="lg:hidden">
+          <PostFAB />
+        </div>
       </ul>
     </nav>
   );
