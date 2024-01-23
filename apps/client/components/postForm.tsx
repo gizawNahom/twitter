@@ -39,7 +39,7 @@ export function PostForm({ autoFocus = false }: { autoFocus?: boolean }) {
           onClick={() => {
             dispatch(createPostAsync(text));
           }}
-          className=" w-min bg-sky-500 self-end px-4 py-1 rounded-full text-white font-semibold"
+          className=" w-min bg-sky-500 disabled:bg-sky-300 self-end px-4 py-1 rounded-full text-white font-semibold"
         >
           Post
         </button>
