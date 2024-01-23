@@ -29,7 +29,7 @@ export function PostForm({ autoFocus = false }: { autoFocus?: boolean }) {
           placeholder="What's happening?"
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="h-10 text-xl placeholder:text-slate-600 pb-6 border-b-transparent border-b-[1px] transition focus:outline-transparent focus:border-b-sky-400"
+          className="h-12 text-xl placeholder:text-slate-600 pb-6 border-b-transparent border-b-[1px] transition focus:outline-none focus:border-b-sky-400"
           ref={inputRef}
         />
         <button
