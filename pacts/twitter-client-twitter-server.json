@@ -4,7 +4,7 @@
   },
   "interactions": [
     {
-      "description": "a request to create a post",
+      "description": "a request to create a post with a valid text",
       "request": {
         "body": {
           "operationName": "createPost",
@@ -30,7 +30,69 @@
       },
       "response": {
         "body": {
-          "data": null,
+          "data": {
+            "createPost": {
+              "__typename": "Post",
+              "createdAt": "2023-12-09T04:47:07Z",
+              "id": "postId1",
+              "text": "Hello World",
+              "userId": "userId1"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.createPost.__typename": {
+            "match": "type"
+          },
+          "$.body.data.createPost.createdAt": {
+            "match": "type"
+          },
+          "$.body.data.createPost.id": {
+            "match": "type"
+          },
+          "$.body.data.createPost.text": {
+            "match": "type"
+          },
+          "$.body.data.createPost.userId": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to create a post with an invalid text",
+      "request": {
+        "body": {
+          "operationName": "createPost",
+          "query": "mutation createPost($text: String) {\n            createPost(text: $text) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "variables": {
+            "text": ""
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "mutation\\s*createPost\\(\\$text:\\s*String\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.text": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "createPost": null
+          },
           "errors": [
             {
               "message": "Server error"
@@ -40,11 +102,64 @@
         "headers": {
           "Content-Type": "application/json; charset=utf-8"
         },
+        "matchingRules": {
+          "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
         "status": 200
       }
     },
     {
-      "description": "a request to fetch a post",
+      "description": "a request to fetch a post with an invalid post id",
+      "request": {
+        "body": {
+          "operationName": "post",
+          "query": "query post($id: ID!) {\n            post(id: $id) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "variables": {
+            "id": ""
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "query\\s*post\\(\\$id:\\s*ID!\\)\\s*\\{\\s*post\\(id:\\s*\\$id\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.id": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "post": null
+          },
+          "errors": [
+            {
+              "message": "Server error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to fetch a post with a valid post id",
+      "providerState": "a post with the id exists",
       "request": {
         "body": {
           "operationName": "post",
@@ -70,15 +185,35 @@
       },
       "response": {
         "body": {
-          "data": null,
-          "errors": [
-            {
-              "message": "Server error"
+          "data": {
+            "post": {
+              "__typename": "Post",
+              "createdAt": "2023-12-09T04:47:07Z",
+              "id": "postId1",
+              "text": "Hello World",
+              "userId": "userId1"
             }
-          ]
+          }
         },
         "headers": {
           "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.post.__typename": {
+            "match": "type"
+          },
+          "$.body.data.post.createdAt": {
+            "match": "type"
+          },
+          "$.body.data.post.id": {
+            "match": "type"
+          },
+          "$.body.data.post.text": {
+            "match": "type"
+          },
+          "$.body.data.post.userId": {
+            "match": "type"
+          }
         },
         "status": 200
       }

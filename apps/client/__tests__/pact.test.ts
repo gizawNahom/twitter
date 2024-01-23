@@ -39,7 +39,7 @@ setUpClient();
 
 describe('Create Post', () => {
   test('creates post', async () => {
-    await addInteractionWithBody({
+    const interaction = createInteraction({
       data: {
         createPost: {
           id: like(samplePostResponse.id),
@@ -49,7 +49,12 @@ describe('Create Post', () => {
           __typename: like(samplePostResponse.__typename),
         },
       },
-    });
+    })
+      .uponReceiving('a request to create a post with a valid text')
+      .withVariables({
+        text: like(samplePostResponse.text),
+      });
+    await addInteraction(interaction);
 
     const [post, errors] = await createPost(samplePostResponse.text);
 
@@ -58,16 +63,24 @@ describe('Create Post', () => {
   });
 
   test('handles error', async () => {
-    await addInteractionWithBody({
-      data: null,
+    const invalidText = '';
+    const interaction = createInteraction({
+      data: {
+        createPost: null,
+      },
       errors: [
         {
-          message: ERROR_MESSAGE,
+          message: like(ERROR_MESSAGE),
         },
       ],
-    });
+    })
+      .uponReceiving('a request to create a post with an invalid text')
+      .withVariables({
+        text: like(invalidText),
+      });
+    await addInteraction(interaction);
 
-    const [post, errors] = await createPost(samplePostResponse.text);
+    const [post, errors] = await createPost(invalidText);
 
     expect(errors).not.toBe(null);
     expect(errors?.length).toBe(1);
@@ -76,9 +89,8 @@ describe('Create Post', () => {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async function addInteractionWithBody(responseBody: any) {
-    const interaction = createBaseInteraction(responseBody)
-      .uponReceiving('a request to create a post')
+  function createInteraction(responseBody: any) {
+    return createBaseInteraction(responseBody)
       .withOperation('createPost')
       .withMutation(
         `mutation createPost($text: String) {
@@ -90,17 +102,13 @@ describe('Create Post', () => {
               __typename
             }
           }`
-      )
-      .withVariables({
-        text: like(samplePostResponse.text),
-      });
-    await provider.addInteraction(interaction);
+      );
   }
 });
 
 describe('Fetch Post', () => {
   test('fetches post', async () => {
-    await addInteractionWithBody({
+    const interaction = createInteraction({
       data: {
         post: {
           id: like(samplePostResponse.id),
@@ -110,7 +118,13 @@ describe('Fetch Post', () => {
           __typename: like(samplePostResponse.__typename),
         },
       },
-    });
+    })
+      .uponReceiving('a request to fetch a post with a valid post id')
+      .given('a post with the id exists')
+      .withVariables({
+        id: like(samplePostResponse.id),
+      });
+    await addInteraction(interaction);
 
     const post = await fetchPost(samplePostResponse.id);
 
@@ -118,23 +132,30 @@ describe('Fetch Post', () => {
   });
 
   test('handles error', async () => {
-    await addInteractionWithBody({
-      data: null,
+    const invalidPostId = '';
+    const interaction = createInteraction({
+      data: {
+        post: null,
+      },
       errors: [
         {
-          message: ERROR_MESSAGE,
+          message: like(ERROR_MESSAGE),
         },
       ],
-    });
+    })
+      .uponReceiving('a request to fetch a post with an invalid post id')
+      .withVariables({
+        id: like(invalidPostId),
+      });
+    await addInteraction(interaction);
 
     await expect(async () => {
-      await fetchPost(samplePostResponse.id);
+      await fetchPost(invalidPostId);
     }).rejects.toThrow();
   });
 
-  async function addInteractionWithBody(responseBody: AnyTemplate) {
-    const interaction = createBaseInteraction(responseBody)
-      .uponReceiving('a request to fetch a post')
+  function createInteraction(responseBody: AnyTemplate) {
+    return createBaseInteraction(responseBody)
       .withOperation('post')
       .withMutation(
         `query post($id: ID!) {
@@ -146,11 +167,7 @@ describe('Fetch Post', () => {
               __typename
             }
           }`
-      )
-      .withVariables({
-        id: like(samplePostResponse.id),
-      });
-    await provider.addInteraction(interaction);
+      );
   }
 });
 
@@ -168,4 +185,8 @@ function createBaseInteraction(responseBody: any) {
       },
       body: responseBody,
     });
+}
+
+async function addInteraction(interaction: GraphQLInteraction) {
+  await provider.addInteraction(interaction);
 }
