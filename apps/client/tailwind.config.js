@@ -9,9 +9,10 @@ module.exports = {
       '{src,pages,components,app}/**/*!(*.stories|*.spec).{ts,tsx,html}'
     ),
     ...createGlobPatternsForDependencies(__dirname),
+    './node_modules/tw-elements/dist/js/**/*.js',
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('tw-elements/dist/plugin.cjs')],
 };
