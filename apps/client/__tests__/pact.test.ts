@@ -6,6 +6,8 @@ import { samplePostResponse } from '../mocks/values';
 import { setUpClient } from './utilities/helpers';
 import { fetchPost } from '../lib/redux/slices/postsSlice/fetchPost';
 import { Post } from '../lib/redux/slices/postsSlice/post';
+import { gql } from '@apollo/client';
+import { Client } from '../utilities/client';
 
 const baseUrl = new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
 const PORT = +baseUrl.port;
@@ -170,6 +172,95 @@ describe('Fetch Post', () => {
       );
   }
 });
+
+describe('Fetches created posts', () => {
+  test('paginates created posts', async () => {
+    const interaction = createBaseInteraction({
+      data: {
+        posts: [
+          {
+            id: like(samplePostResponse.id),
+            text: like(samplePostResponse.text),
+            userId: like(samplePostResponse.userId),
+            createdAt: like(samplePostResponse.createdAt),
+            __typename: like(samplePostResponse.__typename),
+          },
+        ],
+      },
+    })
+      .withOperation('Posts')
+      .withQuery(
+        `
+        query Posts($id: ID!, $offset: Int, $limit: Int) {
+          posts(id: $id, offset: $offset, limit: $limit) {
+            id
+            text
+            userId
+            createdAt
+            __typename
+          }
+        }
+      `
+      )
+      .uponReceiving(
+        'a request to fetch created posts with valid offset and limit'
+      )
+      .withVariables({
+        id: like(samplePostResponse.id),
+        offset: like(0),
+        limit: like(10),
+      });
+    await addInteraction(interaction);
+
+    const posts = await fetchPosts(samplePostResponse.id, 0, 10);
+
+    expect(posts.length).toBe(1);
+    assertPostEquality(posts[0]);
+  });
+});
+
+async function fetchPosts(
+  id: string,
+  offset: number,
+  limit: number
+): Promise<Array<Post>> {
+  const res = await Client.client.query({
+    query: getQuery(),
+    variables: getVariables(id, offset, limit),
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return res.data.posts.map((post: any) => {
+    return {
+      id: post.id,
+      text: post.text,
+      userId: post.userId,
+      createdAt: new Date(post.createdAt),
+    };
+  }) as Array<Post>;
+
+  function getQuery() {
+    return gql`
+      query Posts($id: ID!, $offset: Int, $limit: Int) {
+        posts(id: $id, offset: $offset, limit: $limit) {
+          id
+          text
+          userId
+          createdAt
+          __typename
+        }
+      }
+    `;
+  }
+
+  function getVariables(id: string, offset: number, limit: number) {
+    return {
+      id,
+      offset,
+      limit,
+    };
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createBaseInteraction(responseBody: any) {
