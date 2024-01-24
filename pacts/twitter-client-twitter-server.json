@@ -158,6 +158,131 @@
       }
     },
     {
+      "description": "a request to fetch created posts with invalid id, offset and limit",
+      "request": {
+        "body": {
+          "operationName": "Posts",
+          "query": "\n        query Posts($id: ID!, $offset: Int, $limit: Int) {\n          posts(id: $id, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
+          "variables": {
+            "id": "",
+            "limit": -10,
+            "offset": -1
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "\\s*query\\s*Posts\\(\\$id:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(id:\\s*\\$id,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
+          },
+          "$.body.variables.id": {
+            "match": "type"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "posts": null
+          },
+          "errors": [
+            {
+              "message": "Server error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to fetch created posts with valid id, offset and limit",
+      "request": {
+        "body": {
+          "operationName": "Posts",
+          "query": "\n        query Posts($id: ID!, $offset: Int, $limit: Int) {\n          posts(id: $id, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
+          "variables": {
+            "id": "postId1",
+            "limit": 10,
+            "offset": 0
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "\\s*query\\s*Posts\\(\\$id:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(id:\\s*\\$id,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
+          },
+          "$.body.variables.id": {
+            "match": "type"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "posts": [
+              {
+                "__typename": "Post",
+                "createdAt": "2023-12-09T04:47:07Z",
+                "id": "postId1",
+                "text": "Hello World",
+                "userId": "userId1"
+              }
+            ]
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.posts[0].__typename": {
+            "match": "type"
+          },
+          "$.body.data.posts[0].createdAt": {
+            "match": "type"
+          },
+          "$.body.data.posts[0].id": {
+            "match": "type"
+          },
+          "$.body.data.posts[0].text": {
+            "match": "type"
+          },
+          "$.body.data.posts[0].userId": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
       "description": "a request to fetch created posts with valid offset and limit",
       "request": {
         "body": {

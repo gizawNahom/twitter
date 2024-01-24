@@ -175,7 +175,9 @@ describe('Fetch Post', () => {
 
 describe('Fetches created posts', () => {
   test('paginates created posts', async () => {
-    const interaction = createBaseInteraction({
+    const validOffset = 0;
+    const validLimit = 10;
+    const interaction = createInteraction({
       data: {
         posts: [
           {
@@ -188,9 +190,62 @@ describe('Fetches created posts', () => {
         ],
       },
     })
-      .withOperation('Posts')
-      .withQuery(
-        `
+      .uponReceiving(
+        'a request to fetch created posts with valid id, offset and limit'
+      )
+      .withVariables({
+        id: like(samplePostResponse.id),
+        offset: like(validOffset),
+        limit: like(validLimit),
+      });
+    await addInteraction(interaction);
+
+    const posts = await fetchPosts(
+      samplePostResponse.id,
+      validOffset,
+      validLimit
+    );
+
+    expect(posts.length).toBe(1);
+    assertPostEquality(posts[0]);
+  });
+
+  test('handles error', async () => {
+    const invalidId = '';
+    const invalidOffset = -1;
+    const invalidLimit = -10;
+    const interaction = createInteraction({
+      data: {
+        posts: null,
+      },
+      errors: [
+        {
+          message: like(ERROR_MESSAGE),
+        },
+      ],
+    })
+      .uponReceiving(
+        'a request to fetch created posts with invalid id, offset and limit'
+      )
+      .withVariables({
+        id: like(invalidId),
+        offset: like(invalidOffset),
+        limit: like(invalidLimit),
+      });
+    await addInteraction(interaction);
+
+    await expect(async () => {
+      await fetchPosts(invalidId, invalidOffset, invalidLimit);
+    }).rejects.toThrow(new Error());
+  });
+});
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function createInteraction(responseBody: any) {
+  return createBaseInteraction(responseBody)
+    .withOperation('Posts')
+    .withQuery(
+      `
         query Posts($id: ID!, $offset: Int, $limit: Int) {
           posts(id: $id, offset: $offset, limit: $limit) {
             id
@@ -201,43 +256,32 @@ describe('Fetches created posts', () => {
           }
         }
       `
-      )
-      .uponReceiving(
-        'a request to fetch created posts with valid offset and limit'
-      )
-      .withVariables({
-        id: like(samplePostResponse.id),
-        offset: like(0),
-        limit: like(10),
-      });
-    await addInteraction(interaction);
-
-    const posts = await fetchPosts(samplePostResponse.id, 0, 10);
-
-    expect(posts.length).toBe(1);
-    assertPostEquality(posts[0]);
-  });
-});
+    );
+}
 
 async function fetchPosts(
   id: string,
   offset: number,
   limit: number
 ): Promise<Array<Post>> {
-  const res = await Client.client.query({
-    query: getQuery(),
-    variables: getVariables(id, offset, limit),
-  });
+  try {
+    const res = await Client.client.query({
+      query: getQuery(),
+      variables: getVariables(id, offset, limit),
+    });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return res.data.posts.map((post: any) => {
-    return {
-      id: post.id,
-      text: post.text,
-      userId: post.userId,
-      createdAt: new Date(post.createdAt),
-    };
-  }) as Array<Post>;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return res.data.posts.map((post: any) => {
+      return {
+        id: post.id,
+        text: post.text,
+        userId: post.userId,
+        createdAt: new Date(post.createdAt),
+      };
+    }) as Array<Post>;
+  } catch (error) {
+    throw new Error();
+  }
 
   function getQuery() {
     return gql`
