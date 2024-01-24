@@ -6,8 +6,7 @@ import { samplePostResponse } from '../mocks/values';
 import { setUpClient } from './utilities/helpers';
 import { fetchPost } from '../lib/redux/slices/postsSlice/fetchPost';
 import { Post } from '../lib/redux/slices/postsSlice/post';
-import { gql } from '@apollo/client';
-import { Client } from '../utilities/client';
+import { fetchPosts } from '../lib/redux/slices/postsSlice/fetchPosts';
 
 const baseUrl = new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
 const PORT = +baseUrl.port;
@@ -238,14 +237,13 @@ describe('Fetches created posts', () => {
       await fetchPosts(invalidId, invalidOffset, invalidLimit);
     }).rejects.toThrow(new Error());
   });
-});
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createInteraction(responseBody: any) {
-  return createBaseInteraction(responseBody)
-    .withOperation('Posts')
-    .withQuery(
-      `
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  function createInteraction(responseBody: any) {
+    return createBaseInteraction(responseBody)
+      .withOperation('Posts')
+      .withQuery(
+        `
         query Posts($id: ID!, $offset: Int, $limit: Int) {
           posts(id: $id, offset: $offset, limit: $limit) {
             id
@@ -256,55 +254,9 @@ function createInteraction(responseBody: any) {
           }
         }
       `
-    );
-}
-
-async function fetchPosts(
-  id: string,
-  offset: number,
-  limit: number
-): Promise<Array<Post>> {
-  try {
-    const res = await Client.client.query({
-      query: getQuery(),
-      variables: getVariables(id, offset, limit),
-    });
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return res.data.posts.map((post: any) => {
-      return {
-        id: post.id,
-        text: post.text,
-        userId: post.userId,
-        createdAt: new Date(post.createdAt),
-      };
-    }) as Array<Post>;
-  } catch (error) {
-    throw new Error();
+      );
   }
-
-  function getQuery() {
-    return gql`
-      query Posts($id: ID!, $offset: Int, $limit: Int) {
-        posts(id: $id, offset: $offset, limit: $limit) {
-          id
-          text
-          userId
-          createdAt
-          __typename
-        }
-      }
-    `;
-  }
-
-  function getVariables(id: string, offset: number, limit: number) {
-    return {
-      id,
-      offset,
-      limit,
-    };
-  }
-}
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createBaseInteraction(responseBody: any) {
