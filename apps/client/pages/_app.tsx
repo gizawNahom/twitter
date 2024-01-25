@@ -5,6 +5,7 @@ import { Client } from '../utilities/client';
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 import { Providers } from '../lib/providers';
 import { App } from '../components/app';
+import { offsetLimitPagination } from '@apollo/client/utilities';
 
 if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
   require('../mocks');
@@ -12,7 +13,15 @@ if (process.env.NEXT_PUBLIC_API_MOCKING === 'enabled') {
 
 Client.client = new ApolloClient({
   uri: process.env.NEXT_PUBLIC_API_BASE_URL,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          posts: offsetLimitPagination(['id']),
+        },
+      },
+    },
+  }),
 });
 
 function CustomApp({ Component, pageProps }: AppProps) {
