@@ -3,7 +3,7 @@ import {
   addInteraction,
   assertPostEquality,
   createBaseInteraction,
-} from '../utilities/helpers';
+} from '../utilities/contractHelpers';
 import { GENERIC_SERVER_ERROR, samplePostResponse } from '../../mocks/values';
 import { fetchPosts } from '../../lib/redux/slices/postsSlice/fetchPosts';
 import { Pact } from '@pact-foundation/pact';
