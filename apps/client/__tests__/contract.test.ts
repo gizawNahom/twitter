@@ -1,7 +1,7 @@
 import { setUpClient } from './utilities/helpers';
-import { testCreatePost } from './contracts/createPost.test';
-import { testFetchPost } from './contracts/fetchPost.test';
-import { testFetchPosts } from './contracts/fetchPosts.test';
+import { testCreatePost } from './contracts/createPostTest';
+import { testFetchPost } from './contracts/fetchPostTest';
+import { testFetchPosts } from './contracts/fetchPostsTest';
 import { Pact } from '@pact-foundation/pact';
 import path from 'path';
 
