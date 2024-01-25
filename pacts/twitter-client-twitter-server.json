@@ -95,7 +95,7 @@
           },
           "errors": [
             {
-              "message": "Server error"
+              "message": "Generic error"
             }
           ]
         },
@@ -142,7 +142,7 @@
           },
           "errors": [
             {
-              "message": "Server error"
+              "message": "Generic error"
             }
           ]
         },
@@ -197,7 +197,7 @@
           },
           "errors": [
             {
-              "message": "Server error"
+              "message": "Generic error"
             }
           ]
         },

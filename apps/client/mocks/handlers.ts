@@ -1,5 +1,5 @@
 import { graphql } from 'msw';
-import { samplePostResponse } from './values';
+import { GENERIC_SERVER_ERROR, samplePostResponse } from './values';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
@@ -38,5 +38,5 @@ export const handlers = [
 ];
 
 export const errorHandler = graphql.operation((req, res, ctx) => {
-  return res(ctx.errors([{ message: 'Generic error' }]));
+  return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
 });
