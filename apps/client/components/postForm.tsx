@@ -33,9 +33,7 @@ export function PostForm({ autoFocus = false }: { autoFocus?: boolean }) {
           ref={inputRef}
         />
         <button
-          disabled={
-            isInvalid(text) || status === 'loading' || isSucceeded(status)
-          }
+          disabled={isInvalid(text) || status === 'loading'}
           onClick={() => {
             dispatch(createPostAsync(text));
           }}
