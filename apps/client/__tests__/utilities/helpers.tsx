@@ -4,8 +4,9 @@ import { Client } from '../../utilities/client';
 import { Provider } from 'react-redux';
 import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { server } from '../../mocks/server';
+import { ERROR_TEST_ID } from './testIds';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -55,4 +56,8 @@ export function setUpMSW() {
   );
   afterEach(() => server.resetHandlers());
   afterAll(() => server.close());
+}
+
+export function queryErrorComponent(): HTMLElement | null {
+  return screen.queryByTestId(ERROR_TEST_ID);
 }

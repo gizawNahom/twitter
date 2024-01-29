@@ -3,7 +3,12 @@ import Status from '../../pages/[userId]/status/[id]';
 import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
-import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
+import {
+  queryErrorComponent,
+  renderElement,
+  setUpClient,
+  setUpMSW,
+} from '../utilities/helpers';
 import { samplePostResponse } from '../../mocks/values';
 import { BACK_BUTTON_TEST_ID } from '../utilities/testIds';
 
@@ -13,7 +18,6 @@ jest.mock('next/router', () => ({
 
 const PAGE_TITLE = /post/i;
 const LOADING = /loading/i;
-const ERROR_MESSAGE = /something went wrong/i;
 
 function mockRouter() {
   const router = useRouter as jest.Mock;
@@ -33,7 +37,7 @@ function assertWasPostCalled(value: boolean) {
 }
 
 function assertErrorMessageIsNotShown() {
-  expect(screen.queryByText(ERROR_MESSAGE)).toBeNull();
+  expect(queryErrorComponent()).toBeNull();
 }
 
 function assertPostIsNotShown() {
@@ -106,7 +110,7 @@ test('error state', async () => {
 
   renderSUT();
 
-  await waitFor(() => expect(screen.queryByText(ERROR_MESSAGE)).not.toBeNull());
+  await waitFor(() => expect(queryErrorComponent()).not.toBeNull());
   assertLoadingIsNotShown();
   assertPostIsNotShown();
 });

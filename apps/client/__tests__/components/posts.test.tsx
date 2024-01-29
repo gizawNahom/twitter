@@ -1,11 +1,15 @@
 import { waitFor, screen } from '@testing-library/react';
 import { Posts } from '../../components/posts';
-import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
+import {
+  queryErrorComponent,
+  renderElement,
+  setUpClient,
+  setUpMSW,
+} from '../utilities/helpers';
 import { server } from '../../mocks/server';
 import { postsErrorHandler, wasPostsCalled } from '../../mocks/handlers';
 
 const LOADING = /loading/i;
-const ERROR_MESSAGE = /something went wrong/i;
 
 function renderSUT() {
   renderElement(<Posts />);
@@ -22,7 +26,7 @@ test('initial', async () => {
   renderSUT();
 
   expect(wasPostsCalled).toBe(false);
-  expect(screen.queryByText(ERROR_MESSAGE)).toBeNull();
+  expect(queryErrorComponent()).toBeNull();
   await waitFor(() => {
     expect(queryLoading()).toBeInTheDocument();
   });
@@ -33,7 +37,7 @@ test('error', async () => {
 
   renderSUT();
 
-  await waitFor(() => expect(screen.queryByText(ERROR_MESSAGE)).not.toBeNull());
+  await waitFor(() => expect(queryErrorComponent()).not.toBeNull());
   expect(queryLoading()).not.toBeInTheDocument();
   expect(wasPostsCalled).toBe(true);
 });
