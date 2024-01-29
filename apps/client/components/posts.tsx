@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { fetchPosts } from '../lib/redux/slices/postsSlice/fetchPosts';
+import { Error } from './error';
 
 export function Posts() {
   const [status, setStatus] = useState('loading');
@@ -28,9 +29,7 @@ export function Posts() {
           </span>
         </div>
       )}
-      {status === 'error' && (
-        <p className="text-slate-500">Something went wrong</p>
-      )}
+      {status === 'error' && <Error />}
     </div>
   );
 }

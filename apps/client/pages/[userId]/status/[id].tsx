@@ -8,6 +8,7 @@ import {
 } from '../../../lib/redux';
 import { ReactNode, useEffect } from 'react';
 import { Page } from '../../../components/page';
+import { Error } from '../../../components/error';
 
 export default function Status() {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ export default function Status() {
       )}
       {fetchStatus === 'failed' && (
         <Container>
-          <p className="text-slate-500">Something went wrong</p>
+          <Error />
         </Container>
       )}
     </Page>
