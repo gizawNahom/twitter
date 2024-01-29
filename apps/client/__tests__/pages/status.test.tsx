@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import Status from '../../pages/[userId]/status/[id]';
-import { errorHandler, wasPostCalled } from '../../mocks/handlers';
+import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
 import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
 import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
@@ -102,7 +102,7 @@ test('success state', async () => {
 });
 
 test('error state', async () => {
-  server.use(errorHandler);
+  server.use(genericErrorHandler);
 
   renderSUT();
 

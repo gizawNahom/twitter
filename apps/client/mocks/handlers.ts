@@ -55,6 +55,6 @@ export const postsErrorHandler = graphql.query(
   }
 );
 
-export const errorHandler = graphql.operation((req, res, ctx) => {
+export const genericErrorHandler = graphql.operation((req, res, ctx) => {
   return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
 });
