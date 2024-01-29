@@ -1,12 +1,13 @@
 import { graphql } from 'msw';
 import { GENERIC_SERVER_ERROR, samplePostResponse } from './values';
+import { Operations } from '../__tests__/utilities/operations';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
 export let wasPostsCalled = false;
 
 export const handlers = [
-  graphql.mutation('createPost', (req, res, ctx) => {
+  graphql.mutation(Operations.CreatePost, (req, res, ctx) => {
     wasCreatePostCalled = true;
     return res(
       ctx.delay(),
@@ -21,7 +22,7 @@ export const handlers = [
       })
     );
   }),
-  graphql.query('post', (req, res, ctx) => {
+  graphql.query(Operations.Post, (req, res, ctx) => {
     wasPostCalled = true;
     return res(
       ctx.delay(),
@@ -36,7 +37,7 @@ export const handlers = [
       })
     );
   }),
-  graphql.query('Posts', (req, res, ctx) => {
+  graphql.query(Operations.Posts, (req, res, ctx) => {
     wasPostsCalled = true;
     return res(
       ctx.data({
@@ -46,10 +47,13 @@ export const handlers = [
   }),
 ];
 
-export const postsErrorHandler = graphql.query('Posts', (req, res, ctx) => {
-  wasPostsCalled = true;
-  return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
-});
+export const postsErrorHandler = graphql.query(
+  Operations.Posts,
+  (req, res, ctx) => {
+    wasPostsCalled = true;
+    return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
+  }
+);
 
 export const errorHandler = graphql.operation((req, res, ctx) => {
   return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));

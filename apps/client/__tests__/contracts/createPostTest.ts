@@ -7,6 +7,7 @@ import {
 import { GENERIC_SERVER_ERROR, samplePostResponse } from '../../mocks/values';
 import { createPost } from '../../lib/redux/slices/postsSlice/createPost';
 import { Pact } from '@pact-foundation/pact';
+import { Operations } from '../utilities/operations';
 
 export function testCreatePost(provider: Pact, baseUrl: URL) {
   describe('Create Post', () => {
@@ -62,7 +63,7 @@ export function testCreatePost(provider: Pact, baseUrl: URL) {
 
     function createInteraction(responseBody: AnyTemplate) {
       return createBaseInteraction(baseUrl, responseBody)
-        .withOperation('createPost')
+        .withOperation(Operations.CreatePost)
         .withMutation(
           `mutation createPost($text: String) {
             createPost(text: $text) {

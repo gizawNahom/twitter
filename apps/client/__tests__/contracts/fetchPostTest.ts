@@ -7,6 +7,7 @@ import {
 import { GENERIC_SERVER_ERROR, samplePostResponse } from '../../mocks/values';
 import { fetchPost } from '../../lib/redux/slices/postsSlice/fetchPost';
 import { Pact } from '@pact-foundation/pact';
+import { Operations } from '../utilities/operations';
 
 export function testFetchPost(provider: Pact, baseUrl: URL) {
   describe('Fetch Post', () => {
@@ -59,7 +60,7 @@ export function testFetchPost(provider: Pact, baseUrl: URL) {
 
     function createInteraction(responseBody: AnyTemplate) {
       return createBaseInteraction(baseUrl, responseBody)
-        .withOperation('post')
+        .withOperation(Operations.Post)
         .withMutation(
           `query post($id: ID!) {
             post(id: $id) {
