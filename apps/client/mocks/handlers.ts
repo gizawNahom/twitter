@@ -3,6 +3,7 @@ import { GENERIC_SERVER_ERROR, samplePostResponse } from './values';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
+export let wasPostsCalled = false;
 
 export const handlers = [
   graphql.mutation('createPost', (req, res, ctx) => {
@@ -35,7 +36,20 @@ export const handlers = [
       })
     );
   }),
+  graphql.query('Posts', (req, res, ctx) => {
+    wasPostsCalled = true;
+    return res(
+      ctx.data({
+        posts: [],
+      })
+    );
+  }),
 ];
+
+export const postsErrorHandler = graphql.query('Posts', (req, res, ctx) => {
+  wasPostsCalled = true;
+  return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
+});
 
 export const errorHandler = graphql.operation((req, res, ctx) => {
   return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
