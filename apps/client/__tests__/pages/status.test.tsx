@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
 import {
   queryErrorComponent,
+  querySpinner,
   renderElement,
   setUpClient,
   setUpMSW,
@@ -17,7 +18,6 @@ jest.mock('next/router', () => ({
 }));
 
 const PAGE_TITLE = /post/i;
-const LOADING = /loading/i;
 
 function mockRouter() {
   const router = useRouter as jest.Mock;
@@ -65,11 +65,8 @@ function queryPostText(): HTMLElement | null {
   return screen.queryByText(samplePostResponse.text);
 }
 
-function assertLoadingIsNotShown(): void | Promise<void> {
-  expect(queryLoading()).toBeNull();
-}
-function queryLoading(): HTMLElement | null {
-  return screen.queryByText(LOADING);
+function assertSpinnerIsNotShown(): void | Promise<void> {
+  expect(querySpinner()).toBeNull();
 }
 
 beforeEach(() => {
@@ -89,7 +86,7 @@ test('initial state', async () => {
 
   assertWasPostCalled(false);
   expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
-  await waitFor(() => expect(queryLoading()).not.toBeNull());
+  await waitFor(() => expect(querySpinner()).not.toBeNull());
   assertErrorMessageIsNotShown();
   assertPostIsNotShown();
   expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
@@ -98,7 +95,7 @@ test('initial state', async () => {
 test('success state', async () => {
   renderSUT();
 
-  await waitFor(() => assertLoadingIsNotShown());
+  await waitFor(() => assertSpinnerIsNotShown());
   assertWasPostCalled(true);
   expect(queryPostText()).not.toBeNull();
   expect(queryPostTime()).not.toBeNull();
@@ -111,6 +108,6 @@ test('error state', async () => {
   renderSUT();
 
   await waitFor(() => expect(queryErrorComponent()).not.toBeNull());
-  assertLoadingIsNotShown();
+  assertSpinnerIsNotShown();
   assertPostIsNotShown();
 });

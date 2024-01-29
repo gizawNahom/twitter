@@ -1,7 +1,8 @@
-import { waitFor, screen } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import { Posts } from '../../components/posts';
 import {
   queryErrorComponent,
+  querySpinner,
   renderElement,
   setUpClient,
   setUpMSW,
@@ -9,14 +10,8 @@ import {
 import { server } from '../../mocks/server';
 import { postsErrorHandler, wasPostsCalled } from '../../mocks/handlers';
 
-const LOADING = /loading/i;
-
 function renderSUT() {
   renderElement(<Posts />);
-}
-
-function queryLoading(): HTMLElement | null {
-  return screen.queryByText(LOADING);
 }
 
 setUpClient();
@@ -28,7 +23,7 @@ test('initial', async () => {
   expect(wasPostsCalled).toBe(false);
   expect(queryErrorComponent()).toBeNull();
   await waitFor(() => {
-    expect(queryLoading()).toBeInTheDocument();
+    expect(querySpinner()).toBeInTheDocument();
   });
 });
 
@@ -38,6 +33,6 @@ test('error', async () => {
   renderSUT();
 
   await waitFor(() => expect(queryErrorComponent()).not.toBeNull());
-  expect(queryLoading()).not.toBeInTheDocument();
+  expect(querySpinner()).not.toBeInTheDocument();
   expect(wasPostsCalled).toBe(true);
 });

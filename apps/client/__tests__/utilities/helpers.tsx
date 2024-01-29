@@ -6,7 +6,7 @@ import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { render, screen } from '@testing-library/react';
 import { server } from '../../mocks/server';
-import { ERROR_TEST_ID } from './testIds';
+import { ERROR_TEST_ID, SPINNER_TEST_ID } from './testIds';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -60,4 +60,8 @@ export function setUpMSW() {
 
 export function queryErrorComponent(): HTMLElement | null {
   return screen.queryByTestId(ERROR_TEST_ID);
+}
+
+export function querySpinner(): HTMLElement | null {
+  return screen.queryByTestId(SPINNER_TEST_ID);
 }
