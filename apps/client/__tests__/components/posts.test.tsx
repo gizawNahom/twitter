@@ -8,10 +8,21 @@ import {
   setUpMSW,
 } from '../utilities/helpers';
 import { server } from '../../mocks/server';
-import { postsErrorHandler, wasPostsCalled } from '../../mocks/handlers';
+import {
+  postsErrorHandler,
+  postsVariables,
+  wasPostsCalled,
+} from '../../mocks/handlers';
 
 function renderSUT() {
   renderElement(<Posts />);
+}
+
+function assertApiCall() {
+  expect(wasPostsCalled).toBe(true);
+  const { limit, offset } = postsVariables;
+  expect(limit).toBe(20);
+  expect(offset).toBe(0);
 }
 
 setUpClient();
@@ -34,5 +45,5 @@ test('error', async () => {
 
   await waitFor(() => expect(queryErrorComponent()).not.toBeNull());
   expect(querySpinner()).not.toBeInTheDocument();
-  expect(wasPostsCalled).toBe(true);
+  assertApiCall();
 });

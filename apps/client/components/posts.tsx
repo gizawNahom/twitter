@@ -11,7 +11,7 @@ export function Posts() {
   useEffect(() => {
     (async () => {
       try {
-        setPosts(await fetchPosts('', 0, 0));
+        setPosts(await fetchPosts('', 0, 20));
         setStatus('success');
       } catch (e) {
         setStatus('error');
