@@ -9,7 +9,7 @@ import {
 import { ReactNode, useEffect } from 'react';
 import { Page } from '../../../components/page';
 import { Error } from '../../../components/error';
-import { Spinner } from 'apps/client/components/spinner';
+import { Spinner } from '../../../components/spinner';
 
 export default function Status() {
   const dispatch = useDispatch();
