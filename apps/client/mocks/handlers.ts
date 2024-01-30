@@ -1,10 +1,11 @@
-import { graphql } from 'msw';
+import { GraphQLVariables, graphql } from 'msw';
 import { GENERIC_SERVER_ERROR, samplePostResponse } from './values';
 import { Operations } from '../__tests__/utilities/operations';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
 export let wasPostsCalled = false;
+export let postsVariables: GraphQLVariables;
 
 export const handlers = [
   graphql.mutation(Operations.CreatePost, (req, res, ctx) => {
@@ -37,11 +38,20 @@ export const handlers = [
       })
     );
   }),
-  graphql.query(Operations.Posts, (req, res, ctx) => {
+  graphql.query(Operations.Posts, ({ variables }, res, ctx) => {
     wasPostsCalled = true;
+    postsVariables = variables;
     return res(
       ctx.data({
-        posts: [],
+        posts: [
+          {
+            id: samplePostResponse.id,
+            text: samplePostResponse.text,
+            userId: samplePostResponse.userId,
+            createdAt: samplePostResponse.createdAt,
+            __typename: samplePostResponse.__typename,
+          },
+        ],
       })
     );
   }),
