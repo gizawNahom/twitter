@@ -4,20 +4,20 @@ import { Error } from './error';
 import { Spinner } from './spinner';
 import { Post } from '../lib/redux/slices/postsSlice/post';
 
-export function Posts() {
+export function Posts({ userId }: { userId: string }) {
   const [status, setStatus] = useState('loading');
   const [posts, setPosts] = useState<Array<Post>>([]);
 
   useEffect(() => {
     (async () => {
       try {
-        setPosts(await fetchPosts('', 0, 20));
+        setPosts(await fetchPosts(userId, 0, 20));
         setStatus('success');
       } catch (e) {
         setStatus('error');
       }
     })();
-  }, []);
+  }, [userId]);
 
   return (
     <div data-testid="posts">

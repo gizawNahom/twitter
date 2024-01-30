@@ -6,7 +6,7 @@ export default function Profile() {
     <div>
       <Page>
         <h4>Posts</h4>
-        <Posts />
+        <Posts userId="userId1" />
       </Page>
     </div>
   );

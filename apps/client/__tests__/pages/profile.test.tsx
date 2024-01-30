@@ -2,7 +2,8 @@ import { screen, waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
 import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
 import { BACK_BUTTON_TEST_ID } from '../utilities/testIds';
-import { samplePostResponse } from 'apps/client/mocks/values';
+import { samplePostResponse } from '../../mocks/values';
+import { postsVariables } from '../../mocks/handlers';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -29,6 +30,11 @@ async function assertPostsRender() {
   });
 }
 
+function assertUserIdInAPICall() {
+  const { id } = postsVariables;
+  expect(id).toBe('userId1');
+}
+
 setUpClient();
 setUpMSW();
 
@@ -39,4 +45,5 @@ test('initial', async () => {
   expect(screen.getByText(/posts/i)).toBeVisible();
   expect(screen.getByTestId('posts')).toBeVisible();
   expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
+  assertUserIdInAPICall();
 });
