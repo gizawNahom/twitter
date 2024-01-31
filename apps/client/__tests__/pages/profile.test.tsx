@@ -31,8 +31,8 @@ async function assertPostsRender() {
 }
 
 function assertUserIdInAPICall() {
-  const { id } = postsVariables;
-  expect(id).toBe('userId1');
+  const { userId } = postsVariables;
+  expect(userId).toBe('userId1');
 }
 
 setUpClient();

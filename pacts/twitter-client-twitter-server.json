@@ -162,11 +162,11 @@
       "request": {
         "body": {
           "operationName": "Posts",
-          "query": "\n        query Posts($id: ID!, $offset: Int, $limit: Int) {\n          posts(id: $id, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
+          "query": "\n        query Posts($userId: ID!, $offset: Int, $limit: Int) {\n          posts(userId: $userId, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
           "variables": {
-            "id": "",
             "limit": -10,
-            "offset": -1
+            "offset": -1,
+            "userId": ""
           }
         },
         "headers": {
@@ -175,15 +175,15 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "\\s*query\\s*Posts\\(\\$id:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(id:\\s*\\$id,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
-          },
-          "$.body.variables.id": {
-            "match": "type"
+            "regex": "\\s*query\\s*Posts\\(\\$userId:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(userId:\\s*\\$userId,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
           },
           "$.body.variables.limit": {
             "match": "type"
           },
           "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.body.variables.userId": {
             "match": "type"
           }
         },
@@ -217,11 +217,11 @@
       "request": {
         "body": {
           "operationName": "Posts",
-          "query": "\n        query Posts($id: ID!, $offset: Int, $limit: Int) {\n          posts(id: $id, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
+          "query": "\n        query Posts($userId: ID!, $offset: Int, $limit: Int) {\n          posts(userId: $userId, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
           "variables": {
-            "id": "postId1",
             "limit": 10,
-            "offset": 0
+            "offset": 0,
+            "userId": "userId1"
           }
         },
         "headers": {
@@ -230,15 +230,15 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "\\s*query\\s*Posts\\(\\$id:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(id:\\s*\\$id,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
-          },
-          "$.body.variables.id": {
-            "match": "type"
+            "regex": "\\s*query\\s*Posts\\(\\$userId:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(userId:\\s*\\$userId,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
           },
           "$.body.variables.limit": {
             "match": "type"
           },
           "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.body.variables.userId": {
             "match": "type"
           }
         },

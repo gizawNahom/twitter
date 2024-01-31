@@ -31,14 +31,14 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
           'a request to fetch created posts with valid id, offset and limit'
         )
         .withVariables({
-          id: like(samplePostResponse.id),
+          userId: like(samplePostResponse.userId),
           offset: like(validOffset),
           limit: like(validLimit),
         });
       await addInteraction(provider, interaction);
 
       const posts = await fetchPosts(
-        samplePostResponse.id,
+        samplePostResponse.userId,
         validOffset,
         validLimit
       );
@@ -48,7 +48,7 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
     });
 
     test('handles error', async () => {
-      const invalidId = '';
+      const invalidUserId = '';
       const invalidOffset = -1;
       const invalidLimit = -10;
       const interaction = createInteraction({
@@ -65,14 +65,14 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
           'a request to fetch created posts with invalid id, offset and limit'
         )
         .withVariables({
-          id: like(invalidId),
+          userId: like(invalidUserId),
           offset: like(invalidOffset),
           limit: like(invalidLimit),
         });
       await addInteraction(provider, interaction);
 
       await expect(async () => {
-        await fetchPosts(invalidId, invalidOffset, invalidLimit);
+        await fetchPosts(invalidUserId, invalidOffset, invalidLimit);
       }).rejects.toThrow(new Error());
     });
 
@@ -81,8 +81,8 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
         .withOperation(Operations.Posts)
         .withQuery(
           `
-        query Posts($id: ID!, $offset: Int, $limit: Int) {
-          posts(id: $id, offset: $offset, limit: $limit) {
+        query Posts($userId: ID!, $offset: Int, $limit: Int) {
+          posts(userId: $userId, offset: $offset, limit: $limit) {
             id
             text
             userId

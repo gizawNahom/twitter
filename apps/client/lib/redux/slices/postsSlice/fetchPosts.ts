@@ -3,14 +3,14 @@ import { Post } from './post';
 import { Client } from '../../../../utilities/client';
 
 export async function fetchPosts(
-  id: string,
+  userId: string,
   offset: number,
   limit: number
 ): Promise<Array<Post>> {
   try {
     const res = await Client.client.query({
       query: getQuery(),
-      variables: getVariables(id, offset, limit),
+      variables: getVariables(userId, offset, limit),
     });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,8 +28,8 @@ export async function fetchPosts(
 
   function getQuery() {
     return gql`
-      query Posts($id: ID!, $offset: Int, $limit: Int) {
-        posts(id: $id, offset: $offset, limit: $limit) {
+      query Posts($userId: ID!, $offset: Int, $limit: Int) {
+        posts(userId: $userId, offset: $offset, limit: $limit) {
           id
           text
           userId
@@ -40,9 +40,9 @@ export async function fetchPosts(
     `;
   }
 
-  function getVariables(id: string, offset: number, limit: number) {
+  function getVariables(userId: string, offset: number, limit: number) {
     return {
-      id,
+      userId,
       offset,
       limit,
     };
