@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
 import { renderElement, setUpApi } from '../utilities/helpers';
-import { BACK_BUTTON_TEST_ID } from '../utilities/testIds';
+import { BACK_BUTTON_TEST_ID, POSTS_TEST_ID } from '../utilities/testIds';
 import { samplePostResponse } from '../../mocks/values';
 import { postsVariables } from '../../mocks/handlers';
 
@@ -42,7 +42,7 @@ test('initial', async () => {
 
   await assertPostsRender();
   expect(screen.getByText(/posts/i)).toBeVisible();
-  expect(screen.getByTestId('posts')).toBeVisible();
+  expect(screen.getByTestId(POSTS_TEST_ID)).toBeVisible();
   expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
   assertUserIdInAPICall();
 });
