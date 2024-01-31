@@ -12,9 +12,10 @@ import {
   postsVariables,
   wasPostsCalled,
 } from '../../mocks/handlers';
+import { samplePostResponse } from '../../mocks/values';
 
 function renderSUT() {
-  renderElement(<Posts />);
+  renderElement(<Posts userId={samplePostResponse.userId} />);
 }
 
 function assertApiCall() {
