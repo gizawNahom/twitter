@@ -4,8 +4,7 @@ import {
   queryErrorComponent,
   querySpinner,
   renderElement,
-  setUpClient,
-  setUpMSW,
+  setUpApi,
 } from '../utilities/helpers';
 import { server } from '../../mocks/server';
 import {
@@ -25,8 +24,7 @@ function assertApiCall() {
   expect(offset).toBe(0);
 }
 
-setUpClient();
-setUpMSW();
+setUpApi();
 
 test('initial', async () => {
   renderSUT();

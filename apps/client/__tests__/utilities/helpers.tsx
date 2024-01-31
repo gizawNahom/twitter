@@ -48,14 +48,19 @@ function addNewStore(component: JSX.Element) {
   return <Provider store={store}>{component}</Provider>;
 }
 
-export function setUpMSW() {
-  beforeAll(() =>
-    server.listen({
-      onUnhandledRequest: 'error',
-    })
-  );
-  afterEach(() => server.resetHandlers());
-  afterAll(() => server.close());
+export function setUpApi() {
+  setUpClient();
+  setUpMSW();
+
+  function setUpMSW() {
+    beforeAll(() =>
+      server.listen({
+        onUnhandledRequest: 'error',
+      })
+    );
+    afterEach(() => server.resetHandlers());
+    afterAll(() => server.close());
+  }
 }
 
 export function queryErrorComponent(): HTMLElement | null {

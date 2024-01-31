@@ -7,8 +7,7 @@ import {
   queryErrorComponent,
   querySpinner,
   renderElement,
-  setUpClient,
-  setUpMSW,
+  setUpApi,
 } from '../utilities/helpers';
 import { samplePostResponse } from '../../mocks/values';
 import { BACK_BUTTON_TEST_ID } from '../utilities/testIds';
@@ -77,9 +76,7 @@ afterEach(() => {
   jest.resetAllMocks();
 });
 
-setUpClient();
-
-setUpMSW();
+setUpApi();
 
 test('initial state', async () => {
   renderSUT();

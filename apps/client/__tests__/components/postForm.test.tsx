@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { genericErrorHandler, wasCreatePostCalled } from '../../mocks/handlers';
-import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
+import { renderElement, setUpApi } from '../utilities/helpers';
 import { PostForm } from '../../components/postForm';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../utilities/texts';
 
@@ -74,9 +74,7 @@ beforeEach(() => {
   renderSUT();
 });
 
-setUpMSW();
-
-setUpClient();
+setUpApi();
 
 test('Initial state', () => {
   assertEmptyInput();

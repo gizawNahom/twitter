@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
-import { renderElement, setUpClient, setUpMSW } from '../utilities/helpers';
+import { renderElement, setUpApi } from '../utilities/helpers';
 import { BACK_BUTTON_TEST_ID } from '../utilities/testIds';
 import { samplePostResponse } from '../../mocks/values';
 import { postsVariables } from '../../mocks/handlers';
@@ -35,8 +35,7 @@ function assertUserIdInAPICall() {
   expect(userId).toBe('userId1');
 }
 
-setUpClient();
-setUpMSW();
+setUpApi();
 
 test('initial', async () => {
   renderElement(<Profile />);
