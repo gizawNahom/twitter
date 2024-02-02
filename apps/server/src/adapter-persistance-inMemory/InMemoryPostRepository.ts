@@ -28,4 +28,26 @@ export class InMemoryPostRepository implements PostRepository {
     const idNum = this.posts.length + 1;
     post.setId('postId' + idNum);
   }
+
+  async getLatestPosts(
+    userId: string,
+    limit: number,
+    offset: number
+  ): Promise<Array<Post>> {
+    if (this.doesLimitExceedPostsLength(limit)) return this.getAllPosts(userId);
+    return this.getPaginatedPosts(offset, limit, userId);
+  }
+
+  private doesLimitExceedPostsLength(limit: number) {
+    return limit > this.posts.length;
+  }
+
+  private getPaginatedPosts(offset: number, limit: number, userId: string) {
+    const start = offset * limit;
+    return this.getAllPosts(userId).slice(start, start + limit);
+  }
+
+  private getAllPosts(userId: string): Post[] {
+    return this.posts.filter((p) => p.getUserId() === userId).reverse();
+  }
 }

@@ -13,4 +13,7 @@ export class PostRepositoryErrorStub implements PostRepository {
   save(): Promise<void> {
     throw new Error(PostRepositoryErrorStub.ERROR_MESSAGE);
   }
+  getLatestPosts(): Promise<Post[]> {
+    throw new Error(PostRepositoryErrorStub.ERROR_MESSAGE);
+  }
 }

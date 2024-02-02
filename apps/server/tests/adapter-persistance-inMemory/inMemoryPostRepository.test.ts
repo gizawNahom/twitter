@@ -1,21 +1,29 @@
 import { Post } from '../../src/core/entities/post';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
+import { assertPostEquality } from '../utilities/assertions';
 
 let repo: InMemoryPostRepository;
+const sampleUserId = 'userId';
 
 function createPosts(count: number): Post[] {
   const posts: Post[] = [];
   for (let i = 1; i < count + 1; i++) {
     const post = new Post();
     post.setId('postId' + i);
-    post.setUserId('userId');
+    post.setUserId(sampleUserId);
     posts.push(post);
   }
   return posts;
 }
 
-async function savePost(post: Post) {
-  await repo.save(post);
+function savePosts(posts: Post[]) {
+  posts.forEach(async (p) => {
+    await savePost(p);
+  });
+
+  async function savePost(post: Post) {
+    await repo.save(post);
+  }
 }
 
 function assertPostIsSaved(savedUsers: Post[] | null, post: Post) {
@@ -39,34 +47,53 @@ beforeEach(() => {
 test('saves post', async () => {
   const [p1] = createPosts(1);
 
-  await savePost(p1);
+  savePosts([p1]);
 
-  const savedUsers = await repo.getAll('userId');
+  const savedUsers = await repo.getAll(sampleUserId);
   assertPostIsSaved(savedUsers, p1);
 });
 
 test('saves multiple posts for the same user', async () => {
   const [p1, p2] = createPosts(2);
 
-  await savePost(p1);
-  await savePost(p2);
+  savePosts([p1, p2]);
 
-  const savedUsers = await repo.getAll('userId');
+  const savedUsers = await repo.getAll(sampleUserId);
   expect(savedUsers?.length).toBe(2);
   assertPostIsSaved(savedUsers, p1);
   assertPostIsSaved(savedUsers, p2);
 });
 
-test('creates post ids that sequential', async () => {
-  const p1 = new Post();
-  p1.setUserId('userId');
-  const p2 = new Post();
-  p2.setUserId('userId');
+test('creates post ids that are sequential', async () => {
+  const [p1, p2] = createPosts(2);
 
-  await savePost(p1);
-  await savePost(p2);
+  savePosts([p1, p2]);
 
-  const savedUsers = (await repo.getAll('userId')) as Post[];
+  const savedUsers = (await repo.getAll(sampleUserId)) as Post[];
   expect(savedUsers[0].getId()).toBe('postId1');
   expect(savedUsers[1].getId()).toBe('postId2');
+});
+
+describe('gets latest post', () => {
+  test.each([
+    [4, 2, 0, [3, 2]],
+    [4, 2, 1, [1, 0]],
+    [1, 3, 1, [0]],
+    [0, 3, 1, []],
+    [4, 3, 1, [0]],
+    [4, 3, 2, []],
+  ])(
+    'with created(%s), limit(%s), offset(%s)',
+    async (createCount, limit, offset, expectedIndexes) => {
+      const posts = createPosts(createCount);
+
+      savePosts(posts);
+
+      const result = await repo.getLatestPosts(sampleUserId, limit, offset);
+      expect(result).toHaveLength(expectedIndexes.length);
+      for (let index = 0; index < result.length; index++) {
+        assertPostEquality(result[index], posts[expectedIndexes[index]]);
+      }
+    }
+  );
 });
