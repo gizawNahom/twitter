@@ -12,6 +12,13 @@ const server = app.listen(port, () => {
   console.log(`Service listening on ${baseUrl}`);
 });
 
+async function savePost() {
+  const post = new Post();
+  post.setText('Hello World');
+  post.setUserId('userId1');
+  await Context.postRepository.save(post);
+}
+
 describe('Pact verification', () => {
   test('validate the expectations of the matching consumer', () => {
     return new Verifier({
@@ -24,10 +31,10 @@ describe('Pact verification', () => {
       ],
       stateHandlers: {
         'a post with the id exists': async () => {
-          const post = new Post();
-          post.setText('Hello World');
-          post.setUserId('userId1');
-          await Context.postRepository.save(post);
+          await savePost();
+        },
+        'a user has created a post': async () => {
+          await savePost();
         },
       },
       beforeEach: async () => {

@@ -30,6 +30,7 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
         .uponReceiving(
           'a request to fetch created posts with valid id, offset and limit'
         )
+        .given('a user has created a post')
         .withVariables({
           userId: like(samplePostResponse.userId),
           offset: like(validOffset),

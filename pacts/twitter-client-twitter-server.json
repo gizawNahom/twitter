@@ -213,7 +213,69 @@
       }
     },
     {
+      "description": "a request to fetch a post with a valid post id",
+      "providerState": "a post with the id exists",
+      "request": {
+        "body": {
+          "operationName": "post",
+          "query": "query post($id: ID!) {\n            post(id: $id) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "variables": {
+            "id": "postId1"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "query\\s*post\\(\\$id:\\s*ID!\\)\\s*\\{\\s*post\\(id:\\s*\\$id\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.id": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "post": {
+              "__typename": "Post",
+              "createdAt": "2023-12-09T04:47:07Z",
+              "id": "postId1",
+              "text": "Hello World",
+              "userId": "userId1"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.post.__typename": {
+            "match": "type"
+          },
+          "$.body.data.post.createdAt": {
+            "match": "type"
+          },
+          "$.body.data.post.id": {
+            "match": "type"
+          },
+          "$.body.data.post.text": {
+            "match": "type"
+          },
+          "$.body.data.post.userId": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
       "description": "a request to fetch created posts with valid id, offset and limit",
+      "providerState": "a user has created a post",
       "request": {
         "body": {
           "operationName": "Posts",
@@ -276,67 +338,6 @@
             "match": "type"
           },
           "$.body.data.posts[0].userId": {
-            "match": "type"
-          }
-        },
-        "status": 200
-      }
-    },
-    {
-      "description": "a request to fetch a post with a valid post id",
-      "providerState": "a post with the id exists",
-      "request": {
-        "body": {
-          "operationName": "post",
-          "query": "query post($id: ID!) {\n            post(id: $id) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
-          "variables": {
-            "id": "postId1"
-          }
-        },
-        "headers": {
-          "Content-Type": "application/json"
-        },
-        "matchingRules": {
-          "$.body.query": {
-            "match": "regex",
-            "regex": "query\\s*post\\(\\$id:\\s*ID!\\)\\s*\\{\\s*post\\(id:\\s*\\$id\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
-          },
-          "$.body.variables.id": {
-            "match": "type"
-          }
-        },
-        "method": "POST",
-        "path": "/graphql"
-      },
-      "response": {
-        "body": {
-          "data": {
-            "post": {
-              "__typename": "Post",
-              "createdAt": "2023-12-09T04:47:07Z",
-              "id": "postId1",
-              "text": "Hello World",
-              "userId": "userId1"
-            }
-          }
-        },
-        "headers": {
-          "Content-Type": "application/json; charset=utf-8"
-        },
-        "matchingRules": {
-          "$.body.data.post.__typename": {
-            "match": "type"
-          },
-          "$.body.data.post.createdAt": {
-            "match": "type"
-          },
-          "$.body.data.post.id": {
-            "match": "type"
-          },
-          "$.body.data.post.text": {
-            "match": "type"
-          },
-          "$.body.data.post.userId": {
             "match": "type"
           }
         },
