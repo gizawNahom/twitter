@@ -21,8 +21,11 @@ export function testInvalidToken(useCaseExecution: (token: string) => void) {
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function handlesExpectedErrorTest(action: () => Promise<any>) {
+export function handlesExpectedErrorTest(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  action: () => Promise<any>,
+  errorMessage = ERROR_INVALID_USER
+) {
   describe('expected error', () => {
     beforeEach(() => (Context.gateKeeper = new GateKeeperFailureStub()));
 
@@ -30,7 +33,7 @@ export function handlesExpectedErrorTest(action: () => Promise<any>) {
       const res = await action();
 
       expect(res.body.errors.length).toBe(1);
-      expect(res.body.errors[0].message).toBe(ERROR_INVALID_USER);
+      expect(res.body.errors[0].message).toBe(errorMessage);
     });
 
     test('logs expected error', async () => {
@@ -38,7 +41,7 @@ export function handlesExpectedErrorTest(action: () => Promise<any>) {
       await action();
 
       expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
-        new ValidationError(ERROR_INVALID_USER)
+        new ValidationError(errorMessage)
       );
     });
   });
