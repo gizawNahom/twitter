@@ -22,11 +22,7 @@ export function Posts({ userId }: { userId: string }) {
 
   return (
     <div data-testid="posts">
-      {status === 'loading' && (
-        <Container>
-          <Spinner />
-        </Container>
-      )}
+      {status === 'loading' && <Spinner />}
       {status === 'error' && <Error />}
       {status === 'success' &&
         posts.map((p) => {
@@ -64,13 +60,5 @@ export function Posts({ userId }: { userId: string }) {
     };
 
     return new Intl.DateTimeFormat('en-US', options).format(date);
-  }
-
-  function Container({ children }: { children: ReactNode }) {
-    return (
-      <div className="min-h-[150px] flex justify-center items-center">
-        {children}
-      </div>
-    );
   }
 }

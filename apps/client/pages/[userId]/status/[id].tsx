@@ -42,11 +42,7 @@ export default function Status() {
           </time>
         </article>
       )}
-      {fetchStatus === 'loading' && (
-        <Container>
-          <Spinner />
-        </Container>
-      )}
+      {fetchStatus === 'loading' && <Spinner />}
       {fetchStatus === 'failed' && (
         <Container>
           <Error />
