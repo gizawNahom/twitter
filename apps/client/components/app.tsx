@@ -5,7 +5,7 @@ export function App({ children }: { children: ReactNode }) {
   return (
     <div className="flex">
       <Nav></Nav>
-      <div className="grow lg:basis-1/2">{children}</div>
+      <div className="grow sm:max-w-xl">{children}</div>
     </div>
   );
 }
