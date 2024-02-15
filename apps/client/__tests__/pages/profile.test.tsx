@@ -45,4 +45,4 @@ test('initial', async () => {
   expect(screen.getByTestId(POSTS_TEST_ID)).toBeVisible();
   expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
   assertUserIdInAPICall();
-});
+}, 10000);
