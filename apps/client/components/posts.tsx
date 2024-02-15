@@ -38,7 +38,7 @@ export function Posts({ userId }: { userId: string }) {
         <div className="grow">
           <div className="flex gap-1">
             <p className="font-bold">John Doe</p>
-            <div className="text-slate-500 flex">
+            <div className="text-slate-500 flex text-sm">
               <p>@john</p>
               <div className="flex justify-center items-center h-3 px-1">
                 <p>.</p>
