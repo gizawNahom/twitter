@@ -24,16 +24,32 @@ export function Posts({ userId }: { userId: string }) {
       {status === 'loading' && <Spinner />}
       {status === 'error' && <Error />}
       {status === 'success' &&
-        posts.map((e) => {
-          return (
-            <div key={e.id}>
-              <p>{e.text}</p>
-              <p>{formatDate(e.createdAt)}</p>
-            </div>
-          );
+        posts.map((p) => {
+          return createPost(p);
         })}
     </div>
   );
+
+  function createPost(p: Post) {
+    return (
+      <div key={p.id} className="border-t-[1px] flex gap-2 p-2">
+        <div className="bg-slate-300 h-10 w-10 rounded-full border "></div>
+        <div className="grow">
+          <div className="flex gap-1">
+            <p className="font-bold">John Doe</p>
+            <div className="text-slate-500 flex">
+              <p>@john</p>
+              <div className="flex justify-center items-center h-3 px-1">
+                <p>.</p>
+              </div>
+              <p>{formatDate(p.createdAt)}</p>
+            </div>
+          </div>
+          <p>{p.text}</p>
+        </div>
+      </div>
+    );
+  }
 
   function formatDate(date: Date): string {
     const options: Intl.DateTimeFormatOptions = {
