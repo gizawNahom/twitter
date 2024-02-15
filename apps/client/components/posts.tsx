@@ -33,7 +33,7 @@ export function Posts({ userId }: { userId: string }) {
 
   function createPost(p: Post) {
     return (
-      <div key={p.id} className="border-t-[1px] flex gap-2 p-2">
+      <div key={p.id} className="border-b-[1px] flex gap-2 p-2">
         <Avatar />
         <div className="grow">
           <div className="flex gap-1">
