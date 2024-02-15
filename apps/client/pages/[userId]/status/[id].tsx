@@ -10,6 +10,7 @@ import { ReactNode, useEffect } from 'react';
 import { Page } from '../../../components/page';
 import { Error } from '../../../components/error';
 import { Spinner } from '../../../components/spinner';
+import { Avatar } from '../../../components/avatar';
 
 export default function Status() {
   const dispatch = useDispatch();
@@ -29,7 +30,7 @@ export default function Status() {
       {fetchedPost && (
         <article className="h-min flex flex-col gap-y-3 pt-3">
           <header className="flex gap-3 items-center">
-            <div className="bg-slate-300 h-10 w-10 rounded-full border "></div>
+            <Avatar />
             <div>
               <p className="font-bold text-lg">John Doe</p>
               <p className="text-slate-500 -mt-1">@john</p>

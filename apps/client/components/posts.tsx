@@ -3,6 +3,7 @@ import { fetchPosts } from '../lib/redux/slices/postsSlice/fetchPosts';
 import { Error } from './error';
 import { Spinner } from './spinner';
 import { Post } from '../lib/redux/slices/postsSlice/post';
+import { Avatar } from './avatar';
 
 export function Posts({ userId }: { userId: string }) {
   const [status, setStatus] = useState('loading');
@@ -33,7 +34,7 @@ export function Posts({ userId }: { userId: string }) {
   function createPost(p: Post) {
     return (
       <div key={p.id} className="border-t-[1px] flex gap-2 p-2">
-        <div className="bg-slate-300 h-10 w-10 rounded-full border "></div>
+        <Avatar />
         <div className="grow">
           <div className="flex gap-1">
             <p className="font-bold">John Doe</p>
