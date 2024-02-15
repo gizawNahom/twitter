@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import { fetchPosts } from '../lib/redux/slices/postsSlice/fetchPosts';
 import { Error } from './error';
 import { Spinner } from './spinner';
@@ -22,7 +22,11 @@ export function Posts({ userId }: { userId: string }) {
 
   return (
     <div data-testid="posts">
-      {status === 'loading' && <Spinner />}
+      {status === 'loading' && (
+        <Container>
+          <Spinner />
+        </Container>
+      )}
       {status === 'error' && <Error />}
       {status === 'success' &&
         posts.map((p) => {
@@ -60,5 +64,13 @@ export function Posts({ userId }: { userId: string }) {
     };
 
     return new Intl.DateTimeFormat('en-US', options).format(date);
+  }
+
+  function Container({ children }: { children: ReactNode }) {
+    return (
+      <div className="min-h-[150px] flex justify-center items-center">
+        {children}
+      </div>
+    );
   }
 }
