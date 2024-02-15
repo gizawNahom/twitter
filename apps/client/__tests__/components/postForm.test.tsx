@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { genericErrorHandler, wasCreatePostCalled } from '../../mocks/handlers';
@@ -119,7 +119,7 @@ test('loading state', async () => {
   await typeText(validText);
   await clickPostButton();
 
-  assertPostButtonIsDisabled();
+  await waitFor(() => assertPostButtonIsDisabled());
   assertErrorMessageIsNotDisplayed();
 }, 10000);
 
