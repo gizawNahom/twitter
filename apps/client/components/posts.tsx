@@ -1,33 +1,46 @@
-import { ReactNode, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { fetchPosts } from '../lib/redux/slices/postsSlice/fetchPosts';
 import { Error } from './error';
 import { Spinner } from './spinner';
 import { Post } from '../lib/redux/slices/postsSlice/post';
 import { Avatar } from './avatar';
+import InfiniteScroll from 'react-infinite-scroller';
 
 export function Posts({ userId }: { userId: string }) {
-  const [status, setStatus] = useState('loading');
+  const [hasMore, setHasMore] = useState(true);
+  const [offset, setOffset] = useState(0);
   const [posts, setPosts] = useState<Array<Post>>([]);
+  const [status, setStatus] = useState<'idle' | 'fetching' | 'error'>('idle');
+
+  const fetchItems = useCallback(async () => {
+    try {
+      if (status === 'fetching') return;
+      setStatus('fetching');
+      const fetchedPosts = await fetchPosts(userId, offset, 20);
+      if (fetchPosts.length === 0) setHasMore(false);
+      setOffset(offset + 1);
+      setPosts([...posts, ...fetchedPosts]);
+      setStatus('idle');
+    } catch (e) {
+      setStatus('error');
+    }
+  }, [offset, posts, status, userId]);
 
   useEffect(() => {
-    (async () => {
-      try {
-        setPosts(await fetchPosts(userId, 0, 20));
-        setStatus('success');
-      } catch (e) {
-        setStatus('error');
-      }
-    })();
-  }, [userId]);
+    fetchItems();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const loader = <Spinner key="loader" />;
 
   return (
     <div data-testid="posts">
-      {status === 'loading' && <Spinner />}
       {status === 'error' && <Error />}
-      {status === 'success' &&
-        posts.map((p) => {
-          return createPost(p);
-        })}
+      {status !== 'error' && (
+        <InfiniteScroll loadMore={fetchItems} hasMore={hasMore} loader={loader}>
+          {posts.map((post, i) => createPost(post))}
+        </InfiniteScroll>
+      )}
     </div>
   );
 
