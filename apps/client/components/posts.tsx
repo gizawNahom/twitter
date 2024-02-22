@@ -23,6 +23,7 @@ export function Posts({ userId }: { userId: string }) {
       setStatus('idle');
     } catch (e) {
       setStatus('error');
+      setHasMore(false);
     }
   }, [offset, posts, status, userId]);
 
@@ -35,11 +36,13 @@ export function Posts({ userId }: { userId: string }) {
 
   return (
     <div data-testid="posts">
-      {status === 'error' && <Error />}
-      {status !== 'error' && (
-        <InfiniteScroll loadMore={fetchItems} hasMore={hasMore} loader={loader}>
-          {posts.map((post, i) => createPost(post))}
-        </InfiniteScroll>
+      <InfiniteScroll loadMore={fetchItems} hasMore={hasMore} loader={loader}>
+        {posts.map((post, i) => createPost(post))}
+      </InfiniteScroll>
+      {status === 'error' && (
+        <div className="flex justify-center items-center h-16 w-full">
+          <Error />
+        </div>
       )}
     </div>
   );
