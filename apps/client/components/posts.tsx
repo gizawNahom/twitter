@@ -5,6 +5,7 @@ import { Spinner } from './spinner';
 import { Post } from '../lib/redux/slices/postsSlice/post';
 import { Avatar } from './avatar';
 import InfiniteScroll from 'react-infinite-scroller';
+import { createWhenText } from '../utilities/createWhenText';
 
 export function Posts({ userId }: { userId: string }) {
   const [hasMore, setHasMore] = useState(true);
@@ -59,22 +60,12 @@ export function Posts({ userId }: { userId: string }) {
               <div className="flex justify-center items-center h-3 px-1">
                 <p>.</p>
               </div>
-              <p>{formatDate(p.createdAt)}</p>
+              <p>{createWhenText(p.createdAt)}</p>
             </div>
           </div>
           <p>{p.text}</p>
         </div>
       </div>
     );
-  }
-
-  function formatDate(date: Date): string {
-    const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    };
-
-    return new Intl.DateTimeFormat('en-US', options).format(date);
   }
 }
