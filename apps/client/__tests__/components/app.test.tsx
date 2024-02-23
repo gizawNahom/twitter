@@ -1,6 +1,6 @@
 import { App } from '../../components/app';
-import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../utilities/testIds';
-import { renderElement } from '../utilities/helpers';
+import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../testUtilities/testIds';
+import { renderElement } from '../testUtilities/helpers';
 import { screen } from '@testing-library/react';
 
 jest.mock('next/router', () => ({

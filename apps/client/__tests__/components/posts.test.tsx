@@ -5,7 +5,7 @@ import {
   querySpinner,
   renderElement,
   setUpApi,
-} from '../utilities/helpers';
+} from '../testUtilities/helpers';
 import { server } from '../../mocks/server';
 import {
   postsErrorHandler,

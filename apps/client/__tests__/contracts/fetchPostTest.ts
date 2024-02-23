@@ -3,11 +3,11 @@ import {
   addInteraction,
   assertPostEquality,
   createBaseInteraction,
-} from '../utilities/contractHelpers';
+} from '../testUtilities/contractHelpers';
 import { GENERIC_SERVER_ERROR, samplePostResponse } from '../../mocks/values';
 import { fetchPost } from '../../lib/redux/slices/postsSlice/fetchPost';
 import { Pact } from '@pact-foundation/pact';
-import { Operations } from '../utilities/operations';
+import { Operations } from '../testUtilities/operations';
 
 export function testFetchPost(provider: Pact, baseUrl: URL) {
   describe('Fetch Post', () => {

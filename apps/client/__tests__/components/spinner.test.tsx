@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { Spinner } from '../../components/spinner';
-import { renderElement } from '../utilities/helpers';
+import { renderElement } from '../testUtilities/helpers';
 
 const LOADING = /loading/i;
 

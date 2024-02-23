@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
-import { renderElement } from '../utilities/helpers';
+import { renderElement } from '../testUtilities/helpers';
 import { BackButton } from '../../components/backButton';
 
 jest.mock('next/router', () => ({

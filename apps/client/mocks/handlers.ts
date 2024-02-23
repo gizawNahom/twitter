@@ -1,6 +1,6 @@
 import { GraphQLVariables, graphql } from 'msw';
 import { GENERIC_SERVER_ERROR, samplePostResponse } from './values';
-import { Operations } from '../__tests__/utilities/operations';
+import { Operations } from '../__tests__/testUtilities/operations';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;

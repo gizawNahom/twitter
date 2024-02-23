@@ -1,5 +1,5 @@
 import { Error } from '../../components/error';
-import { renderElement } from '../utilities/helpers';
+import { renderElement } from '../testUtilities/helpers';
 import { screen } from '@testing-library/react';
 
 const ERROR_MESSAGE = /something went wrong/i;

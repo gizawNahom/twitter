@@ -8,9 +8,9 @@ import {
   querySpinner,
   renderElement,
   setUpApi,
-} from '../utilities/helpers';
+} from '../testUtilities/helpers';
 import { samplePostResponse } from '../../mocks/values';
-import { BACK_BUTTON_TEST_ID } from '../utilities/testIds';
+import { BACK_BUTTON_TEST_ID } from '../testUtilities/testIds';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),

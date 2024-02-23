@@ -1,4 +1,4 @@
-import { setUpClient } from './utilities/helpers';
+import { setUpClient } from './testUtilities/helpers';
 import { testCreatePost } from './contracts/createPostTest';
 import { testFetchPost } from './contracts/fetchPostTest';
 import { testFetchPosts } from './contracts/fetchPostsTest';

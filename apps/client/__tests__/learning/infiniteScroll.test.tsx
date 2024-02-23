@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { renderElement } from '../utilities/helpers';
+import { renderElement } from '../testUtilities/helpers';
 import { useEffect, useState } from 'react';
 
 test('should render', async () => {

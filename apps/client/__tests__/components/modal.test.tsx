@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import { Modal } from '../../components/modal';
-import { renderElement } from '../utilities/helpers';
+import { renderElement } from '../testUtilities/helpers';
 import userEvent from '@testing-library/user-event';
 
 test('gets closed', async () => {

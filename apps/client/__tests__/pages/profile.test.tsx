@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
-import { renderElement, setUpApi } from '../utilities/helpers';
-import { BACK_BUTTON_TEST_ID, POSTS_TEST_ID } from '../utilities/testIds';
+import { renderElement, setUpApi } from '../testUtilities/helpers';
+import { BACK_BUTTON_TEST_ID, POSTS_TEST_ID } from '../testUtilities/testIds';
 import { samplePostResponse } from '../../mocks/values';
 import { postsVariables } from '../../mocks/handlers';
 

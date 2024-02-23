@@ -1,8 +1,11 @@
 import { screen } from '@testing-library/react';
 import ComposeTweet from '../../pages/compose/tweet';
-import { renderElement } from '../utilities/helpers';
-import { POST_INPUT_PLACE_HOLDER_TEXT } from '../utilities/texts';
-import { BACK_BUTTON_TEST_ID, POST_FORM_TEST_ID } from '../utilities/testIds';
+import { renderElement } from '../testUtilities/helpers';
+import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
+import {
+  BACK_BUTTON_TEST_ID,
+  POST_FORM_TEST_ID,
+} from '../testUtilities/testIds';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
