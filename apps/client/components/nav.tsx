@@ -57,7 +57,7 @@ export function Nav() {
         </Link>
       </ul>
       <div className="fixed bottom-20 right-5 sm:static xl:hidden">
-        <PostFAB />
+        {router.pathname !== '/compose/tweet' && <PostFAB />}
       </div>
     </nav>
   );
