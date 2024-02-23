@@ -10,7 +10,7 @@ export function Nav() {
       data-testid="nav"
       className="sm:border-r-[1px] sm:basis-1/6 sm:flex sm:flex-col sm:items-center sm:pt-14 sm:h-screen md:items-end md:pr-5 xl:basis-1/4 xl:pl-12"
     >
-      <ul className="absolute bottom-0 left-0 w-full flex justify-around border-t-[1px] sm:flex-col sm:static sm:w-min sm:border-none xl:w-full">
+      <ul className="fixed bg-white bottom-0 left-0 w-full flex justify-around border-t-[1px] sm:flex-col sm:static sm:w-min sm:border-none xl:w-full">
         <Link href="/home" aria-label="Home">
           <li className="text-xl flex gap-4 hover:bg-slate-200 rounded-full p-3 transition lg:w-min">
             <svg
@@ -56,7 +56,7 @@ export function Nav() {
           </li>
         </Link>
       </ul>
-      <div className="absolute bottom-20 right-5 sm:static xl:hidden">
+      <div className="fixed bottom-20 right-5 sm:static xl:hidden">
         <PostFAB />
       </div>
     </nav>
