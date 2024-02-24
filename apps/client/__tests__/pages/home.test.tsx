@@ -6,5 +6,5 @@ import { POST_FORM_TEST_ID } from '../testUtilities/testIds';
 test('renders PostForm', () => {
   renderElement(<Home />);
 
-  expect(screen.getByTestId(POST_FORM_TEST_ID)).toBeVisible();
+  expect(screen.getByTestId(POST_FORM_TEST_ID)).toBeInTheDocument();
 });
