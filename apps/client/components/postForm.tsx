@@ -42,7 +42,6 @@ export function PostForm({ autoFocus = false }: { autoFocus?: boolean }) {
           Post
         </button>
       </div>
-      {status === 'succeeded' && <p>Your post was sent.</p>}
     </div>
   );
 

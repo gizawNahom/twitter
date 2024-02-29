@@ -8,7 +8,6 @@ import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
 
 const POST_BUTTON_TEXT = /^post$/i;
 const ERROR_MESSAGE = 'Something went wrong';
-const SUCCESS_MESSAGE = 'Your post was sent.';
 
 const validText = generateRandomString(280);
 const tooLongText = validText + '.';
@@ -80,7 +79,6 @@ test('Initial state', () => {
   assertEmptyInput();
   assertPostButtonIsDisabled();
   assertErrorMessageIsNotDisplayed();
-  expect(queryByText(SUCCESS_MESSAGE)).toBeNull();
 });
 
 test("empty post doesn't trigger a request", async () => {
@@ -129,6 +127,5 @@ test('success state', async () => {
 
   assertPostButtonIsDisabled();
   assertErrorMessageIsNotDisplayed();
-  await screen.findByText(SUCCESS_MESSAGE);
-  assertEmptyInput();
+  await waitFor(() => assertEmptyInput());
 }, 10000);
