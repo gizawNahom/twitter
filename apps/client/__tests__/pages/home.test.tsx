@@ -39,7 +39,7 @@ test('renders toast on successful post creation', async () => {
   );
 
   await typeText('hello world');
-  clickPostButton();
+  await clickPostButton();
 
   await waitFor(() =>
     expect(screen.getByText(POST_CREATION_MESSAGE)).toBeInTheDocument()
