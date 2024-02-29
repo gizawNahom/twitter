@@ -1,6 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import fetch from 'cross-fetch';
-import fs from 'fs';
 import { Client } from '../../utilities/client';
 import { Provider } from 'react-redux';
 import { reducer } from '../../lib/redux/rootReducer';
@@ -35,10 +34,6 @@ export function setUpClient() {
 
 export function renderElement(element: JSX.Element) {
   render(addNewStore(element));
-
-  const style = document.createElement('style');
-  style.innerHTML = fs.readFileSync('apps/client/__tests__/global.css', 'utf8');
-  document.head.appendChild(style);
 }
 
 function addNewStore(component: JSX.Element) {
