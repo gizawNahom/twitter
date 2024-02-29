@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-export function Toast1() {
+export function Toast() {
   const modalElementRef = useRef<HTMLDivElement>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const modalRef = useRef<any>();
