@@ -7,6 +7,8 @@ import { configureStore } from '@reduxjs/toolkit';
 import { render, screen } from '@testing-library/react';
 import { server } from '../../mocks/server';
 import { ERROR_TEST_ID, SPINNER_TEST_ID } from './testIds';
+import userEvent from '@testing-library/user-event';
+import { POST_BUTTON_TEXT } from './texts';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -69,4 +71,12 @@ export function queryErrorComponent(): HTMLElement | null {
 
 export function querySpinner(): HTMLElement | null {
   return screen.queryByTestId(SPINNER_TEST_ID);
+}
+
+export async function typeText(text: string) {
+  await userEvent.type(screen.getByRole('textbox'), text);
+}
+
+export function clickPostButton() {
+  return userEvent.click(screen.getByText(POST_BUTTON_TEXT));
 }

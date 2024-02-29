@@ -1,12 +1,19 @@
 import { screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { server } from '../../mocks/server';
 import { genericErrorHandler, wasCreatePostCalled } from '../../mocks/handlers';
-import { renderElement, setUpApi } from '../testUtilities/helpers';
+import {
+  clickPostButton,
+  renderElement,
+  setUpApi,
+  typeText,
+} from '../testUtilities/helpers';
 import { PostForm } from '../../components/postForm';
-import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
+import {
+  POST_BUTTON_TEXT,
+  POST_INPUT_PLACE_HOLDER_TEXT,
+} from '../testUtilities/texts';
 
-const POST_BUTTON_TEXT = /^post$/i;
+// const POST_BUTTON_TEXT = /^post$/i;
 const ERROR_MESSAGE = 'Something went wrong';
 
 const validText = generateRandomString(280);
@@ -22,14 +29,6 @@ function queryPostButton() {
 
 function queryByText(text: string | RegExp) {
   return screen.queryByText(text);
-}
-
-async function typeText(text: string) {
-  await userEvent.type(screen.getByRole('textbox'), text);
-}
-
-function clickPostButton() {
-  return userEvent.click(screen.getByText(POST_BUTTON_TEXT));
 }
 
 function assertEmptyInput() {
