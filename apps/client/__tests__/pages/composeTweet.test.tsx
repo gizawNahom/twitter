@@ -1,7 +1,8 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import ComposeTweet from '../../pages/compose/tweet';
 import {
   clickPostButton,
+  createNewStore,
   renderElement,
   setUpApi,
   typeText,
@@ -13,16 +14,14 @@ import {
 } from '../testUtilities/testIds';
 import { useRouter } from 'next/router';
 import { createPostAsync } from '../../lib/redux';
-import { configureStore } from '@reduxjs/toolkit';
-import { reducer } from '../../lib/redux/rootReducer';
-import { Provider } from 'react-redux';
+import { EnhancedStore } from '@reduxjs/toolkit';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-function renderSUT() {
-  renderElement(<ComposeTweet />);
+function renderSUT(store?: EnhancedStore) {
+  renderElement(<ComposeTweet />, store);
 }
 
 const push = jest.fn();
@@ -66,21 +65,10 @@ test('redirects to home on successful post creation', async () => {
 });
 
 test('does not redirect to home if post creation was already successful', async () => {
-  const store = configureStore({
-    reducer,
-    middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware({
-        serializableCheck: false,
-      });
-    },
-  });
+  const store = createNewStore();
   await store.dispatch(createPostAsync('Hello'));
 
-  render(
-    <Provider store={store}>
-      <ComposeTweet />
-    </Provider>
-  );
+  renderSUT(store);
 
   expect(push).toHaveBeenCalledTimes(0);
 });

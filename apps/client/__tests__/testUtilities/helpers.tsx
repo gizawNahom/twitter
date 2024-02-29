@@ -34,12 +34,12 @@ export function setUpClient() {
   }
 }
 
-export function renderElement(element: JSX.Element) {
-  render(addNewStore(element));
+export function renderElement(element: JSX.Element, store = createNewStore()) {
+  render(<Provider store={store}>{element}</Provider>);
 }
 
-function addNewStore(component: JSX.Element) {
-  const store = configureStore({
+export function createNewStore() {
+  return configureStore({
     reducer,
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware({
@@ -47,7 +47,6 @@ function addNewStore(component: JSX.Element) {
       });
     },
   });
-  return <Provider store={store}>{component}</Provider>;
 }
 
 export function setUpApi() {
