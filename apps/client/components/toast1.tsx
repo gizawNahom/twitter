@@ -10,6 +10,7 @@ export function Toast1() {
       const { Toast } = await import('tw-elements');
       const toast = new Toast(modalElementRef.current);
       modalRef.current = toast;
+      modalRef.current.show();
     };
     init();
     return () => modalRef.current?.dispose();
@@ -17,15 +18,14 @@ export function Toast1() {
 
   return (
     <div
-      className="pointer-events-auto mx-auto hidden w-96 max-w-full rounded-lg bg-white bg-clip-padding text-sm shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden dark:bg-neutral-600"
-      id="static-example"
+      className="absolute inset-x-0 bottom-[53px] hidden pointer-events-auto text-white text-xs bg-sky-500 bg-clip-padding shadow-lg shadow-black/5 data-[te-toast-show]:block data-[te-toast-hide]:hidden max-w-full px-3 py-2 mx-auto sm:w-max sm:rounded-sm"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
-      data-te-autohide="false"
+      data-te-autohide="true"
       ref={modalElementRef}
     >
-      Post Created
+      Post Created.
     </div>
   );
 }
