@@ -1,7 +1,6 @@
-import { useRouter } from 'next/router';
 import userEvent from '@testing-library/user-event';
 import { screen } from '@testing-library/react';
-import { renderElement } from '../testUtilities/helpers';
+import { mockRouter, renderElement } from '../testUtilities/helpers';
 import { BackButton } from '../../components/backButton';
 
 jest.mock('next/router', () => ({
@@ -18,16 +17,8 @@ function renderSUT() {
   renderElement(<BackButton />);
 }
 
-function mockRouter() {
-  const router = useRouter as jest.Mock;
-  router.mockImplementation(() => ({
-    back: back,
-    push: push,
-  }));
-}
-
 beforeEach(() => {
-  mockRouter();
+  mockRouter({ back, push });
 });
 
 afterEach(() => {

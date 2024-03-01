@@ -1,9 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import Status from '../../pages/[userId]/status/[id]';
 import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
-import { useRouter } from 'next/router';
 import { server } from '../../mocks/server';
 import {
+  mockRouter,
   queryErrorComponent,
   querySpinner,
   renderElement,
@@ -17,15 +17,6 @@ jest.mock('next/router', () => ({
 }));
 
 const PAGE_TITLE = /post/i;
-
-function mockRouter() {
-  const router = useRouter as jest.Mock;
-  router.mockImplementation(() => ({
-    query: {
-      id: 'id1',
-    },
-  }));
-}
 
 function renderSUT() {
   renderElement(<Status />);
@@ -69,7 +60,11 @@ function assertSpinnerIsNotShown(): void | Promise<void> {
 }
 
 beforeEach(() => {
-  mockRouter();
+  mockRouter({
+    query: {
+      id: 'id1',
+    },
+  });
 });
 
 afterEach(() => {

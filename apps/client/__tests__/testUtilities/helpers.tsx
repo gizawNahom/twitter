@@ -9,6 +9,7 @@ import { server } from '../../mocks/server';
 import { ERROR_TEST_ID, SPINNER_TEST_ID } from './testIds';
 import userEvent from '@testing-library/user-event';
 import { POST_BUTTON_TEXT } from './texts';
+import { useRouter } from 'next/router';
 
 export function setUpClient() {
   beforeAll(() => {
@@ -78,4 +79,21 @@ export async function typeText(text: string) {
 
 export function clickPostButton() {
   return userEvent.click(screen.getByText(POST_BUTTON_TEXT));
+}
+
+export function mockRouter({
+  back,
+  push,
+  query,
+}: {
+  back?: jest.Mock;
+  push?: jest.Mock;
+  query?: object;
+}) {
+  const router = useRouter as jest.Mock;
+  router.mockImplementation(() => ({
+    back: back,
+    push: push,
+    query,
+  }));
 }

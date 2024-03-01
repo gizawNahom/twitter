@@ -3,6 +3,7 @@ import ComposeTweet from '../../pages/compose/tweet';
 import {
   clickPostButton,
   createNewStore,
+  mockRouter,
   renderElement,
   setUpApi,
   typeText,
@@ -12,7 +13,6 @@ import {
   BACK_BUTTON_TEST_ID,
   POST_FORM_TEST_ID,
 } from '../testUtilities/testIds';
-import { useRouter } from 'next/router';
 import { createPostAsync } from '../../lib/redux';
 import { EnhancedStore } from '@reduxjs/toolkit';
 
@@ -20,23 +20,16 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-function renderSUT(store?: EnhancedStore) {
-  renderElement(<ComposeTweet />, store);
-}
-
 const push = jest.fn();
 
-function mockRouter() {
-  const router = useRouter as jest.Mock;
-  router.mockImplementation(() => ({
-    push: push,
-  }));
+function renderSUT(store?: EnhancedStore) {
+  renderElement(<ComposeTweet />, store);
 }
 
 setUpApi();
 
 beforeEach(() => {
-  mockRouter();
+  mockRouter({ push });
 });
 
 afterEach(() => {
