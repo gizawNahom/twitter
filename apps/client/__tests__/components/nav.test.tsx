@@ -4,7 +4,7 @@ import { renderElement } from '../testUtilities/helpers';
 import { POST_FAB_TEST_ID } from '../testUtilities/testIds';
 
 const HOME_LINK = '/home';
-const PROFILE_LINK = '/home';
+const PROFILE_LINK = '/username';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn().mockImplementation(() => ({
