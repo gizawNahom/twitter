@@ -3,6 +3,7 @@ import { Page } from '../../components/page';
 import { useEffect, useState } from 'react';
 import { selectCreateStatus, useSelector } from '../../lib/redux';
 import { useRouter } from 'next/router';
+import { HOME_ROUTE } from 'apps/client/utilities/constants';
 
 export default function ComposeTweet() {
   const router = useRouter();
@@ -22,7 +23,7 @@ export default function ComposeTweet() {
     }
 
     function goToHome() {
-      router.push('/home');
+      router.push(HOME_ROUTE);
     }
   }, [currentCreateStatus, router, previousCreateStatus]);
 
