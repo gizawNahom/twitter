@@ -7,6 +7,7 @@ import { Logger } from '../ports/logger';
 import { PostRepository } from '../ports/postRepository';
 import { UserRepository } from '../ports/userRepository';
 import { ValidationMessages } from '../validationMessages';
+import { Limit } from '../valueObjects/limit';
 import { Token } from '../valueObjects/token';
 
 export class GetPostsUseCase {
@@ -21,16 +22,11 @@ export class GetPostsUseCase {
   ) {}
 
   async execute(request: GetPostsRequest): Promise<GetPostsResponse> {
-    this.validateLimit(request.limit);
+    new Limit(request.limit);
     this.validateOffset(request.offset);
     this.validateUserId(request.userId);
     await this.ensureUserExists(request.userId);
     return this.buildResponse(await this.getPosts(request));
-  }
-
-  private validateLimit(limit: number) {
-    if (limit <= 0 || limit > 20)
-      this.throwValidationError(ValidationMessages.INVALID_LIMIT);
   }
 
   private validateOffset(offset: number) {
