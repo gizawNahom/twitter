@@ -8,6 +8,7 @@ import { PostRepository } from '../ports/postRepository';
 import { UserRepository } from '../ports/userRepository';
 import { ValidationMessages } from '../validationMessages';
 import { Limit } from '../valueObjects/limit';
+import { Offset } from '../valueObjects/offset';
 import { Token } from '../valueObjects/token';
 
 export class GetPostsUseCase {
@@ -23,15 +24,10 @@ export class GetPostsUseCase {
 
   async execute(request: GetPostsRequest): Promise<GetPostsResponse> {
     new Limit(request.limit);
-    this.validateOffset(request.offset);
+    new Offset(request.offset);
     this.validateUserId(request.userId);
     await this.ensureUserExists(request.userId);
     return this.buildResponse(await this.getPosts(request));
-  }
-
-  private validateOffset(offset: number) {
-    if (offset < 0)
-      this.throwValidationError(ValidationMessages.INVALID_OFFSET);
   }
 
   private validateUserId(userId: string) {
