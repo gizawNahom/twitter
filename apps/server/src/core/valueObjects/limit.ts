@@ -2,8 +2,10 @@ import { ValidationError } from '../errors';
 import { ValidationMessages } from '../validationMessages';
 
 export class Limit {
+  private limit: number;
   constructor(limit: number) {
     if (this.isLimitInvalid(limit)) this.throwLimitInvalidError();
+    this.limit = limit;
   }
 
   private isLimitInvalid(limit: number) {
@@ -12,5 +14,9 @@ export class Limit {
 
   private throwLimitInvalidError() {
     throw new ValidationError(ValidationMessages.INVALID_LIMIT);
+  }
+
+  getLimit() {
+    return this.limit;
   }
 }

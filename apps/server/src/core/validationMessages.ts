@@ -9,4 +9,5 @@ export enum ValidationMessages {
   INVALID_OFFSET = 'Offset is invalid',
   USER_ID_REQUIRED = 'User id is required',
   USER_DOES_NOT_EXIST = 'User does not exist',
+  INVALID_QUERY = 'Query is invalid',
 }
