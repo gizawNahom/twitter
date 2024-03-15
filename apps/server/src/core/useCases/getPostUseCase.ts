@@ -1,4 +1,3 @@
-import { makeSureUserIsAuthenticated } from '../domainServices';
 import { ValidationError } from '../errors';
 import { GateKeeper } from '../ports/gateKeeper';
 import { LogMessages } from '../logMessages';
@@ -7,6 +6,7 @@ import { Post } from '../entities/post';
 import { PostRepository } from '../ports/postRepository';
 import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
+import { makeSureUserIsAuthenticated } from '../domainServices';
 
 export class GetPostUseCase {
   constructor(
@@ -23,7 +23,7 @@ export class GetPostUseCase {
     await makeSureUserIsAuthenticated(
       this.gateKeeper,
       this.logger,
-      new Token(token).getToken()
+      new Token(token)
     );
     const post = await this.getSavedPost(postId);
     if (!this.exists(post)) this.throwInvalidPostIdError();

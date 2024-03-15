@@ -46,11 +46,7 @@ export class SearchPostsUseCase {
   }
 
   private async makeSureUserIsAuthenticated(token: Token) {
-    await makeSureUserIsAuthenticated(
-      this.gateKeeper,
-      this.logger,
-      token.getToken()
-    );
+    await makeSureUserIsAuthenticated(this.gateKeeper, this.logger, token);
   }
 
   private async getPosts(query: string, l: Limit, o: Offset) {

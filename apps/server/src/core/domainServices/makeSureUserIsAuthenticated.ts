@@ -3,16 +3,17 @@ import { GateKeeper } from '../ports/gateKeeper';
 import { LogMessages } from '../logMessages';
 import { Logger } from '../ports/logger';
 import { ValidationMessages } from '../validationMessages';
+import { Token } from '../valueObjects/token';
 
 export async function makeSureUserIsAuthenticated(
   gateKeeper: GateKeeper,
   logger: Logger,
-  token: string
+  token: Token
 ) {
   if (!isUserAuthenticated(await getUser(token))) throwInvalidUserError();
 
-  async function getUser(token: string) {
-    const user = await gateKeeper.extractUser(token);
+  async function getUser(token: Token) {
+    const user = await gateKeeper.extractUser(token.getToken());
     logInfo(LogMessages.EXTRACTED_USER, { userId: user?.getId() });
     return user;
   }
