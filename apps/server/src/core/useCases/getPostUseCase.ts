@@ -1,4 +1,4 @@
-import { checkUserAuthorization } from '../domainServices';
+import { makeSureUserIsAuthenticated } from '../domainServices';
 import { ValidationError } from '../errors';
 import { GateKeeper } from '../ports/gateKeeper';
 import { LogMessages } from '../logMessages';
@@ -20,7 +20,7 @@ export class GetPostUseCase {
     postId: string | null
   ): Promise<GetPostUseCaseResponse> {
     this.validatePostId(postId);
-    await checkUserAuthorization(
+    await makeSureUserIsAuthenticated(
       this.gateKeeper,
       this.logger,
       new Token(token).getToken()

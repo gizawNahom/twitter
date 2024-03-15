@@ -1,4 +1,4 @@
-import { checkUserAuthorization } from '../domainServices';
+import { makeSureUserIsAuthenticated } from '../domainServices';
 import { Post } from '../entities/post';
 import { ValidationError } from '../errors';
 import { LogMessages } from '../logMessages';
@@ -44,7 +44,7 @@ export class SearchPostsUseCase {
   }
 
   private async makeSureUserIsAuthenticated(token: Token) {
-    await checkUserAuthorization(
+    await makeSureUserIsAuthenticated(
       this.gateKeeper,
       this.logger,
       token.getToken()

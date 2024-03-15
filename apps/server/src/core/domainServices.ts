@@ -4,7 +4,7 @@ import { LogMessages } from './logMessages';
 import { Logger } from './ports/logger';
 import { ValidationMessages } from './validationMessages';
 
-export async function checkUserAuthorization(
+export async function makeSureUserIsAuthenticated(
   gateKeeper: GateKeeper,
   logger: Logger,
   token: string
