@@ -32,14 +32,6 @@ export class CreatePostUseCase {
     if (this.is0(textLength)) this.throwTextTooShortError();
   }
 
-  private isTokenInvalid(token: string) {
-    return token === '' || token == null;
-  }
-
-  private throwTokenInvalidError() {
-    throw this.createError(ValidationMessages.INVALID_TOKEN);
-  }
-
   private isLongerThan280(textLength: number) {
     return textLength > 280;
   }
