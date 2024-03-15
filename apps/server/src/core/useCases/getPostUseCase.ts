@@ -7,6 +7,7 @@ import { PostRepository } from '../ports/postRepository';
 import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
 import { makeSureUserIsAuthenticated } from '../domainServices';
+import { extractUser } from '../domainServices';
 
 export class GetPostUseCase {
   constructor(
@@ -20,13 +21,14 @@ export class GetPostUseCase {
     postId: string | null
   ): Promise<GetPostUseCaseResponse> {
     this.validatePostId(postId);
-    await makeSureUserIsAuthenticated(
-      this.gateKeeper,
-      this.logger,
-      new Token(token)
+
+    makeSureUserIsAuthenticated(
+      await extractUser(this.gateKeeper, this.logger, new Token(token))
     );
+
     const post = await this.getSavedPost(postId);
     if (!this.exists(post)) this.throwInvalidPostIdError();
+
     return this.buildResponse(post);
   }
 

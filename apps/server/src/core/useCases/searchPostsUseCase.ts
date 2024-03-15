@@ -2,6 +2,7 @@ import {
   makeSureUserIsAuthenticated,
   sanitizeXSSString,
 } from '../domainServices';
+import { extractUser } from '../domainServices';
 import { Post } from '../entities/post';
 import { ValidationError } from '../errors';
 import { LogMessages } from '../logMessages';
@@ -28,7 +29,9 @@ export class SearchPostsUseCase {
 
     this.validateQuery(query);
 
-    await this.makeSureUserIsAuthenticated(token);
+    makeSureUserIsAuthenticated(
+      await extractUser(this.gateKeeper, this.logger, token)
+    );
 
     return this.buildResponse(await this.getPosts(query, limit, offset));
   }
@@ -43,10 +46,6 @@ export class SearchPostsUseCase {
     function throwInvalidQueryError() {
       throw new ValidationError(ValidationMessages.INVALID_QUERY);
     }
-  }
-
-  private async makeSureUserIsAuthenticated(token: Token) {
-    await makeSureUserIsAuthenticated(this.gateKeeper, this.logger, token);
   }
 
   private async getPosts(query: string, l: Limit, o: Offset) {

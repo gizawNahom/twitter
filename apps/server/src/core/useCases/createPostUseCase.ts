@@ -7,7 +7,11 @@ import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
 import { Logger } from '../ports/logger';
 import { LogMessages } from '../logMessages';
-import { sanitizeXSSString } from '../domainServices';
+import {
+  makeSureUserIsAuthenticated,
+  sanitizeXSSString,
+} from '../domainServices';
+import { extractUser } from '../domainServices';
 
 export class CreatePostUseCase {
   constructor(
@@ -18,13 +22,13 @@ export class CreatePostUseCase {
 
   async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
-    const user = await this.extractUser(new Token(token).getToken());
-    this.logInfo(LogMessages.EXTRACTED_USER, { userId: user?.getId() });
-    if (this.isUserValid(user))
-      return this.buildResponse(
-        await this.getSavedPost(this.sanitizeText(text), user as User)
-      );
-    else this.throwUserIsNotValidError();
+
+    const user = await this.extractUser(new Token(token));
+    makeSureUserIsAuthenticated(user);
+
+    return this.buildResponse(
+      await this.getSavedPost(this.sanitizeText(text), user as User)
+    );
   }
 
   private validateTextLength(textLength: number) {
@@ -48,12 +52,8 @@ export class CreatePostUseCase {
     throw this.createError("Text can't be empty");
   }
 
-  private extractUser(token: string) {
-    return this.gateKeeper.extractUser(token);
-  }
-
-  private isUserValid(user: User | null) {
-    return user !== null;
+  private async extractUser(token: Token): Promise<User> {
+    return await extractUser(this.gateKeeper, this.logger, token);
   }
 
   private sanitizeText(text: string): string {
@@ -89,10 +89,6 @@ export class CreatePostUseCase {
     response.userId = post.getUserId();
     response.createdAt = post.getCreatedAt().toISOString();
     return response;
-  }
-
-  private throwUserIsNotValidError() {
-    throw this.createError(ValidationMessages.INVALID_USER);
   }
 
   private createError(message: string) {

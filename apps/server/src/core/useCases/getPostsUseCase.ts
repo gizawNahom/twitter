@@ -1,3 +1,4 @@
+import { extractUser } from '../domainServices';
 import { Post } from '../entities/post';
 import { User } from '../entities/user';
 import { ValidationError } from '../errors';
@@ -61,9 +62,8 @@ export class GetPostsUseCase {
   }
 
   private async getPosts({ token, userId, limit, offset }: GetPostsRequest) {
-    const user = await this.extractUser(token);
+    const user = await this.extractUser(new Token(token));
     if (this.isAuthenticated(user)) {
-      this.logInfo(LogMessages.EXTRACTED_USER, { userId: user.getId() });
       return await this.getLatestPosts(userId, limit, offset);
     } else
       return await this.getLatestPosts(
@@ -73,8 +73,8 @@ export class GetPostsUseCase {
       );
   }
 
-  private async extractUser(token: string) {
-    return await this.gateKeeper.extractUser(new Token(token).getToken());
+  private async extractUser(token: Token) {
+    return await extractUser(this.gateKeeper, this.logger, token);
   }
 
   private isAuthenticated(user: User) {
