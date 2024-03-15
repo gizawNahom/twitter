@@ -1,10 +1,17 @@
 import Context from '../../src/context';
 import { PostIndexGateway } from '../../src/core/ports/postIndexGateway';
-import { SearchPostsUseCase } from '../../src/core/useCases/searchPostsUseCase';
+import {
+  SearchPostsResponse,
+  SearchPostsUseCase,
+} from '../../src/core/useCases/searchPostsUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
+import { LoggerSpy } from '../doubles/loggerSpy';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
-import { assertValidationErrorWithMessage } from '../utilities/assertions';
+import {
+  assertUserExtractionLog,
+  assertValidationErrorWithMessage,
+} from '../utilities/assertions';
 import {
   ERROR_INVALID_LIMIT,
   ERROR_INVALID_OFFSET,
@@ -30,7 +37,7 @@ function executeUseCase({
   query?: string;
   limit?: number;
   offset?: number;
-}): Promise<void> {
+}): Promise<SearchPostsResponse> {
   postIndexGateway = new PostIndexGatewaySpy();
   return new SearchPostsUseCase(
     Context.gateKeeper,
@@ -42,6 +49,19 @@ function executeUseCase({
     limit,
     offset,
   });
+}
+
+function assertLogInfoCall({
+  call,
+  message,
+  obj,
+}: {
+  call: Array<unknown>;
+  message: string;
+  obj;
+}) {
+  expect(call[0]).toBe(message);
+  expect(call[1]).toStrictEqual(obj);
 }
 
 afterEach(() => {
@@ -109,6 +129,27 @@ describe('sanitizes query text', () => {
   });
 });
 
-// test('returns correct response', async () => {
-//   await executeUseCase({});
-// });
+test('returns correct response', async () => {
+  const response: SearchPostsResponse = await executeUseCase({});
+
+  expect(response.posts).toStrictEqual(PostIndexGatewaySpy.queryResponse);
+});
+
+test('logs happy path', async () => {
+  Context.logger = new LoggerSpy();
+
+  await executeUseCase({});
+
+  const loggerSpy = Context.logger as LoggerSpy;
+  expect(loggerSpy.logInfoCalls).toHaveLength(2);
+  assertUserExtractionLog(loggerSpy.logInfoCalls[0]);
+  assertLogInfoCall({
+    call: loggerSpy.logInfoCalls[1],
+    message: 'Fetched search results',
+    obj: {
+      query: sampleQueryText,
+      limit: sampleLimit,
+      offset: sampleOffset,
+    },
+  });
+});

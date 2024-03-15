@@ -1,5 +1,7 @@
 import { checkUserAuthorization } from '../domainServices';
+import { Post } from '../entities/post';
 import { ValidationError } from '../errors';
+import { LogMessages } from '../logMessages';
 import { GateKeeper } from '../ports/gateKeeper';
 import { Logger } from '../ports/logger';
 import { PostIndexGateway } from '../ports/postIndexGateway';
@@ -16,31 +18,17 @@ export class SearchPostsUseCase {
     private logger: Logger
   ) {}
 
-  async execute(request: SearchPostsRequest) {
+  async execute(request: SearchPostsRequest): Promise<SearchPostsResponse> {
     const token = new Token(request.token);
     const limit = new Limit(request.limit);
     const offset = new Offset(request.offset);
-    this.validateQuery(request.query);
+    const query = request.query;
+
+    this.validateQuery(query);
 
     await this.makeSureUserIsAuthenticated(token);
 
-    await this.postIndexGateway.query({
-      text: this.sanitize(request.query),
-      limit: limit.getLimit(),
-      offset: offset.getOffset(),
-    });
-  }
-
-  private async makeSureUserIsAuthenticated(token: Token) {
-    await checkUserAuthorization(
-      this.gateKeeper,
-      this.logger,
-      token.getToken()
-    );
-  }
-
-  private sanitize(query: string) {
-    return DOMPurify.sanitize(query).replace(/[{}]/g, '');
+    return this.buildResponse(await this.getPosts(query, limit, offset));
   }
 
   private validateQuery(query: string) {
@@ -55,12 +43,36 @@ export class SearchPostsUseCase {
     }
   }
 
-  private isQueryInvalid(query: string) {
-    return query.length === 0 || query.length > 50;
+  private async makeSureUserIsAuthenticated(token: Token) {
+    await checkUserAuthorization(
+      this.gateKeeper,
+      this.logger,
+      token.getToken()
+    );
   }
 
-  private throwInvalidQueryError() {
-    throw new ValidationError('Query is invalid');
+  private async getPosts(query: string, l: Limit, o: Offset) {
+    const limit = l.getLimit();
+    const offset = o.getOffset();
+    const posts = await this.postIndexGateway.query({
+      text: this.sanitize(query),
+      limit,
+      offset,
+    });
+    this.logger.logInfo(LogMessages.FETCHED_SEARCH_RESULT, {
+      query,
+      limit,
+      offset,
+    });
+    return posts;
+  }
+
+  private sanitize(query: string) {
+    return DOMPurify.sanitize(query).replace(/[{}]/g, '');
+  }
+
+  private buildResponse(posts: Post[]): SearchPostsResponse {
+    return { posts };
   }
 }
 
@@ -69,4 +81,8 @@ export interface SearchPostsRequest {
   query: string;
   limit: number;
   offset: number;
+}
+
+export interface SearchPostsResponse {
+  posts: Array<Post>;
 }

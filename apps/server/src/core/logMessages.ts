@@ -4,4 +4,5 @@ export enum LogMessages {
   SAVED_POST = 'Saved post',
   FETCHED_USER_WITH_ID = 'Fetched user using id',
   FETCHED_USER_POSTS_USING_ID = 'Fetched user posts using id',
+  FETCHED_SEARCH_RESULT = 'Fetched search results',
 }
