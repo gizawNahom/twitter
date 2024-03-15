@@ -6,18 +6,17 @@ import {
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { getSavedPosts, removeSeconds } from '../utilities/helpers';
-import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
-import {
-  ERROR_EMPTY_TEXT,
-  ERROR_INVALID_USER,
-} from '../utilities/errorMessages';
+import { ERROR_EMPTY_TEXT } from '../utilities/errorMessages';
 import {
   assertPostEquality,
   assertUserExtractionLog,
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
 import { sampleUserToken, sampleXSS } from '../utilities/samples';
-import { testInvalidToken } from '../utilities/tests';
+import {
+  testInvalidToken,
+  testUserExtractionFailure,
+} from '../utilities/tests';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { LOG_SAVED_POST } from '../utilities/logMessages';
 import { Post } from '../../src/core/entities/post';
@@ -78,14 +77,7 @@ test('throws validation error if text is more than 280 chars', () => {
   );
 });
 
-test('throws if user is not valid', () => {
-  Context.gateKeeper = new GateKeeperFailureStub();
-
-  assertValidationErrorWithMessage(
-    () => executeUseCaseWithText({}),
-    ERROR_INVALID_USER
-  );
-});
+testUserExtractionFailure(() => executeUseCaseWithText({}));
 
 test('throws if text is empty', () => {
   assertValidationErrorWithMessage(

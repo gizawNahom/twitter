@@ -5,7 +5,6 @@ import {
   SearchPostsUseCase,
 } from '../../src/core/useCases/searchPostsUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
-import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 import {
@@ -17,11 +16,13 @@ import {
   ERROR_INVALID_LIMIT,
   ERROR_INVALID_OFFSET,
   ERROR_INVALID_QUERY,
-  ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
 import { LOG_FETCHED_SEARCH_RESULT } from '../utilities/logMessages';
 import { sampleUserToken, sampleXSS } from '../utilities/samples';
-import { testInvalidToken } from '../utilities/tests';
+import {
+  testInvalidToken,
+  testUserExtractionFailure,
+} from '../utilities/tests';
 
 const sampleLimit = 1;
 const sampleOffset = 0;
@@ -75,13 +76,7 @@ test('throws if "offset" is less than zero', () => {
 
 testInvalidToken((token) => executeUseCase({ token }));
 
-test('throws if user extraction fails', () => {
-  Context.gateKeeper = new GateKeeperFailureStub();
-  assertValidationErrorWithMessage(
-    () => executeUseCase({}),
-    ERROR_INVALID_USER
-  );
-});
+testUserExtractionFailure(() => executeUseCase({}));
 
 describe('throws if query text is invalid', () => {
   const MORE_THAN_50_CHARS =

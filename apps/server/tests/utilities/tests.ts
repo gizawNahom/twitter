@@ -21,6 +21,16 @@ export function testInvalidToken(useCaseExecution: (token: string) => void) {
   });
 }
 
+export function testUserExtractionFailure(
+  useCaseExecutor: () => Promise<unknown>
+) {
+  test('throws if user extraction fails', () => {
+    Context.gateKeeper = new GateKeeperFailureStub();
+
+    assertValidationErrorWithMessage(useCaseExecutor, ERROR_INVALID_USER);
+  });
+}
+
 export function handlesExpectedErrorTest(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: () => Promise<any>,

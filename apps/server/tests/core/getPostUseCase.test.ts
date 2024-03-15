@@ -8,10 +8,8 @@ import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { DummyPostRepository } from '../doubles/dummyPostRepository';
-import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import {
   ERROR_INVALID_POST_ID,
-  ERROR_INVALID_USER,
   ERROR_POST_ID_REQUIRED,
 } from '../utilities/errorMessages';
 import { removeSeconds } from '../utilities/helpers';
@@ -21,7 +19,10 @@ import {
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
 import { samplePostId, sampleUserToken } from '../utilities/samples';
-import { testInvalidToken } from '../utilities/tests';
+import {
+  testInvalidToken,
+  testUserExtractionFailure,
+} from '../utilities/tests';
 import { LOG_FETCHED_POST_WITH_ID } from '../utilities/logMessages';
 
 async function executeUseCase({
@@ -63,14 +64,7 @@ beforeEach(() => {
   Context.logger = new LoggerSpy();
 });
 
-test('throws if user extraction fails', () => {
-  Context.gateKeeper = new GateKeeperFailureStub();
-
-  assertValidationErrorWithMessage(
-    () => executeUseCase({}),
-    ERROR_INVALID_USER
-  );
-});
+testUserExtractionFailure(() => executeUseCase({}));
 
 testInvalidToken((token) => executeUseCase({ token }));
 
