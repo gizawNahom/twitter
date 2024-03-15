@@ -57,7 +57,7 @@ export class SearchPostsUseCase {
     const limit = l.getLimit();
     const offset = o.getOffset();
     const posts = await this.postIndexGateway.query({
-      text: this.sanitize(query),
+      text: this.sanitizeQuery(query),
       limit,
       offset,
     });
@@ -69,8 +69,12 @@ export class SearchPostsUseCase {
     return posts;
   }
 
-  private sanitize(query: string) {
-    return sanitizeXSSString(query).replace(/[{}]/g, '');
+  private sanitizeQuery(query: string) {
+    return removeCurlyBraces(sanitizeXSSString(query));
+
+    function removeCurlyBraces(text: string) {
+      return text.replace(/[{}]/g, '');
+    }
   }
 
   private buildResponse(posts: Post[]): SearchPostsResponse {
