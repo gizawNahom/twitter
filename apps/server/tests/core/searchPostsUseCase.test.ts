@@ -9,6 +9,7 @@ import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 import {
+  assertLogInfoCall,
   assertUserExtractionLog,
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
@@ -49,19 +50,6 @@ function executeUseCase({
     limit,
     offset,
   });
-}
-
-function assertLogInfoCall({
-  call,
-  message,
-  obj,
-}: {
-  call: Array<unknown>;
-  message: string;
-  obj;
-}) {
-  expect(call[0]).toBe(message);
-  expect(call[1]).toStrictEqual(obj);
 }
 
 afterEach(() => {

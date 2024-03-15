@@ -10,6 +10,7 @@ import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { UserRepositoryFailureStub } from '../doubles/userRepositoryFailureStub';
 import {
+  assertLogInfoCall,
   assertUserExtractionLog,
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
@@ -68,19 +69,6 @@ function savePosts(posts: Post[]) {
   async function savePost(post: Post) {
     await Context.postRepository.save(post);
   }
-}
-
-function assertLogInfoCall({
-  call,
-  message,
-  obj,
-}: {
-  call: Array<unknown>;
-  message: string;
-  obj;
-}) {
-  expect(call[0]).toBe(message);
-  expect(call[1]).toStrictEqual(obj);
 }
 
 afterEach(() => {

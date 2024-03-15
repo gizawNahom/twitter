@@ -37,3 +37,16 @@ export function assertPostResponseMatchesPostEntity(postResponse, post: Post) {
     userId: post.getUserId(),
   });
 }
+
+export function assertLogInfoCall({
+  call,
+  message,
+  obj,
+}: {
+  call: Array<unknown>;
+  message: string;
+  obj;
+}) {
+  expect(call[0]).toBe(message);
+  expect(call[1]).toStrictEqual(obj);
+}
