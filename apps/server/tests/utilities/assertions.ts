@@ -5,7 +5,7 @@ import { LOG_EXTRACTED_USER } from './logMessages';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 
 export async function assertValidationErrorWithMessage(
-  task: () => unknown,
+  task: () => Promise<unknown>,
   errorMessage: string
 ) {
   await expect(task()).rejects.toThrow(errorMessage);
