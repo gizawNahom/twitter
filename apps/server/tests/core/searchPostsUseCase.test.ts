@@ -19,6 +19,7 @@ import {
   ERROR_INVALID_QUERY,
   ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
+import { LOG_FETCHED_SEARCH_RESULT } from '../utilities/logMessages';
 import { sampleUserToken } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 
@@ -133,7 +134,7 @@ test('logs happy path', async () => {
   assertUserExtractionLog(loggerSpy.logInfoCalls[0]);
   assertLogInfoCall({
     call: loggerSpy.logInfoCalls[1],
-    message: 'Fetched search results',
+    message: LOG_FETCHED_SEARCH_RESULT,
     obj: {
       query: sampleQueryText,
       limit: sampleLimit,
