@@ -20,7 +20,7 @@ import {
   ERROR_INVALID_USER,
 } from '../utilities/errorMessages';
 import { LOG_FETCHED_SEARCH_RESULT } from '../utilities/logMessages';
-import { sampleUserToken } from '../utilities/samples';
+import { sampleUserToken, sampleXSS } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 
 const sampleLimit = 1;
@@ -108,7 +108,7 @@ test('calls indexer correctly', async () => {
 
 describe('sanitizes query text', () => {
   test.each([
-    ['<img src=x onerror=alert("XSS")>', '<img src="x">'],
+    [sampleXSS.XSSText, sampleXSS.sanitizedText],
     ['{!join from=id }', '!join from=id '],
   ])('if the "text" is %s', async (query, expected) => {
     await executeUseCase({ query });

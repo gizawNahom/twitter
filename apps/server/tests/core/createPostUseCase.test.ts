@@ -16,7 +16,7 @@ import {
   assertUserExtractionLog,
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
-import { sampleUserToken } from '../utilities/samples';
+import { sampleUserToken, sampleXSS } from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { LOG_SAVED_POST } from '../utilities/logMessages';
@@ -107,11 +107,10 @@ test('saves post', async () => {
 });
 
 test('sanitizes text', async () => {
-  const XSSText = '<img src=x onerror=alert("XSS")>';
-  await executeUseCaseWithText({ text: XSSText });
+  await executeUseCaseWithText({ text: sampleXSS.XSSText });
 
   const savedPost = (await getSavedPosts())[0];
-  expect(savedPost.getText()).toEqual('<img src="x">');
+  expect(savedPost.getText()).toEqual(sampleXSS.sanitizedText);
 });
 
 test('returns correct response', async () => {
