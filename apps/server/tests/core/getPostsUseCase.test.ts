@@ -20,17 +20,19 @@ import {
   ERROR_USER_DOES_NOT_EXIST,
   ERROR_USER_ID_REQUIRED,
 } from '../utilities/errorMessages';
-import { sampleUserId, sampleUserToken } from '../utilities/samples';
+import {
+  sampleLimit,
+  sampleOffset,
+  sampleUserId,
+  sampleUserToken,
+} from '../utilities/samples';
 import { testInvalidToken } from '../utilities/tests';
-
-const validLimit = 1;
-const validOffset = 0;
 
 function executeUseCase({
   token = sampleUserToken,
   userId = sampleUserId,
-  limit = validLimit,
-  offset = validOffset,
+  limit = sampleLimit,
+  offset = sampleOffset,
 }: {
   token?: string;
   userId?: string;
@@ -118,8 +120,8 @@ test('returns correct response', async () => {
   expect(response.posts).toStrictEqual(
     await Context.postRepository.getLatestPosts(
       sampleUserId,
-      validLimit,
-      validOffset
+      sampleLimit,
+      sampleOffset
     )
   );
 });
@@ -154,8 +156,8 @@ test('logs happy path', async () => {
     message: 'Fetched user posts using id',
     obj: {
       userId: sampleUserId,
-      limit: validLimit,
-      offset: validOffset,
+      limit: sampleLimit,
+      offset: sampleOffset,
     },
   });
 });

@@ -6,6 +6,10 @@ export const samplePostId = 'postId1';
 
 export const sampleUserId = 'userId1';
 
+export const sampleLimit = 1;
+
+export const sampleOffset = 0;
+
 const samplePost = new Post();
 samplePost.setId(samplePostId);
 samplePost.setText('sample text');

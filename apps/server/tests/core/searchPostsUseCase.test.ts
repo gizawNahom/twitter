@@ -18,14 +18,17 @@ import {
   ERROR_INVALID_QUERY,
 } from '../utilities/errorMessages';
 import { LOG_FETCHED_SEARCH_RESULT } from '../utilities/logMessages';
-import { sampleUserToken, sampleXSS } from '../utilities/samples';
+import {
+  sampleLimit,
+  sampleOffset,
+  sampleUserToken,
+  sampleXSS,
+} from '../utilities/samples';
 import {
   testInvalidToken,
   testUserExtractionFailure,
 } from '../utilities/tests';
 
-const sampleLimit = 1;
-const sampleOffset = 0;
 const sampleQueryText = 'query';
 
 let postIndexGateway: PostIndexGateway;
