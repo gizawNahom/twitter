@@ -3,6 +3,7 @@ import { GateKeeper } from './ports/gateKeeper';
 import { LogMessages } from './logMessages';
 import { Logger } from './ports/logger';
 import { ValidationMessages } from './validationMessages';
+import DOMPurify from 'isomorphic-dompurify';
 
 export async function makeSureUserIsAuthenticated(
   gateKeeper: GateKeeper,
@@ -28,4 +29,8 @@ export async function makeSureUserIsAuthenticated(
   function throwInvalidUserError() {
     throw new ValidationError(ValidationMessages.INVALID_USER);
   }
+}
+
+export function sanitizeXSSString(text: string): string {
+  return DOMPurify.sanitize(text);
 }

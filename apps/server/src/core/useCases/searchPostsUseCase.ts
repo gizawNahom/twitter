@@ -1,4 +1,7 @@
-import { makeSureUserIsAuthenticated } from '../domainServices';
+import {
+  makeSureUserIsAuthenticated,
+  sanitizeXSSString,
+} from '../domainServices';
 import { Post } from '../entities/post';
 import { ValidationError } from '../errors';
 import { LogMessages } from '../logMessages';
@@ -9,7 +12,6 @@ import { ValidationMessages } from '../validationMessages';
 import { Limit } from '../valueObjects/limit';
 import { Offset } from '../valueObjects/offset';
 import { Token } from '../valueObjects/token';
-import DOMPurify from 'isomorphic-dompurify';
 
 export class SearchPostsUseCase {
   constructor(
@@ -68,7 +70,7 @@ export class SearchPostsUseCase {
   }
 
   private sanitize(query: string) {
-    return DOMPurify.sanitize(query).replace(/[{}]/g, '');
+    return sanitizeXSSString(query).replace(/[{}]/g, '');
   }
 
   private buildResponse(posts: Post[]): SearchPostsResponse {

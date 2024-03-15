@@ -2,12 +2,12 @@ import { GateKeeper } from '../ports/gateKeeper';
 import { PostRepository } from '../ports/postRepository';
 import { User } from '../entities/user';
 import { Post } from '../entities/post';
-import DOMPurify from 'isomorphic-dompurify';
 import { ValidationError } from '../errors';
 import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
 import { Logger } from '../ports/logger';
 import { LogMessages } from '../logMessages';
+import { sanitizeXSSString } from '../domainServices';
 
 export class CreatePostUseCase {
   constructor(
@@ -65,7 +65,7 @@ export class CreatePostUseCase {
   }
 
   private sanitizeText(text: string): string {
-    return DOMPurify.sanitize(text);
+    return sanitizeXSSString(text);
   }
 
   private async getSavedPost(text: string, user: User): Promise<Post> {
