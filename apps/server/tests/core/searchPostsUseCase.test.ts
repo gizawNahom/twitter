@@ -28,6 +28,7 @@ import {
   testInvalidToken,
   testUserExtractionFailure,
   testWithInvalidLimit,
+  testWithInvalidOffset,
 } from '../utilities/tests';
 
 const sampleQueryText = 'query';
@@ -64,12 +65,7 @@ afterEach(() => {
 
 testWithInvalidLimit((limit: number) => executeUseCase({ limit }));
 
-test('throws if "offset" is less than zero', () => {
-  assertValidationErrorWithMessage(
-    () => executeUseCase({ offset: -1 }),
-    ERROR_INVALID_OFFSET
-  );
-});
+testWithInvalidOffset((offset) => executeUseCase({ offset }));
 
 testInvalidToken((token) => executeUseCase({ token }));
 

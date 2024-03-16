@@ -4,6 +4,7 @@ import { assertValidationErrorWithMessage } from './assertions';
 import {
   ERROR_GENERIC,
   ERROR_INVALID_LIMIT,
+  ERROR_INVALID_OFFSET,
   ERROR_INVALID_USER,
   ERROR_TOKEN_REQUIRED,
 } from './errorMessages';
@@ -44,6 +45,17 @@ export function testWithInvalidLimit(
         ERROR_INVALID_LIMIT
       );
     });
+  });
+}
+
+export function testWithInvalidOffset(
+  useCaseExecutor: (offset) => Promise<unknown>
+) {
+  test('throws if "offset" is less than zero', () => {
+    assertValidationErrorWithMessage(
+      () => useCaseExecutor(-1),
+      ERROR_INVALID_OFFSET
+    );
   });
 }
 

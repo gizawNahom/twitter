@@ -26,7 +26,11 @@ import {
   sampleUserId,
   sampleUserToken,
 } from '../utilities/samples';
-import { testInvalidToken, testWithInvalidLimit } from '../utilities/tests';
+import {
+  testInvalidToken,
+  testWithInvalidLimit,
+  testWithInvalidOffset,
+} from '../utilities/tests';
 
 function executeUseCase({
   token = sampleUserToken,
@@ -80,12 +84,7 @@ afterEach(() => {
 
 testWithInvalidLimit((limit) => executeUseCase({ limit }));
 
-test('throws if "offset" is less than zero', () => {
-  assertValidationErrorWithMessage(
-    () => executeUseCase({ offset: -1 }),
-    ERROR_INVALID_OFFSET
-  );
-});
+testWithInvalidOffset((offset) => executeUseCase({ offset }));
 
 test('throws if the user id is empty', () => {
   assertValidationErrorWithMessage(
