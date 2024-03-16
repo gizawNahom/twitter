@@ -62,7 +62,7 @@ export function testWithInvalidOffset(
   });
 }
 
-export function handlesExpectedErrorTest(
+export function testWithExpectedError(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: () => Promise<any>,
   errorMessage = ERROR_INVALID_USER
@@ -94,7 +94,7 @@ export function handlesExpectedErrorTest(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function handlesUnexpectedErrorTest(action: () => Promise<any>) {
+export function testWithUnExpectedError(action: () => Promise<any>) {
   describe('Unexpected error', () => {
     beforeAll(() => (Context.postRepository = new PostRepositoryErrorStub()));
     afterAll(() => {

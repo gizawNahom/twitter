@@ -2,8 +2,8 @@ import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { samplePost, samplePostId } from '../utilities/samples';
 import {
-  handlesExpectedErrorTest,
-  handlesUnexpectedErrorTest,
+  testWithExpectedError,
+  testWithUnExpectedError,
 } from '../utilities/tests';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 import { sendRequest } from '../utilities/helpers';
@@ -33,9 +33,9 @@ test('returns post', async () => {
   assertPostResponseMatchesPostEntity(res.body.data.post, samplePost);
 });
 
-handlesExpectedErrorTest(async () => {
+testWithExpectedError(async () => {
   await Context.postRepository.save(samplePost);
   return await sendGetPostRequest();
 });
 
-handlesUnexpectedErrorTest(async () => await sendGetPostRequest());
+testWithUnExpectedError(async () => await sendGetPostRequest());

@@ -1,12 +1,11 @@
 import Context from '../../src/context';
-import { LoggerSpy } from '../doubles/loggerSpy';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 import { ERROR_INVALID_LIMIT } from '../utilities/errorMessages';
 import { sendRequest } from '../utilities/helpers';
 import { samplePost, sampleUserId } from '../utilities/samples';
 import {
-  handlesExpectedErrorTest,
-  handlesUnexpectedErrorTest,
+  testWithExpectedError,
+  testWithUnExpectedError,
 } from '../utilities/tests';
 
 async function sendGetPostsRequest(limit = 1) {
@@ -33,9 +32,9 @@ test('gets posts', async () => {
   assertPostResponseMatchesPostEntity(res.body.data.posts[0], samplePost);
 });
 
-handlesExpectedErrorTest(
+testWithExpectedError(
   async () => await sendGetPostsRequest(-1),
   ERROR_INVALID_LIMIT
 );
 
-handlesUnexpectedErrorTest(async () => await sendGetPostsRequest());
+testWithUnExpectedError(async () => await sendGetPostsRequest());

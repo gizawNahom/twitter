@@ -1,14 +1,13 @@
 import Context from '../../src/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
-import { LoggerSpy } from '../doubles/loggerSpy';
 import { PostIndexGatewayErrorStub } from '../doubles/postIndexGatewayErrorStub';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 import { sendRequest } from '../utilities/helpers';
 import { sampleLimit, sampleOffset } from '../utilities/samples';
 import {
-  handlesExpectedErrorTest,
-  handlesUnexpectedErrorTest,
+  testWithExpectedError,
+  testWithUnExpectedError,
 } from '../utilities/tests';
 
 async function sendSearchPostsRequest(limit = sampleLimit) {
@@ -45,9 +44,9 @@ test('searches posts', async () => {
   );
 });
 
-handlesExpectedErrorTest(async () => await sendSearchPostsRequest());
+testWithExpectedError(async () => await sendSearchPostsRequest());
 
-handlesUnexpectedErrorTest(async () => {
+testWithUnExpectedError(async () => {
   Context.postIndexGateway = new PostIndexGatewayErrorStub();
 
   return await sendSearchPostsRequest();
