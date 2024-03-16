@@ -38,8 +38,4 @@ handlesExpectedErrorTest(
   ERROR_INVALID_LIMIT
 );
 
-handlesUnexpectedErrorTest(async () => {
-  Context.logger = new LoggerSpy();
-
-  return await sendGetPostsRequest();
-});
+handlesUnexpectedErrorTest(async () => await sendGetPostsRequest());

@@ -13,6 +13,7 @@ import { ValidationError } from '../../src/core/errors';
 import { PostRepositoryErrorStub } from '../doubles/postRepositoryErrorStub';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { DummyLogger } from '../../src/dummyLogger';
+import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 
 export function testWithInvalidToken(
   useCaseExecution: (token: string) => Promise<unknown>
@@ -96,6 +97,10 @@ export function handlesExpectedErrorTest(
 export function handlesUnexpectedErrorTest(action: () => Promise<any>) {
   describe('Unexpected error', () => {
     beforeAll(() => (Context.postRepository = new PostRepositoryErrorStub()));
+    afterAll(() => {
+      Context.postRepository = new InMemoryPostRepository();
+      Context.logger = new DummyLogger();
+    });
 
     test('hides unexpected error', async () => {
       const res = await action();

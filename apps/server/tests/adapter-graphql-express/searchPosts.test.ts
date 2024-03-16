@@ -48,7 +48,6 @@ test('searches posts', async () => {
 handlesExpectedErrorTest(async () => await sendSearchPostsRequest());
 
 handlesUnexpectedErrorTest(async () => {
-  Context.logger = new LoggerSpy();
   Context.postIndexGateway = new PostIndexGatewayErrorStub();
 
   return await sendSearchPostsRequest();
