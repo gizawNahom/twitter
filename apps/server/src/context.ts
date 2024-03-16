@@ -6,9 +6,11 @@ import { PostRepository } from './core/ports/postRepository';
 import { DefaultGateKeeper } from './defaultGateKeeper';
 import { UserRepository } from './core/ports/userRepository';
 import { DummyUserRepository } from './dummyUserRepository';
+import { PostIndexGateway } from './core/ports/postIndexGateway';
 
 export default class Context {
   static postRepository: PostRepository = new InMemoryPostRepository();
+  static postIndexGateway: PostIndexGateway;
   static gateKeeper: GateKeeper = new DefaultGateKeeper();
   static logger: Logger = new DummyLogger();
   static userRepository: UserRepository = new DummyUserRepository();
