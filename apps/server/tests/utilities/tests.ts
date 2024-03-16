@@ -11,6 +11,8 @@ import {
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { ValidationError } from '../../src/core/errors';
 import { PostRepositoryErrorStub } from '../doubles/postRepositoryErrorStub';
+import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DummyLogger } from '../../src/dummyLogger';
 
 export function testWithInvalidToken(
   useCaseExecution: (token: string) => Promise<unknown>
@@ -66,6 +68,10 @@ export function handlesExpectedErrorTest(
 ) {
   describe('expected error', () => {
     beforeEach(() => (Context.gateKeeper = new GateKeeperFailureStub()));
+    afterAll(() => {
+      Context.gateKeeper = new DefaultGateKeeper();
+      Context.logger = new DummyLogger();
+    });
 
     test('passes expected error', async () => {
       const res = await action();
@@ -76,6 +82,7 @@ export function handlesExpectedErrorTest(
 
     test('logs expected error', async () => {
       Context.logger = new LoggerSpy();
+
       await action();
 
       expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
@@ -98,6 +105,8 @@ export function handlesUnexpectedErrorTest(action: () => Promise<any>) {
     });
 
     test('logs unexpected error', async () => {
+      Context.logger = new LoggerSpy();
+
       await action();
 
       expect((Context.logger as LoggerSpy).logErrorWasCalledWith).toStrictEqual(
