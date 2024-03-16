@@ -27,6 +27,7 @@ import {
 import {
   testInvalidToken,
   testUserExtractionFailure,
+  testWithInvalidLimit,
 } from '../utilities/tests';
 
 const sampleQueryText = 'query';
@@ -61,14 +62,7 @@ afterEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
 });
 
-describe('throws with limit-invalid validation error', () => {
-  test.each([[21], [0], [-1]])('if the "limit" is %s', (limit) => {
-    assertValidationErrorWithMessage(
-      () => executeUseCase({ limit }),
-      ERROR_INVALID_LIMIT
-    );
-  });
-});
+testWithInvalidLimit((limit: number) => executeUseCase({ limit }));
 
 test('throws if "offset" is less than zero', () => {
   assertValidationErrorWithMessage(

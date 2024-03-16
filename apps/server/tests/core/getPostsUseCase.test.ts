@@ -26,7 +26,7 @@ import {
   sampleUserId,
   sampleUserToken,
 } from '../utilities/samples';
-import { testInvalidToken } from '../utilities/tests';
+import { testInvalidToken, testWithInvalidLimit } from '../utilities/tests';
 
 function executeUseCase({
   token = sampleUserToken,
@@ -78,14 +78,7 @@ afterEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
 });
 
-describe('throws with limit-invalid validation error', () => {
-  test.each([[21], [0], [-1]])('if the "limit" is %s', (limit) => {
-    assertValidationErrorWithMessage(
-      () => executeUseCase({ limit }),
-      ERROR_INVALID_LIMIT
-    );
-  });
-});
+testWithInvalidLimit((limit) => executeUseCase({ limit }));
 
 test('throws if "offset" is less than zero', () => {
   assertValidationErrorWithMessage(

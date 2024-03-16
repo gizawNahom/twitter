@@ -3,6 +3,7 @@ import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { assertValidationErrorWithMessage } from './assertions';
 import {
   ERROR_GENERIC,
+  ERROR_INVALID_LIMIT,
   ERROR_INVALID_USER,
   ERROR_TOKEN_REQUIRED,
 } from './errorMessages';
@@ -30,6 +31,19 @@ export function testUserExtractionFailure(
     Context.gateKeeper = new GateKeeperFailureStub();
 
     assertValidationErrorWithMessage(useCaseExecutor, ERROR_INVALID_USER);
+  });
+}
+
+export function testWithInvalidLimit(
+  useCaseExecutor: (limit: number) => Promise<unknown>
+) {
+  describe('throws with limit-invalid validation error', () => {
+    test.each([[21], [0], [-1]])('if the "limit" is %s', (limit) => {
+      assertValidationErrorWithMessage(
+        () => useCaseExecutor(limit),
+        ERROR_INVALID_LIMIT
+      );
+    });
   });
 }
 
