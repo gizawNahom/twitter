@@ -27,7 +27,7 @@ import {
   sampleUserToken,
 } from '../utilities/samples';
 import {
-  testInvalidToken,
+  testWithInvalidToken,
   testWithInvalidLimit,
   testWithInvalidOffset,
 } from '../utilities/tests';
@@ -93,7 +93,7 @@ test('throws if the user id is empty', () => {
   );
 });
 
-testInvalidToken((token) => executeUseCase({ token }));
+testWithInvalidToken((token) => executeUseCase({ token }));
 
 test('throws if the user id does not exist', async () => {
   Context.userRepository = new UserRepositoryFailureStub();

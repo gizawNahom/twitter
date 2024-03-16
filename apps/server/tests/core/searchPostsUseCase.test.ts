@@ -25,7 +25,7 @@ import {
   sampleXSS,
 } from '../utilities/samples';
 import {
-  testInvalidToken,
+  testWithInvalidToken,
   testUserExtractionFailure,
   testWithInvalidLimit,
   testWithInvalidOffset,
@@ -67,7 +67,7 @@ testWithInvalidLimit((limit: number) => executeUseCase({ limit }));
 
 testWithInvalidOffset((offset) => executeUseCase({ offset }));
 
-testInvalidToken((token) => executeUseCase({ token }));
+testWithInvalidToken((token) => executeUseCase({ token }));
 
 testUserExtractionFailure(() => executeUseCase({}));
 

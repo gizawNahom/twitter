@@ -20,7 +20,7 @@ import {
 } from '../utilities/assertions';
 import { samplePostId, sampleUserToken } from '../utilities/samples';
 import {
-  testInvalidToken,
+  testWithInvalidToken,
   testUserExtractionFailure,
 } from '../utilities/tests';
 import { LOG_FETCHED_POST_WITH_ID } from '../utilities/logMessages';
@@ -66,7 +66,7 @@ beforeEach(() => {
 
 testUserExtractionFailure(() => executeUseCase({}));
 
-testInvalidToken((token) => executeUseCase({ token }));
+testWithInvalidToken((token) => executeUseCase({ token }));
 
 describe('throws with post-invalid error message', () => {
   test.each([[''], [null]])('when the post id is %s', (postId) => {

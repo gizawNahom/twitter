@@ -12,7 +12,7 @@ import { LoggerSpy } from '../doubles/loggerSpy';
 import { ValidationError } from '../../src/core/errors';
 import { PostRepositoryErrorStub } from '../doubles/postRepositoryErrorStub';
 
-export function testInvalidToken(
+export function testWithInvalidToken(
   useCaseExecution: (token: string) => Promise<unknown>
 ) {
   describe('throws with token-invalid error message', () => {

@@ -14,7 +14,7 @@ import {
 } from '../utilities/assertions';
 import { sampleUserToken, sampleXSS } from '../utilities/samples';
 import {
-  testInvalidToken,
+  testWithInvalidToken,
   testUserExtractionFailure,
 } from '../utilities/tests';
 import { LoggerSpy } from '../doubles/loggerSpy';
@@ -86,7 +86,7 @@ test('throws if text is empty', () => {
   );
 });
 
-testInvalidToken((token) => executeUseCaseWithText({ token }));
+testWithInvalidToken((token) => executeUseCaseWithText({ token }));
 
 test('saves post', async () => {
   await executeUseCaseWithText({});
