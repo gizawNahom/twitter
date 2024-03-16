@@ -7,6 +7,7 @@ import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import { ValidationError } from './core/errors';
 import { GetPostsUseCase } from './core/useCases/getPostsUseCase';
+import { SearchPostsUseCase } from './core/useCases/searchPostsUseCase';
 
 const GENERIC_ERROR_MESSAGE = 'Server Error';
 
@@ -17,6 +18,7 @@ const typeDefs = `#graphql
     hello: String
     post(id: ID!): Post
     posts(userId: ID!, limit: Int, offset: Int): [Post]
+    searchPosts(query: String!, limit: Int, offset: Int): [Post]
   }
   type Mutation {
     createPost(text: String): Post
@@ -75,6 +77,33 @@ const resolvers = {
             Context.postRepository,
             Context.logger
           ).execute({ token: contextValue.token, userId, limit, offset })
+        ).posts;
+        return posts.map((p) => {
+          return {
+            id: p.getId(),
+            text: p.getText(),
+            userId: p.getUserId(),
+            createdAt: p.getCreatedAt().toISOString(),
+          };
+        });
+      });
+    },
+    searchPosts: async (
+      _: unknown,
+      {
+        query,
+        limit,
+        offset,
+      }: { query: string; limit: number; offset: number },
+      contextValue: ServerContext
+    ) => {
+      return tryResolve(async () => {
+        const posts = (
+          await new SearchPostsUseCase(
+            Context.gateKeeper,
+            Context.postIndexGateway,
+            Context.logger
+          ).execute({ token: contextValue.token, query, limit, offset })
         ).posts;
         return posts.map((p) => {
           return {
