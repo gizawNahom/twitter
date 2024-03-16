@@ -15,8 +15,6 @@ import {
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
 import {
-  ERROR_INVALID_LIMIT,
-  ERROR_INVALID_OFFSET,
   ERROR_USER_DOES_NOT_EXIST,
   ERROR_USER_ID_REQUIRED,
 } from '../utilities/errorMessages';

@@ -12,11 +12,7 @@ import {
   assertUserExtractionLog,
   assertValidationErrorWithMessage,
 } from '../utilities/assertions';
-import {
-  ERROR_INVALID_LIMIT,
-  ERROR_INVALID_OFFSET,
-  ERROR_INVALID_QUERY,
-} from '../utilities/errorMessages';
+import { ERROR_INVALID_QUERY } from '../utilities/errorMessages';
 import { LOG_FETCHED_SEARCH_RESULT } from '../utilities/logMessages';
 import {
   sampleLimit,
