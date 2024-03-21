@@ -38,7 +38,7 @@ export async function createPost(
 
     function getMutation() {
       return gql`
-        mutation createPost($text: String) {
+        mutation createPost($text: String!) {
           createPost(text: $text) {
             id
             text

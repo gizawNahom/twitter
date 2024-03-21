@@ -65,7 +65,7 @@ export function testCreatePost(provider: Pact, baseUrl: URL) {
       return createBaseInteraction(baseUrl, responseBody)
         .withOperation(Operations.CreatePost)
         .withMutation(
-          `mutation createPost($text: String) {
+          `mutation createPost($text: String!) {
             createPost(text: $text) {
               id
               text

@@ -8,7 +8,7 @@
       "request": {
         "body": {
           "operationName": "createPost",
-          "query": "mutation createPost($text: String) {\n            createPost(text: $text) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "query": "mutation createPost($text: String!) {\n            createPost(text: $text) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
           "variables": {
             "text": "Hello World"
           }
@@ -19,7 +19,7 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "mutation\\s*createPost\\(\\$text:\\s*String\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+            "regex": "mutation\\s*createPost\\(\\$text:\\s*String!\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.text": {
             "match": "type"
@@ -68,7 +68,7 @@
       "request": {
         "body": {
           "operationName": "createPost",
-          "query": "mutation createPost($text: String) {\n            createPost(text: $text) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "query": "mutation createPost($text: String!) {\n            createPost(text: $text) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
           "variables": {
             "text": ""
           }
@@ -79,7 +79,7 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "mutation\\s*createPost\\(\\$text:\\s*String\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+            "regex": "mutation\\s*createPost\\(\\$text:\\s*String!\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.text": {
             "match": "type"
@@ -162,7 +162,7 @@
       "request": {
         "body": {
           "operationName": "Posts",
-          "query": "\n        query Posts($userId: ID!, $offset: Int, $limit: Int) {\n          posts(userId: $userId, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
+          "query": "\n        query Posts($userId: ID!, $offset: Int!, $limit: Int!) {\n          posts(userId: $userId, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
           "variables": {
             "limit": -10,
             "offset": -1,
@@ -175,7 +175,7 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "\\s*query\\s*Posts\\(\\$userId:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(userId:\\s*\\$userId,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
+            "regex": "\\s*query\\s*Posts\\(\\$userId:\\s*ID!,\\s*\\$offset:\\s*Int!,\\s*\\$limit:\\s*Int!\\)\\s*\\{\\s*posts\\(userId:\\s*\\$userId,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
           },
           "$.body.variables.limit": {
             "match": "type"
@@ -279,7 +279,7 @@
       "request": {
         "body": {
           "operationName": "Posts",
-          "query": "\n        query Posts($userId: ID!, $offset: Int, $limit: Int) {\n          posts(userId: $userId, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
+          "query": "\n        query Posts($userId: ID!, $offset: Int!, $limit: Int!) {\n          posts(userId: $userId, offset: $offset, limit: $limit) {\n            id\n            text\n            userId\n            createdAt\n            __typename\n          }\n        }\n      ",
           "variables": {
             "limit": 10,
             "offset": 0,
@@ -292,7 +292,7 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "\\s*query\\s*Posts\\(\\$userId:\\s*ID!,\\s*\\$offset:\\s*Int,\\s*\\$limit:\\s*Int\\)\\s*\\{\\s*posts\\(userId:\\s*\\$userId,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
+            "regex": "\\s*query\\s*Posts\\(\\$userId:\\s*ID!,\\s*\\$offset:\\s*Int!,\\s*\\$limit:\\s*Int!\\)\\s*\\{\\s*posts\\(userId:\\s*\\$userId,\\s*offset:\\s*\\$offset,\\s*limit:\\s*\\$limit\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
           },
           "$.body.variables.limit": {
             "match": "type"

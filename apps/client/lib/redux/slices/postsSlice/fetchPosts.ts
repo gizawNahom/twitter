@@ -28,7 +28,7 @@ export async function fetchPosts(
 
   function getQuery() {
     return gql`
-      query Posts($userId: ID!, $offset: Int, $limit: Int) {
+      query Posts($userId: ID!, $offset: Int!, $limit: Int!) {
         posts(userId: $userId, offset: $offset, limit: $limit) {
           id
           text

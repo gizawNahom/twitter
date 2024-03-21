@@ -82,7 +82,7 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
         .withOperation(Operations.Posts)
         .withQuery(
           `
-        query Posts($userId: ID!, $offset: Int, $limit: Int) {
+        query Posts($userId: ID!, $offset: Int!, $limit: Int!) {
           posts(userId: $userId, offset: $offset, limit: $limit) {
             id
             text
