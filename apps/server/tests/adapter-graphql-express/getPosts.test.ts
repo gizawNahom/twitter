@@ -2,13 +2,18 @@ import Context from '../../src/context';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 import { ERROR_INVALID_LIMIT } from '../utilities/errorMessages';
 import { sendRequest } from '../utilities/helpers';
-import { samplePost, sampleUserId } from '../utilities/samples';
+import {
+  sampleLimit,
+  sampleOffset,
+  samplePost,
+  sampleUserId,
+} from '../utilities/samples';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
 } from '../utilities/tests';
 
-async function sendGetPostsRequest(limit = 1) {
+async function sendGetPostsRequest(limit = sampleLimit) {
   const query = `query Posts($userId: ID!, $limit: Int!, $offset: Int!) {
     posts(userId: $userId, limit: $limit, offset: $offset) {
       id
@@ -17,7 +22,7 @@ async function sendGetPostsRequest(limit = 1) {
       createdAt
     }
   }`;
-  const variables = { userId: sampleUserId, limit, offset: 0 };
+  const variables = { userId: sampleUserId, limit, offset: sampleOffset };
   const res = await sendRequest(query, variables);
   return res;
 }
