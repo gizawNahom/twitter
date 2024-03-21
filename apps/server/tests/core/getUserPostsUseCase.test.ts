@@ -2,8 +2,8 @@ import Context from '../../src/context';
 import { Post } from '../../src/core/entities/post';
 import {
   GetPostsResponse,
-  GetPostsUseCase,
-} from '../../src/core/useCases/getPostsUseCase';
+  GetUserPostsUseCase,
+} from '../../src/core/useCases/getUserPostsUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { DummyUserRepository } from '../../src/dummyUserRepository';
 import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
@@ -41,7 +41,7 @@ function executeUseCase({
   limit?: number;
   offset?: number;
 }): Promise<GetPostsResponse> {
-  return new GetPostsUseCase(
+  return new GetUserPostsUseCase(
     Context.gateKeeper,
     Context.userRepository,
     Context.postRepository,

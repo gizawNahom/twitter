@@ -6,7 +6,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import { ValidationError } from './core/errors';
-import { GetPostsUseCase } from './core/useCases/getPostsUseCase';
+import { GetUserPostsUseCase } from './core/useCases/getUserPostsUseCase';
 import { SearchPostsUseCase } from './core/useCases/searchPostsUseCase';
 
 const GENERIC_ERROR_MESSAGE = 'Server Error';
@@ -71,7 +71,7 @@ const resolvers = {
     ) => {
       return tryResolve(async () => {
         const posts = (
-          await new GetPostsUseCase(
+          await new GetUserPostsUseCase(
             Context.gateKeeper,
             Context.userRepository,
             Context.postRepository,

@@ -12,7 +12,7 @@ import { Limit } from '../valueObjects/limit';
 import { Offset } from '../valueObjects/offset';
 import { Token } from '../valueObjects/token';
 
-export class GetPostsUseCase {
+export class GetUserPostsUseCase {
   private readonly UNAUTHENTICATED_LIMIT = 10;
   private readonly UNAUTHENTICATED_OFFSET = 0;
 
