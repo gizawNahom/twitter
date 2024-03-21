@@ -10,7 +10,7 @@ import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 const validText = 'Hello, world!';
 
 async function sendCreatePostRequestWithText(text: string) {
-  const query = `mutation($text: String) {
+  const query = `mutation($text: String!) {
     createPost(text: $text) {
       id
       text

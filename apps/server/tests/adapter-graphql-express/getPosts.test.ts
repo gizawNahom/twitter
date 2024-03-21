@@ -9,7 +9,7 @@ import {
 } from '../utilities/tests';
 
 async function sendGetPostsRequest(limit = 1) {
-  const query = `query Posts($userId: ID!, $limit: Int, $offset: Int) {
+  const query = `query Posts($userId: ID!, $limit: Int!, $offset: Int!) {
     posts(userId: $userId, limit: $limit, offset: $offset) {
       id
       text
