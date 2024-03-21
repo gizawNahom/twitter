@@ -20,3 +20,5 @@ export enum sampleXSS {
   XSSText = '<img src=x onerror=alert("XSS")>',
   sanitizedText = '<img src="x">',
 }
+
+export const sampleQueryText = 'query';

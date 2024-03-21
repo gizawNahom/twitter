@@ -17,6 +17,7 @@ import { LOG_FETCHED_SEARCH_RESULT } from '../utilities/logMessages';
 import {
   sampleLimit,
   sampleOffset,
+  sampleQueryText,
   sampleUserToken,
   sampleXSS,
 } from '../utilities/samples';
@@ -26,8 +27,6 @@ import {
   testWithInvalidLimit,
   testWithInvalidOffset,
 } from '../utilities/tests';
-
-const sampleQueryText = 'query';
 
 let postIndexGateway: PostIndexGateway;
 

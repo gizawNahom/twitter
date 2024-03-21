@@ -4,14 +4,18 @@ import { PostIndexGatewayErrorStub } from '../doubles/postIndexGatewayErrorStub'
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 import { sendRequest } from '../utilities/helpers';
-import { sampleLimit, sampleOffset } from '../utilities/samples';
+import {
+  sampleLimit,
+  sampleOffset,
+  sampleQueryText,
+} from '../utilities/samples';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
 } from '../utilities/tests';
 
 async function sendSearchPostsRequest(limit = sampleLimit) {
-  const query = `query SearchPosts($query: String!, $limit: Int, $offset: Int) {
+  const query = `query SearchPosts($query: String!, $limit: Int!, $offset: Int!) {
     searchPosts(query: $query, limit: $limit, offset: $offset) {
       id
       text
@@ -19,7 +23,6 @@ async function sendSearchPostsRequest(limit = sampleLimit) {
       createdAt
     }
   }`;
-  const sampleQueryText = 'query';
   const variables = {
     query: sampleQueryText,
     limit: limit,
