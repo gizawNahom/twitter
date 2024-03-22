@@ -18,6 +18,7 @@ import {
   ERROR_USER_DOES_NOT_EXIST,
   ERROR_USER_ID_REQUIRED,
 } from '../utilities/errorMessages';
+import { createPosts } from '../utilities/helpers';
 import {
   sampleLimit,
   sampleOffset,
@@ -52,17 +53,6 @@ function executeUseCase({
     limit,
     offset,
   });
-}
-
-function createPosts(count: number): Post[] {
-  const posts: Post[] = [];
-  for (let i = 1; i < count + 1; i++) {
-    const post = new Post();
-    post.setId('postId' + i);
-    post.setUserId(sampleUserId);
-    posts.push(post);
-  }
-  return posts;
 }
 
 function savePosts(posts: Post[]) {

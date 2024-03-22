@@ -3,6 +3,7 @@ import Context from '../../src/context';
 import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import request from 'supertest';
+import { sampleUserId } from './samples';
 
 export function removeSeconds(isoString: string) {
   return isoString.slice(0, isoString.lastIndexOf(':'));
@@ -19,4 +20,15 @@ export async function sendRequest(query: string, variables: unknown) {
     query,
     variables,
   });
+}
+
+export function createPosts(count: number): Post[] {
+  const posts: Post[] = [];
+  for (let i = 1; i < count + 1; i++) {
+    const post = new Post();
+    post.setId('postId' + i);
+    post.setUserId(sampleUserId);
+    posts.push(post);
+  }
+  return posts;
 }
