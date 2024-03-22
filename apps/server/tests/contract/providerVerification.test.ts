@@ -4,6 +4,7 @@ import path from 'path';
 import Context from '../../src/context';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { Post } from '../../src/core/entities/post';
+import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 
 const port = 8081;
 const baseUrl = `http://localhost:${port}`;
@@ -39,6 +40,7 @@ describe('Pact verification', () => {
       },
       beforeEach: async () => {
         Context.postRepository = new InMemoryPostRepository();
+        Context.postIndexGateway = new PostIndexGatewaySpy();
       },
     })
       .verifyProvider()
