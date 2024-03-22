@@ -18,7 +18,7 @@ import {
   ERROR_USER_DOES_NOT_EXIST,
   ERROR_USER_ID_REQUIRED,
 } from '../utilities/errorMessages';
-import { createPosts } from '../utilities/helpers';
+import { createPosts, savePosts } from '../utilities/helpers';
 import {
   sampleLimit,
   sampleOffset,
@@ -53,16 +53,6 @@ function executeUseCase({
     limit,
     offset,
   });
-}
-
-function savePosts(posts: Post[]) {
-  posts.forEach(async (p) => {
-    await savePost(p);
-  });
-
-  async function savePost(post: Post) {
-    await Context.postRepository.save(post);
-  }
 }
 
 afterEach(() => {

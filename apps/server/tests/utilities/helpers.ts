@@ -32,3 +32,13 @@ export function createPosts(count: number): Post[] {
   }
   return posts;
 }
+
+export function savePosts(posts: Post[]) {
+  posts.forEach(async (p) => {
+    await savePost(p);
+  });
+
+  async function savePost(post: Post) {
+    await Context.postRepository.save(post);
+  }
+}

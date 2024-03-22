@@ -2,19 +2,10 @@ import { Post } from '../../src/core/entities/post';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { assertPostEquality } from '../utilities/assertions';
 import { sampleUserId } from '../utilities/samples';
-import { createPosts } from '../utilities/helpers';
+import { createPosts, savePosts } from '../utilities/helpers';
+import Context from '../../src/context';
 
 let repo: InMemoryPostRepository;
-
-function savePosts(posts: Post[]) {
-  posts.forEach(async (p) => {
-    await savePost(p);
-  });
-
-  async function savePost(post: Post) {
-    await repo.save(post);
-  }
-}
 
 function assertPostIsSaved(savedUsers: Post[] | null, post: Post) {
   expect(savedUsers?.findIndex((p) => p.isSame(post))).not.toBe(-1);
@@ -32,6 +23,7 @@ function assertPostIsSaved(savedUsers: Post[] | null, post: Post) {
 
 beforeEach(() => {
   repo = new InMemoryPostRepository();
+  Context.postRepository = repo;
 });
 
 test('saves post', async () => {
