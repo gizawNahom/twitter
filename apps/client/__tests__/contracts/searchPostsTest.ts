@@ -33,7 +33,7 @@ export function testSearchPosts(provider: Pact, baseUrl: URL) {
         },
       })
         .uponReceiving('a request to search posts with query, offset and limit')
-        .given('there are saved posts')
+        .given('a user has created a post')
         .withVariables({
           query: like(sampleQuery),
           offset: like(validOffset),
@@ -53,7 +53,7 @@ export function testSearchPosts(provider: Pact, baseUrl: URL) {
       const invalidLimit = -10;
       const interaction = createInteraction({
         data: {
-          posts: null,
+          searchPosts: null,
         },
         errors: [
           {

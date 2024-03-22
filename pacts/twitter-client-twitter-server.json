@@ -248,7 +248,7 @@
       "response": {
         "body": {
           "data": {
-            "posts": null
+            "searchPosts": null
           },
           "errors": [
             {
@@ -401,7 +401,7 @@
     },
     {
       "description": "a request to search posts with query, offset and limit",
-      "providerState": "there are saved posts",
+      "providerState": "a user has created a post",
       "request": {
         "body": {
           "operationName": "SearchPosts",
