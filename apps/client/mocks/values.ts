@@ -6,4 +6,10 @@ export const samplePostResponse = {
   __typename: 'Post',
 };
 
+export const sampleOffset = 0;
+export const sampleLimit = 10;
+
+export const sampleInvalidOffset = -1;
+export const sampleInvalidLimit = -10;
+
 export const GENERIC_SERVER_ERROR = 'Generic error';

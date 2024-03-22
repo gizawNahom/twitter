@@ -4,7 +4,14 @@ import {
   assertPostEquality,
   createBaseInteraction,
 } from '../testUtilities/contractHelpers';
-import { GENERIC_SERVER_ERROR, samplePostResponse } from '../../mocks/values';
+import {
+  GENERIC_SERVER_ERROR,
+  sampleInvalidLimit,
+  sampleInvalidOffset,
+  sampleLimit,
+  sampleOffset,
+  samplePostResponse,
+} from '../../mocks/values';
 import { fetchPosts } from '../../lib/redux/slices/postsSlice/fetchPosts';
 import { Pact } from '@pact-foundation/pact';
 import { Operations } from '../testUtilities/operations';
@@ -12,8 +19,8 @@ import { Operations } from '../testUtilities/operations';
 export function testFetchPosts(provider: Pact, baseUrl: URL) {
   describe('Fetches created posts', () => {
     test('paginates created posts', async () => {
-      const validOffset = 0;
-      const validLimit = 10;
+      const validOffset = sampleOffset;
+      const validLimit = sampleLimit;
       const interaction = createInteraction({
         data: {
           posts: [
@@ -50,8 +57,8 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
 
     test('handles error', async () => {
       const invalidUserId = '';
-      const invalidOffset = -1;
-      const invalidLimit = -10;
+      const invalidOffset = sampleInvalidOffset;
+      const invalidLimit = sampleInvalidLimit;
       const interaction = createInteraction({
         data: {
           posts: null,

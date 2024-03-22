@@ -7,7 +7,14 @@ import {
 } from '../testUtilities/contractHelpers';
 import { Operations } from '../testUtilities/operations';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
-import { GENERIC_SERVER_ERROR, samplePostResponse } from '../../mocks/values';
+import {
+  GENERIC_SERVER_ERROR,
+  sampleInvalidLimit,
+  sampleInvalidOffset,
+  sampleLimit,
+  sampleOffset,
+  samplePostResponse,
+} from '../../mocks/values';
 
 async function executeSUT(query: string, offset: number, limit: number) {
   return await searchPosts(query, offset, limit);
@@ -17,8 +24,8 @@ export function testSearchPosts(provider: Pact, baseUrl: URL) {
   describe('Search Posts', () => {
     test('searches posts', async () => {
       const sampleQuery = 'hello';
-      const validOffset = 0;
-      const validLimit = 10;
+      const validOffset = sampleOffset;
+      const validLimit = sampleLimit;
       const interaction = createInteraction({
         data: {
           searchPosts: [
@@ -49,8 +56,8 @@ export function testSearchPosts(provider: Pact, baseUrl: URL) {
 
     test('handles error', async () => {
       const invalidQuery = '';
-      const invalidOffset = -1;
-      const invalidLimit = -10;
+      const invalidOffset = sampleInvalidOffset;
+      const invalidLimit = sampleInvalidLimit;
       const interaction = createInteraction({
         data: {
           searchPosts: null,
