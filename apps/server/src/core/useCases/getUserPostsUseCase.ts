@@ -23,7 +23,7 @@ export class GetUserPostsUseCase {
     private logger: Logger
   ) {}
 
-  async execute(request: GetPostsRequest): Promise<GetPostsResponse> {
+  async execute(request: GetUserPostsRequest): Promise<GetUserPostsResponse> {
     new Limit(request.limit);
     new Offset(request.offset);
     this.validateUserId(request.userId);
@@ -61,7 +61,12 @@ export class GetUserPostsUseCase {
     throw new ValidationError(message);
   }
 
-  private async getPosts({ token, userId, limit, offset }: GetPostsRequest) {
+  private async getPosts({
+    token,
+    userId,
+    limit,
+    offset,
+  }: GetUserPostsRequest) {
     const user = await this.extractUser(new Token(token));
     if (this.isAuthenticated(user)) {
       return await this.getLatestPosts(userId, limit, offset);
@@ -103,20 +108,20 @@ export class GetUserPostsUseCase {
     this.logger.logInfo(logMessage, obj);
   }
 
-  private buildResponse(posts: Post[]): GetPostsResponse {
+  private buildResponse(posts: Post[]): GetUserPostsResponse {
     return {
       posts: posts,
     };
   }
 }
 
-export interface GetPostsRequest {
+export interface GetUserPostsRequest {
   token: string;
   userId: string;
   limit: number;
   offset: number;
 }
 
-export interface GetPostsResponse {
+export interface GetUserPostsResponse {
   posts: Array<Post>;
 }

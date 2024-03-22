@@ -1,7 +1,7 @@
 import Context from '../../src/context';
 import { Post } from '../../src/core/entities/post';
 import {
-  GetPostsResponse,
+  GetUserPostsResponse,
   GetUserPostsUseCase,
 } from '../../src/core/useCases/getUserPostsUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
@@ -40,7 +40,7 @@ function executeUseCase({
   userId?: string;
   limit?: number;
   offset?: number;
-}): Promise<GetPostsResponse> {
+}): Promise<GetUserPostsResponse> {
   return new GetUserPostsUseCase(
     Context.gateKeeper,
     Context.userRepository,
