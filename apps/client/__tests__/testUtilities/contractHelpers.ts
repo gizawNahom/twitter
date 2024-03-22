@@ -35,3 +35,5 @@ export function assertPostEquality(post: Post | null) {
     createdAt: new Date(samplePostResponse.createdAt),
   });
 }
+
+export const POST_EXISTS_STATE = 'a user has created a post';

@@ -1,6 +1,7 @@
 import { Pact } from '@pact-foundation/pact';
 import { searchPosts } from '../../lib/redux/slices/postsSlice/searchPosts';
 import {
+  POST_EXISTS_STATE,
   addInteraction,
   assertPostEquality,
   createBaseInteraction,
@@ -40,7 +41,7 @@ export function testSearchPosts(provider: Pact, baseUrl: URL) {
         },
       })
         .uponReceiving('a request to search posts with query, offset and limit')
-        .given('a user has created a post')
+        .given(POST_EXISTS_STATE)
         .withVariables({
           query: like(sampleQuery),
           offset: like(validOffset),

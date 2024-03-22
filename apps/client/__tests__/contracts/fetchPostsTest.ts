@@ -1,5 +1,6 @@
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import {
+  POST_EXISTS_STATE,
   addInteraction,
   assertPostEquality,
   createBaseInteraction,
@@ -37,7 +38,7 @@ export function testFetchPosts(provider: Pact, baseUrl: URL) {
         .uponReceiving(
           'a request to fetch created posts with valid id, offset and limit'
         )
-        .given('a user has created a post')
+        .given(POST_EXISTS_STATE)
         .withVariables({
           userId: like(samplePostResponse.userId),
           offset: like(validOffset),
