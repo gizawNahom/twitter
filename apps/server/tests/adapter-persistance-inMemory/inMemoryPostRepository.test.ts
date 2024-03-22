@@ -1,9 +1,9 @@
 import { Post } from '../../src/core/entities/post';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { assertPostEquality } from '../utilities/assertions';
+import { sampleUserId } from '../utilities/samples';
 
 let repo: InMemoryPostRepository;
-const sampleUserId = 'userId';
 
 function createPosts(count: number): Post[] {
   const posts: Post[] = [];
