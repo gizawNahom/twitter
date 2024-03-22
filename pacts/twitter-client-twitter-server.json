@@ -213,6 +213,61 @@
       }
     },
     {
+      "description": "a request to search posts with invalid query, offset and limit",
+      "request": {
+        "body": {
+          "operationName": "SearchPosts",
+          "query": "query SearchPosts($query: String!, $limit: Int!, $offset: Int!) {\n            searchPosts(query: $query, limit: $limit, offset: $offset) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "variables": {
+            "limit": -10,
+            "offset": -1,
+            "query": ""
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "query\\s*SearchPosts\\(\\$query:\\s*String!,\\s*\\$limit:\\s*Int!,\\s*\\$offset:\\s*Int!\\)\\s*\\{\\s*searchPosts\\(query:\\s*\\$query,\\s*limit:\\s*\\$limit,\\s*offset:\\s*\\$offset\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.body.variables.query": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "posts": null
+          },
+          "errors": [
+            {
+              "message": "Generic error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
       "description": "a request to fetch a post with a valid post id",
       "providerState": "a post with the id exists",
       "request": {
@@ -338,6 +393,77 @@
             "match": "type"
           },
           "$.body.data.posts[0].userId": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to search posts with query, offset and limit",
+      "providerState": "there are saved posts",
+      "request": {
+        "body": {
+          "operationName": "SearchPosts",
+          "query": "query SearchPosts($query: String!, $limit: Int!, $offset: Int!) {\n            searchPosts(query: $query, limit: $limit, offset: $offset) {\n              id\n              text\n              userId\n              createdAt\n              __typename\n            }\n          }",
+          "variables": {
+            "limit": 10,
+            "offset": 0,
+            "query": "hello"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "query\\s*SearchPosts\\(\\$query:\\s*String!,\\s*\\$limit:\\s*Int!,\\s*\\$offset:\\s*Int!\\)\\s*\\{\\s*searchPosts\\(query:\\s*\\$query,\\s*limit:\\s*\\$limit,\\s*offset:\\s*\\$offset\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.body.variables.query": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "searchPosts": [
+              {
+                "__typename": "Post",
+                "createdAt": "2023-12-09T04:47:07Z",
+                "id": "postId1",
+                "text": "Hello World",
+                "userId": "userId1"
+              }
+            ]
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.searchPosts[0].__typename": {
+            "match": "type"
+          },
+          "$.body.data.searchPosts[0].createdAt": {
+            "match": "type"
+          },
+          "$.body.data.searchPosts[0].id": {
+            "match": "type"
+          },
+          "$.body.data.searchPosts[0].text": {
+            "match": "type"
+          },
+          "$.body.data.searchPosts[0].userId": {
             "match": "type"
           }
         },

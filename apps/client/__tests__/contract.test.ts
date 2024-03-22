@@ -4,6 +4,7 @@ import { testFetchPost } from './contracts/fetchPostTest';
 import { testFetchPosts } from './contracts/fetchPostsTest';
 import { Pact } from '@pact-foundation/pact';
 import path from 'path';
+import { testSearchPosts } from './contracts/searchPostsTest';
 
 function getBaseUrl() {
   return new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
@@ -43,3 +44,5 @@ testCreatePost(provider, baseUrl);
 testFetchPost(provider, baseUrl);
 
 testFetchPosts(provider, baseUrl);
+
+testSearchPosts(provider, baseUrl);
