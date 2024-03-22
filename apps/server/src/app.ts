@@ -1,5 +1,5 @@
 import { CreatePostUseCase } from './core/useCases/createPostUseCase';
-import { GetPostUseCase } from './core/useCases/getPostUseCase';
+import { GetUserPostUseCase } from './core/useCases/getUserPostUseCase';
 import Context from './context';
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
@@ -53,7 +53,7 @@ const resolvers = {
       contextValue: ServerContext
     ) => {
       return await tryResolve(async () => {
-        return await new GetPostUseCase(
+        return await new GetUserPostUseCase(
           Context.logger,
           Context.gateKeeper,
           Context.postRepository

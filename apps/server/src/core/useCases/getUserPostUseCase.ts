@@ -9,7 +9,7 @@ import { Token } from '../valueObjects/token';
 import { makeSureUserIsAuthenticated } from '../domainServices';
 import { extractUser } from '../domainServices';
 
-export class GetPostUseCase {
+export class GetUserPostUseCase {
   constructor(
     private logger: Logger,
     private gateKeeper: GateKeeper,
@@ -19,7 +19,7 @@ export class GetPostUseCase {
   async execute(
     token: string,
     postId: string | null
-  ): Promise<GetPostUseCaseResponse> {
+  ): Promise<GetUserPostUseCaseResponse> {
     this.validatePostId(postId);
 
     makeSureUserIsAuthenticated(
@@ -66,7 +66,7 @@ export class GetPostUseCase {
   }
 
   private buildResponse(savedPost: Post) {
-    const response = new GetPostUseCaseResponse();
+    const response = new GetUserPostUseCaseResponse();
     response.id = savedPost.getId();
     response.text = savedPost.getText();
     response.userId = savedPost.getUserId();
@@ -75,7 +75,7 @@ export class GetPostUseCase {
   }
 }
 
-export class GetPostUseCaseResponse {
+export class GetUserPostUseCaseResponse {
   id: string;
   text: string;
   userId: string;

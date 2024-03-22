@@ -1,9 +1,9 @@
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import Context from '../../src/context';
 import {
-  GetPostUseCase,
-  GetPostUseCaseResponse,
-} from '../../src/core/useCases/getPostUseCase';
+  GetUserPostUseCase,
+  GetUserPostUseCaseResponse,
+} from '../../src/core/useCases/getUserPostUseCase';
 import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
@@ -32,7 +32,7 @@ async function executeUseCase({
   token?: string;
   postId?: string | null;
 }) {
-  const uC = new GetPostUseCase(
+  const uC = new GetUserPostUseCase(
     Context.logger,
     Context.gateKeeper,
     Context.postRepository
@@ -50,7 +50,7 @@ function createdSavedPost() {
 }
 
 function createdExpectedRes(savedPost: Post) {
-  const expectedRes = new GetPostUseCaseResponse();
+  const expectedRes = new GetUserPostUseCaseResponse();
   expectedRes.id = savedPost.getId();
   expectedRes.text = savedPost.getText();
   expectedRes.userId = savedPost.getUserId();
