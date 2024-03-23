@@ -1,6 +1,10 @@
 import { screen } from '@testing-library/react';
 import { SearchInput } from '../../components/searchInput';
-import { mockRouter, renderElement } from '../testUtilities/helpers';
+import {
+  getByPlaceholderText,
+  mockRouter,
+  renderElement,
+} from '../testUtilities/helpers';
 import userEvent from '@testing-library/user-event';
 
 jest.mock('next/router', () => ({
@@ -18,7 +22,7 @@ function renderSUT() {
 }
 
 function getSearchInput(): HTMLElement {
-  return screen.getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
+  return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
 }
 
 async function typeQueryOnInput() {

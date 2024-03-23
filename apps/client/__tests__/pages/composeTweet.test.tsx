@@ -3,6 +3,7 @@ import ComposeTweet from '../../pages/compose/tweet';
 import {
   clickPostButton,
   createNewStore,
+  getByPlaceholderText,
   mockRouter,
   renderElement,
   setUpApi,
@@ -41,9 +42,7 @@ test('initial', () => {
 
   expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
   expect(screen.queryByTestId(POST_FORM_TEST_ID)).toBeVisible();
-  expect(
-    screen.getByPlaceholderText(POST_INPUT_PLACE_HOLDER_TEXT)
-  ).toHaveFocus();
+  expect(getByPlaceholderText(POST_INPUT_PLACE_HOLDER_TEXT)).toHaveFocus();
   expect(push).toHaveBeenCalledTimes(0);
 });
 

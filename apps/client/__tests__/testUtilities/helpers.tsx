@@ -97,3 +97,7 @@ export function mockRouter({
     query,
   }));
 }
+
+export function getByPlaceholderText(text: string | RegExp): HTMLElement {
+  return screen.getByPlaceholderText(text);
+}
