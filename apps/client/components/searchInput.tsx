@@ -13,14 +13,14 @@ export function SearchInput() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => {
-          if (isEnterKey(e.key) && !isEmpty(query)) pushToSearchPage();
+          if (isEnterKey(e.key) && !isEmpty(query)) pushToSearchPage(query);
 
           function isEnterKey(key: string) {
             return key === 'Enter';
           }
 
-          function pushToSearchPage() {
-            router.push('/search');
+          function pushToSearchPage(query: string) {
+            router.push(`/search?q=${query}`);
           }
         }}
       />

@@ -26,7 +26,7 @@ function getSearchInput(): HTMLElement {
   return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
 }
 
-async function typeQueryOnInput() {
+async function typeSampleQueryOnInput() {
   await userEvent.type(getSearchInput(), sampleQuery);
 }
 
@@ -46,7 +46,7 @@ test('initial', () => {
 test('clears text', async () => {
   renderSUT();
 
-  await typeQueryOnInput();
+  await typeSampleQueryOnInput();
   await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
 
   expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
@@ -63,9 +63,9 @@ test('does not push route on "enter" for empty text', async () => {
 test('pushes route on "enter"', async () => {
   renderSUT();
 
-  await typeQueryOnInput();
+  await typeSampleQueryOnInput();
   await pressEnterOnInput();
 
   expect(push).toHaveBeenCalledTimes(1);
-  expect(push).toHaveBeenCalledWith('/search');
+  expect(push).toHaveBeenCalledWith(`/search?q=${sampleQuery}`);
 });
