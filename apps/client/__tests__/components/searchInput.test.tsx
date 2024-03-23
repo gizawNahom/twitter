@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import { SearchInput } from '../../components/searchInput';
 import {
+  clickElement,
   getByPlaceholderText,
   mockRouter,
   renderElement,
@@ -52,7 +53,7 @@ test('clears text', async () => {
   renderSUT();
 
   await typeQueryOnInput();
-  await userEvent.click(screen.getByLabelText(CLEAR_TEXT_LABEL));
+  await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
 
   expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
 });

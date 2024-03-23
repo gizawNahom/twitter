@@ -78,7 +78,7 @@ export async function typeText(text: string) {
 }
 
 export function clickPostButton() {
-  return userEvent.click(screen.getByText(POST_BUTTON_TEXT));
+  return clickElement(screen.getByText(POST_BUTTON_TEXT));
 }
 
 export function mockRouter({
@@ -100,4 +100,8 @@ export function mockRouter({
 
 export function getByPlaceholderText(text: string | RegExp): HTMLElement {
   return screen.getByPlaceholderText(text);
+}
+
+export async function clickElement(element: HTMLElement) {
+  await userEvent.click(element);
 }
