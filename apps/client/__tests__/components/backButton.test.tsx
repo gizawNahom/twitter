@@ -1,8 +1,8 @@
 import { screen } from '@testing-library/react';
 import {
-  mockRouter,
   renderElement,
   clickElement,
+  setUpMockRouter,
 } from '../testUtilities/helpers';
 import { BackButton } from '../../components/backButton';
 
@@ -20,13 +20,7 @@ function renderSUT() {
   renderElement(<BackButton />);
 }
 
-beforeEach(() => {
-  mockRouter({ back, push });
-});
-
-afterEach(() => {
-  jest.resetAllMocks();
-});
+setUpMockRouter({ back, push });
 
 test('returns to previous page by clicking back', async () => {
   // @ts-expect-error type not compatible

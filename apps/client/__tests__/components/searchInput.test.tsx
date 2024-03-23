@@ -3,8 +3,8 @@ import { SearchInput } from '../../components/searchInput';
 import {
   clickElement,
   getByPlaceholderText,
-  mockRouter,
   renderElement,
+  setUpMockRouter,
 } from '../testUtilities/helpers';
 import userEvent from '@testing-library/user-event';
 
@@ -34,13 +34,7 @@ async function pressEnterOnInput() {
   await userEvent.type(getSearchInput(), '{enter}');
 }
 
-beforeEach(() => {
-  mockRouter({ push });
-});
-
-afterEach(() => {
-  jest.resetAllMocks();
-});
+setUpMockRouter({ push });
 
 test('initial', () => {
   renderSUT();

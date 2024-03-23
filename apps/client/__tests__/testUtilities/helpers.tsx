@@ -81,7 +81,15 @@ export function clickPostButton() {
   return clickElement(screen.getByText(POST_BUTTON_TEXT));
 }
 
-export function mockRouter({
+export function getByPlaceholderText(text: string | RegExp): HTMLElement {
+  return screen.getByPlaceholderText(text);
+}
+
+export async function clickElement(element: HTMLElement) {
+  await userEvent.click(element);
+}
+
+export function setUpMockRouter({
   back,
   push,
   query,
@@ -90,18 +98,28 @@ export function mockRouter({
   push?: jest.Mock;
   query?: object;
 }) {
-  const router = useRouter as jest.Mock;
-  router.mockImplementation(() => ({
-    back: back,
-    push: push,
+  function mockRouter({
+    back,
+    push,
     query,
-  }));
-}
+  }: {
+    back?: jest.Mock;
+    push?: jest.Mock;
+    query?: object;
+  }) {
+    const router = useRouter as jest.Mock;
+    router.mockImplementation(() => ({
+      back: back,
+      push: push,
+      query,
+    }));
+  }
 
-export function getByPlaceholderText(text: string | RegExp): HTMLElement {
-  return screen.getByPlaceholderText(text);
-}
+  beforeEach(() => {
+    mockRouter({ back, push, query });
+  });
 
-export async function clickElement(element: HTMLElement) {
-  await userEvent.click(element);
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
 }

@@ -3,11 +3,11 @@ import Status from '../../pages/[userId]/status/[id]';
 import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
 import { server } from '../../mocks/server';
 import {
-  mockRouter,
   queryErrorComponent,
   querySpinner,
   renderElement,
   setUpApi,
+  setUpMockRouter,
 } from '../testUtilities/helpers';
 import { samplePostResponse } from '../../mocks/values';
 import { BACK_BUTTON_TEST_ID } from '../testUtilities/testIds';
@@ -59,16 +59,10 @@ function assertSpinnerIsNotShown(): void | Promise<void> {
   expect(querySpinner()).toBeNull();
 }
 
-beforeEach(() => {
-  mockRouter({
-    query: {
-      id: 'id1',
-    },
-  });
-});
-
-afterEach(() => {
-  jest.resetAllMocks();
+setUpMockRouter({
+  query: {
+    id: 'id1',
+  },
 });
 
 setUpApi();

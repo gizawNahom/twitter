@@ -4,9 +4,9 @@ import {
   clickPostButton,
   createNewStore,
   getByPlaceholderText,
-  mockRouter,
   renderElement,
   setUpApi,
+  setUpMockRouter,
   typeText,
 } from '../testUtilities/helpers';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
@@ -29,13 +29,7 @@ function renderSUT(store?: EnhancedStore) {
 
 setUpApi();
 
-beforeEach(() => {
-  mockRouter({ push });
-});
-
-afterEach(() => {
-  jest.resetAllMocks();
-});
+setUpMockRouter({ push });
 
 test('initial', () => {
   renderSUT();
