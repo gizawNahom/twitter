@@ -6,23 +6,9 @@ import {
   renderElement,
   setUpApi,
 } from '../testUtilities/helpers';
-import { server } from '../../mocks/server';
-import {
-  postsErrorHandler,
-  postsVariables,
-  wasPostsCalled,
-} from '../../mocks/handlers';
-import { samplePostResponse } from '../../mocks/values';
 
-function renderSUT() {
-  renderElement(<Posts userId={samplePostResponse.userId} />);
-}
-
-function assertApiCall() {
-  expect(wasPostsCalled).toBe(true);
-  const { limit, offset } = postsVariables;
-  expect(limit).toBe(20);
-  expect(offset).toBe(0);
+function renderSUT(fetchPosts = async () => []) {
+  renderElement(<Posts fetchPosts={fetchPosts} />);
 }
 
 setUpApi();
@@ -30,7 +16,6 @@ setUpApi();
 test('initial', async () => {
   renderSUT();
 
-  expect(wasPostsCalled).toBe(false);
   expect(queryErrorComponent()).toBeNull();
   await waitFor(() => {
     expect(querySpinner()).toBeInTheDocument();
@@ -38,11 +23,10 @@ test('initial', async () => {
 });
 
 test('error', async () => {
-  server.use(postsErrorHandler);
-
-  renderSUT();
+  renderSUT(async () => {
+    throw new Error();
+  });
 
   await waitFor(() => expect(queryErrorComponent()).not.toBeNull());
   expect(querySpinner()).not.toBeInTheDocument();
-  assertApiCall();
 });

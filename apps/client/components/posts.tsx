@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from 'react';
-import { fetchPosts } from '../lib/redux/slices/postsSlice/fetchPosts';
+import InfiniteScroll from 'react-infinite-scroller';
 import { Error } from './error';
 import { Spinner } from './spinner';
 import { Post } from '../lib/redux/slices/postsSlice/post';
 import { Avatar } from './avatar';
-import InfiniteScroll from 'react-infinite-scroller';
 import { createWhenText } from '../utilities/createWhenText';
 
-export function Posts({ userId }: { userId: string }) {
+export function Posts({
+  fetchPosts,
+}: {
+  fetchPosts: (offset: number) => Promise<Array<Post>>;
+}) {
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
   const [posts, setPosts] = useState<Array<Post>>([]);
@@ -17,8 +20,8 @@ export function Posts({ userId }: { userId: string }) {
     try {
       if (status === 'fetching') return;
       setStatus('fetching');
-      const fetchedPosts = await fetchPosts(userId, offset, 20);
-      if (fetchPosts.length === 0) setHasMore(false);
+      const fetchedPosts = await fetchPosts(offset);
+      if (fetchedPosts.length === 0) setHasMore(false);
       setOffset(offset + 1);
       setPosts([...posts, ...fetchedPosts]);
       setStatus('idle');
@@ -26,7 +29,7 @@ export function Posts({ userId }: { userId: string }) {
       setStatus('error');
       setHasMore(false);
     }
-  }, [offset, posts, status, userId]);
+  }, [offset, posts, status, fetchPosts]);
 
   useEffect(() => {
     fetchItems();

@@ -3,7 +3,7 @@ import Profile from '../../pages/username';
 import { renderElement, setUpApi } from '../testUtilities/helpers';
 import { BACK_BUTTON_TEST_ID, POSTS_TEST_ID } from '../testUtilities/testIds';
 import { samplePostResponse } from '../../mocks/values';
-import { postsVariables } from '../../mocks/handlers';
+import { postsVariables, wasPostsCalled } from '../../mocks/handlers';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -30,8 +30,11 @@ async function assertPostsRender() {
   });
 }
 
-function assertUserIdInAPICall() {
-  const { userId } = postsVariables;
+function assertApiCall() {
+  expect(wasPostsCalled).toBe(true);
+  const { limit, offset, userId } = postsVariables;
+  expect(limit).toBe(20);
+  expect(offset).toBe(0);
   expect(userId).toBe('userId1');
 }
 
@@ -44,5 +47,5 @@ test('initial', async () => {
   expect(screen.getByText(/posts/i)).toBeVisible();
   expect(screen.getByTestId(POSTS_TEST_ID)).toBeVisible();
   expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
-  assertUserIdInAPICall();
+  assertApiCall();
 }, 10000);
