@@ -4,22 +4,17 @@ import {
   clickElement,
   getByPlaceholderText,
   renderElement,
-  setUpMockRouter,
 } from '../testUtilities/helpers';
 import userEvent from '@testing-library/user-event';
-
-jest.mock('next/router', () => ({
-  useRouter: jest.fn(),
-}));
 
 const SEARCH_INPUT_PLACEHOLDER_TEXT = /search/i;
 const CLEAR_TEXT_LABEL = /clear text/i;
 const sampleQuery = 'hello';
 
-const push = jest.fn();
+const onSubmit = jest.fn();
 
 function renderSUT() {
-  renderElement(<SearchInput />);
+  renderElement(<SearchInput onSubmit={onSubmit} />);
 }
 
 function getSearchInput(): HTMLElement {
@@ -34,7 +29,7 @@ async function pressEnterOnInput() {
   await userEvent.type(getSearchInput(), '{enter}');
 }
 
-setUpMockRouter({ push });
+afterEach(() => jest.clearAllMocks());
 
 test('initial', () => {
   renderSUT();
@@ -52,20 +47,20 @@ test('clears text', async () => {
   expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
 });
 
-test('does not push route on "enter" for empty text', async () => {
+test('does not submit if query is empty text', async () => {
   renderSUT();
 
   await pressEnterOnInput();
 
-  expect(push).not.toHaveBeenCalled();
+  expect(onSubmit).not.toHaveBeenCalled();
 });
 
-test('pushes route on "enter"', async () => {
+test('submits on "enter"', async () => {
   renderSUT();
 
   await typeSampleQueryOnInput();
   await pressEnterOnInput();
 
-  expect(push).toHaveBeenCalledTimes(1);
-  expect(push).toHaveBeenCalledWith(`/search?q=${sampleQuery}`);
+  expect(onSubmit).toHaveBeenCalledTimes(1);
+  expect(onSubmit).toHaveBeenCalledWith(sampleQuery);
 });
