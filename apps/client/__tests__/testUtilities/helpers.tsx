@@ -12,12 +12,8 @@ import { POST_BUTTON_TEXT } from './texts';
 import { useRouter } from 'next/router';
 
 export function setUpClient() {
-  beforeAll(() => {
+  beforeEach(() => {
     setCLient();
-  });
-
-  afterEach(async () => {
-    await resetClientStore();
   });
 
   function setCLient() {
@@ -28,10 +24,6 @@ export function setUpClient() {
       }),
       cache: new InMemoryCache(),
     });
-  }
-
-  async function resetClientStore() {
-    await Client.client.resetStore();
   }
 }
 
