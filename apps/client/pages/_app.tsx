@@ -27,7 +27,6 @@ Client.client = new ApolloClient({
               }
 
               existing = { ...existing, [userId]: merged };
-              console.log(existing);
               return existing;
             },
           },
