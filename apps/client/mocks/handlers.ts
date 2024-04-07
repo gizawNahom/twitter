@@ -1,11 +1,17 @@
 import { GraphQLVariables, graphql } from 'msw';
-import { GENERIC_SERVER_ERROR, samplePostResponse } from './values';
+import {
+  GENERIC_SERVER_ERROR,
+  samplePostResponse,
+  searchPostsResponse,
+} from './values';
 import { Operations } from '../__tests__/testUtilities/operations';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
 export let wasPostsCalled = false;
 export let postsVariables: GraphQLVariables;
+export const searchPostsCalls: GraphQLVariables[] = [];
+export const genericErrorHandlerCalls: GraphQLVariables[] = [];
 
 export const handlers = [
   graphql.mutation(Operations.CreatePost, (req, res, ctx) => {
@@ -55,6 +61,15 @@ export const handlers = [
       })
     );
   }),
+  graphql.query(Operations.SearchPosts, ({ variables }, res, ctx) => {
+    searchPostsCalls.push(variables);
+    return res(
+      ctx.delay(1),
+      ctx.data({
+        searchPosts: searchPostsResponse,
+      })
+    );
+  }),
 ];
 
 export const postsErrorHandler = graphql.query(
@@ -65,6 +80,9 @@ export const postsErrorHandler = graphql.query(
   }
 );
 
-export const genericErrorHandler = graphql.operation((req, res, ctx) => {
-  return res(ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
-});
+export const genericErrorHandler = graphql.operation(
+  ({ variables }, res, ctx) => {
+    genericErrorHandlerCalls.push(variables);
+    return res(ctx.delay(1), ctx.errors([{ message: GENERIC_SERVER_ERROR }]));
+  }
+);
