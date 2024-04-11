@@ -65,8 +65,11 @@ export function querySpinner(): HTMLElement | null {
   return screen.queryByTestId(SPINNER_TEST_ID);
 }
 
-export async function typeText(text: string) {
-  await userEvent.type(screen.getByRole('textbox'), text);
+export async function typeText(
+  text: string,
+  element = screen.getByRole('textbox')
+) {
+  await userEvent.type(element, text);
 }
 
 export function clickPostButton() {
