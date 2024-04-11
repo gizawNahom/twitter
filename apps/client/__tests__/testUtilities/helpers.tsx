@@ -141,6 +141,31 @@ export function setUpMockRouter({
   });
 }
 
+export function queryPostTime() {
+  const options: Intl.DateTimeFormatOptions = {
+    hour: 'numeric',
+    minute: 'numeric',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  };
+  const postTime = screen.queryByText(
+    new Intl.DateTimeFormat('en-US', options).format(
+      new Date(samplePostResponse.createdAt)
+    )
+  );
+  return postTime;
+}
+
+export function querySamplePostTime(options: Intl.DateTimeFormatOptions) {
+  const postTime = screen.queryByText(
+    new Intl.DateTimeFormat('en-US', options).format(
+      new Date(samplePostResponse.createdAt)
+    )
+  );
+  return postTime;
+}
+
 export function assertErrorIsNotShown() {
   expect(queryErrorComponent()).not.toBeInTheDocument();
 }

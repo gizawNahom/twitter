@@ -1,6 +1,10 @@
 import { screen, waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
-import { renderElement, setUpApi } from '../testUtilities/helpers';
+import {
+  querySamplePostTime,
+  renderElement,
+  setUpApi,
+} from '../testUtilities/helpers';
 import { BACK_BUTTON_TEST_ID, POSTS_TEST_ID } from '../testUtilities/testIds';
 import { samplePostResponse } from '../../mocks/values';
 import { postsVariables, wasPostsCalled } from '../../mocks/handlers';
@@ -9,24 +13,16 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-function queryPostTime() {
-  const options: Intl.DateTimeFormatOptions = {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  };
-  const postTime = screen.queryByText(
-    new Intl.DateTimeFormat('en-US', options).format(
-      new Date(samplePostResponse.createdAt)
-    )
-  );
-  return postTime;
-}
-
 async function assertPostsRender() {
   await waitFor(() => {
     expect(screen.getByText(samplePostResponse.text)).toBeVisible();
-    expect(queryPostTime()).toBeVisible();
+    expect(
+      querySamplePostTime({
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+      })
+    ).toBeVisible();
   });
 }
 

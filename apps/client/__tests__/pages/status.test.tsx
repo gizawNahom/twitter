@@ -6,6 +6,7 @@ import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
   queryErrorComponent,
+  querySamplePostTime,
   querySpinner,
   renderElement,
   setUpApi,
@@ -17,6 +18,14 @@ import { BACK_BUTTON_TEST_ID } from '../testUtilities/testIds';
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
+
+const POST_TIME_FORMAT: Intl.DateTimeFormatOptions = {
+  hour: 'numeric',
+  minute: 'numeric',
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+};
 
 const PAGE_TITLE = /post/i;
 
@@ -30,23 +39,7 @@ function assertWasPostCalled(value: boolean) {
 
 function assertPostIsNotShown() {
   expect(queryPostText()).toBeNull();
-  expect(queryPostTime()).toBeNull();
-}
-
-function queryPostTime() {
-  const options: Intl.DateTimeFormatOptions = {
-    hour: 'numeric',
-    minute: 'numeric',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  };
-  const postTime = screen.queryByText(
-    new Intl.DateTimeFormat('en-US', options).format(
-      new Date(samplePostResponse.createdAt)
-    )
-  );
-  return postTime;
+  expect(querySamplePostTime(POST_TIME_FORMAT)).toBeNull();
 }
 
 function queryPostText(): HTMLElement | null {
@@ -78,7 +71,7 @@ test('success state', async () => {
   await waitFor(() => assertSpinnerIsNotShown());
   assertWasPostCalled(true);
   expect(queryPostText()).not.toBeNull();
-  expect(queryPostTime()).not.toBeNull();
+  expect(querySamplePostTime(POST_TIME_FORMAT)).not.toBeNull();
   assertErrorIsNotShown();
 });
 
