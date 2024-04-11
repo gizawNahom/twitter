@@ -1,5 +1,6 @@
 import {
   clickPostButton,
+  getByTestId,
   getByText,
   renderElement,
   setUpApi,
@@ -24,7 +25,7 @@ setUpApi();
 test('initial', () => {
   renderElement(<Home />);
 
-  expect(screen.getByTestId(POST_FORM_TEST_ID)).toBeInTheDocument();
+  expect(getByTestId(POST_FORM_TEST_ID)).toBeInTheDocument();
   expect(screen.queryByText(POST_CREATION_MESSAGE)).not.toBeInTheDocument();
 });
 

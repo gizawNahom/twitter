@@ -1,6 +1,7 @@
-import { screen, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
 import {
+  getByTestId,
   getByText,
   queryByTestId,
   querySamplePostTime,
@@ -43,7 +44,7 @@ test('initial', async () => {
 
   await assertPostsRender();
   expect(getByText(/posts/i)).toBeVisible();
-  expect(screen.getByTestId(POSTS_TEST_ID)).toBeVisible();
+  expect(getByTestId(POSTS_TEST_ID)).toBeVisible();
   expect(queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
   assertApiCall();
 }, 10000);

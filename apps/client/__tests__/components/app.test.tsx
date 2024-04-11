@@ -1,13 +1,13 @@
 import { App } from '../../components/app';
 import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../testUtilities/testIds';
 import {
+  getByTestId,
   getByText,
   pressEnterOnInput,
   renderElement,
   setUpMockRouter,
   typeQueryOnSearchInput,
 } from '../testUtilities/helpers';
-import { screen } from '@testing-library/react';
 import { sampleQuery } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
@@ -33,9 +33,9 @@ setUpMockRouter({ push });
 test('initial', () => {
   renderSUT();
 
-  expect(screen.getByTestId(NAV_TEST_ID)).toBeVisible();
+  expect(getByTestId(NAV_TEST_ID)).toBeVisible();
   expect(getByText(sampleText)).toBeVisible();
-  expect(screen.getByTestId(POST_FAB_TEST_ID)).toBeVisible();
+  expect(getByTestId(POST_FAB_TEST_ID)).toBeVisible();
 });
 
 test('search input pushes to search page on "enter"', async () => {

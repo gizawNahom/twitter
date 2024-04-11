@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { Nav } from '../../components/nav';
-import { renderElement } from '../testUtilities/helpers';
+import { getByTestId, renderElement } from '../testUtilities/helpers';
 import { POST_FAB_TEST_ID } from '../testUtilities/testIds';
 
 const HOME_LINK = '/home';
@@ -17,5 +17,5 @@ test('initial', async () => {
 
   expect(screen.queryByRole('link', { name: HOME_LINK }));
   expect(screen.queryByRole('link', { name: PROFILE_LINK }));
-  expect(screen.getByTestId(POST_FAB_TEST_ID)).toBeInTheDocument();
+  expect(getByTestId(POST_FAB_TEST_ID)).toBeInTheDocument();
 });

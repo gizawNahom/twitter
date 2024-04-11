@@ -102,6 +102,10 @@ export function getByText(text: string | RegExp): HTMLElement {
   return screen.getByText(text);
 }
 
+export function getByTestId(testId: string): HTMLElement {
+  return screen.getByTestId(testId);
+}
+
 export async function typeQueryOnSearchInput(query: string) {
   await typeText(query, getSearchInput());
 }

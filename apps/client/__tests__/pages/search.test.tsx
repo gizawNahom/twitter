@@ -3,6 +3,7 @@ import Search from '../../pages/search';
 import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
+  getByTestId,
   pressEnterOnInput,
   queryByTestId,
   renderElement,
@@ -33,10 +34,6 @@ function renderSUT() {
   renderElement(<Search />);
 }
 
-function getByTestId(testId: string): HTMLElement {
-  return screen.getByTestId(testId);
-}
-
 async function waitTillAllSearchResultsAreRendered() {
   await waitFor(() => {
     expect(getByTestId(POSTS_TEST_ID)).toBeInTheDocument();
@@ -49,9 +46,7 @@ async function waitTillAllSearchResultsAreRendered() {
 }
 
 async function waitForErrorToBeInTheDocument() {
-  await waitFor(() =>
-    expect(screen.getByTestId(ERROR_TEST_ID)).toBeInTheDocument()
-  );
+  await waitFor(() => expect(getByTestId(ERROR_TEST_ID)).toBeInTheDocument());
 }
 
 async function waitForSpinnerToBeInTheDocument() {
