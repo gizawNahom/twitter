@@ -15,6 +15,7 @@ import {
   sampleLimit,
   sampleOffset,
   samplePostResponse,
+  sampleQuery,
 } from '../../mocks/values';
 
 async function executeSUT(query: string, offset: number, limit: number) {
@@ -24,7 +25,7 @@ async function executeSUT(query: string, offset: number, limit: number) {
 export function testSearchPosts(provider: Pact, baseUrl: URL) {
   describe('Search Posts', () => {
     test('searches posts', async () => {
-      const sampleQuery = 'hello';
+      const validQuery = sampleQuery;
       const validOffset = sampleOffset;
       const validLimit = sampleLimit;
       const interaction = createInteraction({
@@ -43,13 +44,13 @@ export function testSearchPosts(provider: Pact, baseUrl: URL) {
         .uponReceiving('a request to search posts with query, offset and limit')
         .given(POST_EXISTS_STATE)
         .withVariables({
-          query: like(sampleQuery),
+          query: like(validQuery),
           offset: like(validOffset),
           limit: like(validLimit),
         });
       await addInteraction(provider, interaction);
 
-      const posts = await executeSUT(sampleQuery, validOffset, validLimit);
+      const posts = await executeSUT(validQuery, validOffset, validLimit);
 
       expect(posts.length).toBe(1);
       assertPostEquality(posts[0]);

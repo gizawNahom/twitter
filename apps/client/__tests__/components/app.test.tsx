@@ -8,14 +8,13 @@ import {
   typeText,
 } from '../testUtilities/helpers';
 import { screen } from '@testing-library/react';
+import { sampleQuery } from '../../mocks/values';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn().mockImplementation(() => ({
     pathname: '/path',
   })),
 }));
-
-const sampleQuery = 'hello';
 
 const push = jest.fn();
 

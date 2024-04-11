@@ -16,7 +16,11 @@ import {
   POSTS_TEST_ID,
   SPINNER_TEST_ID,
 } from '../testUtilities/testIds';
-import { samplePostResponse, searchPostsResponse } from '../../mocks/values';
+import {
+  samplePostResponse,
+  sampleQuery,
+  searchPostsResponse,
+} from '../../mocks/values';
 import { genericErrorHandler, searchPostsCalls } from '../../mocks/handlers';
 import { server } from '../../mocks/server';
 import { GraphQLVariables } from 'msw';
@@ -24,8 +28,6 @@ import { GraphQLVariables } from 'msw';
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
-
-const sampleQuery = 'hello';
 
 function renderSUT() {
   renderElement(<Search />);

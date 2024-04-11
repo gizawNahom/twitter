@@ -7,9 +7,9 @@ import {
   renderElement,
   typeText,
 } from '../testUtilities/helpers';
+import { sampleQuery } from '../../mocks/values';
 
 const CLEAR_TEXT_LABEL = /clear text/i;
-const sampleQuery = 'hello';
 
 const onSubmit = jest.fn();
 
