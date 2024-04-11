@@ -4,8 +4,8 @@ import {
   clickElement,
   getByPlaceholderText,
   renderElement,
+  typeText,
 } from '../testUtilities/helpers';
-import userEvent from '@testing-library/user-event';
 
 const SEARCH_INPUT_PLACEHOLDER_TEXT = /search/i;
 const CLEAR_TEXT_LABEL = /clear text/i;
@@ -22,11 +22,11 @@ function getSearchInput(): HTMLElement {
 }
 
 async function typeSampleQueryOnInput() {
-  await userEvent.type(getSearchInput(), sampleQuery);
+  await typeText(sampleQuery, getSearchInput());
 }
 
 async function pressEnterOnInput() {
-  await userEvent.type(getSearchInput(), '{enter}');
+  await typeText('{enter}', getSearchInput());
 }
 
 afterEach(() => jest.clearAllMocks());

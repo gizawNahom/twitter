@@ -2,12 +2,12 @@ import {
   clickPostButton,
   renderElement,
   setUpApi,
+  typeText,
 } from '../testUtilities/helpers';
 import Home from '../../pages/home';
 import { screen, waitFor } from '@testing-library/react';
 import { POST_FORM_TEST_ID } from '../testUtilities/testIds';
 import { App } from '../../components/app';
-import userEvent from '@testing-library/user-event';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
 
 jest.mock('next/router', () => ({
@@ -34,9 +34,9 @@ test('renders toast on successful post creation', async () => {
     </App>
   );
 
-  await userEvent.type(
-    screen.getByPlaceholderText(POST_INPUT_PLACE_HOLDER_TEXT),
-    'hello world'
+  await typeText(
+    'hello world',
+    screen.getByPlaceholderText(POST_INPUT_PLACE_HOLDER_TEXT)
   );
   await clickPostButton();
 

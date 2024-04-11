@@ -4,9 +4,9 @@ import {
   getByPlaceholderText,
   renderElement,
   setUpMockRouter,
+  typeText,
 } from '../testUtilities/helpers';
 import { screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn().mockImplementation(() => ({
@@ -30,11 +30,11 @@ function renderSUT() {
 }
 
 async function typeSampleQueryOnInput() {
-  await userEvent.type(getSearchInput(), sampleQuery);
+  await typeText(sampleQuery, getSearchInput());
 }
 
 async function pressEnterOnInput() {
-  await userEvent.type(getSearchInput(), '{enter}');
+  await typeText('{enter}', getSearchInput());
 }
 
 function getSearchInput(): HTMLElement {

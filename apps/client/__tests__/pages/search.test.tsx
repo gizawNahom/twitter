@@ -7,6 +7,7 @@ import {
   renderElement,
   setUpApi,
   setUpMockRouter,
+  typeText,
 } from '../testUtilities/helpers';
 import {
   BACK_BUTTON_TEST_ID,
@@ -17,7 +18,6 @@ import {
 import { samplePostResponse, searchPostsResponse } from '../../mocks/values';
 import { genericErrorHandler, searchPostsCalls } from '../../mocks/handlers';
 import { server } from '../../mocks/server';
-import userEvent from '@testing-library/user-event';
 import { GraphQLVariables } from 'msw';
 
 jest.mock('next/router', () => ({
@@ -36,11 +36,11 @@ function getByTestId(testId: string): HTMLElement {
 }
 
 async function typeSampleQueryOnInput() {
-  await userEvent.type(getSearchInput(), sampleQuery);
+  await typeText(sampleQuery, getSearchInput());
 }
 
 async function pressEnterOnInput() {
-  await userEvent.type(getSearchInput(), '{enter}');
+  await typeText('{enter}', getSearchInput());
 }
 
 function getSearchInput(): HTMLElement {
