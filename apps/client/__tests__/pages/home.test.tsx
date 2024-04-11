@@ -3,9 +3,9 @@ import {
   getByTestId,
   getByText,
   renderElement,
-  setUpApi,
   typeText,
 } from '../testUtilities/helpers';
+import { setUpApi } from '../testUtilities';
 import Home from '../../pages/home';
 import { screen, waitFor } from '@testing-library/react';
 import { POST_FORM_TEST_ID } from '../testUtilities/testIds';

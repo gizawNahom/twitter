@@ -5,11 +5,9 @@ import {
   createNewStore,
   getByPlaceholderText,
   renderElement,
-  setUpApi,
-  setUpMockRouter,
   typeText,
 } from '../testUtilities/helpers';
-import { queryByTestId } from '../testUtilities';
+import { queryByTestId, setUpApi, setUpMockRouter } from '../testUtilities';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
 import {
   BACK_BUTTON_TEST_ID,

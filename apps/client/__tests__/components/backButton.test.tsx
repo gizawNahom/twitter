@@ -1,9 +1,6 @@
 import { screen } from '@testing-library/react';
-import {
-  renderElement,
-  clickElement,
-  setUpMockRouter,
-} from '../testUtilities/helpers';
+import { renderElement, clickElement } from '../testUtilities/helpers';
+import { setUpMockRouter } from '../testUtilities';
 import { BackButton } from '../../components/backButton';
 
 jest.mock('next/router', () => ({

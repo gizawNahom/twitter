@@ -5,9 +5,9 @@ import {
   getByText,
   pressEnterOnInput,
   renderElement,
-  setUpMockRouter,
   typeQueryOnSearchInput,
 } from '../testUtilities/helpers';
+import { setUpMockRouter } from '../testUtilities';
 import { sampleQuery } from '../../mocks/values';
 
 jest.mock('next/router', () => ({

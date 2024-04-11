@@ -4,14 +4,14 @@ import {
   getByTestId,
   pressEnterOnInput,
   renderElement,
-  setUpApi,
-  setUpMockRouter,
   typeQueryOnSearchInput,
 } from '../testUtilities/helpers';
 import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
   queryByTestId,
+  setUpApi,
+  setUpMockRouter,
 } from '../testUtilities';
 import {
   BACK_BUTTON_TEST_ID,

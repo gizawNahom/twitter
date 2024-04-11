@@ -4,9 +4,9 @@ import { genericErrorHandler, wasCreatePostCalled } from '../../mocks/handlers';
 import {
   clickPostButton,
   renderElement,
-  setUpApi,
   typeText,
 } from '../testUtilities/helpers';
+import { setUpApi } from '../testUtilities';
 import { PostForm } from '../../components/postForm';
 import {
   POST_BUTTON_TEXT,

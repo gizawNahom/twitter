@@ -1,14 +1,9 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
-import fetch from 'cross-fetch';
-import { Client } from '../../utilities/client';
 import { Provider } from 'react-redux';
 import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { render, screen } from '@testing-library/react';
-import { server } from '../../mocks/server';
 import userEvent from '@testing-library/user-event';
 import { POST_BUTTON_TEXT, SEARCH_INPUT_PLACEHOLDER_TEXT } from './texts';
-import { useRouter } from 'next/router';
 import { samplePostResponse } from '../../mocks/values';
 
 export function createSamplePost() {
@@ -18,22 +13,6 @@ export function createSamplePost() {
     userId: samplePostResponse.userId,
     createdAt: new Date(samplePostResponse.createdAt),
   };
-}
-
-export function setUpClient() {
-  beforeEach(() => {
-    setCLient();
-  });
-
-  function setCLient() {
-    Client.client = new ApolloClient({
-      link: new HttpLink({
-        uri: process.env.NEXT_PUBLIC_API_BASE_URL,
-        fetch: fetch,
-      }),
-      cache: new InMemoryCache(),
-    });
-  }
 }
 
 export function renderElement(element: JSX.Element, store = createNewStore()) {
@@ -49,21 +28,6 @@ export function createNewStore() {
       });
     },
   });
-}
-
-export function setUpApi() {
-  setUpClient();
-  setUpMSW();
-
-  function setUpMSW() {
-    beforeAll(() =>
-      server.listen({
-        onUnhandledRequest: 'error',
-      })
-    );
-    afterEach(() => server.resetHandlers());
-    afterAll(() => server.close());
-  }
 }
 
 export async function typeText(
@@ -103,39 +67,4 @@ export async function pressEnterOnInput() {
 
 export async function clickElement(element: HTMLElement) {
   await userEvent.click(element);
-}
-
-export function setUpMockRouter({
-  back,
-  push,
-  query,
-}: {
-  back?: jest.Mock;
-  push?: jest.Mock;
-  query?: object;
-}) {
-  function mockRouter({
-    back,
-    push,
-    query,
-  }: {
-    back?: jest.Mock;
-    push?: jest.Mock;
-    query?: object;
-  }) {
-    const router = useRouter as jest.Mock;
-    router.mockImplementation(() => ({
-      back: back,
-      push: push,
-      query,
-    }));
-  }
-
-  beforeEach(() => {
-    mockRouter({ back, push, query });
-  });
-
-  afterEach(() => {
-    jest.resetAllMocks();
-  });
 }
