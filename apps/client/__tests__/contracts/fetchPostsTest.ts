@@ -1,11 +1,5 @@
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import {
-  POST_EXISTS_STATE,
-  addInteraction,
-  assertPostEquality,
-  createBaseInteraction,
-} from '../testUtilities/contractHelpers';
-import {
   GENERIC_SERVER_ERROR,
   sampleInvalidLimit,
   sampleInvalidOffset,
@@ -15,7 +9,13 @@ import {
 } from '../../mocks/values';
 import { fetchPosts } from '../../lib/redux/slices/postsSlice/fetchPosts';
 import { Pact } from '@pact-foundation/pact';
-import { Operations } from '../testUtilities/operations';
+import {
+  Operations,
+  POST_EXISTS_STATE,
+  addInteraction,
+  assertPostEquality,
+  createBaseInteraction,
+} from '../testUtilities';
 
 export function testFetchPosts(provider: Pact, baseUrl: URL) {
   describe('Fetches created posts', () => {

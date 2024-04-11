@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react';
 import { SearchInput } from '../../components/searchInput';
 import {
+  getSearchInput,
   clickElement,
   pressEnterOnInput,
   renderElement,
   typeQueryOnSearchInput,
-} from '../testUtilities/helpers';
-import { getSearchInput } from '../testUtilities';
+} from '../testUtilities';
 import { sampleQuery } from '../../mocks/values';
 
 const CLEAR_TEXT_LABEL = /clear text/i;

@@ -2,18 +2,15 @@ import { screen, waitFor } from '@testing-library/react';
 import { server } from '../../mocks/server';
 import { genericErrorHandler, wasCreatePostCalled } from '../../mocks/handlers';
 import {
+  setUpApi,
   clickPostButton,
   renderElement,
   typeText,
-} from '../testUtilities/helpers';
-import { setUpApi } from '../testUtilities';
-import { PostForm } from '../../components/postForm';
-import {
   POST_BUTTON_TEXT,
   POST_INPUT_PLACE_HOLDER_TEXT,
-} from '../testUtilities/texts';
+} from '../testUtilities';
+import { PostForm } from '../../components/postForm';
 
-// const POST_BUTTON_TEXT = /^post$/i;
 const ERROR_MESSAGE = 'Something went wrong';
 
 const validText = generateRandomString(280);

@@ -1,12 +1,12 @@
 import { Pact } from '@pact-foundation/pact';
 import { searchPosts } from '../../lib/redux/slices/postsSlice/searchPosts';
 import {
+  Operations,
   POST_EXISTS_STATE,
   addInteraction,
   assertPostEquality,
   createBaseInteraction,
-} from '../testUtilities/contractHelpers';
-import { Operations } from '../testUtilities/operations';
+} from '../testUtilities';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import {
   GENERIC_SERVER_ERROR,

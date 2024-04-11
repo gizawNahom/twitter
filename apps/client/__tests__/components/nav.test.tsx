@@ -1,8 +1,6 @@
 import { screen } from '@testing-library/react';
 import { Nav } from '../../components/nav';
-import { renderElement } from '../testUtilities/helpers';
-import { getByTestId } from '../testUtilities';
-import { POST_FAB_TEST_ID } from '../testUtilities/testIds';
+import { renderElement, POST_FAB_TEST_ID, getByTestId } from '../testUtilities';
 
 const HOME_LINK = '/home';
 const PROFILE_LINK = '/username';

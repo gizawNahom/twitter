@@ -1,13 +1,13 @@
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
-import {
-  addInteraction,
-  assertPostEquality,
-  createBaseInteraction,
-} from '../testUtilities/contractHelpers';
 import { GENERIC_SERVER_ERROR, samplePostResponse } from '../../mocks/values';
 import { createPost } from '../../lib/redux/slices/postsSlice/createPost';
 import { Pact } from '@pact-foundation/pact';
-import { Operations } from '../testUtilities/operations';
+import {
+  Operations,
+  addInteraction,
+  assertPostEquality,
+  createBaseInteraction,
+} from '../testUtilities';
 
 export function testCreatePost(provider: Pact, baseUrl: URL) {
   describe('Create Post', () => {

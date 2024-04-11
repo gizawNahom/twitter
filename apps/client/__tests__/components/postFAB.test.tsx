@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { PostFAB } from '../../components/postFAB';
-import { renderElement } from '../testUtilities/helpers';
+import { renderElement } from '../testUtilities';
 
 test('renders a link to compose tweet', () => {
   renderElement(<PostFAB />);

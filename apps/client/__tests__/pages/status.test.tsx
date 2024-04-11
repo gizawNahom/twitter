@@ -2,7 +2,6 @@ import { screen, waitFor } from '@testing-library/react';
 import Status from '../../pages/[userId]/status/[id]';
 import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
 import { server } from '../../mocks/server';
-import { renderElement } from '../testUtilities/helpers';
 import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
@@ -12,9 +11,10 @@ import {
   querySpinner,
   setUpApi,
   setUpMockRouter,
+  BACK_BUTTON_TEST_ID,
+  renderElement,
 } from '../testUtilities';
 import { samplePostResponse } from '../../mocks/values';
-import { BACK_BUTTON_TEST_ID } from '../testUtilities/testIds';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),

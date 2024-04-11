@@ -1,11 +1,14 @@
 import { App } from '../../components/app';
-import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../testUtilities/testIds';
 import {
+  setUpMockRouter,
+  getByTestId,
+  getByText,
   pressEnterOnInput,
   renderElement,
   typeQueryOnSearchInput,
-} from '../testUtilities/helpers';
-import { setUpMockRouter, getByTestId, getByText } from '../testUtilities';
+  NAV_TEST_ID,
+  POST_FAB_TEST_ID,
+} from '../testUtilities';
 import { sampleQuery } from '../../mocks/values';
 
 jest.mock('next/router', () => ({

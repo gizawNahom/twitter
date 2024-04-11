@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { renderElement } from '../testUtilities/helpers';
+import { renderElement } from '../testUtilities';
 
 test('renders', async () => {
   renderElement(<Toast />);

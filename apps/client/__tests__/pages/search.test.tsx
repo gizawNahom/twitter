@@ -1,24 +1,20 @@
 import { screen, waitFor } from '@testing-library/react';
 import Search from '../../pages/search';
 import {
-  pressEnterOnInput,
-  renderElement,
-  typeQueryOnSearchInput,
-} from '../testUtilities/helpers';
-import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
   queryByTestId,
   setUpApi,
   setUpMockRouter,
   getByTestId,
-} from '../testUtilities';
-import {
   BACK_BUTTON_TEST_ID,
   ERROR_TEST_ID,
   POSTS_TEST_ID,
   SPINNER_TEST_ID,
-} from '../testUtilities/testIds';
+  pressEnterOnInput,
+  renderElement,
+  typeQueryOnSearchInput,
+} from '../testUtilities';
 import {
   samplePostResponse,
   sampleQuery,

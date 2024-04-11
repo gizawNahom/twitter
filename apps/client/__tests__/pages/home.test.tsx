@@ -1,14 +1,16 @@
 import {
+  setUpApi,
+  getByTestId,
+  getByText,
+  POST_INPUT_PLACE_HOLDER_TEXT,
   clickPostButton,
   renderElement,
   typeText,
-} from '../testUtilities/helpers';
-import { setUpApi, getByTestId, getByText } from '../testUtilities';
+  POST_FORM_TEST_ID,
+} from '../testUtilities';
 import Home from '../../pages/home';
 import { screen, waitFor } from '@testing-library/react';
-import { POST_FORM_TEST_ID } from '../testUtilities/testIds';
 import { App } from '../../components/app';
-import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn().mockImplementation(() => ({

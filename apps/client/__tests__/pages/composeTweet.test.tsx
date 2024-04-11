@@ -1,22 +1,18 @@
 import { waitFor } from '@testing-library/react';
 import ComposeTweet from '../../pages/compose/tweet';
 import {
-  clickPostButton,
-  createNewStore,
-  renderElement,
-  typeText,
-} from '../testUtilities/helpers';
-import {
   queryByTestId,
   setUpApi,
   setUpMockRouter,
   getByPlaceholderText,
-} from '../testUtilities';
-import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
-import {
+  clickPostButton,
+  createNewStore,
+  renderElement,
+  typeText,
+  POST_INPUT_PLACE_HOLDER_TEXT,
   BACK_BUTTON_TEST_ID,
   POST_FORM_TEST_ID,
-} from '../testUtilities/testIds';
+} from '../testUtilities';
 import { createPostAsync } from '../../lib/redux';
 import { EnhancedStore } from '@reduxjs/toolkit';
 
