@@ -1,11 +1,10 @@
 import { App } from '../../components/app';
 import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../testUtilities/testIds';
 import {
-  getSearchInput,
   pressEnterOnInput,
   renderElement,
   setUpMockRouter,
-  typeText,
+  typeQueryOnSearchInput,
 } from '../testUtilities/helpers';
 import { screen } from '@testing-library/react';
 import { sampleQuery } from '../../mocks/values';
@@ -28,10 +27,6 @@ function renderSUT() {
   );
 }
 
-async function typeSampleQueryOnInput() {
-  await typeText(sampleQuery, getSearchInput());
-}
-
 setUpMockRouter({ push });
 
 test('initial', () => {
@@ -45,7 +40,7 @@ test('initial', () => {
 test('search input pushes to search page on "enter"', async () => {
   renderSUT();
 
-  await typeSampleQueryOnInput();
+  await typeQueryOnSearchInput(sampleQuery);
   await pressEnterOnInput();
 
   expect(push).toHaveBeenCalledTimes(1);

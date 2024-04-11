@@ -1,14 +1,13 @@
 import { screen, waitFor } from '@testing-library/react';
 import Search from '../../pages/search';
 import {
-  getSearchInput,
   pressEnterOnInput,
   queryErrorComponent,
   querySpinner,
   renderElement,
   setUpApi,
   setUpMockRouter,
-  typeText,
+  typeQueryOnSearchInput,
 } from '../testUtilities/helpers';
 import {
   BACK_BUTTON_TEST_ID,
@@ -35,10 +34,6 @@ function renderSUT() {
 
 function getByTestId(testId: string): HTMLElement {
   return screen.getByTestId(testId);
-}
-
-async function typeSampleQueryOnInput() {
-  await typeText(sampleQuery, getSearchInput());
 }
 
 async function waitTillAllPostsAreRendered() {
@@ -158,7 +153,7 @@ describe('Search from typing', () => {
   test('success', async () => {
     renderSUT();
 
-    await typeSampleQueryOnInput();
+    await typeQueryOnSearchInput(sampleQuery);
     await pressEnterOnInput();
 
     await waitForSpinnerToBeInTheDocument();
@@ -172,7 +167,7 @@ describe('Search from typing', () => {
     server.use(genericErrorHandler);
     renderSUT();
 
-    await typeSampleQueryOnInput();
+    await typeQueryOnSearchInput(sampleQuery);
     await pressEnterOnInput();
 
     await waitForSpinnerToBeInTheDocument();

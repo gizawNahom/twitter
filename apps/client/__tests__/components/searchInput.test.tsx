@@ -5,7 +5,7 @@ import {
   getSearchInput,
   pressEnterOnInput,
   renderElement,
-  typeText,
+  typeQueryOnSearchInput,
 } from '../testUtilities/helpers';
 import { sampleQuery } from '../../mocks/values';
 
@@ -15,10 +15,6 @@ const onSubmit = jest.fn();
 
 function renderSUT() {
   renderElement(<SearchInput onSubmit={onSubmit} />);
-}
-
-async function typeSampleQueryOnInput() {
-  await typeText(sampleQuery, getSearchInput());
 }
 
 afterEach(() => jest.clearAllMocks());
@@ -33,7 +29,7 @@ test('initial', () => {
 test('clears text', async () => {
   renderSUT();
 
-  await typeSampleQueryOnInput();
+  await typeQueryOnSearchInput(sampleQuery);
   await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
 
   expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
@@ -50,7 +46,7 @@ test('does not submit if query is empty text', async () => {
 test('submits on "enter"', async () => {
   renderSUT();
 
-  await typeSampleQueryOnInput();
+  await typeQueryOnSearchInput(sampleQuery);
   await pressEnterOnInput();
 
   expect(onSubmit).toHaveBeenCalledTimes(1);
