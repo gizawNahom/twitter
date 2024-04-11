@@ -4,6 +4,7 @@ import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
 import { server } from '../../mocks/server';
 import {
   assertErrorIsNotShown,
+  assertSpinnerIsNotShown,
   queryErrorComponent,
   querySpinner,
   renderElement,
@@ -50,10 +51,6 @@ function queryPostTime() {
 
 function queryPostText(): HTMLElement | null {
   return screen.queryByText(samplePostResponse.text);
-}
-
-function assertSpinnerIsNotShown(): void | Promise<void> {
-  expect(querySpinner()).toBeNull();
 }
 
 setUpMockRouter({

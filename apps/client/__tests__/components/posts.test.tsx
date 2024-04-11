@@ -2,6 +2,7 @@ import { waitFor } from '@testing-library/react';
 import { Posts } from '../../components/posts';
 import {
   assertErrorIsNotShown,
+  assertSpinnerIsNotShown,
   createSamplePost,
   queryErrorComponent,
   querySpinner,
@@ -44,7 +45,7 @@ describe('starts from first page', () => {
         firstPagePosts: firstPagePosts as [] | undefined,
       });
 
-      await waitFor(() => expect(querySpinner()).not.toBeInTheDocument());
+      await waitFor(() => assertSpinnerIsNotShown());
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(0);
     }
@@ -63,7 +64,7 @@ test('starts from second page when "firstPagePosts" is given', async () => {
     firstPagePosts,
   });
 
-  await waitFor(() => expect(querySpinner()).not.toBeInTheDocument());
+  await waitFor(() => assertSpinnerIsNotShown());
   expect(fetch).toHaveBeenCalledTimes(1);
   expect(fetch).toHaveBeenCalledWith(1);
 });
