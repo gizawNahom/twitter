@@ -94,6 +94,10 @@ export function getSearchInput(): HTMLElement {
   return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
 }
 
+export async function pressEnterOnInput() {
+  await typeText('{enter}', getSearchInput());
+}
+
 export async function clickElement(element: HTMLElement) {
   await userEvent.click(element);
 }

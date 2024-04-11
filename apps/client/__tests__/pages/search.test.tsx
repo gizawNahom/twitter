@@ -2,6 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import Search from '../../pages/search';
 import {
   getSearchInput,
+  pressEnterOnInput,
   queryErrorComponent,
   querySpinner,
   renderElement,
@@ -36,10 +37,6 @@ function getByTestId(testId: string): HTMLElement {
 
 async function typeSampleQueryOnInput() {
   await typeText(sampleQuery, getSearchInput());
-}
-
-async function pressEnterOnInput() {
-  await typeText('{enter}', getSearchInput());
 }
 
 async function waitTillAllPostsAreRendered() {

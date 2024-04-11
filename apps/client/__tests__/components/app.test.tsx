@@ -2,6 +2,7 @@ import { App } from '../../components/app';
 import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../testUtilities/testIds';
 import {
   getSearchInput,
+  pressEnterOnInput,
   renderElement,
   setUpMockRouter,
   typeText,
@@ -30,10 +31,6 @@ function renderSUT() {
 
 async function typeSampleQueryOnInput() {
   await typeText(sampleQuery, getSearchInput());
-}
-
-async function pressEnterOnInput() {
-  await typeText('{enter}', getSearchInput());
 }
 
 setUpMockRouter({ push });

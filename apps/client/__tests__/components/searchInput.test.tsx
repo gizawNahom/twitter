@@ -3,6 +3,7 @@ import { SearchInput } from '../../components/searchInput';
 import {
   clickElement,
   getSearchInput,
+  pressEnterOnInput,
   renderElement,
   typeText,
 } from '../testUtilities/helpers';
@@ -18,10 +19,6 @@ function renderSUT() {
 
 async function typeSampleQueryOnInput() {
   await typeText(sampleQuery, getSearchInput());
-}
-
-async function pressEnterOnInput() {
-  await typeText('{enter}', getSearchInput());
 }
 
 afterEach(() => jest.clearAllMocks());
