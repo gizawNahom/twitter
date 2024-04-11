@@ -1,5 +1,6 @@
 import {
   clickPostButton,
+  getByText,
   renderElement,
   setUpApi,
   typeText,
@@ -41,6 +42,6 @@ test('renders toast on successful post creation', async () => {
   await clickPostButton();
 
   await waitFor(() =>
-    expect(screen.getByText(POST_CREATION_MESSAGE)).toBeInTheDocument()
+    expect(getByText(POST_CREATION_MESSAGE)).toBeInTheDocument()
   );
 });

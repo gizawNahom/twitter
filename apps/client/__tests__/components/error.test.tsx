@@ -1,11 +1,10 @@
 import { Error } from '../../components/error';
-import { renderElement } from '../testUtilities/helpers';
-import { screen } from '@testing-library/react';
+import { getByText, renderElement } from '../testUtilities/helpers';
 
 const ERROR_MESSAGE = /something went wrong/i;
 
 test('renders error message', () => {
   renderElement(<Error />);
 
-  expect(screen.getByText(ERROR_MESSAGE)).toBeVisible();
+  expect(getByText(ERROR_MESSAGE)).toBeVisible();
 });

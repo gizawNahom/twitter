@@ -1,6 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
 import {
+  getByText,
   queryByTestId,
   querySamplePostTime,
   renderElement,
@@ -16,7 +17,7 @@ jest.mock('next/router', () => ({
 
 async function assertPostsRender() {
   await waitFor(() => {
-    expect(screen.getByText(samplePostResponse.text)).toBeVisible();
+    expect(getByText(samplePostResponse.text)).toBeVisible();
     expect(
       querySamplePostTime({
         day: 'numeric',
@@ -41,7 +42,7 @@ test('initial', async () => {
   renderElement(<Profile />);
 
   await assertPostsRender();
-  expect(screen.getByText(/posts/i)).toBeVisible();
+  expect(getByText(/posts/i)).toBeVisible();
   expect(screen.getByTestId(POSTS_TEST_ID)).toBeVisible();
   expect(queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
   assertApiCall();

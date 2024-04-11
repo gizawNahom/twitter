@@ -1,6 +1,10 @@
 import { screen, waitFor } from '@testing-library/react';
 import { Modal } from '../../components/modal';
-import { clickElement, renderElement } from '../testUtilities/helpers';
+import {
+  clickElement,
+  getByText,
+  renderElement,
+} from '../testUtilities/helpers';
 
 test('gets closed', async () => {
   const testText = 'Test';
@@ -8,5 +12,5 @@ test('gets closed', async () => {
 
   await clickElement(screen.getByLabelText(/close/i));
 
-  await waitFor(() => expect(screen.getByText(testText)).not.toBeVisible());
+  await waitFor(() => expect(getByText(testText)).not.toBeVisible());
 });

@@ -1,13 +1,13 @@
 import { screen, waitFor } from '@testing-library/react';
 import InfiniteScroll from 'react-infinite-scroller';
-import { renderElement } from '../testUtilities/helpers';
+import { getByText, renderElement } from '../testUtilities/helpers';
 import { useEffect, useState } from 'react';
 
 test('should render', async () => {
   renderElement(<Component />);
 
   await waitFor(() => {
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(getByText(/loading/i)).toBeInTheDocument();
   });
   await waitFor(() => {
     expect(screen.getAllByText(/item/i).length).toBeGreaterThan(1);

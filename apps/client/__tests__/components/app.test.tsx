@@ -1,6 +1,7 @@
 import { App } from '../../components/app';
 import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../testUtilities/testIds';
 import {
+  getByText,
   pressEnterOnInput,
   renderElement,
   setUpMockRouter,
@@ -33,7 +34,7 @@ test('initial', () => {
   renderSUT();
 
   expect(screen.getByTestId(NAV_TEST_ID)).toBeVisible();
-  expect(screen.getByText(sampleText)).toBeVisible();
+  expect(getByText(sampleText)).toBeVisible();
   expect(screen.getByTestId(POST_FAB_TEST_ID)).toBeVisible();
 });
 

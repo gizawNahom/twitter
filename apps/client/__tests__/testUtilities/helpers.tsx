@@ -87,7 +87,7 @@ export async function typeText(
 }
 
 export function clickPostButton() {
-  return clickElement(screen.getByText(POST_BUTTON_TEXT));
+  return clickElement(getByText(POST_BUTTON_TEXT));
 }
 
 export function getByPlaceholderText(text: string | RegExp): HTMLElement {
@@ -96,6 +96,10 @@ export function getByPlaceholderText(text: string | RegExp): HTMLElement {
 
 export function getSearchInput(): HTMLElement {
   return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
+}
+
+export function getByText(text: string | RegExp): HTMLElement {
+  return screen.getByText(text);
 }
 
 export async function typeQueryOnSearchInput(query: string) {
