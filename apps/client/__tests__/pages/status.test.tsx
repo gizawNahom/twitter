@@ -5,6 +5,7 @@ import { server } from '../../mocks/server';
 import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
+  queryByTestId,
   queryErrorComponent,
   querySamplePostTime,
   querySpinner,
@@ -62,7 +63,7 @@ test('initial state', async () => {
   await waitFor(() => expect(querySpinner()).not.toBeNull());
   assertErrorIsNotShown();
   assertPostIsNotShown();
-  expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
+  expect(queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
 });
 
 test('success state', async () => {

@@ -68,11 +68,15 @@ export function setUpApi() {
 }
 
 export function queryErrorComponent(): HTMLElement | null {
-  return screen.queryByTestId(ERROR_TEST_ID);
+  return queryByTestId(ERROR_TEST_ID);
 }
 
 export function querySpinner(): HTMLElement | null {
-  return screen.queryByTestId(SPINNER_TEST_ID);
+  return queryByTestId(SPINNER_TEST_ID);
+}
+
+export function queryByTestId(testId: string): HTMLElement | null {
+  return screen.queryByTestId(testId);
 }
 
 export async function typeText(

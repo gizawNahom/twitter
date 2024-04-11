@@ -4,6 +4,7 @@ import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
   pressEnterOnInput,
+  queryByTestId,
   renderElement,
   setUpApi,
   setUpMockRouter,
@@ -75,7 +76,7 @@ function assertStaticComponents() {
 }
 
 function assertPostsIsNotShown() {
-  expect(screen.queryByTestId(POSTS_TEST_ID)).not.toBeInTheDocument();
+  expect(queryByTestId(POSTS_TEST_ID)).not.toBeInTheDocument();
 }
 
 function assertQueryParameterIsChangedToTypedQuery(

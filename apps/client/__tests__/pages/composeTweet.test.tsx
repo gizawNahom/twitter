@@ -1,9 +1,10 @@
-import { screen, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 import ComposeTweet from '../../pages/compose/tweet';
 import {
   clickPostButton,
   createNewStore,
   getByPlaceholderText,
+  queryByTestId,
   renderElement,
   setUpApi,
   setUpMockRouter,
@@ -34,8 +35,8 @@ setUpMockRouter({ push });
 test('initial', () => {
   renderSUT();
 
-  expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
-  expect(screen.queryByTestId(POST_FORM_TEST_ID)).toBeVisible();
+  expect(queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
+  expect(queryByTestId(POST_FORM_TEST_ID)).toBeVisible();
   expect(getByPlaceholderText(POST_INPUT_PLACE_HOLDER_TEXT)).toHaveFocus();
   expect(push).toHaveBeenCalledTimes(0);
 });
