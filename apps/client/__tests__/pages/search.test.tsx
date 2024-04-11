@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import Search from '../../pages/search';
 import {
-  getByPlaceholderText,
+  getSearchInput,
   queryErrorComponent,
   querySpinner,
   renderElement,
@@ -25,7 +25,6 @@ jest.mock('next/router', () => ({
 }));
 
 const sampleQuery = 'hello';
-const SEARCH_INPUT_PLACEHOLDER_TEXT = /search/i;
 
 function renderSUT() {
   renderElement(<Search />);
@@ -41,10 +40,6 @@ async function typeSampleQueryOnInput() {
 
 async function pressEnterOnInput() {
   await typeText('{enter}', getSearchInput());
-}
-
-function getSearchInput(): HTMLElement {
-  return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
 }
 
 async function waitTillAllPostsAreRendered() {

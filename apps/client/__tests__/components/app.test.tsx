@@ -1,7 +1,7 @@
 import { App } from '../../components/app';
 import { NAV_TEST_ID, POST_FAB_TEST_ID } from '../testUtilities/testIds';
 import {
-  getByPlaceholderText,
+  getSearchInput,
   renderElement,
   setUpMockRouter,
   typeText,
@@ -14,7 +14,6 @@ jest.mock('next/router', () => ({
   })),
 }));
 
-const SEARCH_INPUT_PLACEHOLDER_TEXT = /search/i;
 const sampleQuery = 'hello';
 
 const push = jest.fn();
@@ -35,10 +34,6 @@ async function typeSampleQueryOnInput() {
 
 async function pressEnterOnInput() {
   await typeText('{enter}', getSearchInput());
-}
-
-function getSearchInput(): HTMLElement {
-  return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
 }
 
 setUpMockRouter({ push });

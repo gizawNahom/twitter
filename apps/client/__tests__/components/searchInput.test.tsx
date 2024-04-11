@@ -2,12 +2,11 @@ import { screen } from '@testing-library/react';
 import { SearchInput } from '../../components/searchInput';
 import {
   clickElement,
-  getByPlaceholderText,
+  getSearchInput,
   renderElement,
   typeText,
 } from '../testUtilities/helpers';
 
-const SEARCH_INPUT_PLACEHOLDER_TEXT = /search/i;
 const CLEAR_TEXT_LABEL = /clear text/i;
 const sampleQuery = 'hello';
 
@@ -15,10 +14,6 @@ const onSubmit = jest.fn();
 
 function renderSUT() {
   renderElement(<SearchInput onSubmit={onSubmit} />);
-}
-
-function getSearchInput(): HTMLElement {
-  return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
 }
 
 async function typeSampleQueryOnInput() {

@@ -8,7 +8,7 @@ import { render, screen } from '@testing-library/react';
 import { server } from '../../mocks/server';
 import { ERROR_TEST_ID, SPINNER_TEST_ID } from './testIds';
 import userEvent from '@testing-library/user-event';
-import { POST_BUTTON_TEXT } from './texts';
+import { POST_BUTTON_TEXT, SEARCH_INPUT_PLACEHOLDER_TEXT } from './texts';
 import { useRouter } from 'next/router';
 import { samplePostResponse } from '../../mocks/values';
 
@@ -88,6 +88,10 @@ export function clickPostButton() {
 
 export function getByPlaceholderText(text: string | RegExp): HTMLElement {
   return screen.getByPlaceholderText(text);
+}
+
+export function getSearchInput(): HTMLElement {
+  return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
 }
 
 export async function clickElement(element: HTMLElement) {
