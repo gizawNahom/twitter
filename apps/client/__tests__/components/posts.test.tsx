@@ -1,7 +1,7 @@
-// import { waitFor, screen } from '@testing-library/react';
 import { waitFor } from '@testing-library/react';
 import { Posts } from '../../components/posts';
 import {
+  assertErrorIsNotShown,
   createSamplePost,
   queryErrorComponent,
   querySpinner,
@@ -24,7 +24,7 @@ setUpApi();
 test('initial', async () => {
   renderSUT({});
 
-  expect(queryErrorComponent()).toBeNull();
+  assertErrorIsNotShown();
   await waitFor(() => {
     expect(querySpinner()).toBeInTheDocument();
   });

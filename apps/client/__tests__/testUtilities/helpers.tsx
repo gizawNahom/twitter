@@ -140,3 +140,7 @@ export function setUpMockRouter({
     jest.resetAllMocks();
   });
 }
+
+export function assertErrorIsNotShown() {
+  expect(queryErrorComponent()).not.toBeInTheDocument();
+}

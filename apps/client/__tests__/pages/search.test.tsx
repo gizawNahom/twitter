@@ -1,8 +1,8 @@
 import { screen, waitFor } from '@testing-library/react';
 import Search from '../../pages/search';
 import {
+  assertErrorIsNotShown,
   pressEnterOnInput,
-  queryErrorComponent,
   querySpinner,
   renderElement,
   setUpApi,
@@ -59,10 +59,6 @@ async function waitForSpinnerToBeInTheDocument() {
 
 function assertSpinnerIsNotShown() {
   expect(querySpinner()).toBeNull();
-}
-
-function assertErrorIsNotShown() {
-  expect(queryErrorComponent()).toBeNull();
 }
 
 function assertTwoAPICallsUsingSampleQuery() {

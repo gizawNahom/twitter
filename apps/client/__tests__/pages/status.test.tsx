@@ -3,6 +3,7 @@ import Status from '../../pages/[userId]/status/[id]';
 import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
 import { server } from '../../mocks/server';
 import {
+  assertErrorIsNotShown,
   queryErrorComponent,
   querySpinner,
   renderElement,
@@ -24,10 +25,6 @@ function renderSUT() {
 
 function assertWasPostCalled(value: boolean) {
   expect(wasPostCalled).toBe(value);
-}
-
-function assertErrorMessageIsNotShown() {
-  expect(queryErrorComponent()).toBeNull();
 }
 
 function assertPostIsNotShown() {
@@ -73,7 +70,7 @@ test('initial state', async () => {
   assertWasPostCalled(false);
   expect(screen.queryByText(PAGE_TITLE)).not.toBeNull();
   await waitFor(() => expect(querySpinner()).not.toBeNull());
-  assertErrorMessageIsNotShown();
+  assertErrorIsNotShown();
   assertPostIsNotShown();
   expect(screen.queryByTestId(BACK_BUTTON_TEST_ID)).toBeVisible();
 });
@@ -85,7 +82,7 @@ test('success state', async () => {
   assertWasPostCalled(true);
   expect(queryPostText()).not.toBeNull();
   expect(queryPostTime()).not.toBeNull();
-  assertErrorMessageIsNotShown();
+  assertErrorIsNotShown();
 });
 
 test('error state', async () => {
