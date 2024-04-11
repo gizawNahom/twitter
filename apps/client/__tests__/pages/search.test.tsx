@@ -36,7 +36,7 @@ function getByTestId(testId: string): HTMLElement {
   return screen.getByTestId(testId);
 }
 
-async function waitTillAllPostsAreRendered() {
+async function waitTillAllSearchResultsAreRendered() {
   await waitFor(() => {
     expect(getByTestId(POSTS_TEST_ID)).toBeInTheDocument();
   });
@@ -110,7 +110,7 @@ describe('Search from a query variable', () => {
     renderSUT();
 
     await waitForSpinnerToBeInTheDocument();
-    await waitTillAllPostsAreRendered();
+    await waitTillAllSearchResultsAreRendered();
     assertErrorIsNotShown();
     assertTwoAPICallsUsingSampleQuery();
   });
@@ -149,7 +149,7 @@ describe('Search from typing', () => {
     await pressEnterOnInput();
 
     await waitForSpinnerToBeInTheDocument();
-    await waitTillAllPostsAreRendered();
+    await waitTillAllSearchResultsAreRendered();
     assertErrorIsNotShown();
     assertTwoAPICallsUsingSampleQuery();
     assertQueryParameterIsChangedToTypedQuery(push, sampleQuery);
