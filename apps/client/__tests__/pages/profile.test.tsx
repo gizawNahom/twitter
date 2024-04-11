@@ -3,11 +3,10 @@ import Profile from '../../pages/username';
 import {
   getByTestId,
   getByText,
-  queryByTestId,
-  querySamplePostTime,
   renderElement,
   setUpApi,
 } from '../testUtilities/helpers';
+import { queryByTestId, querySamplePostTime } from '../testUtilities';
 import { BACK_BUTTON_TEST_ID, POSTS_TEST_ID } from '../testUtilities/testIds';
 import { samplePostResponse } from '../../mocks/values';
 import { postsVariables, wasPostsCalled } from '../../mocks/handlers';

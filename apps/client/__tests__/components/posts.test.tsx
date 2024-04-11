@@ -1,14 +1,16 @@
 import { waitFor } from '@testing-library/react';
 import { Posts } from '../../components/posts';
 import {
-  assertErrorIsNotShown,
-  assertSpinnerIsNotShown,
   createSamplePost,
-  queryErrorComponent,
-  querySpinner,
   renderElement,
   setUpApi,
 } from '../testUtilities/helpers';
+import {
+  assertErrorIsNotShown,
+  assertSpinnerIsNotShown,
+  queryErrorComponent,
+  querySpinner,
+} from '../testUtilities';
 import { Post } from '../../lib/redux/slices/postsSlice/post';
 
 function renderSUT({

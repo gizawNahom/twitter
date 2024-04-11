@@ -3,16 +3,18 @@ import Status from '../../pages/[userId]/status/[id]';
 import { genericErrorHandler, wasPostCalled } from '../../mocks/handlers';
 import { server } from '../../mocks/server';
 import {
+  renderElement,
+  setUpApi,
+  setUpMockRouter,
+} from '../testUtilities/helpers';
+import {
   assertErrorIsNotShown,
   assertSpinnerIsNotShown,
   queryByTestId,
   queryErrorComponent,
   querySamplePostTime,
   querySpinner,
-  renderElement,
-  setUpApi,
-  setUpMockRouter,
-} from '../testUtilities/helpers';
+} from '../testUtilities';
 import { samplePostResponse } from '../../mocks/values';
 import { BACK_BUTTON_TEST_ID } from '../testUtilities/testIds';
 

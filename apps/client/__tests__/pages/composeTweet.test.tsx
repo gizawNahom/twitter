@@ -4,12 +4,12 @@ import {
   clickPostButton,
   createNewStore,
   getByPlaceholderText,
-  queryByTestId,
   renderElement,
   setUpApi,
   setUpMockRouter,
   typeText,
 } from '../testUtilities/helpers';
+import { queryByTestId } from '../testUtilities';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
 import {
   BACK_BUTTON_TEST_ID,
