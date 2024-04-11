@@ -10,6 +10,16 @@ import { ERROR_TEST_ID, SPINNER_TEST_ID } from './testIds';
 import userEvent from '@testing-library/user-event';
 import { POST_BUTTON_TEXT } from './texts';
 import { useRouter } from 'next/router';
+import { samplePostResponse } from '../../mocks/values';
+
+export function createSamplePost() {
+  return {
+    id: samplePostResponse.id,
+    text: samplePostResponse.text,
+    userId: samplePostResponse.userId,
+    createdAt: new Date(samplePostResponse.createdAt),
+  };
+}
 
 export function setUpClient() {
   beforeEach(() => {

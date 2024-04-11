@@ -2,22 +2,13 @@
 import { waitFor } from '@testing-library/react';
 import { Posts } from '../../components/posts';
 import {
+  createSamplePost,
   queryErrorComponent,
   querySpinner,
   renderElement,
   setUpApi,
 } from '../testUtilities/helpers';
 import { Post } from '../../lib/redux/slices/postsSlice/post';
-import { samplePostResponse } from 'apps/client/mocks/values';
-
-function createPost(): Post {
-  return {
-    id: samplePostResponse.id,
-    text: samplePostResponse.text,
-    userId: samplePostResponse.userId,
-    createdAt: new Date(samplePostResponse.createdAt),
-  };
-}
 
 function renderSUT({
   fetchPosts = async (offset: number) => [] as Post[],
@@ -62,7 +53,7 @@ describe('starts from first page', () => {
 
 test('starts from second page when "firstPagePosts" is given', async () => {
   const fetch = jest.fn();
-  const firstPagePosts: Post[] = [createPost()];
+  const firstPagePosts: Post[] = [createSamplePost()];
 
   renderSUT({
     fetchPosts: async (offset: number) => {
