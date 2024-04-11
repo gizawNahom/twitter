@@ -1,5 +1,6 @@
 import { Error } from '../../components/error';
-import { getByText, renderElement } from '../testUtilities/helpers';
+import { renderElement } from '../testUtilities/helpers';
+import { getByText } from '../testUtilities';
 
 const ERROR_MESSAGE = /something went wrong/i;
 

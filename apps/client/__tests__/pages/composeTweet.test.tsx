@@ -3,11 +3,15 @@ import ComposeTweet from '../../pages/compose/tweet';
 import {
   clickPostButton,
   createNewStore,
-  getByPlaceholderText,
   renderElement,
   typeText,
 } from '../testUtilities/helpers';
-import { queryByTestId, setUpApi, setUpMockRouter } from '../testUtilities';
+import {
+  queryByTestId,
+  setUpApi,
+  setUpMockRouter,
+  getByPlaceholderText,
+} from '../testUtilities';
 import { POST_INPUT_PLACE_HOLDER_TEXT } from '../testUtilities/texts';
 import {
   BACK_BUTTON_TEST_ID,

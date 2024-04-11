@@ -1,11 +1,13 @@
 import { waitFor } from '@testing-library/react';
 import Profile from '../../pages/username';
+import { renderElement } from '../testUtilities/helpers';
 import {
+  queryByTestId,
+  querySamplePostTime,
+  setUpApi,
   getByTestId,
   getByText,
-  renderElement,
-} from '../testUtilities/helpers';
-import { queryByTestId, querySamplePostTime, setUpApi } from '../testUtilities';
+} from '../testUtilities';
 import { BACK_BUTTON_TEST_ID, POSTS_TEST_ID } from '../testUtilities/testIds';
 import { samplePostResponse } from '../../mocks/values';
 import { postsVariables, wasPostsCalled } from '../../mocks/handlers';

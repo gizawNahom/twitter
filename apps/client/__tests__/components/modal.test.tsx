@@ -1,10 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import { Modal } from '../../components/modal';
-import {
-  clickElement,
-  getByText,
-  renderElement,
-} from '../testUtilities/helpers';
+import { clickElement, renderElement } from '../testUtilities/helpers';
+import { getByText } from '../testUtilities';
 
 test('gets closed', async () => {
   const testText = 'Test';

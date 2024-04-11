@@ -1,7 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import Search from '../../pages/search';
 import {
-  getByTestId,
   pressEnterOnInput,
   renderElement,
   typeQueryOnSearchInput,
@@ -12,6 +11,7 @@ import {
   queryByTestId,
   setUpApi,
   setUpMockRouter,
+  getByTestId,
 } from '../testUtilities';
 import {
   BACK_BUTTON_TEST_ID,

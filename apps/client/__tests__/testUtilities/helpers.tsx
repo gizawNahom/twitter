@@ -3,8 +3,9 @@ import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { POST_BUTTON_TEXT, SEARCH_INPUT_PLACEHOLDER_TEXT } from './texts';
+import { POST_BUTTON_TEXT } from './texts';
 import { samplePostResponse } from '../../mocks/values';
+import { getByText, getSearchInput } from './gets';
 
 export function createSamplePost() {
   return {
@@ -39,22 +40,6 @@ export async function typeText(
 
 export function clickPostButton() {
   return clickElement(getByText(POST_BUTTON_TEXT));
-}
-
-export function getByPlaceholderText(text: string | RegExp): HTMLElement {
-  return screen.getByPlaceholderText(text);
-}
-
-export function getSearchInput(): HTMLElement {
-  return getByPlaceholderText(SEARCH_INPUT_PLACEHOLDER_TEXT);
-}
-
-export function getByText(text: string | RegExp): HTMLElement {
-  return screen.getByText(text);
-}
-
-export function getByTestId(testId: string): HTMLElement {
-  return screen.getByTestId(testId);
 }
 
 export async function typeQueryOnSearchInput(query: string) {
