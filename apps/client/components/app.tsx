@@ -10,7 +10,9 @@ export function App({ children }: { children: ReactNode }) {
     <div className="flex">
       <Nav></Nav>
       <div className="grow sm:max-w-xl sm:border-r-[1px]">{children}</div>
-      <SearchInput onSubmit={pushToSearchPage} />
+      <div className="hidden sm:block">
+        <SearchInput onSubmit={pushToSearchPage} />
+      </div>
     </div>
   );
 

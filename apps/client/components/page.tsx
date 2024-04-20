@@ -12,9 +12,9 @@ export function Page({
 }) {
   return (
     <div>
-      <div className="flex justify-between gap-x-8 items-center pt-2 px-4">
+      <div className="flex justify-between items-center gap-x-9 pt-4 px-4">
         <BackButton />
-        {title}
+        <div className="grow">{title}</div>
       </div>
       <div className={padded ? 'px-4' : ''}>{children}</div>
     </div>

@@ -12,7 +12,7 @@ export function BackButton() {
           if (isFirstPageToBeLoaded()) router.push(HOME_ROUTE);
           else router.back();
         }}
-        className="h-5 w-5 -ml-[0.2rem] p-0 relative inline-block before:block before:absolute before:hover:bg-slate-200 before:active:bg-slate-300 before:w-full before:h-full before:-z-10 before:rounded-full before:p-4 before:-top-[6px] before:-left-[6px]"
+        className="flex items-center h-5 w-5 -ml-[0.2rem] p-0 relative before:block before:absolute before:hover:bg-slate-200 before:active:bg-slate-300 before:w-full before:h-full before:-z-10 before:rounded-full before:p-4 before:-top-[6px] before:-left-[6px]"
       >
         <svg
           viewBox="0 0 1024 1024"
