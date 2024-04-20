@@ -33,7 +33,7 @@ export function SearchInput({
           : `border-transparent bg-slate-100`
       } sm:pb-3 sm:pt-2 sm:pr-3`}
     >
-      <div className=" flex items-center gap-x-3 grow">
+      <div className=" flex items-center gap-x-3 grow sm:gap-x-5">
         <svg
           viewBox="0 0 24 24"
           aria-hidden="true"
