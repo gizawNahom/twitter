@@ -26,7 +26,7 @@ export default function Status() {
   }, [id, dispatch]);
 
   return (
-    <Page title={<h1 className="text-xl font-medium">Post</h1>}>
+    <Page title={<h1 className=" text-lg font-bold">Post</h1>}>
       {fetchedPost && (
         <article className="h-min flex flex-col gap-y-3 pt-3">
           <header className="flex gap-3 items-center">
