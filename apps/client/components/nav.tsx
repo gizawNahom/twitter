@@ -9,7 +9,7 @@ export function Nav() {
   return (
     <nav
       data-testid="nav"
-      className="sm:border-r-[1px] sm:basis-1/6 sm:flex sm:flex-col sm:items-center sm:pt-14 sm:h-screen md:items-end md:pr-5 lg:basis-28 xl:basis-1/4 xl:pl-6 2xl:basis-72"
+      className="sm:border-r-[1px] sm:flex sm:flex-col sm:items-center sm:pt-14 sm:h-screen md:items-end md:pr-5 xl:pl-6"
     >
       <ul className="fixed bg-white bottom-0 left-0 w-full flex justify-around border-t-[1px] sm:flex-col sm:static sm:w-min sm:border-none xl:w-full">
         <Link href={HOME_ROUTE} aria-label="Home">
