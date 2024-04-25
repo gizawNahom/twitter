@@ -61,7 +61,7 @@ export function SearchInput({
         />
       </div>
       <div className="w-5 h-6">
-        {!isEmpty(query) && (
+        {!isEmpty(query) && focused === true && (
           <button
             aria-label="clear text"
             onClick={() => setQuery('')}

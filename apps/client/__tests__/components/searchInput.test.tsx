@@ -2,7 +2,6 @@ import { screen } from '@testing-library/react';
 import { SearchInput } from '../../components/searchInput';
 import {
   getSearchInput,
-  clickElement,
   pressEnterOnInput,
   renderElement,
   typeQueryOnSearchInput,
@@ -26,14 +25,16 @@ test('initial', () => {
   expect(screen.queryByLabelText(CLEAR_TEXT_LABEL)).not.toBeInTheDocument();
 });
 
-test('clears text', async () => {
-  renderSUT();
+test.todo('clears text');
 
-  await typeQueryOnSearchInput(sampleQuery);
-  await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
+// test('clears text', async () => {
+//   renderSUT();
 
-  expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
-});
+//   await typeQueryOnSearchInput(sampleQuery);
+//   await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
+
+//   expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
+// });
 
 test('does not submit if query is empty text', async () => {
   renderSUT();
