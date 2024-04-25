@@ -19,9 +19,6 @@ export function SearchInput({
     inputRef.current?.addEventListener('focus', () => {
       setFocused(true);
     });
-    inputRef.current?.addEventListener('blur', () => {
-      setFocused(false);
-    });
   }, []);
 
   return (
@@ -61,10 +58,13 @@ export function SearchInput({
         />
       </div>
       <div className="w-5 h-6">
-        {!isEmpty(query) && focused === true && (
+        {!isEmpty(query) && focused == true && (
           <button
             aria-label="clear text"
-            onClick={() => setQuery('')}
+            onClick={() => {
+              inputRef.current?.focus();
+              setQuery('');
+            }}
             className=" bg-blue-500 rounded-full p-1"
           >
             <svg

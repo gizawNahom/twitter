@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react';
 import { SearchInput } from '../../components/searchInput';
 import {
+  clickElement,
   getSearchInput,
   pressEnterOnInput,
   renderElement,
@@ -25,16 +26,23 @@ test('initial', () => {
   expect(screen.queryByLabelText(CLEAR_TEXT_LABEL)).not.toBeInTheDocument();
 });
 
-test.todo('clears text');
+test('clears text', async () => {
+  renderSUT();
 
-// test('clears text', async () => {
-//   renderSUT();
+  await typeQueryOnSearchInput(sampleQuery);
+  await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
 
-//   await typeQueryOnSearchInput(sampleQuery);
-//   await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
+  expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
+});
 
-//   expect(screen.queryByDisplayValue(sampleQuery)).not.toBeInTheDocument();
-// });
+test('clearing text does not remove focus from the input', async () => {
+  renderSUT();
+
+  await typeQueryOnSearchInput(sampleQuery);
+  await clickElement(screen.getByLabelText(CLEAR_TEXT_LABEL));
+
+  expect(getSearchInput()).toHaveFocus();
+});
 
 test('does not submit if query is empty text', async () => {
   renderSUT();
