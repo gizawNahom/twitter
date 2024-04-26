@@ -16,7 +16,11 @@ export default function Search() {
     'idle' | 'loading' | 'error' | 'success'
   >('idle');
   const [initialPosts, setInitialPosts] = useState<Post[]>();
-  const [query, setQuery] = useState(router.query?.q as string);
+  const [query, setQuery] = useState('');
+
+  useEffect(() => {
+    setQuery(router.query?.q as string);
+  }, [router.query?.q]);
 
   useSearchOnMount(query);
 
@@ -31,12 +35,11 @@ export default function Search() {
   function useSearchOnMount(query: string) {
     useEffect(() => {
       if (query) search(query);
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [query]);
   }
 
   function renderSearchBar() {
-    return <SearchBar value={query} onSubmit={onSubmit} />;
+    return <SearchBar value={query} onSubmit={onSubmit} key={query} />;
 
     async function onSubmit(query: string) {
       setQuery(query);
