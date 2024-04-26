@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Nav } from './nav';
-import { SearchInput } from './searchInput';
+import { SearchBar } from './searchBar';
 import { useRouter } from 'next/router';
 
 export function App({ children }: { children: ReactNode }) {
@@ -17,7 +17,7 @@ export function App({ children }: { children: ReactNode }) {
       <div className="hidden grow items-start pt-1 lg:flex lg:px-5 xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
         {router.pathname !== '/search' && (
           <div className="w-full">
-            <SearchInput onSubmit={pushToSearchPage} />
+            <SearchBar onSubmit={pushToSearchPage} />
           </div>
         )}
       </div>

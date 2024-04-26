@@ -11,6 +11,7 @@ import {
   ERROR_TEST_ID,
   POSTS_TEST_ID,
   SPINNER_TEST_ID,
+  SEARCH_BAR_TEST_ID,
   pressEnterOnInput,
   renderElement,
   typeQueryOnSearchInput,
@@ -65,7 +66,7 @@ function assertTwoAPICallsUsingSampleQuery() {
 
 function assertStaticComponents() {
   expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
-  expect(getByTestId('searchInput')).toBeInTheDocument();
+  expect(getByTestId(SEARCH_BAR_TEST_ID)).toBeInTheDocument();
 }
 
 function assertPostsIsNotShown() {

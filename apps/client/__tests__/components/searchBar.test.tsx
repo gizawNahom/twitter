@@ -1,5 +1,5 @@
 import { screen } from '@testing-library/react';
-import { SearchInput } from '../../components/searchInput';
+import { SearchBar } from '../../components/searchBar';
 import {
   clickElement,
   getSearchInput,
@@ -14,7 +14,7 @@ const CLEAR_TEXT_LABEL = /clear text/i;
 const onSubmit = jest.fn();
 
 function renderSUT() {
-  renderElement(<SearchInput onSubmit={onSubmit} />);
+  renderElement(<SearchBar onSubmit={onSubmit} />);
 }
 
 afterEach(() => jest.clearAllMocks());

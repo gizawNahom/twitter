@@ -1,6 +1,6 @@
 import { KeyboardEvent, RefObject, useEffect, useRef, useState } from 'react';
 
-export function SearchInput({
+export function SearchBar({
   value = '',
   onSubmit,
 }: {
@@ -13,7 +13,7 @@ export function SearchInput({
 
   return (
     <div
-      data-testid="searchInput"
+      data-testid="searchBar"
       className={`rounded-full pl-4 pr-2 border-[0.5px] transition flex gap-x-3 items-center justify-between ${
         focused
           ? `border-cyan-400 bg-inherit`

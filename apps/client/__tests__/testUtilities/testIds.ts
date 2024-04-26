@@ -11,3 +11,5 @@ export const ERROR_TEST_ID = 'error';
 export const SPINNER_TEST_ID = 'spinner';
 
 export const POSTS_TEST_ID = 'posts';
+
+export const SEARCH_BAR_TEST_ID = 'searchBar';

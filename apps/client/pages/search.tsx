@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { Page } from '../components/page';
-import { SearchInput } from '../components/searchInput';
+import { SearchBar } from '../components/searchBar';
 import { Posts } from '../components/posts';
 import { searchPosts } from '../lib/redux/slices/postsSlice/searchPosts';
 import { Spinner } from '../components/spinner';
@@ -21,7 +21,7 @@ export default function Search() {
   useSearchOnMount(query);
 
   return (
-    <Page title={renderSearchInput()}>
+    <Page title={renderSearchBar()}>
       {status === 'loading' && <Spinner />}
       {status === 'error' && <Error />}
       {status === 'success' && renderPosts()}
@@ -35,8 +35,8 @@ export default function Search() {
     }, []);
   }
 
-  function renderSearchInput() {
-    return <SearchInput value={query} onSubmit={onSubmit} />;
+  function renderSearchBar() {
+    return <SearchBar value={query} onSubmit={onSubmit} />;
 
     async function onSubmit(query: string) {
       setQuery(query);
