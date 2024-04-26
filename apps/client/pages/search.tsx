@@ -10,19 +10,15 @@ import { Post } from '../lib/redux/slices/postsSlice/post';
 
 export default function Search() {
   const LIMIT = 20;
-  const router = useRouter();
 
   const [status, setStatus] = useState<
     'idle' | 'loading' | 'error' | 'success'
   >('idle');
   const [initialPosts, setInitialPosts] = useState<Post[]>();
-  const [query, setQuery] = useState('');
 
-  useEffect(() => {
-    setQuery(router.query?.q as string);
-  }, [router.query?.q]);
-
-  useSearchOnMount(query);
+  const router = useRouter();
+  const { query, setQuery } = useQuery(router.query?.q as string);
+  useSearch(query);
 
   return (
     <Page title={renderSearchBar()}>
@@ -32,7 +28,17 @@ export default function Search() {
     </Page>
   );
 
-  function useSearchOnMount(query: string) {
+  function useQuery(queryParam: string) {
+    const [query, setQuery] = useState('');
+
+    useEffect(() => {
+      setQuery(queryParam as string);
+    }, [queryParam]);
+
+    return { query, setQuery };
+  }
+
+  function useSearch(query: string) {
     useEffect(() => {
       if (query) search(query);
     }, [query]);
