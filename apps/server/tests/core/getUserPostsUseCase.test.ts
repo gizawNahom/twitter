@@ -1,5 +1,4 @@
 import Context from '../../src/context';
-import { Post } from '../../src/core/entities/post';
 import {
   GetUserPostsResponse,
   GetUserPostsUseCase,
