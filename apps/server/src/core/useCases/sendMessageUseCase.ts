@@ -34,7 +34,7 @@ export class SendMessageUseCase {
 
     await this.ensureChatExists(cId);
 
-    const message = this.buildMessage(user, chatId, text);
+    const message = this.buildMessage(user, cId, text);
     await this.saveMessage(message);
 
     await this.sendMessage(await this.getCorrespondentId(cId, user), message);
@@ -64,7 +64,7 @@ export class SendMessageUseCase {
     throw new ValidationError(errorMessage);
   }
 
-  private buildMessage(user: User, chatId: string, text: string) {
+  private buildMessage(user: User, chatId: ChatId, text: string) {
     const messageId = this.idGenerator.generate();
     return new Message(
       messageId,

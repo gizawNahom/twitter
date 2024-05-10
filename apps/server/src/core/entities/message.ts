@@ -1,14 +1,16 @@
+import { ChatId } from '../valueObjects/chatId';
+
 export class Message {
   private id: string;
   private senderId: string;
-  private chatId: string;
+  private chatId: ChatId;
   private text: string;
   private createdAt: Date;
 
   constructor(
     id: string,
     senderId: string,
-    chatId: string,
+    chatId: ChatId,
     text: string,
     createdAtISO: string
   ) {
@@ -27,7 +29,7 @@ export class Message {
     return this.senderId;
   }
 
-  getChatId(): string {
+  getChatId(): ChatId {
     return this.chatId;
   }
 
