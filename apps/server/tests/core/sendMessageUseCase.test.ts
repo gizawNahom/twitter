@@ -48,15 +48,13 @@ async function executeUseCase({
   return await uC.execute({ token, text, chatId });
 }
 
-function assertMessageWithDefaultValues(savedMessage: Message) {
-  expect(savedMessage).toBeTruthy();
-  expect(savedMessage.getId()).toBe(idGeneratorStub.STUB_ID);
-  expect(savedMessage.getSenderId()).toBe(
-    DefaultGateKeeper.defaultUser.getId()
-  );
-  expect(savedMessage.getChatId()).toBe(sampleChatId);
-  expect(savedMessage.getText()).toBe(sampleMessage);
-  expect(removeSeconds(savedMessage.getCreatedAt().toISOString())).toBe(
+function assertMessageWithDefaultValues(message: Message) {
+  expect(message).toBeTruthy();
+  expect(message.getId()).toBe(idGeneratorStub.STUB_ID);
+  expect(message.getSenderId()).toBe(DefaultGateKeeper.defaultUser.getId());
+  expect(message.getChatId()).toBe(sampleChatId);
+  expect(message.getText()).toBe(sampleMessage);
+  expect(removeSeconds(message.getCreatedAt().toISOString())).toBe(
     removeSeconds(new Date().toISOString())
   );
 }
@@ -151,4 +149,12 @@ test('sends message if correspondent is available', async () => {
   const msgGateway = messageGateway as MessageGatewaySpy;
   assertCorrectCorrespondentIsFetched(msgGateway);
   assertCorrectMessageIsSent(msgSender, msgGateway.getCorrespondentIdResponse);
+});
+
+test('sends sanitized text', async () => {
+  await executeUseCase({ text: sampleXSS.XSSText });
+
+  const sentMessage = (messageSender as MessageSenderSpy).sendMessageCalls[0]
+    .message;
+  expect(sentMessage.getText()).toBe(sampleXSS.sanitizedText);
 });
