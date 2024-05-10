@@ -15,6 +15,7 @@ import { MessageSender } from '../ports/messageSender';
 import { Logger } from '../ports/logger';
 import { User } from '../entities/user';
 import { MessageText } from '../valueObjects/messageText';
+import { MessageBuilder } from '../messageBuilder';
 
 export class SendMessageUseCase {
   constructor(
@@ -51,14 +52,13 @@ export class SendMessageUseCase {
   }
 
   private buildMessage(user: User, chatId: ChatId, msgText: MessageText) {
-    const messageId = this.idGenerator.generate();
-    return new Message(
-      messageId,
-      user.getId(),
-      chatId,
-      msgText,
-      new Date().toISOString()
-    );
+    return MessageBuilder.message()
+      .withId(this.idGenerator.generate())
+      .withSenderId(user.getId())
+      .withChatId(chatId)
+      .withText(msgText)
+      .withCreatedAt(new Date())
+      .build();
   }
 
   private async saveMessage(msg: Message) {
