@@ -42,7 +42,8 @@ async function executeUseCase({
     Context.gateKeeper,
     messageGateway,
     idGeneratorStub,
-    messageSender
+    messageSender,
+    Context.logger
   );
   return await uC.execute({ token, text, chatId });
 }
