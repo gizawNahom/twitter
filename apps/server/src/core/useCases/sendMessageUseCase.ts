@@ -14,6 +14,7 @@ import { ChatId } from '../valueObjects/chatId';
 import { MessageSender } from '../ports/messageSender';
 import { Logger } from '../ports/logger';
 import { User } from '../entities/user';
+import { MessageText } from '../valueObjects/messageText';
 
 export class SendMessageUseCase {
   constructor(
@@ -27,7 +28,7 @@ export class SendMessageUseCase {
   async execute({ token, text, chatId }: SendMessageRequest) {
     const cId = new ChatId(chatId);
     const t = new Token(token);
-    this.makeSureMessageIsValid(text);
+    new MessageText(text);
 
     const user = await extractUser(this.gateKeeper, this.logger, t);
     makeSureUserIsAuthenticated(user);
@@ -38,21 +39,6 @@ export class SendMessageUseCase {
     await this.saveMessage(message);
 
     await this.sendMessage(await this.getCorrespondentId(cId, user), message);
-  }
-
-  private makeSureMessageIsValid(message: string) {
-    if (isMessageLongerThan1000Chars())
-      this.throwValidationError(ValidationMessages.MESSAGE_TOO_LONG);
-    if (isMessageEmpty())
-      this.throwValidationError(ValidationMessages.MESSAGE_EMPTY);
-
-    function isMessageLongerThan1000Chars() {
-      return message.length > 1000;
-    }
-
-    function isMessageEmpty() {
-      return message.trim().length === 0;
-    }
   }
 
   private async ensureChatExists(chatId: ChatId) {
