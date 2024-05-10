@@ -61,6 +61,32 @@ function assertMessageWithDefaultValues(savedMessage: Message) {
   );
 }
 
+function assertCorrectCorrespondentIsFetched(msgGateway: MessageGatewaySpy) {
+  expect(msgGateway.getCorrespondentIdCalls).toHaveLength(1);
+  expect(msgGateway.getCorrespondentIdCalls[0].chatId.getId()).toBe(
+    sampleChatId
+  );
+  expect(msgGateway.getCorrespondentIdCalls[0].userId).toBe(
+    DefaultGateKeeper.defaultUser.getId()
+  );
+}
+
+function assertCorrectMessageIsSent(
+  msgSender: MessageSenderSpy,
+  getCorrespondentIdResponse: string
+) {
+  expect(msgSender.isRecipientAvailableCalls).toHaveLength(1);
+  expect(msgSender.isRecipientAvailableCalls[0].userId).toBe(
+    getCorrespondentIdResponse
+  );
+
+  expect(msgSender.sendMessageCalls).toHaveLength(1);
+  expect(msgSender.sendMessageCalls[0].recipientUserId).toBe(
+    getCorrespondentIdResponse
+  );
+  assertMessageWithDefaultValues(msgSender.sendMessageCalls[0].message);
+}
+
 beforeEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
   Context.userRepository = new DummyUserRepository();
@@ -118,28 +144,11 @@ test('sanitizes text', async () => {
   expect(savedMessage.getText()).toBe(sampleXSS.sanitizedText);
 });
 
-test('sends Message if Recipient is available', async () => {
+test('sends message if correspondent is available', async () => {
   await executeUseCase({});
 
   const msgSender = messageSender as MessageSenderSpy;
   const msgGateway = messageGateway as MessageGatewaySpy;
-
-  expect(msgGateway.getCorrespondentIdCalls).toHaveLength(1);
-  expect(msgGateway.getCorrespondentIdCalls[0].chatId.getId()).toBe(
-    sampleChatId
-  );
-  expect(msgGateway.getCorrespondentIdCalls[0].userId).toBe(
-    DefaultGateKeeper.defaultUser.getId()
-  );
-
-  expect(msgSender.isRecipientAvailableCalls).toHaveLength(1);
-  expect(msgSender.isRecipientAvailableCalls[0].userId).toBe(
-    msgGateway.getCorrespondentIdResponse
-  );
-
-  expect(msgSender.sendMessageCalls).toHaveLength(1);
-  expect(msgSender.sendMessageCalls[0].recipientUserId).toBe(
-    msgGateway.getCorrespondentIdResponse
-  );
-  assertMessageWithDefaultValues(msgSender.sendMessageCalls[0].message);
+  assertCorrectCorrespondentIsFetched(msgGateway);
+  assertCorrectMessageIsSent(msgSender, msgGateway.getCorrespondentIdResponse);
 });
