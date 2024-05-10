@@ -30,8 +30,8 @@ export class Message {
     return this.senderId;
   }
 
-  getChatId(): ChatId {
-    return this.chatId;
+  getChatId(): string {
+    return this.chatId.getId();
   }
 
   getText(): string {

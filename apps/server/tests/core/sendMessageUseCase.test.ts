@@ -54,7 +54,7 @@ function assertMessageWithDefaultValues(savedMessage: Message) {
   expect(savedMessage.getSenderId()).toBe(
     DefaultGateKeeper.defaultUser.getId()
   );
-  expect(savedMessage.getChatId().getId()).toBe(sampleChatId);
+  expect(savedMessage.getChatId()).toBe(sampleChatId);
   expect(savedMessage.getText()).toBe(sampleMessage);
   expect(removeSeconds(savedMessage.getCreatedAt().toISOString())).toBe(
     removeSeconds(new Date().toISOString())
