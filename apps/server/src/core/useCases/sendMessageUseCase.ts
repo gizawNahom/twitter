@@ -28,14 +28,14 @@ export class SendMessageUseCase {
   async execute({ token, text, chatId }: SendMessageRequest) {
     const cId = new ChatId(chatId);
     const t = new Token(token);
-    new MessageText(text);
+    const msgTxt = new MessageText(sanitizeXSSString(text));
 
     const user = await extractUser(this.gateKeeper, this.logger, t);
     makeSureUserIsAuthenticated(user);
 
     await this.ensureChatExists(cId);
 
-    const message = this.buildMessage(user, cId, text);
+    const message = this.buildMessage(user, cId, msgTxt);
     await this.saveMessage(message);
 
     await this.sendMessage(await this.getCorrespondentId(cId, user), message);
@@ -50,13 +50,13 @@ export class SendMessageUseCase {
     throw new ValidationError(errorMessage);
   }
 
-  private buildMessage(user: User, chatId: ChatId, text: string) {
+  private buildMessage(user: User, chatId: ChatId, msgText: MessageText) {
     const messageId = this.idGenerator.generate();
     return new Message(
       messageId,
       user.getId(),
       chatId,
-      sanitizeXSSString(text),
+      msgText,
       new Date().toISOString()
     );
   }
