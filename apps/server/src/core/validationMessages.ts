@@ -10,4 +10,8 @@ export enum ValidationMessages {
   USER_ID_REQUIRED = 'User id is required',
   USER_DOES_NOT_EXIST = 'User does not exist',
   INVALID_QUERY = 'Query is invalid',
+  MESSAGE_TOO_LONG = "Message can't be more than 1000 chars",
+  MESSAGE_EMPTY = "Message can't be empty",
+  CHAT_ID_REQUIRED = 'Chat id is required',
+  CHAT_DOES_NOT_EXIST = 'Chat does not exist',
 }
