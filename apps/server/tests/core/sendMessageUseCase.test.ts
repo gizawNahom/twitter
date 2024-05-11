@@ -6,9 +6,14 @@ import { SendMessageUseCase } from '../../src/core/useCases/sendMessageUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { DummyUserRepository } from '../../src/dummyUserRepository';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
+import { LoggerSpy } from '../doubles/loggerSpy';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { MessageSenderSpy } from '../doubles/messageSenderSpy';
-import { assertValidationErrorWithMessage } from '../utilities/assertions';
+import {
+  assertLogInfoCall,
+  assertUserExtractionLog,
+  assertValidationErrorWithMessage,
+} from '../utilities/assertions';
 import {
   ERROR_CHAT_DOES_NOT_EXIST,
   ERROR_CHAT_ID_REQUIRED,
@@ -16,6 +21,13 @@ import {
   ERROR_LONG_MESSAGE,
 } from '../utilities/errorMessages';
 import { removeSeconds } from '../utilities/helpers';
+import {
+  LOG_CHECKED_CHAT_EXISTENCE,
+  LOG_CHECKED_MESSAGE_CORRESPONDENT_AVAILABILITY,
+  LOG_FETCHED_CORRESPONDENT_ID,
+  LOG_SAVED_MESSAGE,
+  LOG_SENT_MESSAGE_TO_CORRESPONDENT,
+} from '../utilities/logMessages';
 import { sampleUserToken, sampleXSS } from '../utilities/samples';
 import {
   testUserExtractionFailure,
@@ -88,6 +100,7 @@ function assertCorrectMessageIsSent(
 beforeEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
   Context.userRepository = new DummyUserRepository();
+  Context.logger = new LoggerSpy();
   messageGateway = new MessageGatewaySpy();
   idGeneratorStub = new IdGeneratorStub();
   messageSender = new MessageSenderSpy();
@@ -157,4 +170,69 @@ test('sends sanitized text', async () => {
   const sentMessage = (messageSender as MessageSenderSpy).sendMessageCalls[0]
     .message;
   expect(sentMessage.getText()).toBe(sampleXSS.sanitizedText);
+});
+
+test('logs info for happy path', async () => {
+  await executeUseCase({});
+
+  const loggerSpy = Context.logger as LoggerSpy;
+  expect(loggerSpy.logInfoCalls.length).toBe(6);
+  assertUserExtractionLog(loggerSpy.logInfoCalls[0]);
+  assertChatExistenceLog(loggerSpy.logInfoCalls[1]);
+  assertSavedMessageLog(loggerSpy.logInfoCalls[2]);
+  assertFetchedCorrespondentLog(loggerSpy.logInfoCalls[3]);
+  assertCorrespondentAvailabilityLog(loggerSpy.logInfoCalls[4]);
+  assertSentMessageLog(loggerSpy.logInfoCalls[5]);
+
+  function assertChatExistenceLog(call: unknown[]) {
+    assertLogInfoCall({
+      call,
+      message: LOG_CHECKED_CHAT_EXISTENCE,
+      obj: { chatId: sampleChatId },
+    });
+  }
+
+  function assertSavedMessageLog(call: unknown[]) {
+    assertLogInfoCall({
+      call,
+      message: LOG_SAVED_MESSAGE,
+      obj: {
+        messageId: idGeneratorStub.STUB_ID,
+      },
+    });
+  }
+
+  function assertFetchedCorrespondentLog(call: unknown[]) {
+    assertLogInfoCall({
+      call,
+      message: LOG_FETCHED_CORRESPONDENT_ID,
+      obj: {
+        chatId: sampleChatId,
+        correspondentId: (messageGateway as MessageGatewaySpy)
+          .getCorrespondentIdResponse,
+      },
+    });
+  }
+
+  function assertCorrespondentAvailabilityLog(call: unknown[]) {
+    assertLogInfoCall({
+      call,
+      message: LOG_CHECKED_MESSAGE_CORRESPONDENT_AVAILABILITY,
+      obj: {
+        correspondentId: (messageGateway as MessageGatewaySpy)
+          .getCorrespondentIdResponse,
+        wasAvailable: (messageSender as MessageSenderSpy)
+          .isRecipientAvailableResponse,
+      },
+    });
+  }
+
+  function assertSentMessageLog(call: unknown[]) {
+    expect(call[0]).toEqual(LOG_SENT_MESSAGE_TO_CORRESPONDENT);
+    expect(call[1]).toEqual({
+      correspondentId: (messageGateway as MessageGatewaySpy)
+        .getCorrespondentIdResponse,
+      messageId: idGeneratorStub.STUB_ID,
+    });
+  }
 });
