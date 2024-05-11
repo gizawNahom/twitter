@@ -90,7 +90,7 @@ export class SendMessageUseCase {
   }
 
   private async isCorrespondentAvailable(correspondentId: string) {
-    const status = await this.messageSender.isRecipientAvailable(
+    const status = await this.messageSender.isCorrespondentAvailable(
       correspondentId
     );
     this.logInfo(LogMessages.CHECKED_MESSAGE_CORRESPONDENT_AVAILABILITY, {

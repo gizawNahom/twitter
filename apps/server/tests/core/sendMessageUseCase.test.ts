@@ -85,8 +85,8 @@ function assertCorrectMessageIsSent(
   msgSender: MessageSenderSpy,
   getCorrespondentIdResponse: string
 ) {
-  expect(msgSender.isRecipientAvailableCalls).toHaveLength(1);
-  expect(msgSender.isRecipientAvailableCalls[0].userId).toBe(
+  expect(msgSender.isCorrespondentAvailableCalls).toHaveLength(1);
+  expect(msgSender.isCorrespondentAvailableCalls[0].userId).toBe(
     getCorrespondentIdResponse
   );
 
@@ -222,7 +222,7 @@ test('logs info for happy path', async () => {
         correspondentId: (messageGateway as MessageGatewaySpy)
           .getCorrespondentIdResponse,
         wasAvailable: (messageSender as MessageSenderSpy)
-          .isRecipientAvailableResponse,
+          .isCorrespondentAvailableResponse,
       },
     });
   }
