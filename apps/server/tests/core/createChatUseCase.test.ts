@@ -28,12 +28,15 @@ testWithInvalidToken((tokenString) => {
 });
 
 describe('throws with invalid username error message', () => {
-  test.each([[emptyString]])('when username is %s', async (usernameString) => {
-    assertValidationErrorWithMessage(
-      () => executeUseCase({ usernameString }),
-      ERROR_USERNAME_INVALID
-    );
-  });
+  test.each([[emptyString], ['a'.repeat(4)]])(
+    'when username is %s',
+    async (usernameString) => {
+      assertValidationErrorWithMessage(
+        () => executeUseCase({ usernameString }),
+        ERROR_USERNAME_INVALID
+      );
+    }
+  );
 });
 
 testUserExtractionFailure(() => executeUseCase({}));

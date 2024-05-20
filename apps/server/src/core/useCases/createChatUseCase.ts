@@ -19,8 +19,15 @@ export class CreateChatUseCase {
     );
 
     function validateUsername(usernameString: string) {
-      if (usernameString.trim().length === 0)
+      if (getLength(usernameString) <= 4) throwUsernameInvalidError();
+
+      function getLength(usernameString: string) {
+        return usernameString.trim().length;
+      }
+
+      function throwUsernameInvalidError() {
         throw new ValidationError(ValidationMessages.USERNAME_INVALID);
+      }
     }
   }
 }
