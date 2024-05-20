@@ -1,21 +1,25 @@
+import Context from '../../src/context';
 import { CreateChatUseCase } from '../../src/core/useCases/createChatUseCase';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import { ERROR_USERNAME_INVALID } from '../utilities/errorMessages';
 import { sampleUserToken } from '../utilities/samples';
-import { testWithInvalidToken } from '../utilities/tests';
+import {
+  testUserExtractionFailure,
+  testWithInvalidToken,
+} from '../utilities/tests';
 
 const emptyString = ' \n\t\r';
 
 function executeUseCase({
   tokenString = sampleUserToken,
-  username = 'sampleUserName',
+  usernameString = 'sampleUserName',
 }: {
   tokenString?: string;
-  username?: string;
+  usernameString?: string;
 }): Promise<unknown> {
-  return new CreateChatUseCase().execute({
+  return new CreateChatUseCase(Context.gateKeeper, Context.logger).execute({
     tokenString,
-    username,
+    usernameString,
   });
 }
 
@@ -24,10 +28,18 @@ testWithInvalidToken((tokenString) => {
 });
 
 describe('throws with invalid username error message', () => {
-  test.each([[emptyString]])('when username is %s', async (username) => {
+  test.each([[emptyString]])('when username is %s', async (usernameString) => {
     assertValidationErrorWithMessage(
-      () => executeUseCase({ username }),
+      () => executeUseCase({ usernameString }),
       ERROR_USERNAME_INVALID
     );
   });
 });
+
+testUserExtractionFailure(() => executeUseCase({}));
+
+test.todo('username must exist');
+test.todo('creates chat');
+test.todo('does not create chat if it already exists');
+test.todo('returns created chat');
+test.todo('returns existing chat');
