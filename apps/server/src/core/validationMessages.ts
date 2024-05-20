@@ -14,4 +14,5 @@ export enum ValidationMessages {
   MESSAGE_EMPTY = "Message can't be empty",
   CHAT_ID_REQUIRED = 'Chat id is required',
   CHAT_DOES_NOT_EXIST = 'Chat does not exist',
+  USERNAME_INVALID = 'Username is invalid',
 }

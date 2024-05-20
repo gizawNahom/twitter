@@ -24,4 +24,6 @@ export const ERROR_EMPTY_MESSAGE = "Message can't be empty";
 export const ERROR_CHAT_DOES_NOT_EXIST = 'Chat does not exist';
 export const ERROR_CHAT_ID_REQUIRED = 'Chat id is required';
 
+export const ERROR_USERNAME_INVALID = 'Username is invalid';
+
 export const ERROR_GENERIC = 'Server Error';
