@@ -1,4 +1,5 @@
 import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
+import { Username } from '../entities/username';
 import { ValidationError } from '../errors';
 import { GateKeeper } from '../ports/gateKeeper';
 import { Logger } from '../ports/logger';
@@ -13,34 +14,10 @@ export class CreateChatUseCase {
     usernameString: usernameString,
   }: CreateChatRequest): Promise<void> {
     const token = new Token(tokenString);
-    validateUsername(usernameString);
+    new Username(usernameString);
     makeSureUserIsAuthenticated(
       await extractUser(this.gateKeeper, this.logger, token)
     );
-
-    function validateUsername(usernameString: string) {
-      if (
-        !isOfValidLength(getLength(usernameString)) ||
-        !isOnlyWords(usernameString)
-      )
-        throwUsernameInvalidError();
-
-      function getLength(usernameString: string) {
-        return usernameString.trim().length;
-      }
-
-      function isOfValidLength(length: number) {
-        return length > 4 && length <= 15;
-      }
-
-      function isOnlyWords(usernameString: string) {
-        return /^[a-zA-Z0-9_]+$/.test(usernameString);
-      }
-
-      function throwUsernameInvalidError() {
-        throw new ValidationError(ValidationMessages.USERNAME_INVALID);
-      }
-    }
   }
 }
 
