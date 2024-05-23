@@ -8,8 +8,7 @@ export async function assertValidationErrorWithMessage(
   task: () => Promise<unknown>,
   errorMessage: string
 ) {
-  await expect(task()).rejects.toThrow(errorMessage);
-  await expect(task()).rejects.toThrow(ValidationError);
+  await expect(task()).rejects.toThrow(new ValidationError(errorMessage));
 }
 
 export function assertPostEquality(post1: Post, post2: Post) {

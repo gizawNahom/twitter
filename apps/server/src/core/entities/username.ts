@@ -2,8 +2,11 @@ import { ValidationError } from '../errors';
 import { ValidationMessages } from '../validationMessages';
 
 export class Username {
+  private username: string;
+
   constructor(usernameString: string) {
     this.validateString(usernameString);
+    this.username = usernameString;
   }
 
   private validateString(usernameString: string) {
@@ -28,5 +31,9 @@ export class Username {
     function throwUsernameInvalidError() {
       throw new ValidationError(ValidationMessages.USERNAME_INVALID);
     }
+  }
+
+  getUsername(): string {
+    return this.username;
   }
 }
