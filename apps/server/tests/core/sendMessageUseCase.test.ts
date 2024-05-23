@@ -1,7 +1,5 @@
 import Context from '../../src/context';
 import { Message } from '../../src/core/entities/message';
-import { MessageGateway } from '../../src/core/ports/messageGateway';
-import { MessageSender } from '../../src/core/ports/messageSender';
 import { SendMessageUseCase } from '../../src/core/useCases/sendMessageUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { DummyUserRepository } from '../../src/dummyUserRepository';
@@ -37,9 +35,9 @@ import {
 const emptyString = ' \n\t\r';
 const sampleMessage = 'sample message';
 const sampleChatId = 'chatId123';
-let messageGateway: MessageGateway;
+let messageGatewaySpy: MessageGatewaySpy;
 let idGeneratorStub: IdGeneratorStub;
-let messageSender: MessageSender;
+let messageSenderSpy: MessageSenderSpy;
 
 async function executeUseCase({
   token = sampleUserToken,
@@ -52,9 +50,9 @@ async function executeUseCase({
 }) {
   const uC = new SendMessageUseCase(
     Context.gateKeeper,
-    messageGateway,
-    idGeneratorStub,
-    messageSender,
+    Context.messageGateway,
+    Context.idGenerator,
+    Context.messageSender,
     Context.logger
   );
   return await uC.execute({ token, text, chatId });
@@ -101,9 +99,12 @@ beforeEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
   Context.userRepository = new DummyUserRepository();
   Context.logger = new LoggerSpy();
-  messageGateway = new MessageGatewaySpy();
+  messageGatewaySpy = new MessageGatewaySpy();
+  Context.messageGateway = messageGatewaySpy;
   idGeneratorStub = new IdGeneratorStub();
-  messageSender = new MessageSenderSpy();
+  Context.idGenerator = idGeneratorStub;
+  messageSenderSpy = new MessageSenderSpy();
+  Context.messageSender = messageSenderSpy;
 });
 
 test('throws validation error if message is more than 1000 chars', () => {
@@ -132,7 +133,7 @@ test('throws if the chat id is empty', () => {
 });
 
 test('throws if chat does not exist', async () => {
-  (messageGateway as MessageGatewaySpy).doesChatExistResponse = false;
+  messageGatewaySpy.doesChatExistResponse = false;
 
   assertValidationErrorWithMessage(
     () => executeUseCase({}),
@@ -143,32 +144,30 @@ test('throws if chat does not exist', async () => {
 test('saves message', async () => {
   await executeUseCase({});
 
-  assertMessageWithDefaultValues(
-    (messageGateway as MessageGatewaySpy).savedMessage
-  );
+  assertMessageWithDefaultValues(messageGatewaySpy.savedMessage);
 });
 
 test('sanitizes text', async () => {
   await executeUseCase({ text: sampleXSS.XSSText });
 
-  const savedMessage = (messageGateway as MessageGatewaySpy).savedMessage;
+  const savedMessage = messageGatewaySpy.savedMessage;
   expect(savedMessage.getText()).toBe(sampleXSS.sanitizedText);
 });
 
 test('sends message if correspondent is available', async () => {
   await executeUseCase({});
 
-  const msgSender = messageSender as MessageSenderSpy;
-  const msgGateway = messageGateway as MessageGatewaySpy;
-  assertCorrectCorrespondentIsFetched(msgGateway);
-  assertCorrectMessageIsSent(msgSender, msgGateway.getCorrespondentIdResponse);
+  assertCorrectCorrespondentIsFetched(messageGatewaySpy);
+  assertCorrectMessageIsSent(
+    messageSenderSpy,
+    messageGatewaySpy.getCorrespondentIdResponse
+  );
 });
 
 test('sends sanitized text', async () => {
   await executeUseCase({ text: sampleXSS.XSSText });
 
-  const sentMessage = (messageSender as MessageSenderSpy).sendMessageCalls[0]
-    .message;
+  const sentMessage = messageSenderSpy.sendMessageCalls[0].message;
   expect(sentMessage.getText()).toBe(sampleXSS.sanitizedText);
 });
 
@@ -208,8 +207,7 @@ test('logs info for happy path', async () => {
       message: LOG_FETCHED_CORRESPONDENT_ID,
       obj: {
         chatId: sampleChatId,
-        correspondentId: (messageGateway as MessageGatewaySpy)
-          .getCorrespondentIdResponse,
+        correspondentId: messageGatewaySpy.getCorrespondentIdResponse,
       },
     });
   }
@@ -219,10 +217,8 @@ test('logs info for happy path', async () => {
       call,
       message: LOG_CHECKED_MESSAGE_CORRESPONDENT_AVAILABILITY,
       obj: {
-        correspondentId: (messageGateway as MessageGatewaySpy)
-          .getCorrespondentIdResponse,
-        wasAvailable: (messageSender as MessageSenderSpy)
-          .isCorrespondentAvailableResponse,
+        correspondentId: messageGatewaySpy.getCorrespondentIdResponse,
+        wasAvailable: messageSenderSpy.isCorrespondentAvailableResponse,
       },
     });
   }
@@ -230,8 +226,7 @@ test('logs info for happy path', async () => {
   function assertSentMessageLog(call: unknown[]) {
     expect(call[0]).toEqual(LOG_SENT_MESSAGE_TO_CORRESPONDENT);
     expect(call[1]).toEqual({
-      correspondentId: (messageGateway as MessageGatewaySpy)
-        .getCorrespondentIdResponse,
+      correspondentId: messageGatewaySpy.getCorrespondentIdResponse,
       messageId: idGeneratorStub.STUB_ID,
     });
   }
