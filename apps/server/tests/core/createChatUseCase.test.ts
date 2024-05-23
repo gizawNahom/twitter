@@ -28,7 +28,7 @@ testWithInvalidToken((tokenString) => {
 });
 
 describe('throws with invalid username error message', () => {
-  test.each([[emptyString], ['a'.repeat(4)], ['/?<.>']])(
+  test.each([[emptyString], ['a'.repeat(4)], ['/?<.>'], ['a'.repeat(16)]])(
     'when username is %s',
     async (usernameString) => {
       assertValidationErrorWithMessage(

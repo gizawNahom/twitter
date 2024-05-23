@@ -19,11 +19,18 @@ export class CreateChatUseCase {
     );
 
     function validateUsername(usernameString: string) {
-      if (getLength(usernameString) <= 4 || !isOnlyWords(usernameString))
+      if (
+        !isOfValidLength(getLength(usernameString)) ||
+        !isOnlyWords(usernameString)
+      )
         throwUsernameInvalidError();
 
       function getLength(usernameString: string) {
         return usernameString.trim().length;
+      }
+
+      function isOfValidLength(length: number) {
+        return length > 4 && length <= 15;
       }
 
       function isOnlyWords(usernameString: string) {
