@@ -50,6 +50,24 @@ function getSaveChatCalls() {
   return calls;
 }
 
+function stubGetChatResponse(msgGateway: MessageGatewaySpy) {
+  msgGateway.getChatResponse = new Chat(
+    new ChatId('globallyUniqueId'),
+    ['', ''],
+    new Date(2019)
+  );
+  const getChatResponse = msgGateway.getChatResponse;
+  return getChatResponse;
+}
+
+function assertCorrectResponse(response: CreateChatResponse, createdAt: Date) {
+  const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
+  expect(response.chatId).toBe(idGeneratorStub.STUB_ID);
+  expect(removeSeconds(response.createdAt.toISOString())).toBe(
+    removeSeconds(createdAt.toISOString())
+  );
+}
+
 beforeEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
   userRepoSpy = new UserRepositorySpy();
@@ -116,13 +134,8 @@ test('creates chat', async () => {
 });
 
 test('does not create chat if it already exists', async () => {
-  const msgGateway = new MessageGatewaySpy();
-  msgGateway.getChatResponse = new Chat(
-    new ChatId('globallyUniqueId'),
-    ['', ''],
-    new Date()
-  );
-  Context.messageGateway = msgGateway;
+  const msgGateway = Context.messageGateway as MessageGatewaySpy;
+  stubGetChatResponse(msgGateway);
 
   await executeUseCase({});
 
@@ -137,11 +150,15 @@ test('does not create chat if it already exists', async () => {
 test('returns created chat', async () => {
   const response = await executeUseCase({});
 
-  const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
-  expect(response.chatId).toBe(idGeneratorStub.STUB_ID);
-  expect(removeSeconds(response.createdAt.toISOString())).toBe(
-    removeSeconds(new Date().toISOString())
-  );
+  assertCorrectResponse(response, new Date());
 });
 
-test.todo('returns existing chat');
+test('returns existing chat', async () => {
+  const getChatResponse = stubGetChatResponse(
+    Context.messageGateway as MessageGatewaySpy
+  );
+
+  const response = await executeUseCase({});
+
+  assertCorrectResponse(response, getChatResponse.getCreatedAt());
+});
