@@ -3,15 +3,15 @@ import { Username } from '../../src/core/entities/username';
 import { UserRepository } from '../../src/core/ports/userRepository';
 
 export class UserRepositorySpy implements UserRepository {
-  doesUserExistCalls: { username: Username }[] = [];
-  doesUserExistResponse: boolean;
-
-  async doesUserExist(username: Username): Promise<boolean> {
-    this.doesUserExistCalls.push({ username });
-    return this.doesUserExistResponse;
-  }
+  getUserIdCalls: { username: Username }[] = [];
+  getUserIdResponse: string | null;
 
   getById(): Promise<User | null> {
     throw new Error('Method not implemented.');
+  }
+
+  async getUserId(username: Username): Promise<string | null> {
+    this.getUserIdCalls.push({ username });
+    return this.getUserIdResponse;
   }
 }
