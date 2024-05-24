@@ -1,5 +1,8 @@
 import Context from '../../src/context';
-import { CreateChatUseCase } from '../../src/core/useCases/createChatUseCase';
+import {
+  CreateChatResponse,
+  CreateChatUseCase,
+} from '../../src/core/useCases/createChatUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
@@ -28,7 +31,7 @@ function executeUseCase({
 }: {
   tokenString?: string;
   usernameString?: string;
-}): Promise<unknown> {
+}): Promise<CreateChatResponse> {
   return new CreateChatUseCase(
     Context.idGenerator,
     Context.messageGateway,
@@ -131,5 +134,14 @@ test('does not create chat if it already exists', async () => {
   expect(msgGateway.getChatCalls[0]).toContain(userRepoSpy.getUserIdResponse);
 });
 
-test.todo('returns created chat');
+test('returns created chat', async () => {
+  const response = await executeUseCase({});
+
+  const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
+  expect(response.chatId).toBe(idGeneratorStub.STUB_ID);
+  expect(removeSeconds(response.createdAt.toISOString())).toBe(
+    removeSeconds(new Date().toISOString())
+  );
+});
+
 test.todo('returns existing chat');

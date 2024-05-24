@@ -23,25 +23,32 @@ export class CreateChatUseCase {
   async execute({
     tokenString,
     usernameString: usernameString,
-  }: CreateChatRequest): Promise<void> {
-    const { token, username } = this.createValueObjects(
-      tokenString,
-      usernameString
+  }: CreateChatRequest): Promise<CreateChatResponse> {
+    return this.buildResponse(
+      await this.getOrCreateChat(
+        await this.getParticipantIds(
+          this.createValueObjects(tokenString, usernameString)
+        )
+      )
     );
-    const { uId1, uId2 } = await this.getParticipantIds(token, username);
-    if (!(await this.getChat(uId1, uId2))) await this.createChat(uId1, uId2);
   }
 
-  private createValueObjects(tokenString: string, usernameString: string) {
+  private createValueObjects(
+    tokenString: string,
+    usernameString: string
+  ): [Token, Username] {
     const token = new Token(tokenString);
     const username = new Username(usernameString);
-    return { token, username };
+    return [token, username];
   }
 
-  private async getParticipantIds(token: Token, username: Username) {
+  private async getParticipantIds([token, username]: [
+    Token,
+    Username
+  ]): Promise<[string, string]> {
     const uId1 = await this.getFirstParticipantId(token);
     const uId2 = await this.getSecondParticipantId(username);
-    return { uId1, uId2 };
+    return [uId1, uId2];
   }
 
   private async getFirstParticipantId(token: Token) {
@@ -65,12 +72,20 @@ export class CreateChatUseCase {
       throw new ValidationError(ValidationMessages.USER_DOES_NOT_EXIST);
   }
 
+  private async getOrCreateChat([uId1, uId2]: [string, string]) {
+    let chat = await this.getChat(uId1, uId2);
+    if (!chat) chat = await this.createChat(uId1, uId2);
+    return chat;
+  }
+
   private async getChat(uId1: string, uId2: string) {
     return await this.messageGateway.getChat(uId1, uId2);
   }
 
   private async createChat(uId1: string, uId2: string) {
-    await this.saveChat(this.buildChat(uId1, uId2));
+    const chat = this.buildChat(uId1, uId2);
+    await this.saveChat(chat);
+    return chat;
   }
 
   private async saveChat(chat: Chat) {
@@ -88,9 +103,20 @@ export class CreateChatUseCase {
   private generateId(): string {
     return this.idGenerator.generate();
   }
+
+  private buildResponse(
+    chat: Chat
+  ): CreateChatResponse | PromiseLike<CreateChatResponse> {
+    return { chatId: chat.getId(), createdAt: chat.getCreatedAt() };
+  }
 }
 
 export interface CreateChatRequest {
   tokenString: string;
   usernameString: string;
+}
+
+export interface CreateChatResponse {
+  chatId: string;
+  createdAt: Date;
 }
