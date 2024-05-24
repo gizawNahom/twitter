@@ -29,7 +29,7 @@ export class CreateChatUseCase {
       usernameString
     );
     const { uId1, uId2 } = await this.getParticipantIds(token, username);
-    await this.createChat(uId1, uId2);
+    if (!(await this.getChat(uId1, uId2))) await this.createChat(uId1, uId2);
   }
 
   private createValueObjects(tokenString: string, usernameString: string) {
@@ -63,6 +63,10 @@ export class CreateChatUseCase {
   private makeSureUserExists(userId: string) {
     if (!userId)
       throw new ValidationError(ValidationMessages.USER_DOES_NOT_EXIST);
+  }
+
+  private async getChat(uId1: string, uId2: string) {
+    return await this.messageGateway.getChat(uId1, uId2);
   }
 
   private async createChat(uId1: string, uId2: string) {

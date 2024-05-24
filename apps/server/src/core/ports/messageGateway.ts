@@ -7,4 +7,5 @@ export interface MessageGateway {
   doesChatExist(chatId: ChatId): Promise<boolean>;
   getCorrespondentId(chatId: ChatId, userId: string): Promise<string>;
   saveChat(chat: Chat): Promise<void>;
+  getChat(userId1: string, userId2: string): Promise<Chat | null>;
 }

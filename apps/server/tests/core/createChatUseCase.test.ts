@@ -1,7 +1,6 @@
 import Context from '../../src/context';
 import { CreateChatUseCase } from '../../src/core/useCases/createChatUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
-import { DummyUserRepository } from '../../src/dummyUserRepository';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import {
@@ -16,9 +15,12 @@ import {
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
 import { removeSeconds } from '../utilities/helpers';
+import { Chat } from '../../src/core/entities/chat';
+import { ChatId } from '../../src/core/valueObjects/chatId';
 
 const emptyString = ' \n\t\r';
 const sampleUsername = 'sampleUserName';
+let userRepoSpy: UserRepositorySpy;
 
 function executeUseCase({
   tokenString = sampleUserToken,
@@ -39,9 +41,17 @@ function executeUseCase({
   });
 }
 
+function getSaveChatCalls() {
+  const spy = Context.messageGateway as MessageGatewaySpy;
+  const calls = spy.saveChatCalls;
+  return calls;
+}
+
 beforeEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
-  Context.userRepository = new DummyUserRepository();
+  userRepoSpy = new UserRepositorySpy();
+  userRepoSpy.getUserIdResponse = sampleUserId;
+  Context.userRepository = userRepoSpy;
   Context.messageGateway = new MessageGatewaySpy();
   Context.idGenerator = new IdGeneratorStub();
 });
@@ -65,33 +75,28 @@ describe('throws with invalid username error message', () => {
 testUserExtractionFailure(() => executeUseCase({}));
 
 test('throws if username does not exist', async () => {
-  const userRepo = new UserRepositorySpy();
-  userRepo.getUserIdResponse = null;
-  Context.userRepository = userRepo;
+  userRepoSpy.getUserIdResponse = null;
+  Context.userRepository = userRepoSpy;
 
   await assertValidationErrorWithMessage(
     () => executeUseCase({}),
     ERROR_USER_DOES_NOT_EXIST
   );
-  expect(userRepo.getUserIdCalls).toHaveLength(1);
-  expect(userRepo.getUserIdCalls[0].username.getUsername()).toBe(
+  expect(userRepoSpy.getUserIdCalls).toHaveLength(1);
+  expect(userRepoSpy.getUserIdCalls[0].username.getUsername()).toBe(
     sampleUsername
   );
 });
 
 test('creates chat', async () => {
-  const userRepo = new UserRepositorySpy();
-  userRepo.getUserIdResponse = sampleUserId;
-  Context.userRepository = userRepo;
-
   await executeUseCase({});
 
   assertChatWasCreated();
 
   function assertChatWasCreated() {
-    const spy = Context.messageGateway as MessageGatewaySpy;
-    expect(spy.saveChatCalls).toHaveLength(1);
-    assertCorrectSavedChat(spy.saveChatCalls[0].chat);
+    const calls = getSaveChatCalls();
+    expect(calls).toHaveLength(1);
+    assertCorrectSavedChat(calls[0].chat);
 
     function assertCorrectSavedChat(chat) {
       const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
@@ -102,11 +107,29 @@ test('creates chat', async () => {
       );
       const participants = chat.getParticipants();
       expect(participants).toContain(DefaultGateKeeper.defaultUser.getId());
-      expect(participants).toContain(userRepo.getUserIdResponse);
+      expect(participants).toContain(userRepoSpy.getUserIdResponse);
     }
   }
 });
 
-test.todo('does not create chat if it already exists');
+test('does not create chat if it already exists', async () => {
+  const msgGateway = new MessageGatewaySpy();
+  msgGateway.getChatResponse = new Chat(
+    new ChatId('globallyUniqueId'),
+    ['', ''],
+    new Date()
+  );
+  Context.messageGateway = msgGateway;
+
+  await executeUseCase({});
+
+  expect(getSaveChatCalls()).toHaveLength(0);
+  expect(msgGateway.getChatCalls).toHaveLength(1);
+  expect(msgGateway.getChatCalls[0]).toContain(
+    DefaultGateKeeper.defaultUser.getId()
+  );
+  expect(msgGateway.getChatCalls[0]).toContain(userRepoSpy.getUserIdResponse);
+});
+
 test.todo('returns created chat');
 test.todo('returns existing chat');
