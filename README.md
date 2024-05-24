@@ -110,3 +110,6 @@ type Post {
   createdAt: String!
 }
 ```
+
+**For more**  
+Read the [wiki](https://github.com/gizawNahom/twitter/wiki).
