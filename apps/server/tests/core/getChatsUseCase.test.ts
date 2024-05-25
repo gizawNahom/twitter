@@ -1,3 +1,4 @@
+import Context from '../../src/context';
 import { GetChatsUseCase } from '../../src/core/useCases/getChatsUseCase';
 import {
   sampleLimit,
@@ -5,6 +6,7 @@ import {
   sampleUserToken,
 } from '../utilities/samples';
 import {
+  testUserExtractionFailure,
   testWithInvalidLimit,
   testWithInvalidOffset,
   testWithInvalidToken,
@@ -19,7 +21,7 @@ function executeUseCase({
   limitValue?: number;
   offsetValue?: number;
 }): Promise<void> {
-  return new GetChatsUseCase().execute({
+  return new GetChatsUseCase(Context.gateKeeper, Context.logger).execute({
     tokenString,
     limitValue,
     offsetValue,
@@ -33,3 +35,5 @@ testWithInvalidToken((tokenString) => {
 testWithInvalidLimit((limitValue) => executeUseCase({ limitValue }));
 
 testWithInvalidOffset((offsetValue) => executeUseCase({ offsetValue }));
+
+testUserExtractionFailure(() => executeUseCase({}));
