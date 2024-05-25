@@ -11,7 +11,7 @@ import { ValidationMessages } from '../validationMessages';
 import { ChatId } from '../valueObjects/chatId';
 import { Token } from '../valueObjects/token';
 
-export class CreateChatUseCase {
+export class GetOrCreateChatUseCase {
   constructor(
     private idGenerator: IdGenerator,
     private messageGateway: MessageGateway,
@@ -23,7 +23,7 @@ export class CreateChatUseCase {
   async execute({
     tokenString,
     usernameString: usernameString,
-  }: CreateChatRequest): Promise<CreateChatResponse> {
+  }: GetOrCreateChatRequest): Promise<GetOrCreateChatResponse> {
     return this.buildResponse(
       await this.getOrCreateChat(
         await this.getParticipantIds(
@@ -104,19 +104,17 @@ export class CreateChatUseCase {
     return this.idGenerator.generate();
   }
 
-  private buildResponse(
-    chat: Chat
-  ): CreateChatResponse | PromiseLike<CreateChatResponse> {
+  private buildResponse(chat: Chat): GetOrCreateChatResponse {
     return { chatId: chat.getId(), createdAt: chat.getCreatedAt() };
   }
 }
 
-export interface CreateChatRequest {
+export interface GetOrCreateChatRequest {
   tokenString: string;
   usernameString: string;
 }
 
-export interface CreateChatResponse {
+export interface GetOrCreateChatResponse {
   chatId: string;
   createdAt: Date;
 }

@@ -1,8 +1,8 @@
 import Context from '../../src/context';
 import {
-  CreateChatResponse,
-  CreateChatUseCase,
-} from '../../src/core/useCases/createChatUseCase';
+  GetOrCreateChatResponse,
+  GetOrCreateChatUseCase,
+} from '../../src/core/useCases/getOrCreateChatUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
@@ -31,8 +31,8 @@ function executeUseCase({
 }: {
   tokenString?: string;
   usernameString?: string;
-}): Promise<CreateChatResponse> {
-  return new CreateChatUseCase(
+}): Promise<GetOrCreateChatResponse> {
+  return new GetOrCreateChatUseCase(
     Context.idGenerator,
     Context.messageGateway,
     Context.userRepository,
@@ -60,7 +60,10 @@ function stubGetChatResponse(msgGateway: MessageGatewaySpy) {
   return getChatResponse;
 }
 
-function assertCorrectResponse(response: CreateChatResponse, createdAt: Date) {
+function assertCorrectResponse(
+  response: GetOrCreateChatResponse,
+  createdAt: Date
+) {
   const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
   expect(response.chatId).toBe(idGeneratorStub.STUB_ID);
   expect(removeSeconds(response.createdAt.toISOString())).toBe(
