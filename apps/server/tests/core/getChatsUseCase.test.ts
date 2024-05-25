@@ -1,17 +1,28 @@
 import { GetChatsUseCase } from '../../src/core/useCases/getChatsUseCase';
-import { sampleLimit, sampleUserToken } from '../utilities/samples';
-import { testWithInvalidLimit, testWithInvalidToken } from '../utilities/tests';
+import {
+  sampleLimit,
+  sampleOffset,
+  sampleUserToken,
+} from '../utilities/samples';
+import {
+  testWithInvalidLimit,
+  testWithInvalidOffset,
+  testWithInvalidToken,
+} from '../utilities/tests';
 
 function executeUseCase({
   tokenString = sampleUserToken,
   limitValue = sampleLimit,
+  offsetValue = sampleOffset,
 }: {
   tokenString?: string;
   limitValue?: number;
+  offsetValue?: number;
 }): Promise<void> {
   return new GetChatsUseCase().execute({
     tokenString,
     limitValue,
+    offsetValue,
   });
 }
 
@@ -20,3 +31,5 @@ testWithInvalidToken((tokenString) => {
 });
 
 testWithInvalidLimit((limitValue) => executeUseCase({ limitValue }));
+
+testWithInvalidOffset((offsetValue) => executeUseCase({ offsetValue }));
