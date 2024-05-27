@@ -1,8 +1,17 @@
 import Context from '../../src/context';
-import { GetChatsUseCase } from '../../src/core/useCases/getChatsUseCase';
+import { Chat } from '../../src/core/entities/chat';
+import {
+  GetChatsResponse,
+  GetChatsUseCase,
+} from '../../src/core/useCases/getChatsUseCase';
+import { ChatId } from '../../src/core/valueObjects/chatId';
+import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import {
   sampleLimit,
   sampleOffset,
+  sampleUser1,
+  sampleUser2,
   sampleUserToken,
 } from '../utilities/samples';
 import {
@@ -20,13 +29,22 @@ function executeUseCase({
   tokenString?: string;
   limitValue?: number;
   offsetValue?: number;
-}): Promise<void> {
-  return new GetChatsUseCase(Context.gateKeeper, Context.logger).execute({
+}): Promise<GetChatsResponse> {
+  return new GetChatsUseCase(
+    Context.messageGateway,
+    Context.gateKeeper,
+    Context.logger
+  ).execute({
     tokenString,
     limitValue,
     offsetValue,
   });
 }
+
+beforeEach(() => {
+  Context.gateKeeper = new DefaultGateKeeper();
+  Context.messageGateway = new MessageGatewaySpy();
+});
 
 testWithInvalidToken((tokenString) => {
   return executeUseCase({ tokenString });
@@ -37,3 +55,35 @@ testWithInvalidLimit((limitValue) => executeUseCase({ limitValue }));
 testWithInvalidOffset((offsetValue) => executeUseCase({ offsetValue }));
 
 testUserExtractionFailure(() => executeUseCase({}));
+
+test('gets chat list', async () => {
+  const msgGateway = Context.messageGateway as MessageGatewaySpy;
+  const sampleChat = new Chat(
+    new ChatId('globallyUniqueId'),
+    [sampleUser1, sampleUser2],
+    new Date(2019)
+  );
+  msgGateway.getChatsResponse = [sampleChat];
+
+  const response = await executeUseCase({});
+
+  assertCorrectResponse(response);
+  assertGetChatCall();
+
+  function assertCorrectResponse(response) {
+    const chats = response.chats;
+    expect(chats).toHaveLength(1);
+    expect(chats[0].id).toEqual(sampleChat.getId());
+    expect(chats[0].createdAtISO).toEqual(
+      sampleChat.getCreatedAt().toISOString()
+    );
+  }
+
+  function assertGetChatCall() {
+    const getChatsCalls = msgGateway.getChatsCalls;
+    expect(getChatsCalls).toHaveLength(1);
+    expect(getChatsCalls[0].userId).toBe(DefaultGateKeeper.defaultUser.getId());
+    expect(getChatsCalls[0].limit.getLimit()).toBe(sampleLimit);
+    expect(getChatsCalls[0].offset.getOffset()).toBe(sampleOffset);
+  }
+});

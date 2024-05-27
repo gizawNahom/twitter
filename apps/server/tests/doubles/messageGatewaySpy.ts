@@ -2,6 +2,8 @@ import { Chat } from '../../src/core/entities/chat';
 import { Message } from '../../src/core/entities/message';
 import { MessageGateway } from '../../src/core/ports/messageGateway';
 import { ChatId } from '../../src/core/valueObjects/chatId';
+import { Limit } from '../../src/core/valueObjects/limit';
+import { Offset } from '../../src/core/valueObjects/offset';
 
 export class MessageGatewaySpy implements MessageGateway {
   savedMessage: Message;
@@ -16,7 +18,8 @@ export class MessageGatewaySpy implements MessageGateway {
   getChatResponse: Chat | null;
   getChatCalls: [string, string][] = [];
 
-  getChatsResponse: never[];
+  getChatsResponse: Chat[];
+  getChatsCalls: { userId: string; limit: Limit; offset: Offset }[] = [];
 
   async saveMessage(message: Message): Promise<void> {
     this.savedMessage = message;
@@ -38,5 +41,14 @@ export class MessageGatewaySpy implements MessageGateway {
 
   async saveChat(chat: Chat): Promise<void> {
     this.saveChatCalls.push({ chat });
+  }
+
+  async getChats(
+    userId: string,
+    limit: Limit,
+    offset: Offset
+  ): Promise<Chat[]> {
+    this.getChatsCalls.push({ userId, limit, offset });
+    return this.getChatsResponse;
   }
 }
