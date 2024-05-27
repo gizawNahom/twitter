@@ -10,7 +10,12 @@ import {
   ERROR_USERNAME_INVALID,
   ERROR_USER_DOES_NOT_EXIST,
 } from '../utilities/errorMessages';
-import { sampleUserId, sampleUserToken } from '../utilities/samples';
+import {
+  sampleUser1,
+  sampleUser2,
+  sampleUserId,
+  sampleUserToken,
+} from '../utilities/samples';
 import {
   testUserExtractionFailure,
   testWithInvalidToken,
@@ -52,7 +57,7 @@ function getSaveChatCalls() {
 function stubGetChatResponse(msgGateway: MessageGatewaySpy) {
   msgGateway.getChatResponse = new Chat(
     new ChatId('globallyUniqueId'),
-    [new User('uId1'), new User('uId2')],
+    [sampleUser1, sampleUser2],
     new Date(2019)
   );
   return msgGateway.getChatResponse;
