@@ -27,7 +27,7 @@ export class GetChatsUseCase {
     );
     const user = await this.getAuthenticatedUser(token);
     const chats = await this.getChats(user, limit, offset);
-    return this.buildResponse(chats);
+    return this.buildResponse(chats, user);
   }
 
   private createValueObjects(
@@ -51,14 +51,35 @@ export class GetChatsUseCase {
     return await this.messageGateway.getChats(user.getId(), limit, offset);
   }
 
-  private buildResponse(chats: Chat[]) {
+  private buildResponse(chats: Chat[], user: User): GetChatsResponse {
     return {
-      chats: chats.map((c) => {
+      chats: chats.map((chat) => {
         return {
-          id: c.getId(),
-          createdAtISO: c.getCreatedAt().toISOString(),
+          id: chat.getId(),
+          createdAtISO: chat.getCreatedAt().toISOString(),
+          participant: this.buildParticipantResponse(
+            this.getParticipant(chat, user)
+          ),
         };
       }),
+    };
+  }
+
+  private getParticipant(chat: Chat, user: User) {
+    return chat.getParticipants()[0].getId() === user.getId()
+      ? chat.getParticipants()[1]
+      : chat.getParticipants()[0];
+  }
+
+  private buildParticipantResponse(participant: User): {
+    username: string;
+    displayName: string;
+    profilePic: string;
+  } {
+    return {
+      username: participant.getUsername(),
+      displayName: participant.getDisplayName(),
+      profilePic: participant.getProfilePic(),
     };
   }
 }
@@ -70,5 +91,13 @@ export interface GetChatsRequest {
 }
 
 export interface GetChatsResponse {
-  chats: Array<{ id: string; createdAtISO: string }>;
+  chats: Array<{
+    id: string;
+    createdAtISO: string;
+    participant: {
+      username: string;
+      profilePic: string;
+      displayName: string;
+    };
+  }>;
 }

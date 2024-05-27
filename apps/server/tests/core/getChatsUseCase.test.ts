@@ -60,7 +60,7 @@ test('gets chat list', async () => {
   const msgGateway = Context.messageGateway as MessageGatewaySpy;
   const sampleChat = new Chat(
     new ChatId('globallyUniqueId'),
-    [sampleUser1, sampleUser2],
+    [DefaultGateKeeper.defaultUser, sampleUser2],
     new Date(2019)
   );
   msgGateway.getChatsResponse = [sampleChat];
@@ -77,6 +77,11 @@ test('gets chat list', async () => {
     expect(chats[0].createdAtISO).toEqual(
       sampleChat.getCreatedAt().toISOString()
     );
+    expect(chats[0].participant).toStrictEqual({
+      username: sampleUser2.getUsername(),
+      displayName: sampleUser2.getDisplayName(),
+      profilePic: sampleUser2.getProfilePic(),
+    });
   }
 
   function assertGetChatCall() {

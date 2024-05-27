@@ -77,7 +77,7 @@ function assertCorrectResponse(
 beforeEach(() => {
   Context.gateKeeper = new DefaultGateKeeper();
   userRepoSpy = new UserRepositorySpy();
-  userRepoSpy.getUserResponse = new User(sampleUserId);
+  userRepoSpy.getUserResponse = sampleUser1;
   Context.userRepository = userRepoSpy;
   Context.messageGateway = new MessageGatewaySpy();
   Context.idGenerator = new IdGeneratorStub();

@@ -1,5 +1,6 @@
 import { Post } from '../../src/core/entities/post';
 import { User } from '../../src/core/entities/user';
+import { Username } from '../../src/core/entities/username';
 
 export const sampleUserToken = 'userToken';
 
@@ -17,8 +18,18 @@ samplePost.setText('sample text');
 samplePost.setUserId(sampleUserId);
 export { samplePost };
 
-const sampleUser1 = new User(sampleUserId);
-const sampleUser2 = new User('userId2');
+const sampleUser1 = new User(
+  sampleUserId,
+  new Username('User1'),
+  'displayName',
+  'https://sample'
+);
+const sampleUser2 = new User(
+  'userId2',
+  new Username('User1'),
+  'displayName',
+  'https://sample'
+);
 export { sampleUser1, sampleUser2 };
 
 export enum sampleXSS {
