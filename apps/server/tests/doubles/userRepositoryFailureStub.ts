@@ -9,4 +9,8 @@ export class UserRepositoryFailureStub implements UserRepository {
   async getById(): Promise<User | null> {
     return null;
   }
+
+  async getUser(): Promise<User | null> {
+    return null;
+  }
 }

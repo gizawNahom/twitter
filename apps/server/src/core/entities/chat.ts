@@ -1,11 +1,12 @@
 import { ChatId } from '../valueObjects/chatId';
+import { User } from './user';
 
 export class Chat {
   private id: ChatId;
   private createdAt: Date;
-  private participants: [string, string];
+  private participants: [User, User];
 
-  constructor(id: ChatId, participants: [string, string], createdAt: Date) {
+  constructor(id: ChatId, participants: [User, User], createdAt: Date) {
     this.id = id;
     this.createdAt = createdAt;
     this.participants = participants;
@@ -19,7 +20,7 @@ export class Chat {
     return this.createdAt;
   }
 
-  getParticipants(): [string, string] {
+  getParticipants(): [User, User] {
     return this.participants;
   }
 }

@@ -5,12 +5,18 @@ import { ChatId } from '../../src/core/valueObjects/chatId';
 
 export class MessageGatewaySpy implements MessageGateway {
   savedMessage: Message;
+
   doesChatExistResponse = true;
+
   getCorrespondentIdCalls: { chatId: ChatId; userId: string }[] = [];
   getCorrespondentIdResponse = 'correspondentId1';
+
   saveChatCalls: { chat: Chat }[] = [];
+
   getChatResponse: Chat | null;
   getChatCalls: [string, string][] = [];
+
+  getChatsResponse: never[];
 
   async saveMessage(message: Message): Promise<void> {
     this.savedMessage = message;
@@ -25,12 +31,12 @@ export class MessageGatewaySpy implements MessageGateway {
     return this.getCorrespondentIdResponse;
   }
 
-  async saveChat(chat: Chat): Promise<void> {
-    this.saveChatCalls.push({ chat });
-  }
-
   async getChat(userId1: string, userId2: string): Promise<Chat | null> {
     this.getChatCalls.push([userId1, userId2]);
     return this.getChatResponse;
+  }
+
+  async saveChat(chat: Chat): Promise<void> {
+    this.saveChatCalls.push({ chat });
   }
 }

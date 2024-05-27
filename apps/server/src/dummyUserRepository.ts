@@ -9,4 +9,8 @@ export class DummyUserRepository implements UserRepository {
   async getById(): Promise<User | null> {
     return new User('userId1');
   }
+
+  async getUser(): Promise<User | null> {
+    return null;
+  }
 }

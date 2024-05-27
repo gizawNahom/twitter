@@ -3,5 +3,5 @@ import { Username } from '../entities/username';
 
 export interface UserRepository {
   getById(userId: string): Promise<User | null>;
-  getUserId(username: Username): Promise<string | null>;
+  getUser(username: Username): Promise<User | null>;
 }

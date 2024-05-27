@@ -1,5 +1,6 @@
 import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
 import { Chat } from '../entities/chat';
+import { User } from '../entities/user';
 import { Username } from '../entities/username';
 import { ValidationError } from '../errors';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -26,7 +27,7 @@ export class GetOrCreateChatUseCase {
   }: GetOrCreateChatRequest): Promise<GetOrCreateChatResponse> {
     return this.buildResponse(
       await this.getOrCreateChat(
-        await this.getParticipantIds(
+        await this.getParticipants(
           this.createValueObjects(tokenString, usernameString)
         )
       )
@@ -42,48 +43,47 @@ export class GetOrCreateChatUseCase {
     return [token, username];
   }
 
-  private async getParticipantIds([token, username]: [
-    Token,
-    Username
-  ]): Promise<[string, string]> {
-    const uId1 = await this.getFirstParticipantId(token);
-    const uId2 = await this.getSecondParticipantId(username);
-    return [uId1, uId2];
+  private async getParticipants([token, username]: [Token, Username]): Promise<
+    [User, User]
+  > {
+    const u1 = await this.getFirstParticipant(token);
+    const u2 = await this.getSecondParticipant(username);
+    return [u1, u2];
   }
 
-  private async getFirstParticipantId(token: Token) {
+  private async getFirstParticipant(token: Token) {
     const user = await extractUser(this.gateKeeper, this.logger, token);
     makeSureUserIsAuthenticated(user);
-    return user.getId();
+    return user;
   }
 
-  private async getSecondParticipantId(username: Username) {
-    const userId = await this.getUserId(username);
-    this.makeSureUserExists(userId);
-    return userId;
+  private async getSecondParticipant(username: Username) {
+    const user = await this.getUser(username);
+    this.makeSureUserExists(user);
+    return user;
   }
 
-  private async getUserId(username: Username) {
-    return await this.userRepository.getUserId(username);
+  private async getUser(username: Username) {
+    return await this.userRepository.getUser(username);
   }
 
-  private makeSureUserExists(userId: string) {
-    if (!userId)
+  private makeSureUserExists(user: User) {
+    if (!user)
       throw new ValidationError(ValidationMessages.USER_DOES_NOT_EXIST);
   }
 
-  private async getOrCreateChat([uId1, uId2]: [string, string]) {
-    let chat = await this.getChat(uId1, uId2);
-    if (!chat) chat = await this.createChat(uId1, uId2);
+  private async getOrCreateChat([u1, u2]: [User, User]) {
+    let chat = await this.getChat(u1, u2);
+    if (!chat) chat = await this.createChat(u1, u2);
     return chat;
   }
 
-  private async getChat(uId1: string, uId2: string) {
-    return await this.messageGateway.getChat(uId1, uId2);
+  private async getChat(u1: User, u2: User) {
+    return await this.messageGateway.getChat(u1.getId(), u2.getId());
   }
 
-  private async createChat(uId1: string, uId2: string) {
-    const chat = this.buildChat(uId1, uId2);
+  private async createChat(u1: User, u2: User) {
+    const chat = this.buildChat(u1, u2);
     await this.saveChat(chat);
     return chat;
   }
@@ -92,12 +92,8 @@ export class GetOrCreateChatUseCase {
     await this.messageGateway.saveChat(chat);
   }
 
-  private buildChat(userId1: string, userId2: string) {
-    return new Chat(
-      new ChatId(this.generateId()),
-      [userId1, userId2],
-      new Date()
-    );
+  private buildChat(u1: User, u2: User): Chat {
+    return new Chat(new ChatId(this.generateId()), [u1, u2], new Date());
   }
 
   private generateId(): string {
