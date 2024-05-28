@@ -26,4 +26,6 @@ export const ERROR_CHAT_ID_REQUIRED = 'Chat id is required';
 
 export const ERROR_USERNAME_INVALID = 'Username is invalid';
 
+export const ERROR_NOT_PARTICIPANT = 'User is not participant of chat';
+
 export const ERROR_GENERIC = 'Server Error';

@@ -1,13 +1,18 @@
 import Context from '../../src/context';
 import { ReadMessagesUseCase } from '../../src/core/useCases/readMessagesUseCase';
-import { ChatId } from '../../src/core/valueObjects/chatId';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
+import { ChatMother } from '../utilities/ChatMother';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
-import { ERROR_CHAT_DOES_NOT_EXIST } from '../utilities/errorMessages';
+import {
+  ERROR_CHAT_DOES_NOT_EXIST,
+  ERROR_NOT_PARTICIPANT,
+} from '../utilities/errorMessages';
 import {
   sampleLimit,
   sampleOffset,
+  sampleUser1,
+  sampleUser2,
   sampleUserToken,
 } from '../utilities/samples';
 import {
@@ -76,4 +81,16 @@ test('throws if chat does not exist', async () => {
     expect(getChatWithIdCalls).toHaveLength(1);
     expect(getChatWithIdCalls[0].chatId.getId()).toStrictEqual(sampleChatId);
   }
+});
+
+test('throws if user is not a participant', async () => {
+  messageGatewaySpy.getChatWithIdResponse = ChatMother.chatWithParticipants([
+    sampleUser1,
+    sampleUser2,
+  ]);
+
+  await assertValidationErrorWithMessage(
+    () => executeUseCase({}),
+    ERROR_NOT_PARTICIPANT
+  );
 });

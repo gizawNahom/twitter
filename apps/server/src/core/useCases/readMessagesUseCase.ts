@@ -1,5 +1,6 @@
 import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
 import { Chat } from '../entities/chat';
+import { User } from '../entities/user';
 import { ValidationError } from '../errors';
 import { GateKeeper } from '../ports/gateKeeper';
 import { Logger } from '../ports/logger';
@@ -28,12 +29,14 @@ export class ReadMessagesUseCase {
     new Offset(offsetValue);
     const chatId = new ChatId(chatIdString);
 
-    makeSureUserIsAuthenticated(
-      await extractUser(this.gateKeeper, this.logger, token)
-    );
+    const user = await extractUser(this.gateKeeper, this.logger, token);
+    makeSureUserIsAuthenticated(user);
 
     const chat = await this.getChat(chatId);
     this.makeSureChatExists(chat);
+
+    if (this.isParticipant(chat, user))
+      this.throwValidationError(ValidationMessages.NOT_PARTICIPANT);
   }
 
   private async getChat(chatId: ChatId) {
@@ -42,7 +45,18 @@ export class ReadMessagesUseCase {
 
   private makeSureChatExists(chat: Chat) {
     if (!chat)
-      throw new ValidationError(ValidationMessages.CHAT_DOES_NOT_EXIST);
+      this.throwValidationError(ValidationMessages.CHAT_DOES_NOT_EXIST);
+  }
+
+  private isParticipant(chat: Chat, user: User) {
+    return (
+      chat.getParticipants().filter((p) => p.getId() === user.getId())
+        .length === 0
+    );
+  }
+
+  private throwValidationError(message: ValidationMessages) {
+    throw new ValidationError(message);
   }
 }
 

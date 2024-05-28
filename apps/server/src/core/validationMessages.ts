@@ -15,4 +15,5 @@ export enum ValidationMessages {
   CHAT_ID_REQUIRED = 'Chat id is required',
   CHAT_DOES_NOT_EXIST = 'Chat does not exist',
   USERNAME_INVALID = 'Username is invalid',
+  NOT_PARTICIPANT = 'User is not participant of chat',
 }
