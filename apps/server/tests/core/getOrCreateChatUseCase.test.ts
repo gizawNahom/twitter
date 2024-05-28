@@ -11,6 +11,7 @@ import {
   ERROR_USER_DOES_NOT_EXIST,
 } from '../utilities/errorMessages';
 import {
+  emptyString,
   sampleUser1,
   sampleUser2,
   sampleUserToken,
@@ -25,7 +26,6 @@ import { removeSeconds } from '../utilities/helpers';
 import { Chat } from '../../src/core/entities/chat';
 import { ChatMother } from '../utilities/ChatMother';
 
-const emptyString = ' \n\t\r';
 const sampleUsername = 'sampleUserName';
 let userRepoSpy: UserRepositorySpy;
 

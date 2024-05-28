@@ -15,6 +15,7 @@ import { PostRepositoryErrorStub } from '../doubles/postRepositoryErrorStub';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { DummyLogger } from '../../src/dummyLogger';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
+import { emptyString } from './samples';
 
 export function testWithInvalidToken(
   useCaseExecution: (token: string) => Promise<unknown>
@@ -63,7 +64,6 @@ export function testWithInvalidOffset(
   });
 }
 
-const emptyString = ' \n\t\r';
 export function testWithInvalidChatId(
   useCaseExecutor: (invalidChatId) => Promise<unknown>
 ) {

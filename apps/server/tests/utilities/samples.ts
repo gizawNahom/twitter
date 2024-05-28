@@ -38,3 +38,5 @@ export enum sampleXSS {
 }
 
 export const sampleQueryText = 'query';
+
+export const emptyString = ' \n\t\r';
