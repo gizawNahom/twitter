@@ -1,16 +1,14 @@
 import Context from '../../src/context';
-import { Chat } from '../../src/core/entities/chat';
 import {
   GetChatsResponse,
   GetChatsUseCase,
 } from '../../src/core/useCases/getChatsUseCase';
-import { ChatId } from '../../src/core/valueObjects/chatId';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
+import { ChatMother } from '../utilities/ChatMother';
 import {
   sampleLimit,
   sampleOffset,
-  sampleUser1,
   sampleUser2,
   sampleUserToken,
 } from '../utilities/samples';
@@ -58,11 +56,10 @@ testUserExtractionFailure(() => executeUseCase({}));
 
 test('gets chat list', async () => {
   const msgGateway = Context.messageGateway as MessageGatewaySpy;
-  const sampleChat = new Chat(
-    new ChatId('globallyUniqueId'),
-    [DefaultGateKeeper.defaultUser, sampleUser2],
-    new Date(2019)
-  );
+  const sampleChat = ChatMother.chatWithParticipants([
+    DefaultGateKeeper.defaultUser,
+    sampleUser2,
+  ]);
   msgGateway.getChatsResponse = [sampleChat];
 
   const response = await executeUseCase({});

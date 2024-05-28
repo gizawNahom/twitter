@@ -13,7 +13,6 @@ import {
 import {
   sampleUser1,
   sampleUser2,
-  sampleUserId,
   sampleUserToken,
 } from '../utilities/samples';
 import {
@@ -24,8 +23,7 @@ import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
 import { removeSeconds } from '../utilities/helpers';
 import { Chat } from '../../src/core/entities/chat';
-import { ChatId } from '../../src/core/valueObjects/chatId';
-import { User } from '../../src/core/entities/user';
+import { ChatMother } from '../utilities/ChatMother';
 
 const emptyString = ' \n\t\r';
 const sampleUsername = 'sampleUserName';
@@ -55,11 +53,10 @@ function getSaveChatCalls() {
 }
 
 function stubGetChatResponse(msgGateway: MessageGatewaySpy) {
-  msgGateway.getChatResponse = new Chat(
-    new ChatId('globallyUniqueId'),
-    [sampleUser1, sampleUser2],
-    new Date(2019)
-  );
+  msgGateway.getChatResponse = ChatMother.chatWithParticipants([
+    sampleUser1,
+    sampleUser2,
+  ]);
   return msgGateway.getChatResponse;
 }
 
