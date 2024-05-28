@@ -1,3 +1,4 @@
+import Context from '../../src/context';
 import { ReadMessagesUseCase } from '../../src/core/useCases/readMessagesUseCase';
 import {
   sampleLimit,
@@ -5,6 +6,7 @@ import {
   sampleUserToken,
 } from '../utilities/samples';
 import {
+  testUserExtractionFailure,
   testWithInvalidChatId,
   testWithInvalidLimit,
   testWithInvalidOffset,
@@ -24,7 +26,7 @@ async function executeUseCase({
   offsetValue?: number;
   chatIdString?: string;
 }) {
-  const uC = new ReadMessagesUseCase();
+  const uC = new ReadMessagesUseCase(Context.gateKeeper, Context.logger);
   return await uC.execute({
     tokenString,
     limitValue,
@@ -40,3 +42,5 @@ testWithInvalidLimit((limitValue) => executeUseCase({ limitValue }));
 testWithInvalidOffset((offsetValue) => executeUseCase({ offsetValue }));
 
 testWithInvalidChatId((chatIdString) => executeUseCase({ chatIdString }));
+
+testUserExtractionFailure(() => executeUseCase({}));
