@@ -21,6 +21,9 @@ export class MessageGatewaySpy implements MessageGateway {
   getChatsResponse: Chat[];
   getChatsCalls: { userId: string; limit: Limit; offset: Offset }[] = [];
 
+  getChatWithIdResponse: Chat | null;
+  getChatWithIdCalls: { chatId: ChatId }[] = [];
+
   async saveMessage(message: Message): Promise<void> {
     this.savedMessage = message;
   }
@@ -50,5 +53,10 @@ export class MessageGatewaySpy implements MessageGateway {
   ): Promise<Chat[]> {
     this.getChatsCalls.push({ userId, limit, offset });
     return this.getChatsResponse;
+  }
+
+  async getChatWithId(chatId: ChatId): Promise<Chat | null> {
+    this.getChatWithIdCalls.push({ chatId });
+    return this.getChatWithIdResponse;
   }
 }

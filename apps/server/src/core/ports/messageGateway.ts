@@ -11,4 +11,5 @@ export interface MessageGateway {
   saveChat(chat: Chat): Promise<void>;
   getChat(userId1: string, userId2: string): Promise<Chat | null>;
   getChats(userId: string, limit: Limit, offset: Offset): Promise<Array<Chat>>;
+  getChatWithId(chatId: ChatId): Promise<Chat | null>;
 }
