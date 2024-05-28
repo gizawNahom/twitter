@@ -10,7 +10,8 @@ export class ChatId {
   }
 
   private validateId(id: string) {
-    if (isEmpty(id)) throwValidationError(ValidationMessages.CHAT_ID_REQUIRED);
+    if (!id || isEmpty(id))
+      throwValidationError(ValidationMessages.CHAT_ID_REQUIRED);
 
     function isEmpty(id: string) {
       return id.trim().length === 0;

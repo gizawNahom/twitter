@@ -67,11 +67,13 @@ const emptyString = ' \n\t\r';
 export function testWithInvalidChatId(
   useCaseExecutor: (invalidChatId) => Promise<unknown>
 ) {
-  test('throws if the chat id is empty', () => {
-    assertValidationErrorWithMessage(
-      () => useCaseExecutor(emptyString),
-      ERROR_CHAT_ID_REQUIRED
-    );
+  describe('throws with Chat-id-required validation error', () => {
+    test.each([[emptyString], [null]])('if chat id is %s', (invalidChatId) => {
+      assertValidationErrorWithMessage(
+        () => useCaseExecutor(invalidChatId),
+        ERROR_CHAT_ID_REQUIRED
+      );
+    });
   });
 }
 
