@@ -14,7 +14,6 @@ import {
 } from '../utilities/assertions';
 import {
   ERROR_CHAT_DOES_NOT_EXIST,
-  ERROR_CHAT_ID_REQUIRED,
   ERROR_EMPTY_MESSAGE,
   ERROR_LONG_MESSAGE,
 } from '../utilities/errorMessages';
@@ -29,6 +28,7 @@ import {
 import { sampleUserToken, sampleXSS } from '../utilities/samples';
 import {
   testUserExtractionFailure,
+  testWithInvalidChatId,
   testWithInvalidToken,
 } from '../utilities/tests';
 
@@ -125,12 +125,9 @@ testUserExtractionFailure(() => executeUseCase({}));
 
 testWithInvalidToken((token) => executeUseCase({ token }));
 
-test('throws if the chat id is empty', () => {
-  assertValidationErrorWithMessage(
-    () => executeUseCase({ chatId: emptyString }),
-    ERROR_CHAT_ID_REQUIRED
-  );
-});
+testWithInvalidChatId((chatIdString) =>
+  executeUseCase({ chatId: chatIdString })
+);
 
 test('throws if chat does not exist', async () => {
   messageGatewaySpy.doesChatExistResponse = false;

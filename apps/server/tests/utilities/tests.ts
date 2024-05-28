@@ -2,6 +2,7 @@ import Context from '../../src/context';
 import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { assertValidationErrorWithMessage } from './assertions';
 import {
+  ERROR_CHAT_ID_REQUIRED,
   ERROR_GENERIC,
   ERROR_INVALID_LIMIT,
   ERROR_INVALID_OFFSET,
@@ -58,6 +59,18 @@ export function testWithInvalidOffset(
     assertValidationErrorWithMessage(
       () => useCaseExecutor(-1),
       ERROR_INVALID_OFFSET
+    );
+  });
+}
+
+const emptyString = ' \n\t\r';
+export function testWithInvalidChatId(
+  useCaseExecutor: (invalidChatId) => Promise<unknown>
+) {
+  test('throws if the chat id is empty', () => {
+    assertValidationErrorWithMessage(
+      () => useCaseExecutor(emptyString),
+      ERROR_CHAT_ID_REQUIRED
     );
   });
 }
