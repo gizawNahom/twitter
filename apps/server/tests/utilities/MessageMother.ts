@@ -2,9 +2,7 @@ import { Message } from '../../src/core/entities/message';
 import { MessageBuilder } from '../../src/core/messageBuilder';
 import { ChatId } from '../../src/core/valueObjects/chatId';
 import { MessageText } from '../../src/core/valueObjects/messageText';
-import { sampleUserId } from './samples';
-
-const sampleChatId = 'chatId123';
+import { sampleChatId, sampleUserId } from './samples';
 
 export class MessageMother {
   private constructor() {

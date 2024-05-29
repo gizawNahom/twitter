@@ -10,6 +10,7 @@ import {
   ERROR_NOT_PARTICIPANT,
 } from '../utilities/errorMessages';
 import {
+  sampleChatId,
   sampleLimit,
   sampleOffset,
   sampleUser1,
@@ -24,7 +25,6 @@ import {
   testWithInvalidToken,
 } from '../utilities/tests';
 
-const sampleChatId = 'chatId123';
 let messageGatewaySpy: MessageGatewaySpy;
 
 async function executeUseCase({

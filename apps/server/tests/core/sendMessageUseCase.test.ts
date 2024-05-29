@@ -25,7 +25,12 @@ import {
   LOG_SAVED_MESSAGE,
   LOG_SENT_MESSAGE_TO_CORRESPONDENT,
 } from '../utilities/logMessages';
-import { emptyString, sampleUserToken, sampleXSS } from '../utilities/samples';
+import {
+  emptyString,
+  sampleChatId,
+  sampleUserToken,
+  sampleXSS,
+} from '../utilities/samples';
 import {
   testUserExtractionFailure,
   testWithInvalidChatId,
@@ -33,7 +38,6 @@ import {
 } from '../utilities/tests';
 
 const sampleMessage = 'sample message';
-const sampleChatId = 'chatId123';
 let messageGatewaySpy: MessageGatewaySpy;
 let idGeneratorStub: IdGeneratorStub;
 let messageSenderSpy: MessageSenderSpy;
