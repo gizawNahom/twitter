@@ -12,4 +12,9 @@ export interface MessageGateway {
   getChat(userId1: string, userId2: string): Promise<Chat | null>;
   getChats(userId: string, limit: Limit, offset: Offset): Promise<Array<Chat>>;
   getChatWithId(chatId: ChatId): Promise<Chat | null>;
+  getMessages(
+    chatId: ChatId,
+    limit: Limit,
+    offset: Offset
+  ): Promise<Array<Message>>;
 }

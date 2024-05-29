@@ -1,5 +1,6 @@
 import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
 import { Chat } from '../entities/chat';
+import { Message } from '../entities/message';
 import { User } from '../entities/user';
 import { ValidationError } from '../errors';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -18,25 +19,37 @@ export class ReadMessagesUseCase {
     private logger: Logger
   ) {}
 
-  async execute({
+  async execute(request: ReadMessagesRequest): Promise<ReadMessagesResponse> {
+    const { token, chatId, limit, offset } = this.createValueObjects(request);
+    const user = await this.getUserOrThrow(token);
+    const chat = await this.getChatOrThrow(chatId);
+    this.makeSureUserIsAllowedToReadChat(user, chat);
+    return this.buildResponse(await this.getMessages(chatId, limit, offset));
+  }
+
+  private createValueObjects({
     tokenString,
     limitValue,
     offsetValue,
     chatIdString,
   }: ReadMessagesRequest) {
     const token = new Token(tokenString);
-    new Limit(limitValue);
-    new Offset(offsetValue);
+    const limit = new Limit(limitValue);
+    const offset = new Offset(offsetValue);
     const chatId = new ChatId(chatIdString);
+    return { token, chatId, limit, offset };
+  }
 
+  private async getUserOrThrow(token: Token) {
     const user = await extractUser(this.gateKeeper, this.logger, token);
     makeSureUserIsAuthenticated(user);
+    return user;
+  }
 
+  private async getChatOrThrow(chatId: ChatId) {
     const chat = await this.getChat(chatId);
     this.makeSureChatExists(chat);
-
-    if (this.isParticipant(chat, user))
-      this.throwValidationError(ValidationMessages.NOT_PARTICIPANT);
+    return chat;
   }
 
   private async getChat(chatId: ChatId) {
@@ -48,6 +61,15 @@ export class ReadMessagesUseCase {
       this.throwValidationError(ValidationMessages.CHAT_DOES_NOT_EXIST);
   }
 
+  private makeSureUserIsAllowedToReadChat(user: User, chat: Chat) {
+    if (this.isParticipant(chat, user))
+      this.throwValidationError(ValidationMessages.NOT_PARTICIPANT);
+  }
+
+  private throwValidationError(message: ValidationMessages) {
+    throw new ValidationError(message);
+  }
+
   private isParticipant(chat: Chat, user: User) {
     return (
       chat.getParticipants().filter((p) => p.getId() === user.getId())
@@ -55,14 +77,26 @@ export class ReadMessagesUseCase {
     );
   }
 
-  private throwValidationError(message: ValidationMessages) {
-    throw new ValidationError(message);
+  private async getMessages(chatId: ChatId, limit: Limit, offset: Offset) {
+    return await this.messageGateway.getMessages(chatId, limit, offset);
+  }
+
+  private buildResponse(
+    messages: Message[]
+  ): ReadMessagesResponse | PromiseLike<ReadMessagesResponse> {
+    return {
+      messages,
+    };
   }
 }
 
-export class ReadMessagesRequest {
+export interface ReadMessagesRequest {
   tokenString: string;
   limitValue: number;
   offsetValue: number;
   chatIdString: string;
+}
+
+export interface ReadMessagesResponse {
+  messages: Message[];
 }
