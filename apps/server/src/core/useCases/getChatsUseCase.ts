@@ -66,9 +66,7 @@ export class GetChatsUseCase {
   }
 
   private getParticipant(chat: Chat, user: User) {
-    return chat.getParticipants()[0].getId() === user.getId()
-      ? chat.getParticipants()[1]
-      : chat.getParticipants()[0];
+    return chat.getParticipants().filter((u) => u.getId() !== user.getId())[0];
   }
 
   private buildParticipantResponse(participant: User): {
