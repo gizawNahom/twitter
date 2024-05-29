@@ -28,6 +28,7 @@ import {
 import {
   emptyString,
   sampleChatId,
+  sampleMessage,
   sampleUserToken,
   sampleXSS,
 } from '../utilities/samples';
@@ -37,7 +38,6 @@ import {
   testWithInvalidToken,
 } from '../utilities/tests';
 
-const sampleMessage = 'sample message';
 let messageGatewaySpy: MessageGatewaySpy;
 let idGeneratorStub: IdGeneratorStub;
 let messageSenderSpy: MessageSenderSpy;
