@@ -26,8 +26,9 @@ jobs:
       run: npm install
 
     - name: Run tests
-      run: npx nx run client:test:ci
-      run: npx nx run server:test:ci
+      run: 
+        - npx nx run client:test:ci
+        - npx nx run server:test:ci
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
