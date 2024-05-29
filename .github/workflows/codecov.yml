@@ -25,10 +25,10 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Run tests
-      run: 
-        - npx nx run client:test:ci
-        - npx nx run server:test:ci
+    - name: Run Client tests
+      run: npx nx run client:test:ci
+    - name: Run Server tests
+      run: npx nx run server:test:ci
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1
