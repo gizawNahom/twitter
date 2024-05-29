@@ -1,11 +1,9 @@
 import Context from '../../src/context';
-import { MessageBuilder } from '../../src/core/messageBuilder';
 import { ReadMessagesUseCase } from '../../src/core/useCases/readMessagesUseCase';
-import { ChatId } from '../../src/core/valueObjects/chatId';
-import { MessageText } from '../../src/core/valueObjects/messageText';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { ChatMother } from '../utilities/ChatMother';
+import { MessageMother } from '../utilities/MessageMother';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import {
   ERROR_CHAT_DOES_NOT_EXIST,
@@ -16,7 +14,6 @@ import {
   sampleOffset,
   sampleUser1,
   sampleUser2,
-  sampleUserId,
   sampleUserToken,
 } from '../utilities/samples';
 import {
@@ -100,13 +97,7 @@ test('throws if user is not a participant', async () => {
 });
 
 test('gets messages', async () => {
-  const message = MessageBuilder.message()
-    .withId('globallyUniqueId')
-    .withChatId(new ChatId(sampleChatId))
-    .withCreatedAt(new Date(2011))
-    .withSenderId(sampleUserId)
-    .withText(new MessageText('hello'))
-    .build();
+  const message = MessageMother.CompleteMessage();
   messageGatewaySpy.getMessagesResponse = [message];
   messageGatewaySpy.getChatWithIdResponse = ChatMother.chatWithParticipants([
     DefaultGateKeeper.defaultUser,
