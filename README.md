@@ -22,9 +22,9 @@ Decisions that increase the quality of the codebase:
 
 ## Cypress videos
 
-https://github.com/gizawNahom/twitter/assets/154278634/cfa412be-7b95-4b3c-ab36-d9aa3a389fb6
+https://github.com/gizawNahom/twitter/assets/154278634/4701c6d8-4e9b-4489-bf05-952edcf2fd65
 
-https://github.com/gizawNahom/twitter/assets/154278634/3f6e79a4-014f-4126-af1c-7660f74f56e5
+https://github.com/gizawNahom/twitter/assets/154278634/3ca346e6-47bf-4871-8dde-e842f2de2f7f
 
 ## Environment Variables
 
