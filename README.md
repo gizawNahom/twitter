@@ -24,6 +24,8 @@ Decisions that increase the quality of the codebase:
 
 https://github.com/gizawNahom/twitter/assets/154278634/cfa412be-7b95-4b3c-ab36-d9aa3a389fb6
 
+https://github.com/gizawNahom/twitter/assets/154278634/3f6e79a4-014f-4126-af1c-7660f74f56e5
+
 ## Environment Variables
 
 ### Server environment variables
