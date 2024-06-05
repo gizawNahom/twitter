@@ -67,7 +67,7 @@ export function Posts({
             <div className="flex gap-1">
               <p className="font-bold">John Doe</p>
               <div className="text-slate-500 flex text-sm">
-                <p>@john</p>
+                <p>@username</p>
                 <div className="flex justify-center items-center h-3 px-1">
                   <p>.</p>
                 </div>

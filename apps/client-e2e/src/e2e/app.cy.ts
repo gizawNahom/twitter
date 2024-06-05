@@ -1,13 +1,27 @@
-import { getGreeting } from '../support/app.po';
-
 describe('twitter', () => {
-  beforeEach(() => cy.visit('/'));
+  beforeEach(() => {
+    cy.visit('/');
+    cy.viewport(1280, 720);
+  });
 
-  it('should display welcome message', () => {
-    // Custom command example, see `../support/commands.ts` file
-    cy.login('my-email@something.com', 'myPassword');
+  it('creates post', () => {
+    cy.get('input[placeholder*="What\'s happening?"]').type('hello');
+    cy.get('button').contains(/post/i).click();
 
-    // Function helper example, see `../support/app.po.ts` file
-    getGreeting().contains('Welcome twitter');
+    cy.contains('Post Created.');
+  });
+
+  it('searches post', () => {
+    cy.get('input[placeholder="Search"]').type('hello{enter}');
+
+    cy.contains('Hello');
+  });
+
+  it('gets profile', () => {
+    cy.get('a').contains('Profile').click();
+
+    cy.contains('Posts');
+    cy.contains('Hello World');
+    cy.contains('@username');
   });
 });
