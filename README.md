@@ -21,7 +21,7 @@ Decisions that increase the quality of the codebase:
 
 ## Cypress videos
 
-[![Large screen](docs/screenshots/twitterStatus.png)](docs/videos/app.cy.ts.mp4)
+https://github.com/gizawNahom/twitter/assets/154278634/cfa412be-7b95-4b3c-ab36-d9aa3a389fb6
 
 ## Environment Variables
 
