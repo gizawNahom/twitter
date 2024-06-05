@@ -4,6 +4,7 @@ import { renderElement, POST_FAB_TEST_ID, getByTestId } from '../testUtilities';
 
 const HOME_LINK = '/home';
 const PROFILE_LINK = '/username';
+const SEARCH_LINK = '/search';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn().mockImplementation(() => ({
@@ -16,5 +17,6 @@ test('initial', async () => {
 
   expect(screen.queryByRole('link', { name: HOME_LINK }));
   expect(screen.queryByRole('link', { name: PROFILE_LINK }));
+  expect(screen.queryByRole('link', { name: SEARCH_LINK }));
   expect(getByTestId(POST_FAB_TEST_ID)).toBeInTheDocument();
 });
