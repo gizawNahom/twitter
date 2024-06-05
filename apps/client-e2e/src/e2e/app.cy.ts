@@ -1,3 +1,9 @@
+import {
+  assertProfilePage,
+  runCreatesPostTest,
+  runSearchesPostTest,
+} from '../support/app.po';
+
 describe('twitter', () => {
   beforeEach(() => {
     cy.visit('/');
@@ -5,23 +11,19 @@ describe('twitter', () => {
   });
 
   it('creates post', () => {
-    cy.get('input[placeholder*="What\'s happening?"]').type('hello');
-    cy.get('button').contains(/post/i).click();
-
-    cy.contains('Post Created.');
+    runCreatesPostTest();
   });
 
   it('searches post', () => {
-    cy.get('input[placeholder="Search"]').type('hello{enter}');
-
-    cy.contains('Hello');
+    runSearchesPostTest();
   });
 
   it('gets profile', () => {
-    cy.get('a').contains('Profile').click();
+    navigateToProfilePage();
+    assertProfilePage();
 
-    cy.contains('Posts');
-    cy.contains('Hello World');
-    cy.contains('@username');
+    function navigateToProfilePage() {
+      cy.get('a').contains('Profile').click();
+    }
   });
 });

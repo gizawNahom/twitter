@@ -1,3 +1,9 @@
+import {
+  assertProfilePage,
+  runCreatesPostTest,
+  runSearchesPostTest,
+} from '../support/app.po';
+
 describe('twitter', () => {
   beforeEach(() => {
     cy.viewport('iphone-8');
@@ -5,25 +11,29 @@ describe('twitter', () => {
   });
 
   it('creates post', () => {
-    cy.get('a[href="/compose/tweet"]').click();
-    cy.get('input[placeholder*="What\'s happening?"]').type('hello');
-    cy.get('button').contains(/post/i).click();
+    navigateToCreatePostPage();
+    runCreatesPostTest();
 
-    cy.contains('Post Created.');
+    function navigateToCreatePostPage() {
+      cy.get('a[href="/compose/tweet"]').click();
+    }
   });
 
   it('searches post', () => {
-    cy.visit('/search?q=hello');
-    cy.get('input[placeholder*="Search"]').type('hello{enter}');
+    navigateToSearchPage();
+    runSearchesPostTest();
 
-    cy.contains('Hello');
+    function navigateToSearchPage() {
+      cy.get('a[href="/search"]').click();
+    }
   });
 
   it('gets profile', () => {
-    cy.get('a[href="/username"]').click();
+    navigateToProfilePage();
+    assertProfilePage();
 
-    cy.contains('Posts');
-    cy.contains('Hello World');
-    cy.contains('@username');
+    function navigateToProfilePage() {
+      cy.get('a[href="/username"]').click();
+    }
   });
 });
