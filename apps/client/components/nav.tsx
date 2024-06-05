@@ -34,7 +34,7 @@ export function Nav() {
             </span>
           </li>
         </Link>
-        <Link href="/username" aria-label="Home">
+        <Link href="/username" aria-label="Profile">
           <li className="text-xl flex gap-4 hover:bg-slate-200 rounded-full p-3 transition lg:w-min">
             <svg
               viewBox="0 0 24 24"
