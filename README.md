@@ -17,13 +17,9 @@ Decisions that increase the quality of the codebase:
 - Read posts
 - Search posts
 
-## Screenshots
+## Cypress videos
 
-![Home page](docs/screenshots/twitterHome.jpg)
-
-![Profile page](docs/screenshots/twitterProfile.png)
-
-![Status page](docs/screenshots/twitterStatus.png)
+[![Large screen](docs/screenshots/twitterStatus.png)](docs/videos/app.cy.ts.mp4)
 
 ## Environment Variables
 
