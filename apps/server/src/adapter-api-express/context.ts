@@ -3,7 +3,7 @@ import { InMemoryPostRepository } from '../adapter-persistance-inMemory/InMemory
 import { GateKeeper } from '../core/ports/gateKeeper';
 import { Logger } from '../core/ports/logger';
 import { PostRepository } from '../core/ports/postRepository';
-import { DefaultGateKeeper } from '../defaultGateKeeper';
+import { DefaultGateKeeper } from './defaultGateKeeper';
 import { UserRepository } from '../core/ports/userRepository';
 import { DummyUserRepository } from '../dummyUserRepository';
 import { PostIndexGateway } from '../core/ports/postIndexGateway';

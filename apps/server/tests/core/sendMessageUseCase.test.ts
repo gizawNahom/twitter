@@ -1,7 +1,7 @@
 import Context from '../../src/adapter-api-express/context';
 import { Message } from '../../src/core/entities/message';
 import { SendMessageUseCase } from '../../src/core/useCases/sendMessageUseCase';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { DummyUserRepository } from '../../src/dummyUserRepository';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
 import { LoggerSpy } from '../doubles/loggerSpy';

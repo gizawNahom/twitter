@@ -3,7 +3,7 @@ import {
   GetOrCreateChatResponse,
   GetOrCreateChatUseCase,
 } from '../../src/core/useCases/getOrCreateChatUseCase';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
 import { ERROR_USER_DOES_NOT_EXIST } from '../utilities/errorMessages';

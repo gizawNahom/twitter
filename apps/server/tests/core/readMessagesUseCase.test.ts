@@ -1,6 +1,6 @@
 import Context from '../../src/adapter-api-express/context';
 import { ReadMessagesUseCase } from '../../src/core/useCases/readMessagesUseCase';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { ChatMother } from '../utilities/ChatMother';
 import { MessageMother } from '../utilities/MessageMother';

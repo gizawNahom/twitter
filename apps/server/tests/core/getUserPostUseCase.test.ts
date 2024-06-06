@@ -5,7 +5,7 @@ import {
   GetUserPostUseCaseResponse,
 } from '../../src/core/useCases/getUserPostUseCase';
 import { Post } from '../../src/core/entities/post';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { DummyPostRepository } from '../doubles/dummyPostRepository';
 import {

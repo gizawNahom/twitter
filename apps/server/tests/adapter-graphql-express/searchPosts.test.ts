@@ -1,5 +1,5 @@
 import Context from '../../src/adapter-api-express/context';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { PostIndexGatewayErrorStub } from '../doubles/postIndexGatewayErrorStub';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';

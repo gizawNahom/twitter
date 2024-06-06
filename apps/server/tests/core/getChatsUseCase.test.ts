@@ -3,7 +3,7 @@ import {
   GetChatsResponse,
   GetChatsUseCase,
 } from '../../src/core/useCases/getChatsUseCase';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { ChatMother } from '../utilities/ChatMother';
 import {

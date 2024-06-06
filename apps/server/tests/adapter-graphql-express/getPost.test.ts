@@ -1,5 +1,5 @@
 import Context from '../../src/adapter-api-express/context';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { samplePost, samplePostId } from '../utilities/samples';
 import {
   testWithExpectedError,

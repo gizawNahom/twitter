@@ -1,6 +1,6 @@
-import { GateKeeper } from './core/ports/gateKeeper';
-import { User } from './core/entities/user';
-import { Username } from './core/entities/username';
+import { GateKeeper } from '../core/ports/gateKeeper';
+import { User } from '../core/entities/user';
+import { Username } from '../core/entities/username';
 
 export class DefaultGateKeeper implements GateKeeper {
   static defaultUser: User = new User(

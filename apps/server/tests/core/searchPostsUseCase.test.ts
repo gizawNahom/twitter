@@ -4,7 +4,7 @@ import {
   SearchPostsResponse,
   SearchPostsUseCase,
 } from '../../src/core/useCases/searchPostsUseCase';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 import {

@@ -4,7 +4,7 @@ import {
   testWithExpectedError,
   testWithUnExpectedError,
 } from '../utilities/tests';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 
 const validText = 'Hello, world!';

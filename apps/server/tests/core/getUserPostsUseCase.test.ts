@@ -3,7 +3,7 @@ import {
   GetUserPostsResponse,
   GetUserPostsUseCase,
 } from '../../src/core/useCases/getUserPostsUseCase';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { DummyUserRepository } from '../../src/dummyUserRepository';
 import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { LoggerSpy } from '../doubles/loggerSpy';

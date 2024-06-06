@@ -2,7 +2,7 @@ import { ValidationError } from '../../src/core/errors';
 import { Post } from '../../src/core/entities/post';
 import { removeSeconds } from './helpers';
 import { LOG_EXTRACTED_USER } from './logMessages';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 
 export async function assertValidationErrorWithMessage(
   task: () => Promise<unknown>,

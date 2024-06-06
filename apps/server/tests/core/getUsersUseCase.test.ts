@@ -1,6 +1,6 @@
 import Context from '../../src/adapter-api-express/context';
 import { GetUsersUseCase } from '../../src/core/useCases/getUsersUseCase';
-import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import {
   sampleLimit,
