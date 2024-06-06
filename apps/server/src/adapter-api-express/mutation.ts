@@ -3,7 +3,7 @@ import Context from './context';
 import { ServerContext } from './app';
 import { tryResolve } from './resolvers';
 
-async function createPost(
+async function resolveCreatePost(
   _: unknown,
   args: { text: string },
   contextValue: ServerContext
@@ -18,5 +18,5 @@ async function createPost(
 }
 
 export const mutation = {
-  createPost: createPost,
+  createPost: resolveCreatePost,
 };
