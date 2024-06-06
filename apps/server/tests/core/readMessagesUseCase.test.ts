@@ -1,4 +1,4 @@
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { ReadMessagesUseCase } from '../../src/core/useCases/readMessagesUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';

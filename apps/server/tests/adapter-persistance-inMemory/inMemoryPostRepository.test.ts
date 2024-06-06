@@ -3,7 +3,7 @@ import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/I
 import { assertPostEquality } from '../utilities/assertions';
 import { sampleUserId } from '../utilities/samples';
 import { createPosts, savePosts } from '../utilities/helpers';
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 
 let repo: InMemoryPostRepository;
 

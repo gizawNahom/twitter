@@ -1,5 +1,5 @@
 import { app } from '../../src/app';
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import request from 'supertest';

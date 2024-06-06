@@ -1,6 +1,6 @@
 import { CreatePostUseCase } from './core/useCases/createPostUseCase';
 import { GetUserPostUseCase } from './core/useCases/getUserPostUseCase';
-import Context from './context';
+import Context from './adapter-api-express/context';
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';

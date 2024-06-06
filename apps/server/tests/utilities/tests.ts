@@ -1,4 +1,4 @@
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { assertValidationErrorWithMessage } from './assertions';
 import {

@@ -1,4 +1,4 @@
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { getSavedPosts, sendRequest } from '../utilities/helpers';
 import {
   testWithExpectedError,

@@ -1,4 +1,4 @@
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { PostIndexGateway } from '../../src/core/ports/postIndexGateway';
 import {
   SearchPostsResponse,

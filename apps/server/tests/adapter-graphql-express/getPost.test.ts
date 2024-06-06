@@ -1,4 +1,4 @@
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { samplePost, samplePostId } from '../utilities/samples';
 import {

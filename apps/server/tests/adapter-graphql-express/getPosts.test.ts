@@ -1,4 +1,4 @@
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
 import { ERROR_INVALID_LIMIT } from '../utilities/errorMessages';
 import { sendRequest } from '../utilities/helpers';

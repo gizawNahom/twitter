@@ -1,7 +1,7 @@
 import { Verifier } from '@pact-foundation/pact';
 import { app } from '../../src/app';
 import path from 'path';
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { Post } from '../../src/core/entities/post';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';

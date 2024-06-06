@@ -3,7 +3,7 @@ import {
   CreatePostUseCase,
   PostUseCaseResponse,
 } from '../../src/core/useCases/createPostUseCase';
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { getSavedPosts, removeSeconds } from '../utilities/helpers';
 import { ERROR_EMPTY_TEXT } from '../utilities/errorMessages';

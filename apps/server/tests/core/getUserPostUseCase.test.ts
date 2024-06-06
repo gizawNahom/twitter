@@ -1,5 +1,5 @@
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import {
   GetUserPostUseCase,
   GetUserPostUseCaseResponse,

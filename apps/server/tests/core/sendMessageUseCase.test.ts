@@ -1,4 +1,4 @@
-import Context from '../../src/context';
+import Context from '../../src/adapter-api-express/context';
 import { Message } from '../../src/core/entities/message';
 import { SendMessageUseCase } from '../../src/core/useCases/sendMessageUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
