@@ -6,7 +6,7 @@ import { Limit } from '../valueObjects/limit';
 import { Offset } from '../valueObjects/offset';
 import { Token } from '../valueObjects/token';
 
-export class GetUserUseCase {
+export class GetUsersUseCase {
   constructor(private gateKeeper: GateKeeper, private logger: Logger) {}
 
   async execute({

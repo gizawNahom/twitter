@@ -1,5 +1,5 @@
 import Context from '../../src/context';
-import { GetUserUseCase } from '../../src/core/useCases/getUserUseCase';
+import { GetUsersUseCase } from '../../src/core/useCases/getUsersUseCase';
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import {
   sampleLimit,
@@ -26,7 +26,7 @@ async function executeUseCase({
   offsetValue?: number;
   usernameString?: string;
 }) {
-  const uC = new GetUserUseCase(Context.gateKeeper, Context.logger);
+  const uC = new GetUsersUseCase(Context.gateKeeper, Context.logger);
   return await uC.execute({
     tokenString,
     limitValue,
