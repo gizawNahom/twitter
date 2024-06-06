@@ -8,6 +8,7 @@ import {
   ERROR_INVALID_OFFSET,
   ERROR_INVALID_USER,
   ERROR_TOKEN_REQUIRED,
+  ERROR_USERNAME_INVALID,
 } from './errorMessages';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { ValidationError } from '../../src/core/errors';
@@ -133,5 +134,21 @@ export function testWithUnExpectedError(action: () => Promise<any>) {
         new Error(PostRepositoryErrorStub.ERROR_MESSAGE)
       );
     });
+  });
+}
+
+export function testWithInvalidUsername(
+  useCaseExecution: (usernameString) => Promise<unknown>
+) {
+  describe('throws with invalid username error message', () => {
+    test.each([[emptyString], ['a'.repeat(4)], ['/?<.>'], ['a'.repeat(16)]])(
+      'when username is %s',
+      async (usernameString) => {
+        assertValidationErrorWithMessage(
+          () => useCaseExecution(usernameString),
+          ERROR_USERNAME_INVALID
+        );
+      }
+    );
   });
 }

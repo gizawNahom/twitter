@@ -44,3 +44,5 @@ export const emptyString = ' \n\t\r';
 export const sampleChatId = 'chatId123';
 
 export const sampleMessage = 'sample message';
+
+export const sampleUsername = 'sampleUserName';

@@ -6,19 +6,17 @@ import {
 import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import { assertValidationErrorWithMessage } from '../utilities/assertions';
+import { ERROR_USER_DOES_NOT_EXIST } from '../utilities/errorMessages';
 import {
-  ERROR_USERNAME_INVALID,
-  ERROR_USER_DOES_NOT_EXIST,
-} from '../utilities/errorMessages';
-import {
-  emptyString,
   sampleUser1,
   sampleUser2,
   sampleUserToken,
+  sampleUsername,
 } from '../utilities/samples';
 import {
   testUserExtractionFailure,
   testWithInvalidToken,
+  testWithInvalidUsername,
 } from '../utilities/tests';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
@@ -26,7 +24,6 @@ import { removeSeconds } from '../utilities/helpers';
 import { Chat } from '../../src/core/entities/chat';
 import { ChatMother } from '../utilities/ChatMother';
 
-const sampleUsername = 'sampleUserName';
 let userRepoSpy: UserRepositorySpy;
 
 function executeUseCase({
@@ -84,17 +81,7 @@ testWithInvalidToken((tokenString) => {
   return executeUseCase({ tokenString });
 });
 
-describe('throws with invalid username error message', () => {
-  test.each([[emptyString], ['a'.repeat(4)], ['/?<.>'], ['a'.repeat(16)]])(
-    'when username is %s',
-    async (usernameString) => {
-      assertValidationErrorWithMessage(
-        () => executeUseCase({ usernameString }),
-        ERROR_USERNAME_INVALID
-      );
-    }
-  );
-});
+testWithInvalidUsername((usernameString) => executeUseCase({ usernameString }));
 
 testUserExtractionFailure(() => executeUseCase({}));
 
