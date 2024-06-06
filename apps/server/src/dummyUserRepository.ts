@@ -19,4 +19,8 @@ export class DummyUserRepository implements UserRepository {
   async getUser(): Promise<User | null> {
     return null;
   }
+
+  async getUsers(): Promise<User[]> {
+    return [];
+  }
 }

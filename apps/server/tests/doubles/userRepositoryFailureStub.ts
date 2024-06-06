@@ -13,4 +13,8 @@ export class UserRepositoryFailureStub implements UserRepository {
   async getUser(): Promise<User | null> {
     return null;
   }
+
+  async getUsers(): Promise<User[]> {
+    return [];
+  }
 }

@@ -2,12 +2,17 @@ import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
 import { Username } from '../entities/username';
 import { GateKeeper } from '../ports/gateKeeper';
 import { Logger } from '../ports/logger';
+import { UserRepository } from '../ports/userRepository';
 import { Limit } from '../valueObjects/limit';
 import { Offset } from '../valueObjects/offset';
 import { Token } from '../valueObjects/token';
 
 export class GetUsersUseCase {
-  constructor(private gateKeeper: GateKeeper, private logger: Logger) {}
+  constructor(
+    private userRepository: UserRepository,
+    private gateKeeper: GateKeeper,
+    private logger: Logger
+  ) {}
 
   async execute({
     tokenString,
@@ -16,11 +21,13 @@ export class GetUsersUseCase {
     usernameString,
   }: GetUserRequest) {
     const token = new Token(tokenString);
-    new Limit(limitValue);
-    new Offset(offsetValue);
-    new Username(usernameString);
+    const limit = new Limit(limitValue);
+    const offset = new Offset(offsetValue);
+    const username = new Username(usernameString);
 
     await this.getAuthenticatedUser(token);
+
+    await this.userRepository.getUsers(username, limit, offset);
   }
 
   private async getAuthenticatedUser(token: Token) {
