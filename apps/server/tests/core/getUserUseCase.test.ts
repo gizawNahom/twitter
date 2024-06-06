@@ -1,4 +1,6 @@
+import Context from '../../src/context';
 import { GetUserUseCase } from '../../src/core/useCases/getUserUseCase';
+import { DefaultGateKeeper } from '../../src/defaultGateKeeper';
 import {
   sampleLimit,
   sampleOffset,
@@ -6,6 +8,7 @@ import {
   sampleUsername,
 } from '../utilities/samples';
 import {
+  testUserExtractionFailure,
   testWithInvalidLimit,
   testWithInvalidOffset,
   testWithInvalidToken,
@@ -23,7 +26,7 @@ async function executeUseCase({
   offsetValue?: number;
   usernameString?: string;
 }) {
-  const uC = new GetUserUseCase();
+  const uC = new GetUserUseCase(Context.gateKeeper, Context.logger);
   return await uC.execute({
     tokenString,
     limitValue,
@@ -32,6 +35,10 @@ async function executeUseCase({
   });
 }
 
+beforeEach(() => {
+  Context.gateKeeper = new DefaultGateKeeper();
+});
+
 testWithInvalidToken((tokenString) => executeUseCase({ tokenString }));
 
 testWithInvalidLimit((limitValue) => executeUseCase({ limitValue }));
@@ -39,3 +46,5 @@ testWithInvalidLimit((limitValue) => executeUseCase({ limitValue }));
 testWithInvalidOffset((offsetValue) => executeUseCase({ offsetValue }));
 
 testWithInvalidUsername((usernameString) => executeUseCase({ usernameString }));
+
+testUserExtractionFailure(() => executeUseCase({}));
