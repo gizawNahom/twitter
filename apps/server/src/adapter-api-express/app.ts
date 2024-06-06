@@ -1,13 +1,13 @@
-import { CreatePostUseCase } from './core/useCases/createPostUseCase';
-import { GetUserPostUseCase } from './core/useCases/getUserPostUseCase';
-import Context from './adapter-api-express/context';
+import { CreatePostUseCase } from '../core/useCases/createPostUseCase';
+import { GetUserPostUseCase } from '../core/useCases/getUserPostUseCase';
+import Context from './context';
 import express from 'express';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
-import { ValidationError } from './core/errors';
-import { GetUserPostsUseCase } from './core/useCases/getUserPostsUseCase';
-import { SearchPostsUseCase } from './core/useCases/searchPostsUseCase';
+import { ValidationError } from '../core/errors';
+import { GetUserPostsUseCase } from '../core/useCases/getUserPostsUseCase';
+import { SearchPostsUseCase } from '../core/useCases/searchPostsUseCase';
 
 const GENERIC_ERROR_MESSAGE = 'Server Error';
 

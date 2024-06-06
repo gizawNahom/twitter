@@ -1,5 +1,5 @@
 import { Verifier } from '@pact-foundation/pact';
-import { app } from '../../src/app';
+import { app } from '../../src/adapter-api-express/app';
 import path from 'path';
 import Context from '../../src/adapter-api-express/context';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
