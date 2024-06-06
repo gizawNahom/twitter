@@ -14,7 +14,7 @@ import { LoggerSpy } from '../doubles/loggerSpy';
 import { ValidationError } from '../../src/core/errors';
 import { PostRepositoryErrorStub } from '../doubles/postRepositoryErrorStub';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
-import { DummyLogger } from '../../src/dummyLogger';
+import { DummyLogger } from '../../src/adapter-api-express/dummyLogger';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { emptyString } from './samples';
 

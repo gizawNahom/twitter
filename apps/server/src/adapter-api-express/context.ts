@@ -1,4 +1,4 @@
-import { DummyLogger } from '../dummyLogger';
+import { DummyLogger } from './dummyLogger';
 import { InMemoryPostRepository } from '../adapter-persistance-inMemory/InMemoryPostRepository';
 import { GateKeeper } from '../core/ports/gateKeeper';
 import { Logger } from '../core/ports/logger';
