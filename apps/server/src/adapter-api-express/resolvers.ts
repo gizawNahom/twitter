@@ -1,29 +1,15 @@
-import { CreatePostUseCase } from '../core/useCases/createPostUseCase';
 import { GetUserPostUseCase } from '../core/useCases/getUserPostUseCase';
 import Context from './context';
 import { GetUserPostsUseCase } from '../core/useCases/getUserPostsUseCase';
 import { SearchPostsUseCase } from '../core/useCases/searchPostsUseCase';
 import { ValidationError } from '../core/errors';
 import { ServerContext } from './app';
+import { mutation } from './mutation';
 
 const GENERIC_ERROR_MESSAGE = 'Server Error';
 
 const resolvers = {
-  Mutation: {
-    createPost: async (
-      _: unknown,
-      args: { text: string },
-      contextValue: ServerContext
-    ) => {
-      return await tryResolve(async () => {
-        return await new CreatePostUseCase(
-          Context.logger,
-          Context.gateKeeper,
-          Context.postRepository
-        ).execute(contextValue.token, args.text);
-      });
-    },
-  },
+  Mutation: mutation,
   Query: {
     post: async (
       _: unknown,
@@ -96,7 +82,7 @@ const resolvers = {
   },
 };
 
-async function tryResolve(resolve: () => Promise<unknown>) {
+export async function tryResolve(resolve: () => Promise<unknown>) {
   try {
     return await resolve();
   } catch (error) {
