@@ -4,7 +4,7 @@ import {
   GetUserPostsUseCase,
 } from '../../src/core/useCases/getUserPostsUseCase';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
-import { DummyUserRepository } from '../../src/dummyUserRepository';
+import { DummyUserRepository } from '../../src/adapter-api-express/dummyUserRepository';
 import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { LoggerSpy } from '../doubles/loggerSpy';
 import { UserRepositoryFailureStub } from '../doubles/userRepositoryFailureStub';

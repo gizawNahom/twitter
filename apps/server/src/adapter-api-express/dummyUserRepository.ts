@@ -1,6 +1,6 @@
-import { User } from './core/entities/user';
-import { Username } from './core/entities/username';
-import { UserRepository } from './core/ports/userRepository';
+import { User } from '../core/entities/user';
+import { Username } from '../core/entities/username';
+import { UserRepository } from '../core/ports/userRepository';
 
 export class DummyUserRepository implements UserRepository {
   async getUserId(): Promise<string | null> {

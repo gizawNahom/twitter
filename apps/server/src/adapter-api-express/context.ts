@@ -5,7 +5,7 @@ import { Logger } from '../core/ports/logger';
 import { PostRepository } from '../core/ports/postRepository';
 import { DefaultGateKeeper } from './defaultGateKeeper';
 import { UserRepository } from '../core/ports/userRepository';
-import { DummyUserRepository } from '../dummyUserRepository';
+import { DummyUserRepository } from './dummyUserRepository';
 import { PostIndexGateway } from '../core/ports/postIndexGateway';
 import { MessageSender } from '../core/ports/messageSender';
 import { MessageGateway } from '../core/ports/messageGateway';
