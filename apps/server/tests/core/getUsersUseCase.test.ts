@@ -6,7 +6,6 @@ import {
   sampleLimit,
   sampleOffset,
   sampleUser1,
-  sampleUser2,
   sampleUserToken,
   sampleUsername,
 } from '../utilities/samples';
@@ -61,7 +60,7 @@ testWithInvalidUsername((usernameString) => executeUseCase({ usernameString }));
 testUserExtractionFailure(() => executeUseCase({}));
 
 test('gets users', async () => {
-  userRepoSpy.getUsersResponse = [sampleUser1, sampleUser2];
+  userRepoSpy.getUsersResponse = [sampleUser1, sampleUser1];
 
   await executeUseCase({});
 
@@ -73,5 +72,25 @@ test('gets users', async () => {
     expect(call.username.getUsername()).toBe(sampleUsername);
     expect(call.limit.getLimit()).toBe(sampleLimit);
     expect(call.offset.getOffset()).toBe(sampleOffset);
+  }
+});
+
+test('returns correct response', async () => {
+  userRepoSpy.getUsersResponse = [sampleUser1];
+
+  const response = await executeUseCase({});
+
+  assertCorrectResponse(response);
+
+  function assertCorrectResponse(response) {
+    expect(response).toStrictEqual({
+      users: [
+        {
+          username: sampleUser1.getUsername(),
+          displayName: sampleUser1.getDisplayName(),
+          profilePic: sampleUser1.getProfilePic(),
+        },
+      ],
+    });
   }
 });

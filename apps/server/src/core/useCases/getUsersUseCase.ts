@@ -1,4 +1,5 @@
 import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
+import { User } from '../entities/user';
 import { Username } from '../entities/username';
 import { GateKeeper } from '../ports/gateKeeper';
 import { Logger } from '../ports/logger';
@@ -14,20 +15,24 @@ export class GetUsersUseCase {
     private logger: Logger
   ) {}
 
-  async execute({
+  async execute(request: GetUsersRequest): Promise<GetUsersResponse> {
+    const { token, username, limit, offset } = this.createValueObjects(request);
+    await this.getAuthenticatedUser(token);
+    const users = await this.getUsers(username, limit, offset);
+    return this.buildResponse(users);
+  }
+
+  private createValueObjects({
     tokenString,
     limitValue,
     offsetValue,
     usernameString,
-  }: GetUserRequest) {
+  }: GetUsersRequest) {
     const token = new Token(tokenString);
     const limit = new Limit(limitValue);
     const offset = new Offset(offsetValue);
     const username = new Username(usernameString);
-
-    await this.getAuthenticatedUser(token);
-
-    await this.userRepository.getUsers(username, limit, offset);
+    return { token, username, limit, offset };
   }
 
   private async getAuthenticatedUser(token: Token) {
@@ -35,11 +40,35 @@ export class GetUsersUseCase {
     makeSureUserIsAuthenticated(user);
     return user;
   }
+
+  private async getUsers(username: Username, limit: Limit, offset: Offset) {
+    return await this.userRepository.getUsers(username, limit, offset);
+  }
+
+  private buildResponse(users: User[]): GetUsersResponse {
+    return {
+      users: users.map((u) => {
+        return {
+          username: u.getUsername(),
+          profilePic: u.getProfilePic(),
+          displayName: u.getDisplayName(),
+        };
+      }),
+    };
+  }
 }
 
-export interface GetUserRequest {
+export interface GetUsersRequest {
   tokenString: string;
   limitValue: number;
   offsetValue: number;
   usernameString: string;
+}
+
+export interface GetUsersResponse {
+  users: {
+    username: string;
+    profilePic: string;
+    displayName: string;
+  }[];
 }
