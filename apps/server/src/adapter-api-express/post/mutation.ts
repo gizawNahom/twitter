@@ -1,7 +1,7 @@
-import { CreatePostUseCase } from '../core/useCases/createPostUseCase';
-import Context from './context';
-import { ServerContext } from './app';
-import { tryResolve } from './resolvers';
+import { CreatePostUseCase } from '../../core/useCases/createPostUseCase';
+import Context from '../context';
+import { ServerContext } from '../app';
+import { tryResolve } from '../resolvers';
 
 async function resolveCreatePost(
   _: unknown,

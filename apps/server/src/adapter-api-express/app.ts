@@ -3,7 +3,7 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import resolvers from './resolvers';
-import typeDefs from './typeDefs';
+import typeDefs from './post/typeDefs';
 
 const app = express();
 

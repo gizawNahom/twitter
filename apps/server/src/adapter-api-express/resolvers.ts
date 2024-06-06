@@ -1,7 +1,7 @@
 import Context from './context';
 import { ValidationError } from '../core/errors';
-import { mutation } from './mutation';
-import { query } from './query';
+import { mutation } from './post/mutation';
+import { query } from './post/query';
 
 const GENERIC_ERROR_MESSAGE = 'Server Error';
 
