@@ -1,4 +1,4 @@
-import { app } from './adapter-api-express/app';
+import { app } from './app';
 
 const port = process.env.PORT || 3333;
 const server = app.listen(port, () => {
