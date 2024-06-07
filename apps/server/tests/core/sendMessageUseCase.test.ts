@@ -1,6 +1,9 @@
 import Context from '../../src/adapter-api-express/context';
 import { Message } from '../../src/core/entities/message';
-import { SendMessageUseCase } from '../../src/core/useCases/sendMessageUseCase';
+import {
+  SendMessageResponse,
+  SendMessageUseCase,
+} from '../../src/core/useCases/sendMessageUseCase';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { DummyUserRepository } from '../../src/adapter-api-express/dummyUserRepository';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
@@ -50,7 +53,7 @@ async function executeUseCase({
   text?: string;
   token?: string;
   chatId?: string;
-}) {
+}): Promise<SendMessageResponse> {
   const uC = new SendMessageUseCase(
     Context.gateKeeper,
     Context.messageGateway,
@@ -176,17 +179,17 @@ test('returns correct response', async () => {
 
   assertCorrectResponse(response);
 
-  function assertCorrectResponse(response) {
+  function assertCorrectResponse(response: SendMessageResponse) {
     const savedMessage = messageGatewaySpy.savedMessage;
     expect({
       ...response.message,
-      createdAtISO: removeSeconds(response.message.createdAtISO),
+      createdAt: removeSeconds(response.message.createdAt),
     }).toStrictEqual({
       id: savedMessage.getId(),
       senderId: savedMessage.getSenderId(),
       chatId: savedMessage.getChatId(),
       text: savedMessage.getText(),
-      createdAtISO: removeSeconds(savedMessage.getCreatedAt().toISOString()),
+      createdAt: removeSeconds(savedMessage.getCreatedAt().toISOString()),
     });
   }
 });

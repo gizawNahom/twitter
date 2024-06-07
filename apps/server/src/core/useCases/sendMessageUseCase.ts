@@ -129,7 +129,7 @@ export class SendMessageUseCase {
         senderId: message.getSenderId(),
         chatId: message.getChatId(),
         text: message.getText(),
-        createdAtISO: message.getCreatedAt().toISOString(),
+        createdAt: message.getCreatedAt().toISOString(),
       },
     };
   }
@@ -147,6 +147,6 @@ export interface SendMessageResponse {
     senderId: string;
     chatId: string;
     text: string;
-    createdAtISO: string;
+    createdAt: string;
   };
 }
