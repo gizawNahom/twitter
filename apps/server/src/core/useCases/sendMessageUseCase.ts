@@ -27,23 +27,33 @@ export class SendMessageUseCase {
     private logger: Logger
   ) {}
 
-  async execute({ token, text, chatId }: SendMessageRequest) {
+  async execute({
+    token,
+    text,
+    chatId,
+  }: SendMessageRequest): Promise<SendMessageResponse> {
     const cId = new ChatId(chatId);
     const t = new Token(token);
     const msgTxt = new MessageText(sanitizeXSSString(text));
 
-    const user = await extractUser(this.gateKeeper, this.logger, t);
-    makeSureUserIsAuthenticated(user);
-
-    await this.ensureChatExists(cId);
+    const user = await this.getAuthenticatedUser(t);
+    await this.makeSureChatExists(cId);
 
     const message = this.buildMessage(user, cId, msgTxt);
     await this.saveMessage(message);
 
     await this.sendMessage(await this.getCorrespondentId(cId, user), message);
+
+    return this.buildResponse(message);
   }
 
-  private async ensureChatExists(chatId: ChatId) {
+  private async getAuthenticatedUser(t: Token) {
+    const user = await extractUser(this.gateKeeper, this.logger, t);
+    makeSureUserIsAuthenticated(user);
+    return user;
+  }
+
+  private async makeSureChatExists(chatId: ChatId) {
     if (!(await this.doesChatExist(chatId)))
       this.throwValidationError(ValidationMessages.CHAT_DOES_NOT_EXIST);
   }
@@ -111,10 +121,32 @@ export class SendMessageUseCase {
   private logInfo(message: string, obj: object) {
     this.logger.logInfo(message, obj);
   }
+
+  private buildResponse(message: Message): SendMessageResponse {
+    return {
+      message: {
+        id: message.getId(),
+        senderId: message.getSenderId(),
+        chatId: message.getChatId(),
+        text: message.getText(),
+        createdAtISO: message.getCreatedAt().toISOString(),
+      },
+    };
+  }
 }
 
 export interface SendMessageRequest {
   token: string;
   text: string;
   chatId: string;
+}
+
+export interface SendMessageResponse {
+  message: {
+    id: string;
+    senderId: string;
+    chatId: string;
+    text: string;
+    createdAtISO: string;
+  };
 }

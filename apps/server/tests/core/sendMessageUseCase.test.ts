@@ -171,6 +171,26 @@ test('sends sanitized text', async () => {
   expect(sentMessage.getText()).toBe(sampleXSS.sanitizedText);
 });
 
+test('returns correct response', async () => {
+  const response = await executeUseCase({});
+
+  assertCorrectResponse(response);
+
+  function assertCorrectResponse(response) {
+    const savedMessage = messageGatewaySpy.savedMessage;
+    expect({
+      ...response.message,
+      createdAtISO: removeSeconds(response.message.createdAtISO),
+    }).toStrictEqual({
+      id: savedMessage.getId(),
+      senderId: savedMessage.getSenderId(),
+      chatId: savedMessage.getChatId(),
+      text: savedMessage.getText(),
+      createdAtISO: removeSeconds(savedMessage.getCreatedAt().toISOString()),
+    });
+  }
+});
+
 test('logs info for happy path', async () => {
   await executeUseCase({});
 
