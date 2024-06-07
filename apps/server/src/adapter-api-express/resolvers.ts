@@ -1,13 +1,14 @@
 import Context from './context';
 import { ValidationError } from '../core/errors';
-import { mutation } from './post/mutation';
+import { mutation as postMutation } from './post/mutation';
 import { query } from './post/query';
+import { mutation as messageMutation } from './message/mutation';
 
 const GENERIC_ERROR_MESSAGE = 'Server Error';
 
 const resolvers = {
-  Mutation: mutation,
-  Query: query,
+  Mutation: { ...postMutation, ...messageMutation },
+  Query: { ...query },
 };
 
 export async function tryResolve(resolve: () => Promise<unknown>) {

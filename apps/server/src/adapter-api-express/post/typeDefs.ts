@@ -7,11 +7,19 @@ const typeDefs = `#graphql
   }
   type Mutation {
     createPost(text: String!): Post
+    sendMessage(text: String!, chatId: String!): Message
   }
   type Post {
     id: ID!
     text: String!
     userId: ID!
+    createdAt: String!
+  }
+  type Message {
+    id: ID!
+    senderId: ID!
+    chatId: ID!
+    text: String!
     createdAt: String!
   }
 `;
