@@ -20,7 +20,7 @@ async function sendMessage(
       text: args.text,
       chatId: args.chatId,
     });
-    return { ...response.message, createdAt: response.message.createdAtISO };
+    return response.message;
   });
 }
 
