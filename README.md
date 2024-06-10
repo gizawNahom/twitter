@@ -88,7 +88,7 @@ Server tests:
 
 **Client:** Typescript, Next.js, TailwindCSS, Redux
 
-**Server:** Typescript, Node.js, ExpressJS, GraphQL
+**Server:** Typescript, Node.js, ExpressJS, GraphQL, Socket.IO
 
 ## GraphQL API Reference
 
