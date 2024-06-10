@@ -5,7 +5,11 @@ import { IdGeneratorStub } from '../doubles/idGeneratorStub';
 import { MessageSenderSpy } from '../doubles/messageSenderSpy';
 import { removeSeconds, sendRequest } from '../utilities/helpers';
 import { sampleChatId, sampleMessage } from '../utilities/samples';
-import { testWithExpectedError } from '../utilities/tests';
+import {
+  testWithExpectedError,
+  testWithUnExpectedError,
+} from '../utilities/tests';
+import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
 
 // SEND TOKEN WITH REQUEST
 
@@ -58,3 +62,8 @@ test('returns correct response', async () => {
 testWithExpectedError(
   async () => await sendMessageRequest(sampleMessage, sampleChatId)
 );
+
+testWithUnExpectedError(async () => {
+  Context.gateKeeper = new GateKeeperErrorStub();
+  return await sendMessageRequest(sampleMessage, sampleChatId);
+});
