@@ -3,7 +3,8 @@ import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import cors from 'cors';
 import resolvers from './resolvers';
-import typeDefs from './post/typeDefs';
+import postTypeDefs from './post/typeDefs';
+import messageTypeDefs from './message/typeDefs';
 
 const app = express();
 
@@ -12,7 +13,7 @@ export interface ServerContext {
 }
 
 const server = new ApolloServer<ServerContext>({
-  typeDefs,
+  typeDefs: [postTypeDefs, messageTypeDefs],
   resolvers,
 });
 
