@@ -16,10 +16,13 @@ export async function getSavedPosts(): Promise<Post[]> {
 }
 
 export async function sendRequest(query: string, variables: unknown) {
-  return await request(app).post('/graphql').send({
-    query,
-    variables,
-  });
+  return await request(app)
+    .post('/graphql')
+    .send({
+      query,
+      variables,
+    })
+    .set('Authorization', 'bearer userToken');
 }
 
 export function createPosts(count: number): Post[] {

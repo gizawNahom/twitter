@@ -11,8 +11,6 @@ import {
 } from '../utilities/tests';
 import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
 
-// SEND TOKEN WITH REQUEST
-
 let messageGatewaySpy: MessageGatewaySpy;
 
 async function sendMessageRequest(text: string, chatId: string) {
