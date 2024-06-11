@@ -19,4 +19,8 @@ export class MessageSenderSpy implements MessageSender {
       recipientUserId: correspondentUserId,
     });
   }
+
+  makeCorrespondentAvailable(): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 }
