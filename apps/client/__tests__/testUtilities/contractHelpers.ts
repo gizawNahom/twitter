@@ -1,6 +1,6 @@
 import { GraphQLInteraction, Pact } from '@pact-foundation/pact';
 import { Post } from '../../lib/redux/slices/postsSlice/post';
-import { AnyTemplate } from '@pact-foundation/pact/src/dsl/matchers';
+import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import { createSamplePost } from './helpers';
 
 export function createBaseInteraction(baseUrl: URL, responseBody: AnyTemplate) {
@@ -10,6 +10,9 @@ export function createBaseInteraction(baseUrl: URL, responseBody: AnyTemplate) {
     .withRequest({
       path: PATH_NAME,
       method: 'POST',
+      headers: {
+        authorization: like('Bearer sampleUserToken'),
+      },
     })
     .willRespondWith({
       status: 200,

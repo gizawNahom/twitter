@@ -1,6 +1,6 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { HttpLink, InMemoryCache } from '@apollo/client';
 import fetch from 'cross-fetch';
-import { Client } from '../../utilities/client';
+import { Client, createClient } from '../../utilities/client';
 import { server } from '../../mocks/server';
 import { useRouter } from 'next/router';
 
@@ -60,12 +60,13 @@ export function setUpClient() {
   });
 
   function setCLient() {
-    Client.client = new ApolloClient({
-      link: new HttpLink({
+    const client = createClient(
+      new HttpLink({
         uri: process.env.NEXT_PUBLIC_API_BASE_URL,
         fetch: fetch,
-      }),
-      cache: new InMemoryCache(),
-    });
+      })
+    );
+    client.cache = new InMemoryCache();
+    Client.client = client;
   }
 }

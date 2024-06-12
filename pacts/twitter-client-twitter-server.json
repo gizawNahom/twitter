@@ -14,7 +14,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -22,6 +23,9 @@
             "regex": "mutation\\s*createPost\\(\\$text:\\s*String!\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.text": {
+            "match": "type"
+          },
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -74,7 +78,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -82,6 +87,9 @@
             "regex": "mutation\\s*createPost\\(\\$text:\\s*String!\\)\\s*\\{\\s*createPost\\(text:\\s*\\$text\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.text": {
+            "match": "type"
+          },
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -121,7 +129,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -129,6 +138,9 @@
             "regex": "query\\s*post\\(\\$id:\\s*ID!\\)\\s*\\{\\s*post\\(id:\\s*\\$id\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.id": {
+            "match": "type"
+          },
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -170,7 +182,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -184,6 +197,9 @@
             "match": "type"
           },
           "$.body.variables.userId": {
+            "match": "type"
+          },
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -225,7 +241,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -239,6 +256,9 @@
             "match": "type"
           },
           "$.body.variables.query": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
             "match": "type"
           }
         },
@@ -279,7 +299,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -287,6 +308,9 @@
             "regex": "query\\s*post\\(\\$id:\\s*ID!\\)\\s*\\{\\s*post\\(id:\\s*\\$id\\)\\s*\\{\\s*id\\s*text\\s*userId\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.id": {
+            "match": "type"
+          },
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -342,7 +366,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -356,6 +381,9 @@
             "match": "type"
           },
           "$.body.variables.userId": {
+            "match": "type"
+          },
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -413,7 +441,8 @@
           }
         },
         "headers": {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
         },
         "matchingRules": {
           "$.body.query": {
@@ -427,6 +456,9 @@
             "match": "type"
           },
           "$.body.variables.query": {
+            "match": "type"
+          },
+          "$.header.$": {
             "match": "type"
           }
         },
