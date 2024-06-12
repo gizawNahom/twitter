@@ -5,7 +5,7 @@ export interface MessageSender {
   isCorrespondentAvailable(correspondentUserId: string): Promise<boolean>;
   sendMessage(message: Message, correspondentUserId: string): Promise<void>;
   makeCorrespondentAvailable(
-    socket: Connection,
+    connection: Connection,
     correspondentUserId: string
   ): Promise<void>;
 }
