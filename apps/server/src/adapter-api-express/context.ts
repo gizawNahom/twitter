@@ -10,6 +10,7 @@ import { PostIndexGateway } from '../core/ports/postIndexGateway';
 import { MessageSender } from '../core/ports/messageSender';
 import { MessageGateway } from '../core/ports/messageGateway';
 import { IdGenerator } from '../core/ports/idGenerator';
+import { FakeSocketIOMessageSender } from './fakeSocketIOMessageSender';
 
 export default class Context {
   static postRepository: PostRepository = new InMemoryPostRepository();
@@ -17,7 +18,7 @@ export default class Context {
   static gateKeeper: GateKeeper = new DefaultGateKeeper();
   static logger: Logger = new DummyLogger();
   static userRepository: UserRepository = new DummyUserRepository();
-  static messageSender: MessageSender;
+  static messageSender: MessageSender = new FakeSocketIOMessageSender();
   static messageGateway: MessageGateway;
   static idGenerator: IdGenerator;
 }

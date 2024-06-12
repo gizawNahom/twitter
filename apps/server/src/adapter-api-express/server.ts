@@ -1,34 +1,33 @@
 import http from 'http';
-// import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { app } from './app';
-
-export function runServer() {
-  const port = process.env.PORT || 3333;
-  const server = http.createServer(app);
-  // const io = new Server(server);
-
-  // io.on('connection', (socket: Socket) => {
-  //   console.log('a user connected');
-  //   console.log(socket.request.headers.authorization);
-
-  //   socket.on('send message', () => {
-  //     socket.emit('message sent', { message: 'hello' });
-  //   });
-  // });
-  server.on('error', console.error);
-  return server.listen(port, () => {
-    console.log(`Listening at http://localhost:${port}`);
-  });
-}
+import { GetOnlineUseCase } from '../core/useCases/getOnlineUseCase';
+import Context from './context';
+import { SocketIOConnection } from './socketIOConnection';
+import { ValidationError } from '../core/errors';
 
 export function createServer(): http.Server {
   const server = http.createServer(app);
-  // const io = new Server(server);
+  const io = new Server(server);
 
-  // io.on('connection', (socket: Socket) => {
-  //   console.log('a user connected');
-  //   console.log(socket.request.headers.authorization);
-  // });
+  io.use(async (socket, next) => {
+    try {
+      await new GetOnlineUseCase(
+        Context.messageSender,
+        Context.gateKeeper,
+        Context.logger
+      ).execute({
+        tokenString: socket.request.headers.authorization as string,
+        connection: new SocketIOConnection(socket),
+      });
+      next();
+    } catch (error) {
+      const GENERIC_ERROR_MESSAGE = 'Server Error';
+
+      if (error instanceof ValidationError) next(error);
+      else next(new Error(GENERIC_ERROR_MESSAGE));
+    }
+  });
   server.on('error', console.error);
   return server;
 }
