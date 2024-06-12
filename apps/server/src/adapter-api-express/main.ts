@@ -1,3 +1,7 @@
-import { runServer } from './server';
+import { createServer } from './server';
 
-runServer();
+const port = process.env.PORT || 3333;
+const server = createServer();
+server.listen(port, () => {
+  console.log(`Listening at http://localhost:${port}`);
+});

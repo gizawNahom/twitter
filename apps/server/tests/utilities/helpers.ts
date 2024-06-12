@@ -1,4 +1,4 @@
-import { app } from '../../src/adapter-api-express/app';
+import { createServer } from '../../src/adapter-api-express/server';
 import Context from '../../src/adapter-api-express/context';
 import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
@@ -16,7 +16,7 @@ export async function getSavedPosts(): Promise<Post[]> {
 }
 
 export async function sendRequest(query: string, variables: unknown) {
-  return await request(app)
+  return await request(createServer())
     .post('/graphql')
     .send({
       query,

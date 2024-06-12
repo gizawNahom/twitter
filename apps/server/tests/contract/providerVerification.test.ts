@@ -1,15 +1,15 @@
 import { Verifier } from '@pact-foundation/pact';
-import { app } from '../../src/adapter-api-express/app';
 import path from 'path';
 import Context from '../../src/adapter-api-express/context';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { Post } from '../../src/core/entities/post';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
+import { createServer } from '../../src/adapter-api-express/server';
 
 const port = 8081;
 const baseUrl = `http://localhost:${port}`;
 
-const server = app.listen(port, () => {
+const server = createServer().listen(port, () => {
   console.log(`Service listening on ${baseUrl}`);
 });
 
