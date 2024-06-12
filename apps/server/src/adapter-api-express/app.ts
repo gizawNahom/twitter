@@ -23,7 +23,9 @@ server.start().then(() => {
     cors(),
     express.json(),
     expressMiddleware(server, {
-      context: async () => ({ token: 'userToken' }),
+      context: async ({ req }) => {
+        return { token: req.headers['authorization'].split(' ')[1] };
+      },
     })
   );
 });
