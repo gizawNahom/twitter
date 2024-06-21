@@ -1,4 +1,5 @@
 import Context from '../../src/adapter-api-express/context';
+import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { ChatMother } from '../utilities/ChatMother';
 import {
@@ -7,10 +8,14 @@ import {
 } from '../utilities/assertions';
 import { sendRequest } from '../utilities/helpers';
 import { sampleLimit, sampleOffset, sampleUser1 } from '../utilities/samples';
+import {
+  testWithExpectedError,
+  testWithUnExpectedError,
+} from '../utilities/tests';
 
 let messageGatewaySpy: MessageGatewaySpy;
 
-async function sendGetChatsRequest(limit: number, offset: number) {
+async function sendGetChatsRequest() {
   const query = `query GetChats($limit: Int!, $offset: Int!) {
     chats(limit: $limit, offset: $offset) {
       id
@@ -22,7 +27,7 @@ async function sendGetChatsRequest(limit: number, offset: number) {
       }
     }
   }`;
-  const variables = { limit, offset };
+  const variables = { limit: sampleLimit, offset: sampleOffset };
 
   return await sendRequest(query, variables);
 }
@@ -38,11 +43,20 @@ test('returns correct response', async () => {
     .build();
   messageGatewaySpy.getChatsResponse = [sampleChat];
 
-  const res = await sendGetChatsRequest(sampleLimit, sampleOffset);
+  const res = await sendGetChatsRequest();
 
   expect(res.status).toBe(200);
   assertSingleChatResponse(
     res.body.data.chats,
     buildChatResponse(sampleChat, 1)
   );
+});
+
+testWithExpectedError(async () => {
+  return await sendGetChatsRequest();
+});
+
+testWithUnExpectedError(async () => {
+  Context.gateKeeper = new GateKeeperErrorStub();
+  return await sendGetChatsRequest();
 });
