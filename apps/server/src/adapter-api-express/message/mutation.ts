@@ -1,7 +1,7 @@
 import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
 import { ServerContext } from '../app';
 import Context from '../context';
-import { tryResolve } from '../resolvers';
+import { tryResolve } from '../utilities/tryResolve';
 
 async function sendMessage(
   _: unknown,

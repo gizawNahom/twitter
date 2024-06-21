@@ -1,7 +1,7 @@
 import { GetChatsUseCase } from '../../core/useCases/getChatsUseCase';
 import { ServerContext } from '../app';
 import Context from '../context';
-import { tryResolve } from '../resolvers';
+import { tryResolve } from '../utilities/tryResolve';
 
 async function getChats(
   _: unknown,

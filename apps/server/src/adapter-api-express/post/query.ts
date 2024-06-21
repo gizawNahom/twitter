@@ -3,7 +3,7 @@ import Context from '../context';
 import { GetUserPostsUseCase } from '../../core/useCases/getUserPostsUseCase';
 import { SearchPostsUseCase } from '../../core/useCases/searchPostsUseCase';
 import { ServerContext } from '../app';
-import { tryResolve } from '../resolvers';
+import { tryResolve } from '../utilities/tryResolve';
 
 async function resolvePost(
   _: unknown,
