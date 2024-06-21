@@ -5,15 +5,11 @@ import { sampleUser1, sampleUser2 } from '../utilities/samples';
 import { createServer } from 'node:http';
 import { io as ioc, type Socket as ClientSocket } from 'socket.io-client';
 import { Server, type Socket as ServerSocket } from 'socket.io';
-import { removeSeconds } from '../utilities/helpers';
+import { getRandomPort, removeSeconds } from '../utilities/helpers';
 
 let sender: FakeSocketIOMessageSender;
 let io, serverSocket, clientSocket, httpServer;
 const port = getRandomPort();
-
-function getRandomPort() {
-  return Math.floor(Math.random() * (10000 - 5000 + 1)) + 5000;
-}
 
 async function makeCorrespondentAvailable(correspondentId: string) {
   clientSocket = ioc(`http://localhost:${port}`);

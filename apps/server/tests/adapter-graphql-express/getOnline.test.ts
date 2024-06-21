@@ -5,13 +5,10 @@ import { Socket, io } from 'socket.io-client';
 import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
 import { ERROR_GENERIC, ERROR_INVALID_USER } from '../utilities/errorMessages';
+import { getRandomPort } from '../utilities/helpers';
 
 const port = getRandomPort();
 let server: Server, clientSocket: Socket;
-
-function getRandomPort() {
-  return Math.floor(Math.random() * 5000) + 5000;
-}
 
 async function connectToServer() {
   return new Promise<{ connected: boolean; error: Error | null }>(

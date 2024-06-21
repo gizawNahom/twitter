@@ -45,3 +45,7 @@ export function savePosts(posts: Post[]) {
     await Context.postRepository.save(post);
   }
 }
+
+export function getRandomPort() {
+  return Math.floor(Math.random() * 5000) + 5000;
+}
