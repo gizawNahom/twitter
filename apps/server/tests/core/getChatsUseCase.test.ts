@@ -18,6 +18,7 @@ import {
   testWithInvalidOffset,
   testWithInvalidToken,
 } from '../utilities/tests';
+import { assertSingleChatResponse } from '../utilities/assertions';
 
 function executeUseCase({
   tokenString = sampleUserToken,
@@ -64,22 +65,8 @@ test('gets chat list', async () => {
 
   const response = await executeUseCase({});
 
-  assertCorrectResponse(response);
+  assertSingleChatResponse(response.chats, sampleChat);
   assertGetChatCall();
-
-  function assertCorrectResponse(response) {
-    const chats = response.chats;
-    expect(chats).toHaveLength(1);
-    expect(chats[0].id).toEqual(sampleChat.getId());
-    expect(chats[0].createdAtISO).toEqual(
-      sampleChat.getCreatedAt().toISOString()
-    );
-    expect(chats[0].participant).toStrictEqual({
-      username: sampleUser2.getUsername(),
-      displayName: sampleUser2.getDisplayName(),
-      profilePic: sampleUser2.getProfilePic(),
-    });
-  }
 
   function assertGetChatCall() {
     const getChatsCalls = msgGateway.getChatsCalls;

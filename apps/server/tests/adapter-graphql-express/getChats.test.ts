@@ -2,19 +2,11 @@ import Context from '../../src/adapter-api-express/context';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { ChatMother } from '../utilities/ChatMother';
+import { assertSingleChatResponse } from '../utilities/assertions';
 import { sendRequest } from '../utilities/helpers';
-import {
-  sampleLimit,
-  sampleOffset,
-  sampleUser2,
-  sampleUserToken,
-} from '../utilities/samples';
+import { sampleLimit, sampleOffset, sampleUser2 } from '../utilities/samples';
 
-async function sendGetChatsRequest(
-  token: string,
-  limit: number,
-  offset: number
-) {
+async function sendGetChatsRequest(limit: number, offset: number) {
   const query = `query GetChats($limit: Int!, $offset: Int!) {
     chats(limit: $limit, offset: $offset) {
       id
@@ -26,7 +18,7 @@ async function sendGetChatsRequest(
       }
     }
   }`;
-  const variables = { token, limit, offset };
+  const variables = { limit, offset };
 
   return await sendRequest(query, variables);
 }
@@ -43,26 +35,8 @@ test('returns correct response', async () => {
   ]);
   msgGateway.getChatsResponse = [sampleChat];
 
-  const res = await sendGetChatsRequest(
-    sampleUserToken,
-    sampleLimit,
-    sampleOffset
-  );
+  const res = await sendGetChatsRequest(sampleLimit, sampleOffset);
 
   expect(res.status).toBe(200);
-  const chats = res.body.data.chats;
-  assertCorrectResponse(chats);
-
-  function assertCorrectResponse(chats) {
-    expect(chats).toHaveLength(1);
-    expect(chats[0].id).toEqual(sampleChat.getId());
-    expect(chats[0].createdAtISO).toEqual(
-      sampleChat.getCreatedAt().toISOString()
-    );
-    expect(chats[0].participant).toStrictEqual({
-      username: sampleUser2.getUsername(),
-      displayName: sampleUser2.getDisplayName(),
-      profilePic: sampleUser2.getProfilePic(),
-    });
-  }
+  assertSingleChatResponse(res.body.data.chats, sampleChat);
 });
