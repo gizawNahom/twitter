@@ -50,10 +50,9 @@ function getSaveChatCalls() {
 }
 
 function stubGetChatResponse(msgGateway: MessageGatewaySpy) {
-  msgGateway.getChatResponse = ChatMother.chatWithParticipants([
-    sampleUser1,
-    sampleUser2,
-  ]);
+  msgGateway.getChatResponse = ChatMother.chat()
+    .withParticipants([sampleUser1, sampleUser2])
+    .build();
   return msgGateway.getChatResponse;
 }
 

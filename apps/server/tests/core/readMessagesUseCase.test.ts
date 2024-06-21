@@ -85,10 +85,9 @@ test('throws if chat does not exist', async () => {
 });
 
 test('throws if user is not a participant', async () => {
-  messageGatewaySpy.getChatWithIdResponse = ChatMother.chatWithParticipants([
-    sampleUser1,
-    sampleUser2,
-  ]);
+  messageGatewaySpy.getChatWithIdResponse = ChatMother.chat()
+    .withParticipants([sampleUser1, sampleUser2])
+    .build();
 
   await assertValidationErrorWithMessage(
     () => executeUseCase({}),
@@ -99,10 +98,9 @@ test('throws if user is not a participant', async () => {
 test('gets messages', async () => {
   const message = MessageMother.CompleteMessage();
   messageGatewaySpy.getMessagesResponse = [message];
-  messageGatewaySpy.getChatWithIdResponse = ChatMother.chatWithParticipants([
-    DefaultGateKeeper.defaultUser,
-    sampleUser2,
-  ]);
+  messageGatewaySpy.getChatWithIdResponse = ChatMother.chat()
+    .withParticipants([DefaultGateKeeper.defaultUser, sampleUser2])
+    .build();
 
   const response = await executeUseCase({});
 

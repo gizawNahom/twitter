@@ -9,7 +9,6 @@ import { ChatMother } from '../utilities/ChatMother';
 import {
   sampleLimit,
   sampleOffset,
-  sampleUser2,
   sampleUserToken,
 } from '../utilities/samples';
 import {
@@ -57,10 +56,7 @@ testUserExtractionFailure(() => executeUseCase({}));
 
 test('gets chat list', async () => {
   const msgGateway = Context.messageGateway as MessageGatewaySpy;
-  const sampleChat = ChatMother.chatWithParticipants([
-    DefaultGateKeeper.defaultUser,
-    sampleUser2,
-  ]);
+  const sampleChat = ChatMother.chat().build();
   msgGateway.getChatsResponse = [sampleChat];
 
   const response = await executeUseCase({});

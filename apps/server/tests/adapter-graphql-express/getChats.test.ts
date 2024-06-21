@@ -1,10 +1,11 @@
 import Context from '../../src/adapter-api-express/context';
-import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { ChatMother } from '../utilities/ChatMother';
 import { assertSingleChatResponse } from '../utilities/assertions';
 import { sendRequest } from '../utilities/helpers';
-import { sampleLimit, sampleOffset, sampleUser2 } from '../utilities/samples';
+import { sampleLimit, sampleOffset } from '../utilities/samples';
+
+let messageGatewaySpy: MessageGatewaySpy;
 
 async function sendGetChatsRequest(limit: number, offset: number) {
   const query = `query GetChats($limit: Int!, $offset: Int!) {
@@ -24,16 +25,13 @@ async function sendGetChatsRequest(limit: number, offset: number) {
 }
 
 beforeEach(() => {
-  Context.messageGateway = new MessageGatewaySpy();
+  messageGatewaySpy = new MessageGatewaySpy();
+  Context.messageGateway = messageGatewaySpy;
 });
 
 test('returns correct response', async () => {
-  const msgGateway = Context.messageGateway as MessageGatewaySpy;
-  const sampleChat = ChatMother.chatWithParticipants([
-    DefaultGateKeeper.defaultUser,
-    sampleUser2,
-  ]);
-  msgGateway.getChatsResponse = [sampleChat];
+  const sampleChat = ChatMother.chat().build();
+  messageGatewaySpy.getChatsResponse = [sampleChat];
 
   const res = await sendGetChatsRequest(sampleLimit, sampleOffset);
 
