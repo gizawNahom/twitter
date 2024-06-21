@@ -4,7 +4,7 @@ import { app } from './app';
 import { GetOnlineUseCase } from '../core/useCases/getOnlineUseCase';
 import Context from './context';
 import { SocketIOConnection } from './socketIOConnection';
-import { ValidationError } from '../core/errors';
+import { handleError } from './utilities';
 
 export function createServer(): http.Server {
   const server = http.createServer(app);
@@ -22,10 +22,7 @@ export function createServer(): http.Server {
       });
       next();
     } catch (error) {
-      const GENERIC_ERROR_MESSAGE = 'Server Error';
-
-      if (error instanceof ValidationError) next(error);
-      else next(new Error(GENERIC_ERROR_MESSAGE));
+      handleError(error, next);
     }
   });
   server.on('error', console.error);
