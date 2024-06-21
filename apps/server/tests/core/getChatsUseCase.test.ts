@@ -9,6 +9,7 @@ import { ChatMother } from '../utilities/ChatMother';
 import {
   sampleLimit,
   sampleOffset,
+  sampleUser1,
   sampleUserToken,
 } from '../utilities/samples';
 import {
@@ -17,7 +18,10 @@ import {
   testWithInvalidOffset,
   testWithInvalidToken,
 } from '../utilities/tests';
-import { assertSingleChatResponse } from '../utilities/assertions';
+import {
+  assertSingleChatResponse,
+  buildChatResponse,
+} from '../utilities/assertions';
 
 function executeUseCase({
   tokenString = sampleUserToken,
@@ -56,12 +60,14 @@ testUserExtractionFailure(() => executeUseCase({}));
 
 test('gets chat list', async () => {
   const msgGateway = Context.messageGateway as MessageGatewaySpy;
-  const sampleChat = ChatMother.chat().build();
+  const sampleChat = ChatMother.chat()
+    .withTheSecondParticipant(sampleUser1)
+    .build();
   msgGateway.getChatsResponse = [sampleChat];
 
   const response = await executeUseCase({});
 
-  assertSingleChatResponse(response.chats, sampleChat);
+  assertSingleChatResponse(response.chats, buildChatResponse(sampleChat, 1));
   assertGetChatCall();
 
   function assertGetChatCall() {

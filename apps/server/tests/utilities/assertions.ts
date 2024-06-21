@@ -51,20 +51,20 @@ export function assertLogInfoCall({
   expect(call[1]).toStrictEqual(obj);
 }
 
-export function assertSingleChatResponse(chats, chat: Chat) {
+export function assertSingleChatResponse(chats, chatResponse) {
   expect(chats).toHaveLength(1);
-  expect(chats[0]).toStrictEqual(buildChatResponse(chat));
+  expect(chats[0]).toStrictEqual(chatResponse);
+}
 
-  function buildChatResponse(chat: Chat) {
-    const participant = chat.getParticipants()[1];
-    return {
-      id: chat.getId(),
-      createdAtISO: chat.getCreatedAt().toISOString(),
-      participant: {
-        username: participant.getUsername(),
-        displayName: participant.getDisplayName(),
-        profilePic: participant.getProfilePic(),
-      },
-    };
-  }
+export function buildChatResponse(chat: Chat, participantPosition: 0 | 1) {
+  const participant = chat.getParticipants()[participantPosition];
+  return {
+    id: chat.getId(),
+    createdAtISO: chat.getCreatedAt().toISOString(),
+    participant: {
+      username: participant.getUsername(),
+      displayName: participant.getDisplayName(),
+      profilePic: participant.getProfilePic(),
+    },
+  };
 }
