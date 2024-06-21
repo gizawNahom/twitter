@@ -96,7 +96,7 @@ test('throws if user is not a participant', async () => {
 });
 
 test('gets messages', async () => {
-  const message = MessageMother.CompleteMessage();
+  const message = MessageMother.message();
   messageGatewaySpy.getMessagesResponse = [message];
   messageGatewaySpy.getChatWithIdResponse = ChatMother.chat()
     .withParticipants([DefaultGateKeeper.defaultUser, sampleUser2])

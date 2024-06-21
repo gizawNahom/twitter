@@ -78,14 +78,12 @@ test('returns correct availability status for two correspondents', async () => {
 
 test('sends message', async () => {
   await makeCorrespondentAvailable(sampleUser1.getId());
+  const message = MessageMother.message();
 
-  await sender.sendMessage(
-    MessageMother.CompleteMessage(),
-    sampleUser1.getId()
-  );
+  await sender.sendMessage(message, sampleUser1.getId());
 
   const response = await getServerResponse();
-  assertCorrectMessage(response.message, MessageMother.CompleteMessage());
+  assertCorrectMessage(response.message, message);
 
   async function getServerResponse() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

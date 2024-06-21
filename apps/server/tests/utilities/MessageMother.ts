@@ -9,7 +9,7 @@ export class MessageMother {
     //
   }
 
-  static CompleteMessage(): Message {
+  static message(): Message {
     return MessageBuilder.message()
       .withId('globallyUniqueId')
       .withChatId(new ChatId(sampleChatId))
