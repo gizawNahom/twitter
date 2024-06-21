@@ -1,5 +1,5 @@
-import { ValidationError } from '../core/errors';
-import Context from './context';
+import { ValidationError } from '../../core/errors';
+import Context from '../context';
 
 const GENERIC_ERROR_MESSAGE = 'Server Error';
 
