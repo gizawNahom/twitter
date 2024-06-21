@@ -1,4 +1,4 @@
-import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
+import { getAuthenticatedUserOrThrow } from '../domainServices';
 import { Chat } from '../entities/chat';
 import { User } from '../entities/user';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -25,7 +25,11 @@ export class GetChatsUseCase {
       limitValue,
       offsetValue
     );
-    const user = await this.getAuthenticatedUser(token);
+    const user = await getAuthenticatedUserOrThrow(
+      token,
+      this.gateKeeper,
+      this.logger
+    );
     const chats = await this.getChats(user, limit, offset);
     return this.buildResponse(chats, user);
   }
@@ -39,12 +43,6 @@ export class GetChatsUseCase {
     const limit = new Limit(limitValue);
     const offset = new Offset(offsetValue);
     return { token, limit, offset };
-  }
-
-  private async getAuthenticatedUser(token: Token) {
-    const user = await extractUser(this.gateKeeper, this.logger, token);
-    makeSureUserIsAuthenticated(user);
-    return user;
   }
 
   private async getChats(user: User, limit: Limit, offset: Offset) {

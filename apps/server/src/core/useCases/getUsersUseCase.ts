@@ -1,4 +1,4 @@
-import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
+import { getAuthenticatedUserOrThrow } from '../domainServices';
 import { User } from '../entities/user';
 import { Username } from '../entities/username';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -17,7 +17,7 @@ export class GetUsersUseCase {
 
   async execute(request: GetUsersRequest): Promise<GetUsersResponse> {
     const { token, username, limit, offset } = this.createValueObjects(request);
-    await this.getAuthenticatedUser(token);
+    await getAuthenticatedUserOrThrow(token, this.gateKeeper, this.logger);
     const users = await this.getUsers(username, limit, offset);
     return this.buildResponse(users);
   }
@@ -33,12 +33,6 @@ export class GetUsersUseCase {
     const offset = new Offset(offsetValue);
     const username = new Username(usernameString);
     return { token, username, limit, offset };
-  }
-
-  private async getAuthenticatedUser(token: Token) {
-    const user = await extractUser(this.gateKeeper, this.logger, token);
-    makeSureUserIsAuthenticated(user);
-    return user;
   }
 
   private async getUsers(username: Username, limit: Limit, offset: Offset) {

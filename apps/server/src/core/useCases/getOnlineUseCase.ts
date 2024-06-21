@@ -1,4 +1,4 @@
-import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
+import { getAuthenticatedUserOrThrow } from '../domainServices';
 import { Connection } from '../entities/connection';
 import { User } from '../entities/user';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -14,18 +14,16 @@ export class GetOnlineUseCase {
   ) {}
 
   async execute({ tokenString, connection }: GetOnlineRequest) {
-    const user = await this.getAuthenticatedUser(this.createToken(tokenString));
+    const user = await getAuthenticatedUserOrThrow(
+      this.createToken(tokenString),
+      this.gateKeeper,
+      this.logger
+    );
     this.makeUserAvailable(connection, user);
   }
 
   private createToken(tokenString: string) {
     return new Token(tokenString);
-  }
-
-  private async getAuthenticatedUser(token: Token) {
-    const user = await extractUser(this.gateKeeper, this.logger, token);
-    makeSureUserIsAuthenticated(user);
-    return user;
   }
 
   private makeUserAvailable(connection: Connection, user: User) {

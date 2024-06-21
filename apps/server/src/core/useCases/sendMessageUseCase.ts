@@ -1,6 +1,5 @@
 import {
-  extractUser,
-  makeSureUserIsAuthenticated,
+  getAuthenticatedUserOrThrow,
   sanitizeXSSString,
 } from '../domainServices';
 import { ValidationError } from '../errors';
@@ -36,7 +35,11 @@ export class SendMessageUseCase {
     const t = new Token(token);
     const msgTxt = new MessageText(sanitizeXSSString(text));
 
-    const user = await this.getAuthenticatedUser(t);
+    const user = await getAuthenticatedUserOrThrow(
+      t,
+      this.gateKeeper,
+      this.logger
+    );
     await this.makeSureChatExists(cId);
 
     const message = this.buildMessage(user, cId, msgTxt);
@@ -45,12 +48,6 @@ export class SendMessageUseCase {
     await this.sendMessage(await this.getCorrespondentId(cId, user), message);
 
     return this.buildResponse(message);
-  }
-
-  private async getAuthenticatedUser(t: Token) {
-    const user = await extractUser(this.gateKeeper, this.logger, t);
-    makeSureUserIsAuthenticated(user);
-    return user;
   }
 
   private async makeSureChatExists(chatId: ChatId) {
