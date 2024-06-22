@@ -118,8 +118,8 @@ export function testWithExpectedError(
   });
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function testWithUnExpectedError(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: () => Promise<any>,
   {
     errorExpectation,
