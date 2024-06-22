@@ -10,6 +10,10 @@ import {
   sampleOffset,
   sampleUser2,
 } from '../utilities/samples';
+import {
+  testWithExpectedError,
+  testWithUnExpectedError,
+} from '../utilities/tests';
 
 let messageGatewaySpy: MessageGatewaySpy;
 
@@ -48,4 +52,12 @@ test('returns correct response', async () => {
 
   expect(res.status).toBe(200);
   expect(res.body.data.messages).toStrictEqual([buildMessageResponse(message)]);
+});
+
+testWithExpectedError(async () => {
+  return await sendReadMessagesRequest();
+});
+
+testWithUnExpectedError(async () => {
+  return await sendReadMessagesRequest();
 });

@@ -17,6 +17,7 @@ import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeep
 import { DummyLogger } from '../../src/adapter-api-express/dummyLogger';
 import { InMemoryPostRepository } from '../../src/adapter-persistance-inMemory/InMemoryPostRepository';
 import { emptyString } from './samples';
+import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
 
 export function testWithInvalidToken(
   useCaseExecution: (token: string) => Promise<unknown>
@@ -128,10 +129,14 @@ export function testWithUnExpectedError(
   } = {}
 ) {
   describe('Unexpected error', () => {
-    beforeAll(() => (Context.postRepository = new PostRepositoryErrorStub()));
+    beforeAll(() => {
+      Context.postRepository = new PostRepositoryErrorStub();
+      Context.gateKeeper = new GateKeeperErrorStub();
+    });
     afterAll(() => {
       Context.postRepository = new InMemoryPostRepository();
       Context.logger = new DummyLogger();
+      Context.gateKeeper = new DefaultGateKeeper();
     });
 
     test('hides unexpected error', async () => {
