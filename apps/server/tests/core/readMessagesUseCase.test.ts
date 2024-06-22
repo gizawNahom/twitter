@@ -104,7 +104,13 @@ test('gets messages', async () => {
 
   const response = await executeUseCase({});
 
-  assertCorrectResponse(response, message);
+  assertCorrectResponse(response, {
+    id: message.getId(),
+    senderId: message.getSenderId(),
+    chatId: message.getChatId(),
+    text: message.getText(),
+    createdAt: message.getCreatedAt().toISOString(),
+  });
   assertGetMessageCall();
 
   function assertGetMessageCall() {

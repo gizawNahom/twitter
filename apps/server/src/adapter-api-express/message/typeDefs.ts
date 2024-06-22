@@ -5,6 +5,7 @@ const typeDefs = `#graphql
 
   type Query {
     chats(limit: Int!, offset: Int!): [Chat!]!
+    messages(limit: Int!, offset: Int!, chatId: String!): [Message!]!
   }
 
   type Message {

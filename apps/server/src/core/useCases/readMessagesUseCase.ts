@@ -79,11 +79,17 @@ export class ReadMessagesUseCase {
     return await this.messageGateway.getMessages(chatId, limit, offset);
   }
 
-  private buildResponse(
-    messages: Message[]
-  ): ReadMessagesResponse | PromiseLike<ReadMessagesResponse> {
+  private buildResponse(messages: Message[]): ReadMessagesResponse {
     return {
-      messages,
+      messages: messages.map((m) => {
+        return {
+          id: m.getId(),
+          senderId: m.getSenderId(),
+          chatId: m.getChatId(),
+          text: m.getText(),
+          createdAt: m.getCreatedAt().toISOString(),
+        };
+      }),
     };
   }
 }
@@ -96,5 +102,11 @@ export interface ReadMessagesRequest {
 }
 
 export interface ReadMessagesResponse {
-  messages: Message[];
+  messages: {
+    id: string;
+    senderId: string;
+    chatId: string;
+    text: string;
+    createdAt: string;
+  }[];
 }
