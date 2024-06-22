@@ -6,6 +6,7 @@ import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
 import { ERROR_GENERIC, ERROR_INVALID_USER } from '../utilities/errorMessages';
 import { getRandomPort } from '../utilities/helpers';
+import { testWithExpectedError } from '../utilities/tests';
 
 const port = getRandomPort();
 let server: Server, clientSocket: Socket;
@@ -54,13 +55,18 @@ test('allows user to connect', async () => {
   expect(connected).toBe(true);
 }, 10000);
 
-test('does not allow connection if there is an expected error', async () => {
-  Context.gateKeeper = new GateKeeperFailureStub();
+testWithExpectedError(
+  async () => {
+    Context.gateKeeper = new GateKeeperFailureStub();
 
-  const { error } = await connectToServer();
-
-  expect(error?.message).toBe(ERROR_INVALID_USER);
-});
+    return await connectToServer();
+  },
+  {
+    errorExpectation: ({ error }) => {
+      expect(error?.message).toBe(ERROR_INVALID_USER);
+    },
+  }
+);
 
 test('does not allow connection if there is an unexpected error', async () => {
   Context.gateKeeper = new GateKeeperErrorStub();

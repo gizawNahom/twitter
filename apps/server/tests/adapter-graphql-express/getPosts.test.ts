@@ -37,9 +37,8 @@ test('gets posts', async () => {
   assertPostResponseMatchesPostEntity(res.body.data.posts[0], samplePost);
 });
 
-testWithExpectedError(
-  async () => await sendGetPostsRequest(-1),
-  ERROR_INVALID_LIMIT
-);
+testWithExpectedError(async () => await sendGetPostsRequest(-1), {
+  errorMessage: ERROR_INVALID_LIMIT,
+});
 
 testWithUnExpectedError(async () => await sendGetPostsRequest());

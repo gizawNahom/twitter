@@ -81,7 +81,13 @@ export function testWithInvalidChatId(
 export function testWithExpectedError(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   action: () => Promise<any>,
-  errorMessage = ERROR_INVALID_USER
+  {
+    errorExpectation,
+    errorMessage = ERROR_INVALID_USER,
+  }: {
+    errorExpectation?: (response) => void;
+    errorMessage?: string;
+  } = {}
 ) {
   describe('expected error', () => {
     beforeEach(() => (Context.gateKeeper = new GateKeeperFailureStub()));
@@ -93,8 +99,11 @@ export function testWithExpectedError(
     test('passes expected error', async () => {
       const res = await action();
 
-      expect(res.body.errors.length).toBe(1);
-      expect(res.body.errors[0].message).toBe(errorMessage);
+      if (errorExpectation) errorExpectation(res);
+      else {
+        expect(res.body.errors.length).toBe(1);
+        expect(res.body.errors[0].message).toBe(errorMessage);
+      }
     });
 
     test('logs expected error', async () => {
