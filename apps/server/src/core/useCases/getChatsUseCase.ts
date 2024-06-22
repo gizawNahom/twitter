@@ -1,4 +1,4 @@
-import { getAuthenticatedUserOrThrow } from '../domainServices';
+import { getUserOrThrow } from '../domainServices';
 import { Chat } from '../entities/chat';
 import { User } from '../entities/user';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -25,11 +25,7 @@ export class GetChatsUseCase {
       limitValue,
       offsetValue
     );
-    const user = await getAuthenticatedUserOrThrow(
-      token,
-      this.gateKeeper,
-      this.logger
-    );
+    const user = await getUserOrThrow(token, this.gateKeeper, this.logger);
     const chats = await this.getChats(user, limit, offset);
     return this.buildResponse(chats, user);
   }

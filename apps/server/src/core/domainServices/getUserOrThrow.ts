@@ -6,7 +6,7 @@ import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
 import { extractUser } from './extractUser';
 
-export async function getAuthenticatedUserOrThrow(
+export async function getUserOrThrow(
   token: Token,
   gateKeeper: GateKeeper,
   logger: Logger

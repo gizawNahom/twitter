@@ -1,7 +1,4 @@
-import {
-  getAuthenticatedUserOrThrow,
-  sanitizeXSSString,
-} from '../domainServices';
+import { getUserOrThrow, sanitizeXSSString } from '../domainServices';
 import { Post } from '../entities/post';
 import { ValidationError } from '../errors';
 import { LogMessages } from '../logMessages';
@@ -28,7 +25,7 @@ export class SearchPostsUseCase {
 
     this.validateQuery(query);
 
-    await getAuthenticatedUserOrThrow(token, this.gateKeeper, this.logger);
+    await getUserOrThrow(token, this.gateKeeper, this.logger);
 
     return this.buildResponse(await this.getPosts(query, limit, offset));
   }

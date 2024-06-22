@@ -1,4 +1,4 @@
-import { getAuthenticatedUserOrThrow } from '../domainServices';
+import { getUserOrThrow } from '../domainServices';
 import { Connection } from '../entities/connection';
 import { User } from '../entities/user';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -14,7 +14,7 @@ export class GetOnlineUseCase {
   ) {}
 
   async execute({ tokenString, connection }: GetOnlineRequest) {
-    const user = await getAuthenticatedUserOrThrow(
+    const user = await getUserOrThrow(
       this.createToken(tokenString),
       this.gateKeeper,
       this.logger

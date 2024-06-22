@@ -1,7 +1,4 @@
-import {
-  getAuthenticatedUserOrThrow,
-  sanitizeXSSString,
-} from '../domainServices';
+import { getUserOrThrow, sanitizeXSSString } from '../domainServices';
 import { ValidationError } from '../errors';
 import { MessageGateway } from '../ports/messageGateway';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -35,11 +32,7 @@ export class SendMessageUseCase {
     const t = new Token(token);
     const msgTxt = new MessageText(sanitizeXSSString(text));
 
-    const user = await getAuthenticatedUserOrThrow(
-      t,
-      this.gateKeeper,
-      this.logger
-    );
+    const user = await getUserOrThrow(t, this.gateKeeper, this.logger);
     await this.makeSureChatExists(cId);
 
     const message = this.buildMessage(user, cId, msgTxt);

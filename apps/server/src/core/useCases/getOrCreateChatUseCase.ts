@@ -1,4 +1,4 @@
-import { getAuthenticatedUserOrThrow } from '../domainServices';
+import { getUserOrThrow } from '../domainServices';
 import { Chat } from '../entities/chat';
 import { User } from '../entities/user';
 import { Username } from '../entities/username';
@@ -52,7 +52,7 @@ export class GetOrCreateChatUseCase {
   }
 
   private async getFirstParticipant(token: Token) {
-    return getAuthenticatedUserOrThrow(token, this.gateKeeper, this.logger);
+    return getUserOrThrow(token, this.gateKeeper, this.logger);
   }
 
   private async getSecondParticipant(username: Username) {

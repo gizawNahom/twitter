@@ -6,7 +6,7 @@ import { Post } from '../entities/post';
 import { PostRepository } from '../ports/postRepository';
 import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
-import { getAuthenticatedUserOrThrow } from '../domainServices';
+import { getUserOrThrow } from '../domainServices';
 
 export class GetUserPostUseCase {
   constructor(
@@ -21,11 +21,7 @@ export class GetUserPostUseCase {
   ): Promise<GetUserPostUseCaseResponse> {
     this.validatePostId(postId);
 
-    await getAuthenticatedUserOrThrow(
-      new Token(token),
-      this.gateKeeper,
-      this.logger
-    );
+    await getUserOrThrow(new Token(token), this.gateKeeper, this.logger);
 
     const post = await this.getSavedPost(postId);
     if (!this.exists(post)) this.throwInvalidPostIdError();

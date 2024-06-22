@@ -1,4 +1,4 @@
-import { getAuthenticatedUserOrThrow } from '../domainServices';
+import { getUserOrThrow } from '../domainServices';
 import { User } from '../entities/user';
 import { Username } from '../entities/username';
 import { GateKeeper } from '../ports/gateKeeper';
@@ -17,7 +17,7 @@ export class GetUsersUseCase {
 
   async execute(request: GetUsersRequest): Promise<GetUsersResponse> {
     const { token, username, limit, offset } = this.createValueObjects(request);
-    await getAuthenticatedUserOrThrow(token, this.gateKeeper, this.logger);
+    await getUserOrThrow(token, this.gateKeeper, this.logger);
     const users = await this.getUsers(username, limit, offset);
     return this.buildResponse(users);
   }

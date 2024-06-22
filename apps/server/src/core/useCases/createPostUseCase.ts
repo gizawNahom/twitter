@@ -7,10 +7,7 @@ import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
 import { Logger } from '../ports/logger';
 import { LogMessages } from '../logMessages';
-import {
-  getAuthenticatedUserOrThrow,
-  sanitizeXSSString,
-} from '../domainServices';
+import { getUserOrThrow, sanitizeXSSString } from '../domainServices';
 
 export class CreatePostUseCase {
   constructor(
@@ -22,7 +19,7 @@ export class CreatePostUseCase {
   async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
 
-    const user = await getAuthenticatedUserOrThrow(
+    const user = await getUserOrThrow(
       new Token(token),
       this.gateKeeper,
       this.logger
