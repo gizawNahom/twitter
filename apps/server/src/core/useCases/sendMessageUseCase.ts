@@ -23,24 +23,30 @@ export class SendMessageUseCase {
     private logger: Logger
   ) {}
 
-  async execute({
-    token,
-    text,
-    chatId,
-  }: SendMessageRequest): Promise<SendMessageResponse> {
-    const cId = new ChatId(chatId);
-    const t = new Token(token);
-    const msgTxt = new MessageText(sanitizeXSSString(text));
+  async execute(request: SendMessageRequest): Promise<SendMessageResponse> {
+    const { token, chatId, messageText } = this.createValueObjects(request);
 
-    const user = await getUserOrThrow(t, this.gateKeeper, this.logger);
-    await this.makeSureChatExists(cId);
-
-    const message = this.buildMessage(user, cId, msgTxt);
-    await this.saveMessage(message);
-
-    await this.sendMessage(await this.getCorrespondentId(cId, user), message);
+    const user = await this.getUserOrThrow(token);
+    await this.makeSureChatExists(chatId);
+    const message = this.createMessage(user, chatId, messageText);
+    await this.saveMessageAndSend(message, chatId);
 
     return this.buildResponse(message);
+  }
+
+  private createValueObjects({
+    chatIdString,
+    tokenString,
+    textString,
+  }: SendMessageRequest) {
+    const chatId = new ChatId(chatIdString);
+    const token = new Token(tokenString);
+    const messageText = new MessageText(sanitizeXSSString(textString));
+    return { token, chatId, messageText };
+  }
+
+  private async getUserOrThrow(token: Token) {
+    return await getUserOrThrow(token, this.gateKeeper, this.logger);
   }
 
   private async makeSureChatExists(chatId: ChatId) {
@@ -60,7 +66,7 @@ export class SendMessageUseCase {
     throw new ValidationError(errorMessage);
   }
 
-  private buildMessage(user: User, chatId: ChatId, msgText: MessageText) {
+  private createMessage(user: User, chatId: ChatId, msgText: MessageText) {
     return MessageBuilder.message()
       .withId(this.idGenerator.generate())
       .withSenderId(user.getId())
@@ -70,13 +76,21 @@ export class SendMessageUseCase {
       .build();
   }
 
+  private async saveMessageAndSend(message: Message, chatId: ChatId) {
+    await this.saveMessage(message);
+    await this.sendMessage(
+      await this.getCorrespondentId(chatId, message.getSenderId()),
+      message
+    );
+  }
+
   private async saveMessage(msg: Message) {
     await this.messageGateway.saveMessage(msg);
     this.logInfo(LogMessages.SAVED_MESSAGE, { messageId: msg.getId() });
   }
 
-  private async getCorrespondentId(cId: ChatId, user: User) {
-    const id = await this.messageGateway.getCorrespondentId(cId, user.getId());
+  private async getCorrespondentId(cId: ChatId, userId: string) {
+    const id = await this.messageGateway.getCorrespondentId(cId, userId);
     this.logInfo(LogMessages.FETCHED_CORRESPONDENT_ID, {
       chatId: cId.getId(),
       correspondentId: id,
@@ -126,9 +140,9 @@ export class SendMessageUseCase {
 }
 
 export interface SendMessageRequest {
-  token: string;
-  text: string;
-  chatId: string;
+  tokenString: string;
+  textString: string;
+  chatIdString: string;
 }
 
 export interface SendMessageResponse {

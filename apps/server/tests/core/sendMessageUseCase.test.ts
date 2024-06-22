@@ -1,6 +1,7 @@
 import Context from '../../src/adapter-api-express/context';
 import { Message } from '../../src/core/entities/message';
 import {
+  SendMessageRequest,
   SendMessageResponse,
   SendMessageUseCase,
 } from '../../src/core/useCases/sendMessageUseCase';
@@ -46,14 +47,10 @@ let idGeneratorStub: IdGeneratorStub;
 let messageSenderSpy: MessageSenderSpy;
 
 async function executeUseCase({
-  token = sampleUserToken,
-  text = sampleMessage,
-  chatId = sampleChatId,
-}: {
-  text?: string;
-  token?: string;
-  chatId?: string;
-}): Promise<SendMessageResponse> {
+  tokenString = sampleUserToken,
+  textString = sampleMessage,
+  chatIdString = sampleChatId,
+}: Partial<SendMessageRequest>): Promise<SendMessageResponse> {
   const uC = new SendMessageUseCase(
     Context.gateKeeper,
     Context.messageGateway,
@@ -61,7 +58,7 @@ async function executeUseCase({
     Context.messageSender,
     Context.logger
   );
-  return await uC.execute({ token, text, chatId });
+  return await uC.execute({ tokenString, textString, chatIdString });
 }
 
 function assertMessageWithDefaultValues(message: Message) {
@@ -115,24 +112,24 @@ beforeEach(() => {
 
 test('throws validation error if message is more than 1000 chars', () => {
   assertValidationErrorWithMessage(
-    () => executeUseCase({ text: 'a'.repeat(10001) }),
+    () => executeUseCase({ textString: 'a'.repeat(10001) }),
     ERROR_LONG_MESSAGE
   );
 });
 
 test('throws validation error if message is empty', () => {
   assertValidationErrorWithMessage(
-    () => executeUseCase({ text: emptyString }),
+    () => executeUseCase({ textString: emptyString }),
     ERROR_EMPTY_MESSAGE
   );
 });
 
 testUserExtractionFailure(() => executeUseCase({}));
 
-testWithInvalidToken((token) => executeUseCase({ token }));
+testWithInvalidToken((tokenString) => executeUseCase({ tokenString }));
 
 testWithInvalidChatId((chatIdString) =>
-  executeUseCase({ chatId: chatIdString })
+  executeUseCase({ chatIdString: chatIdString })
 );
 
 test('throws if chat does not exist', async () => {
@@ -151,7 +148,7 @@ test('saves message', async () => {
 });
 
 test('sanitizes text', async () => {
-  await executeUseCase({ text: sampleXSS.XSSText });
+  await executeUseCase({ textString: sampleXSS.XSSText });
 
   const savedMessage = messageGatewaySpy.savedMessage;
   expect(savedMessage.getText()).toBe(sampleXSS.sanitizedText);
@@ -168,7 +165,7 @@ test('sends message if correspondent is available', async () => {
 });
 
 test('sends sanitized text', async () => {
-  await executeUseCase({ text: sampleXSS.XSSText });
+  await executeUseCase({ textString: sampleXSS.XSSText });
 
   const sentMessage = messageSenderSpy.sendMessageCalls[0].message;
   expect(sentMessage.getText()).toBe(sampleXSS.sanitizedText);

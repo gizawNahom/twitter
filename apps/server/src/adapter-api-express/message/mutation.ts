@@ -16,9 +16,9 @@ async function sendMessage(
       Context.messageSender,
       Context.logger
     ).execute({
-      token: contextValue.token,
-      text: args.text,
-      chatId: args.chatId,
+      tokenString: contextValue.token,
+      textString: args.text,
+      chatIdString: args.chatId,
     });
     return response.message;
   });
