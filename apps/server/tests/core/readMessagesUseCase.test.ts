@@ -24,6 +24,7 @@ import {
   testWithInvalidOffset,
   testWithInvalidToken,
 } from '../utilities/tests';
+import { buildMessageResponse } from '../utilities/helpers';
 
 let messageGatewaySpy: MessageGatewaySpy;
 
@@ -104,14 +105,14 @@ test('gets messages', async () => {
 
   const response = await executeUseCase({});
 
-  assertCorrectResponse(response, {
-    id: message.getId(),
-    senderId: message.getSenderId(),
-    chatId: message.getChatId(),
-    text: message.getText(),
-    createdAt: message.getCreatedAt().toISOString(),
-  });
+  assertCorrectResponse(response, buildMessageResponse(message));
   assertGetMessageCall();
+
+  function assertCorrectResponse(response, message) {
+    expect(response).toStrictEqual({
+      messages: [message],
+    });
+  }
 
   function assertGetMessageCall() {
     const getMessagesCalls = messageGatewaySpy.getMessagesCalls;
@@ -119,11 +120,5 @@ test('gets messages', async () => {
     expect(getMessagesCalls[0].chatId.getId()).toBe(sampleChatId);
     expect(getMessagesCalls[0].limit.getLimit()).toBe(sampleLimit);
     expect(getMessagesCalls[0].offset.getOffset()).toBe(sampleOffset);
-  }
-
-  function assertCorrectResponse(response, message) {
-    expect(response).toStrictEqual({
-      messages: [message],
-    });
   }
 });

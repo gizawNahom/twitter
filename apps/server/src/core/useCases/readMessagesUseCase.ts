@@ -101,12 +101,14 @@ export interface ReadMessagesRequest {
   chatIdString: string;
 }
 
+export interface MessageResponse {
+  id: string;
+  senderId: string;
+  chatId: string;
+  text: string;
+  createdAt: string;
+}
+
 export interface ReadMessagesResponse {
-  messages: {
-    id: string;
-    senderId: string;
-    chatId: string;
-    text: string;
-    createdAt: string;
-  }[];
+  messages: MessageResponse[];
 }

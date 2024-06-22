@@ -4,6 +4,8 @@ import { Post } from '../../src/core/entities/post';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import request from 'supertest';
 import { sampleUserId } from './samples';
+import { Message } from '../../src/core/entities/message';
+import { MessageResponse } from '../../src/core/useCases/readMessagesUseCase';
 
 export function removeSeconds(isoString: string) {
   return isoString.slice(0, isoString.lastIndexOf(':'));
@@ -48,4 +50,14 @@ export function savePosts(posts: Post[]) {
 
 export function getRandomPort() {
   return Math.floor(Math.random() * 5000) + 5000;
+}
+
+export function buildMessageResponse(message: Message): MessageResponse {
+  return {
+    id: message.getId(),
+    senderId: message.getSenderId(),
+    chatId: message.getChatId(),
+    text: message.getText(),
+    createdAt: message.getCreatedAt().toISOString(),
+  };
 }

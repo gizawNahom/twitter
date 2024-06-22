@@ -3,7 +3,7 @@ import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeep
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { ChatMother } from '../utilities/ChatMother';
 import { MessageMother } from '../utilities/MessageMother';
-import { sendRequest } from '../utilities/helpers';
+import { buildMessageResponse, sendRequest } from '../utilities/helpers';
 import {
   sampleChatId,
   sampleLimit,
@@ -47,15 +47,5 @@ test('returns correct response', async () => {
   const res = await sendReadMessagesRequest();
 
   expect(res.status).toBe(200);
-  assertCorrectResponse(res.body.data.messages, {
-    id: message.getId(),
-    senderId: message.getSenderId(),
-    chatId: message.getChatId(),
-    text: message.getText(),
-    createdAt: message.getCreatedAt().toISOString(),
-  });
+  expect(res.body.data.messages).toStrictEqual([buildMessageResponse(message)]);
 });
-
-function assertCorrectResponse(messages, message) {
-  expect(messages).toStrictEqual([message]);
-}
