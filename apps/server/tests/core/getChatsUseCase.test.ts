@@ -18,10 +18,8 @@ import {
   testWithInvalidOffset,
   testWithInvalidToken,
 } from '../utilities/tests';
-import {
-  assertSingleChatResponse,
-  buildChatResponse,
-} from '../utilities/assertions';
+import { assertSingleChatResponse } from '../utilities/assertions';
+import { buildChatResponse } from '../utilities/helpers';
 
 function executeUseCase({
   tokenString = sampleUserToken,

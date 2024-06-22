@@ -6,6 +6,7 @@ import request from 'supertest';
 import { sampleUserId } from './samples';
 import { Message } from '../../src/core/entities/message';
 import { MessageResponse } from '../../src/core/useCases/readMessagesUseCase';
+import { Chat } from '../../src/core/entities/chat';
 
 export function removeSeconds(isoString: string) {
   return isoString.slice(0, isoString.lastIndexOf(':'));
@@ -59,5 +60,18 @@ export function buildMessageResponse(message: Message): MessageResponse {
     chatId: message.getChatId(),
     text: message.getText(),
     createdAt: message.getCreatedAt().toISOString(),
+  };
+}
+
+export function buildChatResponse(chat: Chat, participantPosition: 0 | 1) {
+  const participant = chat.getParticipants()[participantPosition];
+  return {
+    id: chat.getId(),
+    createdAtISO: chat.getCreatedAt().toISOString(),
+    participant: {
+      username: participant.getUsername(),
+      displayName: participant.getDisplayName(),
+      profilePic: participant.getProfilePic(),
+    },
   };
 }

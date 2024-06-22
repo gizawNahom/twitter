@@ -55,16 +55,3 @@ export function assertSingleChatResponse(chats, chatResponse) {
   expect(chats).toHaveLength(1);
   expect(chats[0]).toStrictEqual(chatResponse);
 }
-
-export function buildChatResponse(chat: Chat, participantPosition: 0 | 1) {
-  const participant = chat.getParticipants()[participantPosition];
-  return {
-    id: chat.getId(),
-    createdAtISO: chat.getCreatedAt().toISOString(),
-    participant: {
-      username: participant.getUsername(),
-      displayName: participant.getDisplayName(),
-      profilePic: participant.getProfilePic(),
-    },
-  };
-}
