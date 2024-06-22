@@ -119,7 +119,14 @@ export function testWithExpectedError(
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function testWithUnExpectedError(action: () => Promise<any>) {
+export function testWithUnExpectedError(
+  action: () => Promise<any>,
+  {
+    errorExpectation,
+  }: {
+    errorExpectation?: (response) => void;
+  } = {}
+) {
   describe('Unexpected error', () => {
     beforeAll(() => (Context.postRepository = new PostRepositoryErrorStub()));
     afterAll(() => {
@@ -130,8 +137,11 @@ export function testWithUnExpectedError(action: () => Promise<any>) {
     test('hides unexpected error', async () => {
       const res = await action();
 
-      expect(res.body.errors.length).toBe(1);
-      expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
+      if (errorExpectation) errorExpectation(res);
+      else {
+        expect(res.body.errors.length).toBe(1);
+        expect(res.body.errors[0].message).toBe(ERROR_GENERIC);
+      }
     });
 
     test('logs unexpected error', async () => {

@@ -6,7 +6,10 @@ import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
 import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
 import { ERROR_GENERIC, ERROR_INVALID_USER } from '../utilities/errorMessages';
 import { getRandomPort } from '../utilities/helpers';
-import { testWithExpectedError } from '../utilities/tests';
+import {
+  testWithExpectedError,
+  testWithUnExpectedError,
+} from '../utilities/tests';
 
 const port = getRandomPort();
 let server: Server, clientSocket: Socket;
@@ -68,10 +71,15 @@ testWithExpectedError(
   }
 );
 
-test('does not allow connection if there is an unexpected error', async () => {
-  Context.gateKeeper = new GateKeeperErrorStub();
+testWithUnExpectedError(
+  async () => {
+    Context.gateKeeper = new GateKeeperErrorStub();
 
-  const { error } = await connectToServer();
-
-  expect(error?.message).toBe(ERROR_GENERIC);
-});
+    return await connectToServer();
+  },
+  {
+    errorExpectation: ({ error }) => {
+      expect(error?.message).toBe(ERROR_GENERIC);
+    },
+  }
+);
