@@ -1,4 +1,4 @@
-import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
+import { getAuthenticatedUserOrThrow } from '../domainServices';
 import { Chat } from '../entities/chat';
 import { User } from '../entities/user';
 import { Username } from '../entities/username';
@@ -52,9 +52,7 @@ export class GetOrCreateChatUseCase {
   }
 
   private async getFirstParticipant(token: Token) {
-    const user = await extractUser(this.gateKeeper, this.logger, token);
-    makeSureUserIsAuthenticated(user);
-    return user;
+    return getAuthenticatedUserOrThrow(token, this.gateKeeper, this.logger);
   }
 
   private async getSecondParticipant(username: Username) {

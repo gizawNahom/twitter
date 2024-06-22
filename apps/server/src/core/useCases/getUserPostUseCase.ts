@@ -6,8 +6,7 @@ import { Post } from '../entities/post';
 import { PostRepository } from '../ports/postRepository';
 import { ValidationMessages } from '../validationMessages';
 import { Token } from '../valueObjects/token';
-import { makeSureUserIsAuthenticated } from '../domainServices';
-import { extractUser } from '../domainServices';
+import { getAuthenticatedUserOrThrow } from '../domainServices';
 
 export class GetUserPostUseCase {
   constructor(
@@ -22,8 +21,10 @@ export class GetUserPostUseCase {
   ): Promise<GetUserPostUseCaseResponse> {
     this.validatePostId(postId);
 
-    makeSureUserIsAuthenticated(
-      await extractUser(this.gateKeeper, this.logger, new Token(token))
+    await getAuthenticatedUserOrThrow(
+      new Token(token),
+      this.gateKeeper,
+      this.logger
     );
 
     const post = await this.getSavedPost(postId);

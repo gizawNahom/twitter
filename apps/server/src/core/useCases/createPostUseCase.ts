@@ -8,10 +8,9 @@ import { Token } from '../valueObjects/token';
 import { Logger } from '../ports/logger';
 import { LogMessages } from '../logMessages';
 import {
-  makeSureUserIsAuthenticated,
+  getAuthenticatedUserOrThrow,
   sanitizeXSSString,
 } from '../domainServices';
-import { extractUser } from '../domainServices';
 
 export class CreatePostUseCase {
   constructor(
@@ -23,8 +22,11 @@ export class CreatePostUseCase {
   async execute(token: string, text: string): Promise<PostUseCaseResponse> {
     this.validateTextLength(text.length);
 
-    const user = await this.extractUser(new Token(token));
-    makeSureUserIsAuthenticated(user);
+    const user = await getAuthenticatedUserOrThrow(
+      new Token(token),
+      this.gateKeeper,
+      this.logger
+    );
 
     return this.buildResponse(
       await this.getSavedPost(this.sanitizeText(text), user as User)
@@ -50,10 +52,6 @@ export class CreatePostUseCase {
 
   private throwTextTooShortError() {
     throw this.createError("Text can't be empty");
-  }
-
-  private async extractUser(token: Token): Promise<User> {
-    return await extractUser(this.gateKeeper, this.logger, token);
   }
 
   private sanitizeText(text: string): string {

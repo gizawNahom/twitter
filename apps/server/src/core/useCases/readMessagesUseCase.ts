@@ -1,4 +1,4 @@
-import { extractUser, makeSureUserIsAuthenticated } from '../domainServices';
+import { getAuthenticatedUserOrThrow } from '../domainServices';
 import { Chat } from '../entities/chat';
 import { Message } from '../entities/message';
 import { User } from '../entities/user';
@@ -41,9 +41,7 @@ export class ReadMessagesUseCase {
   }
 
   private async getUserOrThrow(token: Token) {
-    const user = await extractUser(this.gateKeeper, this.logger, token);
-    makeSureUserIsAuthenticated(user);
-    return user;
+    return getAuthenticatedUserOrThrow(token, this.gateKeeper, this.logger);
   }
 
   private async getChatOrThrow(chatId: ChatId) {
