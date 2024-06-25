@@ -7,6 +7,10 @@ import {
   sampleUser1,
   sampleUsername,
 } from '../../utilities/samples';
+import {
+  testWithExpectedError,
+  testWithUnExpectedError,
+} from '../../utilities/tests';
 
 let userRepoSpy: UserRepositorySpy;
 
@@ -39,16 +43,20 @@ test('returns correct response', async () => {
 
   expect(res.status).toBe(200);
   assertCorrectResponse(res.body.data);
+
+  function assertCorrectResponse(response) {
+    expect(response).toStrictEqual({
+      users: [
+        {
+          username: sampleUser1.getUsername(),
+          displayName: sampleUser1.getDisplayName(),
+          profilePic: sampleUser1.getProfilePic(),
+        },
+      ],
+    });
+  }
 });
 
-function assertCorrectResponse(response) {
-  expect(response).toStrictEqual({
-    users: [
-      {
-        username: sampleUser1.getUsername(),
-        displayName: sampleUser1.getDisplayName(),
-        profilePic: sampleUser1.getProfilePic(),
-      },
-    ],
-  });
-}
+testWithExpectedError(async () => await sendGetUsersRequest());
+
+testWithUnExpectedError(async () => await sendGetUsersRequest());
