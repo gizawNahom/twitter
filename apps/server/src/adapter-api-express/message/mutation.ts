@@ -30,17 +30,18 @@ async function resolveChat(
   args: { username: string },
   contextValue: ServerContext
 ) {
-  const response = await new GetOrCreateChatUseCase(
-    Context.idGenerator,
-    Context.messageGateway,
-    Context.userRepository,
-    Context.gateKeeper,
-    Context.logger
-  ).execute({
-    tokenString: contextValue.token,
-    usernameString: args.username,
+  return await tryResolve(async () => {
+    return await new GetOrCreateChatUseCase(
+      Context.idGenerator,
+      Context.messageGateway,
+      Context.userRepository,
+      Context.gateKeeper,
+      Context.logger
+    ).execute({
+      tokenString: contextValue.token,
+      usernameString: args.username,
+    });
   });
-  return response;
 }
 
 export const mutation = {

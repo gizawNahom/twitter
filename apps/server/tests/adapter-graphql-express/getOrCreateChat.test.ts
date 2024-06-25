@@ -5,6 +5,10 @@ import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import { assertChat } from '../utilities/assertions';
 import { removeSeconds, sendRequest } from '../utilities/helpers';
 import { sampleUser1, sampleUsername } from '../utilities/samples';
+import {
+  testWithExpectedError,
+  testWithUnExpectedError,
+} from '../utilities/tests';
 
 let userRepoSpy: UserRepositorySpy;
 
@@ -39,4 +43,12 @@ test('returns correct response', async () => {
     id: idGeneratorStub.STUB_ID,
     createdAt: removeSeconds(new Date().toISOString()),
   });
+});
+
+testWithExpectedError(async () => {
+  return await sendGetOrCreateChatRequest();
+});
+
+testWithUnExpectedError(async () => {
+  return await sendGetOrCreateChatRequest();
 });
