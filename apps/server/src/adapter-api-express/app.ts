@@ -5,6 +5,7 @@ import cors from 'cors';
 import resolvers from './resolvers';
 import postTypeDefs from './post/typeDefs';
 import messageTypeDefs from './message/typeDefs';
+import userTypeDefs from './user/typeDefs';
 
 const app = express();
 
@@ -13,7 +14,7 @@ export interface ServerContext {
 }
 
 const server = new ApolloServer<ServerContext>({
-  typeDefs: [postTypeDefs, messageTypeDefs],
+  typeDefs: [postTypeDefs, messageTypeDefs, userTypeDefs],
   resolvers,
 });
 
