@@ -1,12 +1,12 @@
-import Context from '../../src/adapter-api-express/context';
-import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
-import { samplePost, samplePostId } from '../utilities/samples';
+import Context from '../../../src/adapter-api-express/context';
+import { DefaultGateKeeper } from '../../../src/adapter-api-express/defaultGateKeeper';
+import { samplePost, samplePostId } from '../../utilities/samples';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
-} from '../utilities/tests';
-import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
-import { sendRequest } from '../utilities/helpers';
+} from '../../utilities/tests';
+import { assertPostResponseMatchesPostEntity } from '../../utilities/assertions';
+import { sendRequest } from '../../utilities/helpers';
 
 async function sendGetPostRequest(id = samplePostId) {
   const query = `query($id: ID!) {

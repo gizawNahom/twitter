@@ -1,14 +1,18 @@
-import Context from '../../src/adapter-api-express/context';
-import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
-import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
-import { ChatMother } from '../utilities/ChatMother';
-import { assertSingleChatResponse } from '../utilities/assertions';
-import { buildChatResponse, sendRequest } from '../utilities/helpers';
-import { sampleLimit, sampleOffset, sampleUser1 } from '../utilities/samples';
+import Context from '../../../src/adapter-api-express/context';
+import { GateKeeperErrorStub } from '../../doubles/gateKeeperErrorStub';
+import { MessageGatewaySpy } from '../../doubles/messageGatewaySpy';
+import { ChatMother } from '../../utilities/ChatMother';
+import { assertSingleChatResponse } from '../../utilities/assertions';
+import { buildChatResponse, sendRequest } from '../../utilities/helpers';
+import {
+  sampleLimit,
+  sampleOffset,
+  sampleUser1,
+} from '../../utilities/samples';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
-} from '../utilities/tests';
+} from '../../utilities/tests';
 
 let messageGatewaySpy: MessageGatewaySpy;
 

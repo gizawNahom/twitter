@@ -1,15 +1,15 @@
-import Context from '../../src/adapter-api-express/context';
-import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
-import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
-import { IdGeneratorStub } from '../doubles/idGeneratorStub';
-import { MessageSenderSpy } from '../doubles/messageSenderSpy';
-import { removeSeconds, sendRequest } from '../utilities/helpers';
-import { sampleChatId, sampleMessage } from '../utilities/samples';
+import Context from '../../../src/adapter-api-express/context';
+import { DefaultGateKeeper } from '../../../src/adapter-api-express/defaultGateKeeper';
+import { MessageGatewaySpy } from '../../doubles/messageGatewaySpy';
+import { IdGeneratorStub } from '../../doubles/idGeneratorStub';
+import { MessageSenderSpy } from '../../doubles/messageSenderSpy';
+import { removeSeconds, sendRequest } from '../../utilities/helpers';
+import { sampleChatId, sampleMessage } from '../../utilities/samples';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
-} from '../utilities/tests';
-import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
+} from '../../utilities/tests';
+import { GateKeeperErrorStub } from '../../doubles/gateKeeperErrorStub';
 
 let messageGatewaySpy: MessageGatewaySpy;
 

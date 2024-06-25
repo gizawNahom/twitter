@@ -1,15 +1,18 @@
 import { Server } from 'http';
-import Context from '../../src/adapter-api-express/context';
-import { createServer } from '../../src/adapter-api-express/server';
+import Context from '../../../src/adapter-api-express/context';
+import { createServer } from '../../../src/adapter-api-express/server';
 import { Socket, io } from 'socket.io-client';
-import { GateKeeperFailureStub } from '../doubles/gateKeeperFailureStub';
-import { GateKeeperErrorStub } from '../doubles/gateKeeperErrorStub';
-import { ERROR_GENERIC, ERROR_INVALID_USER } from '../utilities/errorMessages';
-import { getRandomPort } from '../utilities/helpers';
+import { GateKeeperFailureStub } from '../../doubles/gateKeeperFailureStub';
+import { GateKeeperErrorStub } from '../../doubles/gateKeeperErrorStub';
+import {
+  ERROR_GENERIC,
+  ERROR_INVALID_USER,
+} from '../../utilities/errorMessages';
+import { getRandomPort } from '../../utilities/helpers';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
-} from '../utilities/tests';
+} from '../../utilities/tests';
 
 const port = getRandomPort();
 let server: Server, clientSocket: Socket;

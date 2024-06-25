@@ -1,11 +1,11 @@
-import { FakeSocketIOMessageSender } from '../../src/adapter-api-express/fakeSocketIOMessageSender';
-import { SocketIOConnection } from '../../src/adapter-api-express/socketIOConnection';
-import { MessageMother } from '../utilities/MessageMother';
-import { sampleUser1, sampleUser2 } from '../utilities/samples';
+import { FakeSocketIOMessageSender } from '../../../src/adapter-api-express/fakeSocketIOMessageSender';
+import { SocketIOConnection } from '../../../src/adapter-api-express/socketIOConnection';
+import { MessageMother } from '../../utilities/MessageMother';
+import { sampleUser1, sampleUser2 } from '../../utilities/samples';
 import { createServer } from 'node:http';
 import { io as ioc, type Socket as ClientSocket } from 'socket.io-client';
 import { Server, type Socket as ServerSocket } from 'socket.io';
-import { getRandomPort, removeSeconds } from '../utilities/helpers';
+import { getRandomPort, removeSeconds } from '../../utilities/helpers';
 
 let sender: FakeSocketIOMessageSender;
 let io, serverSocket, clientSocket, httpServer;

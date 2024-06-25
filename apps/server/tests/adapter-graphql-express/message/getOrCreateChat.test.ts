@@ -1,14 +1,14 @@
-import Context from '../../src/adapter-api-express/context';
-import { IdGeneratorStub } from '../doubles/idGeneratorStub';
-import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
-import { UserRepositorySpy } from '../doubles/userRepositorySpy';
-import { assertChat } from '../utilities/assertions';
-import { removeSeconds, sendRequest } from '../utilities/helpers';
-import { sampleUser1, sampleUsername } from '../utilities/samples';
+import Context from '../../../src/adapter-api-express/context';
+import { IdGeneratorStub } from '../../doubles/idGeneratorStub';
+import { MessageGatewaySpy } from '../../doubles/messageGatewaySpy';
+import { UserRepositorySpy } from '../../doubles/userRepositorySpy';
+import { assertChat } from '../../utilities/assertions';
+import { removeSeconds, sendRequest } from '../../utilities/helpers';
+import { sampleUser1, sampleUsername } from '../../utilities/samples';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
-} from '../utilities/tests';
+} from '../../utilities/tests';
 
 let userRepoSpy: UserRepositorySpy;
 

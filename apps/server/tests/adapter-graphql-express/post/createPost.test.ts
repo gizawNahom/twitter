@@ -1,11 +1,11 @@
-import Context from '../../src/adapter-api-express/context';
-import { getSavedPosts, sendRequest } from '../utilities/helpers';
+import Context from '../../../src/adapter-api-express/context';
+import { getSavedPosts, sendRequest } from '../../utilities/helpers';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
-} from '../utilities/tests';
-import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
-import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
+} from '../../utilities/tests';
+import { DefaultGateKeeper } from '../../../src/adapter-api-express/defaultGateKeeper';
+import { assertPostResponseMatchesPostEntity } from '../../utilities/assertions';
 
 const validText = 'Hello, world!';
 

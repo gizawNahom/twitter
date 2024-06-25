@@ -1,18 +1,18 @@
-import Context from '../../src/adapter-api-express/context';
-import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
-import { PostIndexGatewayErrorStub } from '../doubles/postIndexGatewayErrorStub';
-import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
-import { assertPostResponseMatchesPostEntity } from '../utilities/assertions';
-import { sendRequest } from '../utilities/helpers';
+import Context from '../../../src/adapter-api-express/context';
+import { DefaultGateKeeper } from '../../../src/adapter-api-express/defaultGateKeeper';
+import { PostIndexGatewayErrorStub } from '../../doubles/postIndexGatewayErrorStub';
+import { PostIndexGatewaySpy } from '../../doubles/postIndexGatewaySpy';
+import { assertPostResponseMatchesPostEntity } from '../../utilities/assertions';
+import { sendRequest } from '../../utilities/helpers';
 import {
   sampleLimit,
   sampleOffset,
   sampleQueryText,
-} from '../utilities/samples';
+} from '../../utilities/samples';
 import {
   testWithExpectedError,
   testWithUnExpectedError,
-} from '../utilities/tests';
+} from '../../utilities/tests';
 
 async function sendSearchPostsRequest(limit = sampleLimit) {
   const query = `query SearchPosts($query: String!, $limit: Int!, $offset: Int!) {
