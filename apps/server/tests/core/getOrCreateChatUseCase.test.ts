@@ -61,8 +61,8 @@ function assertCorrectResponse(
   createdAt: Date
 ) {
   const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
-  expect(response.chatId).toBe(idGeneratorStub.STUB_ID);
-  expect(removeSeconds(response.createdAt.toISOString())).toBe(
+  expect(response.id).toBe(idGeneratorStub.STUB_ID);
+  expect(removeSeconds(response.createdAt)).toBe(
     removeSeconds(createdAt.toISOString())
   );
 }

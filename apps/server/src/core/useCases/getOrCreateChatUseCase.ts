@@ -99,7 +99,10 @@ export class GetOrCreateChatUseCase {
   }
 
   private buildResponse(chat: Chat): GetOrCreateChatResponse {
-    return { chatId: chat.getId(), createdAt: chat.getCreatedAt() };
+    return {
+      id: chat.getId(),
+      createdAt: chat.getCreatedAt().toISOString(),
+    };
   }
 }
 
@@ -109,6 +112,6 @@ export interface GetOrCreateChatRequest {
 }
 
 export interface GetOrCreateChatResponse {
-  chatId: string;
-  createdAt: Date;
+  id: string;
+  createdAt: string;
 }

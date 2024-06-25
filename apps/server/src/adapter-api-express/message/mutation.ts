@@ -1,4 +1,5 @@
 import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
+import { GetOrCreateChatUseCase } from '../../core/useCases/getOrCreateChatUseCase';
 import { ServerContext } from '../app';
 import Context from '../context';
 import { tryResolve } from '../utilities/tryResolve';
@@ -24,6 +25,25 @@ async function sendMessage(
   });
 }
 
+async function resolveChat(
+  _: unknown,
+  args: { username: string },
+  contextValue: ServerContext
+) {
+  const response = await new GetOrCreateChatUseCase(
+    Context.idGenerator,
+    Context.messageGateway,
+    Context.userRepository,
+    Context.gateKeeper,
+    Context.logger
+  ).execute({
+    tokenString: contextValue.token,
+    usernameString: args.username,
+  });
+  return response;
+}
+
 export const mutation = {
   sendMessage: sendMessage,
+  chat: resolveChat,
 };

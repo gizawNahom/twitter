@@ -1,6 +1,7 @@
 const typeDefs = `#graphql
   type Mutation {
     sendMessage(text: String!, chatId: String!): Message
+    chat(username: String!): PartialChat!
   }
 
   type Query {
@@ -20,6 +21,11 @@ const typeDefs = `#graphql
     id:  ID!
     createdAtISO: String!
     participant: User!
+  }
+
+  type PartialChat {
+    id:  ID!
+    createdAt: String!
   }
 
   type User {
