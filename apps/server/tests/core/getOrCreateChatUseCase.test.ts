@@ -5,7 +5,10 @@ import {
 } from '../../src/core/useCases/getOrCreateChatUseCase';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
-import { assertValidationErrorWithMessage } from '../utilities/assertions';
+import {
+  assertChat,
+  assertValidationErrorWithMessage,
+} from '../utilities/assertions';
 import { ERROR_USER_DOES_NOT_EXIST } from '../utilities/errorMessages';
 import {
   sampleUser1,
@@ -61,10 +64,10 @@ function assertCorrectResponse(
   createdAt: Date
 ) {
   const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
-  expect(response.id).toBe(idGeneratorStub.STUB_ID);
-  expect(removeSeconds(response.createdAt)).toBe(
-    removeSeconds(createdAt.toISOString())
-  );
+  assertChat(response, {
+    id: idGeneratorStub.STUB_ID,
+    createdAt: removeSeconds(createdAt.toISOString()),
+  });
 }
 
 beforeEach(() => {

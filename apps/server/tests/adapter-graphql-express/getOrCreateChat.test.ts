@@ -1,8 +1,8 @@
 import Context from '../../src/adapter-api-express/context';
-import { GetOrCreateChatResponse } from '../../src/core/useCases/getOrCreateChatUseCase';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
+import { assertChat } from '../utilities/assertions';
 import { removeSeconds, sendRequest } from '../utilities/helpers';
 import { sampleUser1, sampleUsername } from '../utilities/samples';
 
@@ -35,17 +35,8 @@ test('returns correct response', async () => {
 
   expect(res.status).toBe(200);
   const idGeneratorStub = Context.idGenerator as IdGeneratorStub;
-  const expectedResponse = {
+  assertChat(res.body.data.chat, {
     id: idGeneratorStub.STUB_ID,
     createdAt: removeSeconds(new Date().toISOString()),
-  };
-  assertChat(res.body.data.chat, expectedResponse);
-
-  function assertChat(
-    chat: GetOrCreateChatResponse,
-    expectedChat: GetOrCreateChatResponse
-  ) {
-    chat.createdAt = removeSeconds(chat.createdAt);
-    expect(chat).toStrictEqual(expectedChat);
-  }
+  });
 });

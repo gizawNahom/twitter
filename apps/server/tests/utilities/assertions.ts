@@ -55,3 +55,8 @@ export function assertSingleChatResponse(chats, chatResponse) {
   expect(chats).toHaveLength(1);
   expect(chats[0]).toStrictEqual(chatResponse);
 }
+
+export function assertChat(chat, expectedChat) {
+  chat.createdAt = removeSeconds(chat.createdAt);
+  expect(chat).toStrictEqual(expectedChat);
+}
