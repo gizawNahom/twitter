@@ -258,7 +258,7 @@
           "$.body.variables.query": {
             "match": "type"
           },
-          "$.header.$.authorization[0]": {
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -496,6 +496,68 @@
             "match": "type"
           },
           "$.body.data.searchPosts[0].userId": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to fetch users with valid username, offset and limit",
+      "providerState": "a user with the username exists",
+      "request": {
+        "body": {
+          "operationName": "GetUsers",
+          "query": "\n          query GetUsers($username: String!, $limit: Int!, $offset: Int!) {\n            users(username: $username, limit: $limit, offset: $offset) {\n              username\n              displayName\n              profilePic\n              __typename\n            }\n          }\n          ",
+          "variables": {
+            "limit": 10,
+            "offset": 0,
+            "username": "johnDoe"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "\\s*query\\s*GetUsers\\(\\$username:\\s*String!,\\s*\\$limit:\\s*Int!,\\s*\\$offset:\\s*Int!\\)\\s*\\{\\s*users\\(username:\\s*\\$username,\\s*limit:\\s*\\$limit,\\s*offset:\\s*\\$offset\\)\\s*\\{\\s*username\\s*displayName\\s*profilePic\\s*__typename\\s*\\}\\s*\\}\\s*"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.body.variables.username": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "users": [
+              {
+                "__typename": "User",
+                "displayName": "Jonny",
+                "profilePic": "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
+                "username": "johnDoe"
+              }
+            ]
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.users[0]": {
             "match": "type"
           }
         },

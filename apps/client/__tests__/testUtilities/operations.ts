@@ -3,4 +3,5 @@ export enum Operations {
   Posts = 'Posts',
   Post = 'post',
   SearchPosts = 'SearchPosts',
+  GetUsers = 'GetUsers',
 }
