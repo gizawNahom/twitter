@@ -229,6 +229,65 @@
       }
     },
     {
+      "description": "a request to fetch users with invalid id, offset and limit",
+      "request": {
+        "body": {
+          "operationName": "GetUsers",
+          "query": "\n          query GetUsers($username: String!, $limit: Int!, $offset: Int!) {\n            users(username: $username, limit: $limit, offset: $offset) {\n              username\n              displayName\n              profilePic\n              __typename\n            }\n          }\n          ",
+          "variables": {
+            "limit": -10,
+            "offset": -1,
+            "username": ""
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "\\s*query\\s*GetUsers\\(\\$username:\\s*String!,\\s*\\$limit:\\s*Int!,\\s*\\$offset:\\s*Int!\\)\\s*\\{\\s*users\\(username:\\s*\\$username,\\s*limit:\\s*\\$limit,\\s*offset:\\s*\\$offset\\)\\s*\\{\\s*username\\s*displayName\\s*profilePic\\s*__typename\\s*\\}\\s*\\}\\s*"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.body.variables.username": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "users": null
+          },
+          "errors": [
+            {
+              "message": "Generic error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
       "description": "a request to search posts with invalid query, offset and limit",
       "request": {
         "body": {
@@ -533,7 +592,7 @@
           "$.body.variables.username": {
             "match": "type"
           },
-          "$.header.$.authorization[0]": {
+          "$.header.$": {
             "match": "type"
           }
         },

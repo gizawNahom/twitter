@@ -6,6 +6,9 @@ import {
   createBaseInteraction,
 } from '../../testUtilities';
 import {
+  GENERIC_SERVER_ERROR,
+  sampleInvalidLimit,
+  sampleInvalidOffset,
   sampleLimit,
   sampleOffset,
   sampleUserResponse,
@@ -41,6 +44,35 @@ export function testGetUsers(provider: Pact, baseUrl: URL) {
 
       expect(users).toHaveLength(1);
       expect(users[0]).toStrictEqual(sampleUserResponse);
+    });
+
+    test('handles error', async () => {
+      const invalidUsername = '';
+      const invalidOffset = sampleInvalidOffset;
+      const invalidLimit = sampleInvalidLimit;
+      const interaction = createInteraction({
+        data: {
+          users: null,
+        },
+        errors: [
+          {
+            message: like(GENERIC_SERVER_ERROR),
+          },
+        ],
+      })
+        .uponReceiving(
+          'a request to fetch users with invalid id, offset and limit'
+        )
+        .withVariables({
+          username: like(invalidUsername),
+          offset: like(invalidOffset),
+          limit: like(invalidLimit),
+        });
+      await addInteraction(provider, interaction);
+
+      await expect(async () => {
+        await getUsers(invalidUsername, invalidLimit, invalidOffset);
+      }).rejects.toThrow(new Error());
     });
   });
 

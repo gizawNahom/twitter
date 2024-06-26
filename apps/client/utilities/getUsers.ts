@@ -6,12 +6,16 @@ export async function getUsers(
   limit: number,
   offset: number
 ): Promise<User[]> {
-  const res = await Client.client.query({
-    query: getQuery(),
-    variables: getVariables(username, offset, limit),
-  });
+  try {
+    const res = await Client.client.query({
+      query: getQuery(),
+      variables: getVariables(username, offset, limit),
+    });
 
-  return res.data.users as Array<User>;
+    return res.data.users as Array<User>;
+  } catch (error) {
+    throw new Error();
+  }
 
   function getQuery() {
     return gql`
