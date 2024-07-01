@@ -1,31 +1,47 @@
-//@ts-check
+// @ts-check
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
-
-/**
- * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
- **/
-const nextConfig = {
-  nx: {
-    // Set this to true if you would like to use SVGR
-    // See: https://github.com/gregberge/svgr
-    svgr: false,
-  },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/home',
-        permanent: true,
-      },
-    ];
-  },
-};
+const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 
 const plugins = [
   // Add more Next.js plugins to this list if needed.
   withNx,
 ];
 
-module.exports = composePlugins(...plugins)(nextConfig);
+module.exports = (phase, context) => {
+  /**
+   * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
+   **/
+  let productionNextConfig = {
+    nx: {
+      // Set this to true if you would like to use SVGR
+      // See: https://github.com/gregberge/svgr
+      svgr: false,
+    },
+    async redirects() {
+      return [
+        {
+          source: '/',
+          destination: '/home',
+          permanent: true,
+        },
+      ];
+    },
+  };
+
+  if (phase === PHASE_DEVELOPMENT_SERVER)
+    productionNextConfig = {
+      ...productionNextConfig,
+      images: {
+        remotePatterns: [
+          {
+            protocol: 'https',
+            hostname: 'images.unsplash.com',
+          },
+        ],
+      },
+    };
+
+  return composePlugins(...plugins)(productionNextConfig)(phase, context);
+};
