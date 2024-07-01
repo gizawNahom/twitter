@@ -8,13 +8,13 @@ import {
   setUpMockRouter,
   getByTestId,
   BACK_BUTTON_TEST_ID,
-  ERROR_TEST_ID,
   POSTS_TEST_ID,
   SPINNER_TEST_ID,
   SEARCH_BAR_TEST_ID,
   pressEnterOnInput,
   renderElement,
   typeQueryOnSearchInput,
+  waitForErrorToBeInTheDocument,
 } from '../testUtilities';
 import {
   samplePostResponse,
@@ -42,10 +42,6 @@ async function waitTillAllSearchResultsAreRendered() {
       2 * searchPostsResponse.length
     );
   });
-}
-
-async function waitForErrorToBeInTheDocument() {
-  await waitFor(() => expect(getByTestId(ERROR_TEST_ID)).toBeInTheDocument());
 }
 
 async function waitForSpinnerToBeInTheDocument() {

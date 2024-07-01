@@ -3,13 +3,13 @@ import { genericErrorHandler, getUsersCalls } from '../../../mocks/handlers';
 import ComposeMessage from '../../../pages/messages/compose';
 import {
   CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID,
-  ERROR_TEST_ID,
   PEOPLE_SEARCH_TEST_ID,
   clickElement,
   getByTestId,
   getByText,
   renderElement,
   setUpApi,
+  waitForErrorToBeInTheDocument,
 } from '../../testUtilities';
 import { screen, waitFor } from '@testing-library/react';
 import { typeOnInput } from './userSearchInput.test';
@@ -122,7 +122,3 @@ test('can select a user', async () => {
     ).not.toBeInTheDocument();
   }
 });
-
-async function waitForErrorToBeInTheDocument() {
-  await waitFor(() => expect(getByTestId(ERROR_TEST_ID)).toBeInTheDocument());
-}

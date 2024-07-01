@@ -1,11 +1,12 @@
 import { Provider } from 'react-redux';
 import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { POST_BUTTON_TEXT } from './texts';
 import { samplePostResponse } from '../../mocks/values';
-import { getByText, getSearchInput } from './gets';
+import { getByTestId, getByText, getSearchInput } from './gets';
+import { ERROR_TEST_ID } from './testIds';
 
 export function createSamplePost() {
   return {
@@ -52,4 +53,8 @@ export async function pressEnterOnInput() {
 
 export async function clickElement(element: HTMLElement) {
   await userEvent.click(element);
+}
+
+export async function waitForErrorToBeInTheDocument() {
+  await waitFor(() => expect(getByTestId(ERROR_TEST_ID)).toBeInTheDocument());
 }
