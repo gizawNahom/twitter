@@ -1,28 +1,128 @@
+import { sampleUserResponse } from '../../../mocks/values';
+import { genericErrorHandler, getUsersCalls } from '../../../mocks/handlers';
 import ComposeMessage from '../../../pages/messages/compose';
 import {
   CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID,
+  ERROR_TEST_ID,
   PEOPLE_SEARCH_TEST_ID,
+  clickElement,
   getByTestId,
   getByText,
   renderElement,
+  setUpApi,
 } from '../../testUtilities';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
+import { typeOnInput } from './userSearchInput.test';
+import { server } from '../../../mocks/server';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-test('initial', () => {
+function renderSUT() {
   renderElement(<ComposeMessage />);
+}
+
+function queryLoading(): HTMLElement | null {
+  return screen.queryByRole('progressbar');
+}
+
+function getNextButton(): HTMLElement {
+  return screen.getByRole('button', { name: /next/i });
+}
+
+function assertNextButtonIsDisabled() {
+  expect(getNextButton()).toBeDisabled();
+}
+
+setUpApi();
+
+beforeEach(() => getUsersCalls.splice(0, getUsersCalls.length));
+
+test('initial', () => {
+  renderSUT();
 
   expect(getByText(/new message/i)).toBeInTheDocument();
   assertNextButtonIsDisabled();
   expect(getByTestId(CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID)).toBeInTheDocument();
   expect(getByTestId(PEOPLE_SEARCH_TEST_ID)).toBeInTheDocument();
+  expect(queryLoading()).not.toBeInTheDocument();
 });
 
-function assertNextButtonIsDisabled() {
-  const nextButton = screen.getByRole('button', { name: /next/i });
-  expect(nextButton).toBeInTheDocument();
-  expect(nextButton).toBeDisabled();
+test('loading', async () => {
+  renderSUT();
+
+  await typeOnInput('a');
+
+  await waitFor(() => expect(queryLoading()).toBeInTheDocument());
+  assertNextButtonIsDisabled();
+});
+
+test('success', async () => {
+  const character = 'a';
+  renderSUT();
+
+  await typeOnInput(character);
+
+  await waitFor(() => expect(queryLoading()).not.toBeInTheDocument());
+  assertUsersAreDisplayed();
+  assertApiIsCalledCorrectly(character);
+  assertNextButtonIsDisabled();
+
+  function assertUsersAreDisplayed() {
+    expect(screen.getByRole('img')).toHaveAttribute(
+      'src',
+      expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
+    );
+    expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument();
+    expect(getByText('@' + sampleUserResponse.username)).toBeInTheDocument();
+  }
+
+  function assertApiIsCalledCorrectly(character: string) {
+    expect(getUsersCalls).toHaveLength(1);
+    expect(getUsersCalls[0].username).toBe(character);
+    expect(getUsersCalls[0].offset).toBe(0);
+    expect(getUsersCalls[0].limit).toBe(10);
+  }
+});
+
+test('error', async () => {
+  server.use(genericErrorHandler);
+  const character = 'a';
+  renderSUT();
+
+  await typeOnInput(character);
+
+  await waitForErrorToBeInTheDocument();
+  expect(queryLoading()).not.toBeInTheDocument();
+  assertNextButtonIsDisabled();
+});
+
+test('can select a user', async () => {
+  renderSUT();
+
+  await typeOnInput('a');
+  await waitFor(() =>
+    expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument()
+  );
+  await clickElement(getByText(sampleUserResponse.displayName));
+
+  expect(getNextButton()).not.toBeDisabled();
+  expect(screen.queryByDisplayValue('a')).not.toBeInTheDocument();
+  assertSelectedUserIsDisplayed();
+
+  function assertSelectedUserIsDisplayed() {
+    expect(screen.getByRole('img')).toHaveAttribute(
+      'src',
+      expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
+    );
+    expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument();
+    expect(
+      screen.queryByText('@' + sampleUserResponse.username)
+    ).not.toBeInTheDocument();
+  }
+});
+
+async function waitForErrorToBeInTheDocument() {
+  await waitFor(() => expect(getByTestId(ERROR_TEST_ID)).toBeInTheDocument());
 }

@@ -1,19 +1,32 @@
 import { waitFor } from '@testing-library/react';
-import { PeopleSearch } from '../../../pages/messages/compose';
+import { UserSearchInput } from '../../../pages/messages/compose';
 import {
   getByPlaceholderText,
   renderElement,
   typeText,
 } from '../../testUtilities';
+import { useState } from 'react';
 
-const onChange = jest.fn();
+const onThrottledChange = jest.fn();
 const TYPING_DELAY = 200;
 
 function renderSUT() {
-  renderElement(<PeopleSearch onChange={onChange} />);
+  renderElement(<Container />);
+
+  function Container() {
+    const [value, setValue] = useState<string>('');
+
+    return (
+      <UserSearchInput
+        onThrottledChange={onThrottledChange}
+        searchInputValue={value}
+        setSearchInputValue={setValue}
+      />
+    );
+  }
 }
 
-async function typeOnInput(characters: string) {
+export async function typeOnInput(characters: string) {
   await typeText(characters, getSearchPeopleInput());
 }
 
@@ -35,8 +48,8 @@ test('notifies on input change', async () => {
 
   await typeOnInput(character);
 
-  expect(onChange).toHaveBeenCalledTimes(1);
-  expect(onChange).toHaveBeenCalledWith(character);
+  expect(onThrottledChange).toHaveBeenCalledTimes(1);
+  expect(onThrottledChange).toHaveBeenCalledWith(character);
 });
 
 test('does not notify when the input is whitespace', async () => {
@@ -44,7 +57,7 @@ test('does not notify when the input is whitespace', async () => {
 
   await typeOnInput(' ');
 
-  expect(onChange).toHaveBeenCalledTimes(0);
+  expect(onThrottledChange).toHaveBeenCalledTimes(0);
 });
 
 test('strips white space before notifying', async () => {
@@ -53,7 +66,7 @@ test('strips white space before notifying', async () => {
 
   await typeOnInput(' ' + character + ' ');
 
-  expect(onChange).toHaveBeenCalledWith(character);
+  expect(onThrottledChange).toHaveBeenCalledWith(character);
 });
 
 test('throttles input change notification', async () => {
@@ -67,8 +80,8 @@ test('throttles input change notification', async () => {
   await typeOnInput(input.substring(1));
 
   await waitFor(() => {
-    expect(onChange).toHaveBeenCalledTimes(2);
+    expect(onThrottledChange).toHaveBeenCalledTimes(2);
   });
-  expect(onChange.mock.calls[0][0]).toBe(input[0]);
-  expect(input.includes(onChange.mock.calls[1][0])).toBe(true);
+  expect(onThrottledChange.mock.calls[0][0]).toBe(input[0]);
+  expect(input.includes(onThrottledChange.mock.calls[1][0])).toBe(true);
 });

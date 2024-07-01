@@ -1,21 +1,101 @@
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Page } from '../../components/page';
 import { useEffect, useRef, useState } from 'react';
+import { User, getUsers } from '../../../client/utilities/getUsers';
+import { Error } from '../../components/error';
 
 export default function ComposeMessage() {
+  const [status, setStatus] = useState<
+    'loading' | 'success' | 'error' | 'selected'
+  >();
+  const [users, setUsers] = useState<User[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User>();
+  const [searchInputValue, setSearchInputValue] = useState<string>('');
+
   return (
-    <Page
-      title={
-        <div>
-          <CloseMessagePageButton />
-          New message
-          <button disabled>Next</button>
-        </div>
-      }
-    >
-      <PeopleSearch onChange={(value) => console.log(value)} />
+    <Page title={renderTitle()}>
+      <UserSearchInput
+        onThrottledChange={onChange}
+        searchInputValue={searchInputValue}
+        setSearchInputValue={setSearchInputValue}
+      />
+      {selectedUser && renderSelectedUser(selectedUser)}
+      {status == 'loading' && renderProgressBar()}
+      {status == 'success' && renderMatchingUsers(users)}
+      {status == 'error' && <Error />}
     </Page>
   );
+
+  function renderTitle() {
+    return (
+      <div>
+        <CloseMessagePageButton />
+        New message
+        <NextButton isDisabled={selectedUser ? false : true} />
+      </div>
+    );
+  }
+
+  async function onChange(value: string) {
+    try {
+      setStatus('loading');
+      setUsers(await getUsers(value, 10, 0));
+      setStatus('success');
+    } catch (error) {
+      setStatus('error');
+    }
+  }
+
+  function renderSelectedUser(selectedUser: User) {
+    return (
+      <div>
+        <Image
+          src={selectedUser.profilePic}
+          alt={`${selectedUser.username}'s profile picture`}
+          width={200}
+          height={200}
+        />
+        {selectedUser.displayName}
+      </div>
+    );
+  }
+
+  function renderProgressBar() {
+    return <div role="progressbar"></div>;
+  }
+
+  function renderMatchingUsers(users: User[]) {
+    return (
+      <div>
+        {users.map((u, i) => {
+          return (
+            <div
+              key={i}
+              onClick={() => {
+                setSelectedUser(u);
+                setSearchInputValue('');
+                setStatus('selected');
+              }}
+            >
+              <Image
+                src={u.profilePic}
+                alt={`${u.username}'s profile picture`}
+                width={200}
+                height={200}
+              />
+              <span>{u.displayName}</span>
+              <span>@{u.username}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+}
+
+export function NextButton({ isDisabled }: { isDisabled: boolean }) {
+  return <button disabled={isDisabled}>Next</button>;
 }
 
 export function CloseMessagePageButton() {
@@ -36,8 +116,16 @@ export function CloseMessagePageButton() {
 
 type ChangeNotifier = (value: string) => void;
 
-export function PeopleSearch({ onChange }: { onChange: ChangeNotifier }) {
-  const { value, setValue } = useChange(onChange);
+export function UserSearchInput({
+  onThrottledChange: onChange,
+  searchInputValue: value,
+  setSearchInputValue: setValue,
+}: {
+  onThrottledChange: ChangeNotifier;
+  searchInputValue: string;
+  setSearchInputValue: (value: string) => void;
+}) {
+  useChange(onChange, value);
 
   return (
     <div data-testid="people-search">
@@ -50,9 +138,7 @@ export function PeopleSearch({ onChange }: { onChange: ChangeNotifier }) {
     </div>
   );
 
-  function useChange(onChange: ChangeNotifier) {
-    const [value, setValue] = useState('');
-
+  function useChange(onChange: ChangeNotifier, value: string) {
     const throttler = useThrottler();
 
     useEffect(() => {
@@ -67,8 +153,6 @@ export function PeopleSearch({ onChange }: { onChange: ChangeNotifier }) {
         return value.length === 0;
       }
     }, [value, throttler, onChange]);
-
-    return { value, setValue };
   }
 
   function useThrottler() {

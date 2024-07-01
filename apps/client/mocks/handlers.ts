@@ -2,6 +2,7 @@ import { GraphQLVariables, graphql } from 'msw';
 import {
   GENERIC_SERVER_ERROR,
   samplePostResponse,
+  sampleUserResponse,
   searchPostsResponse,
 } from './values';
 import { Operations } from '../__tests__/testUtilities/operations';
@@ -11,6 +12,7 @@ export let wasPostCalled = false;
 export let wasPostsCalled = false;
 export let postsVariables: GraphQLVariables;
 export const searchPostsCalls: GraphQLVariables[] = [];
+export const getUsersCalls: GraphQLVariables[] = [];
 export const genericErrorHandlerCalls: GraphQLVariables[] = [];
 
 export const handlers = [
@@ -67,6 +69,15 @@ export const handlers = [
       ctx.delay(1),
       ctx.data({
         searchPosts: searchPostsResponse,
+      })
+    );
+  }),
+  graphql.query(Operations.GetUsers, ({ variables }, res, ctx) => {
+    getUsersCalls.push(variables);
+    return res(
+      ctx.delay(1),
+      ctx.data({
+        users: [sampleUserResponse],
       })
     );
   }),
