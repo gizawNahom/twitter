@@ -1,11 +1,11 @@
 import { Provider } from 'react-redux';
 import { reducer } from '../../lib/redux/rootReducer';
 import { configureStore } from '@reduxjs/toolkit';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { POST_BUTTON_TEXT } from './texts';
 import { samplePostResponse } from '../../mocks/values';
-import { getByTestId, getByText, getSearchInput } from './gets';
+import { getByRole, getByTestId, getByText, getSearchInput } from './gets';
 import { ERROR_TEST_ID } from './testIds';
 
 export function createSamplePost() {
@@ -32,10 +32,7 @@ export function createNewStore() {
   });
 }
 
-export async function typeText(
-  text: string,
-  element = screen.getByRole('textbox')
-) {
+export async function typeText(text: string, element = getByRole('textbox')) {
   await userEvent.type(element, text);
 }
 

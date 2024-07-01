@@ -1,5 +1,9 @@
-import { screen } from '@testing-library/react';
-import { setUpMockRouter, renderElement, clickElement } from '../testUtilities';
+import {
+  setUpMockRouter,
+  renderElement,
+  clickElement,
+  getByRole,
+} from '../testUtilities';
 import { BackButton } from '../../components/backButton';
 
 jest.mock('next/router', () => ({
@@ -23,7 +27,7 @@ test('returns to previous page by clicking back', async () => {
   windowHistorySpy.mockImplementation(() => [1, 2, 3]);
   renderSUT();
 
-  await clickElement(screen.getByRole('button', { name: BACK_BUTTON }));
+  await clickElement(getByRole('button', { name: BACK_BUTTON }));
 
   expect(back).toHaveBeenCalledTimes(1);
 });
@@ -33,7 +37,7 @@ test('returns to home if there is no history', async () => {
   windowHistorySpy.mockImplementation(() => [1]);
   renderSUT();
 
-  await clickElement(screen.getByRole('button', { name: BACK_BUTTON }));
+  await clickElement(getByRole('button', { name: BACK_BUTTON }));
 
   expect(push).toHaveBeenCalledWith('/home');
 });

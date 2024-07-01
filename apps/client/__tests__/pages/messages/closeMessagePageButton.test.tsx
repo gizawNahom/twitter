@@ -1,7 +1,7 @@
-import { screen } from '@testing-library/react';
 import { CloseMessagePageButton } from '../../../pages/messages/compose';
 import {
   clickElement,
+  getByRole,
   renderElement,
   setUpMockRouter,
 } from '../../testUtilities';
@@ -19,7 +19,7 @@ function renderSUT() {
 }
 
 function getCloseButton(): HTMLElement {
-  return screen.getByRole('button', { name: /close/i });
+  return getByRole('button', { name: /close/i });
 }
 
 test('initial', () => {

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { ByRoleMatcher, ByRoleOptions, screen } from '@testing-library/react';
 import { SEARCH_INPUT_PLACEHOLDER_TEXT } from './texts';
 
 export function getByPlaceholderText(text: string | RegExp): HTMLElement {
@@ -15,4 +15,11 @@ export function getByText(text: string | RegExp): HTMLElement {
 
 export function getByTestId(testId: string): HTMLElement {
   return screen.getByTestId(testId);
+}
+
+export function getByRole(
+  role: ByRoleMatcher,
+  options?: ByRoleOptions | undefined
+) {
+  return screen.getByRole(role, options);
 }

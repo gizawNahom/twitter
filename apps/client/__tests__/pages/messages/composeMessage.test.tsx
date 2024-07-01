@@ -5,6 +5,7 @@ import {
   CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID,
   PEOPLE_SEARCH_TEST_ID,
   clickElement,
+  getByRole,
   getByTestId,
   getByText,
   renderElement,
@@ -28,7 +29,7 @@ function queryLoading(): HTMLElement | null {
 }
 
 function getNextButton(): HTMLElement {
-  return screen.getByRole('button', { name: /next/i });
+  return getByRole('button', { name: /next/i });
 }
 
 function assertNextButtonIsDisabled() {
@@ -70,7 +71,7 @@ test('success', async () => {
   assertNextButtonIsDisabled();
 
   function assertUsersAreDisplayed() {
-    expect(screen.getByRole('img')).toHaveAttribute(
+    expect(getByRole('img')).toHaveAttribute(
       'src',
       expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
     );
@@ -112,7 +113,7 @@ test('can select a user', async () => {
   assertSelectedUserIsDisplayed();
 
   function assertSelectedUserIsDisplayed() {
-    expect(screen.getByRole('img')).toHaveAttribute(
+    expect(getByRole('img')).toHaveAttribute(
       'src',
       expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
     );
