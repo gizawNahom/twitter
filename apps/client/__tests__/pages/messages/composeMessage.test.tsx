@@ -24,7 +24,7 @@ function renderSUT() {
   renderElement(<ComposeMessage />);
 }
 
-function queryLoading(): HTMLElement | null {
+function queryProgressbar(): HTMLElement | null {
   return screen.queryByRole('progressbar');
 }
 
@@ -47,7 +47,7 @@ test('initial', () => {
   assertNextButtonIsDisabled();
   expect(getByTestId(CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID)).toBeInTheDocument();
   expect(getByTestId(PEOPLE_SEARCH_TEST_ID)).toBeInTheDocument();
-  expect(queryLoading()).not.toBeInTheDocument();
+  expect(queryProgressbar()).not.toBeInTheDocument();
 });
 
 test('loading', async () => {
@@ -55,7 +55,7 @@ test('loading', async () => {
 
   await typeOnInput('a');
 
-  await waitFor(() => expect(queryLoading()).toBeInTheDocument());
+  await waitFor(() => expect(queryProgressbar()).toBeInTheDocument());
   assertNextButtonIsDisabled();
 });
 
@@ -65,7 +65,7 @@ test('success', async () => {
 
   await typeOnInput(character);
 
-  await waitFor(() => expect(queryLoading()).not.toBeInTheDocument());
+  await waitFor(() => expect(queryProgressbar()).not.toBeInTheDocument());
   assertUsersAreDisplayed();
   assertApiIsCalledCorrectly(character);
   assertNextButtonIsDisabled();
@@ -95,7 +95,7 @@ test('error', async () => {
   await typeOnInput(character);
 
   await waitForErrorToBeInTheDocument();
-  expect(queryLoading()).not.toBeInTheDocument();
+  expect(queryProgressbar()).not.toBeInTheDocument();
   assertNextButtonIsDisabled();
 });
 
