@@ -15,6 +15,10 @@ import {
 import { screen, waitFor } from '@testing-library/react';
 import { typeOnInput } from './userSearchInput.test';
 import { server } from '../../../mocks/server';
+import {
+  assertNextButtonIsDisabled,
+  assertNextButtonIsNotDisabled,
+} from './nextButton.test';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -26,14 +30,6 @@ function renderSUT() {
 
 function queryProgressbar(): HTMLElement | null {
   return screen.queryByRole('progressbar');
-}
-
-function getNextButton(): HTMLElement {
-  return getByRole('button', { name: /next/i });
-}
-
-function assertNextButtonIsDisabled() {
-  expect(getNextButton()).toBeDisabled();
 }
 
 setUpApi();
@@ -108,7 +104,7 @@ test('can select a user', async () => {
   );
   await clickElement(getByText(sampleUserResponse.displayName));
 
-  expect(getNextButton()).not.toBeDisabled();
+  assertNextButtonIsNotDisabled();
   expect(screen.queryByDisplayValue('a')).not.toBeInTheDocument();
   assertSelectedUserIsDisplayed();
 
