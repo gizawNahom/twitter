@@ -30,9 +30,9 @@ export default function ComposeMessage() {
   function renderHeader() {
     return (
       <div className="flex justify-between items-center gap-x-9">
-        <div className="flex gap-x-10">
+        <div className="flex gap-x-10 items-center">
           <CloseMessagePageButton />
-          <span>New message</span>
+          <span className=" font-semibold">New message</span>
         </div>
         <NextButton isDisabled={selectedUser ? false : true} />
       </div>
@@ -97,20 +97,34 @@ export default function ComposeMessage() {
 }
 
 export function NextButton({ isDisabled }: { isDisabled: boolean }) {
-  return <button disabled={isDisabled}>Next</button>;
+  return (
+    <button
+      disabled={isDisabled}
+      className={`px-4 py-1 text-white rounded-full transition text-sm font-bold ${
+        isDisabled ? 'bg-gray-400' : 'bg-black'
+      }`}
+    >
+      Next
+    </button>
+  );
 }
 
 export function CloseMessagePageButton() {
   const router = useRouter();
 
   return (
-    <div data-testid="close-message-page-button">
+    <div data-testid="close-message-page-button" className=" flex items-center">
       <button
         onClick={() => {
           router.push('/messages');
         }}
+        aria-label="Close"
       >
-        Close
+        <svg viewBox="0 0 24 24" aria-hidden="true" className=" w-5 h-5">
+          <g>
+            <path d="M10.59 12L4.54 5.96l1.42-1.42L12 10.59l6.04-6.05 1.42 1.42L13.41 12l6.05 6.04-1.42 1.42L12 13.41l-6.04 6.05-1.42-1.42L10.59 12z"></path>
+          </g>
+        </svg>
       </button>
     </div>
   );
