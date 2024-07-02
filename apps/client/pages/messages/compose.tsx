@@ -14,7 +14,7 @@ export default function ComposeMessage() {
   const [searchInputValue, setSearchInputValue] = useState<string>('');
 
   return (
-    <Page title={renderTitle()}>
+    <Page header={renderHeader()}>
       <UserSearchInput
         onThrottledChange={onChange}
         searchInputValue={searchInputValue}
@@ -27,11 +27,13 @@ export default function ComposeMessage() {
     </Page>
   );
 
-  function renderTitle() {
+  function renderHeader() {
     return (
-      <div>
-        <CloseMessagePageButton />
-        New message
+      <div className="flex justify-between items-center gap-x-9">
+        <div className="flex gap-x-10">
+          <CloseMessagePageButton />
+          <span>New message</span>
+        </div>
         <NextButton isDisabled={selectedUser ? false : true} />
       </div>
     );

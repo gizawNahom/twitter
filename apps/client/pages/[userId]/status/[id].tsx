@@ -7,7 +7,7 @@ import {
   useSelector,
 } from '../../../lib/redux';
 import { ReactNode, useEffect } from 'react';
-import { Page } from '../../../components/page';
+import { Page, createDefaultHeader } from '../../../components/page';
 import { Error } from '../../../components/error';
 import { Spinner } from '../../../components/spinner';
 import { Avatar } from '../../../components/avatar';
@@ -26,7 +26,9 @@ export default function Status() {
   }, [id, dispatch]);
 
   return (
-    <Page title={<h1 className=" text-lg font-bold">Post</h1>}>
+    <Page
+      header={createDefaultHeader(<h1 className=" text-lg font-bold">Post</h1>)}
+    >
       {fetchedPost && (
         <article className="h-min flex flex-col gap-y-3 pt-3">
           <header className="flex gap-3 items-center">

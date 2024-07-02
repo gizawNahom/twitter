@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Page } from '../components/page';
+import { Page, createDefaultHeader } from '../components/page';
 import { SearchBar } from '../components/searchBar';
 import { Posts } from '../components/posts';
 import { searchPosts } from '../lib/redux/slices/postsSlice/searchPosts';
@@ -21,7 +21,7 @@ export default function Search() {
   useSearch(query);
 
   return (
-    <Page title={renderSearchBar()}>
+    <Page header={createDefaultHeader(renderSearchBar())}>
       {status === 'loading' && <Spinner />}
       {status === 'error' && <Error />}
       {status === 'success' && renderPosts()}

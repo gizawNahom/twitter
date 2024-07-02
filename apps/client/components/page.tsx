@@ -3,20 +3,26 @@ import { BackButton } from './backButton';
 
 export function Page({
   children,
-  title,
+  header = createDefaultHeader(),
   padded = true,
 }: {
   children: ReactNode;
-  title?: ReactNode;
+  header?: ReactNode;
   padded?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-y-2 pt-4">
-      <div className="flex justify-between items-center gap-x-9 px-4">
-        <BackButton />
-        <div className="grow">{title}</div>
-      </div>
+      <div className="px-4">{header}</div>
       <div className={padded ? 'px-4' : ''}>{children}</div>
+    </div>
+  );
+}
+
+export function createDefaultHeader(title?: ReactNode) {
+  return (
+    <div className="flex justify-between items-center gap-x-9">
+      <BackButton />
+      <div className="grow">{title}</div>
     </div>
   );
 }
