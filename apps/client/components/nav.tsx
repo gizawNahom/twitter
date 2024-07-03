@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PostFAB } from './postFAB';
 import {
+  COMPOSE_TWEET_ROUTER,
   HOME_ROUTE,
   MESSAGES_ROUTE,
   PROFILE_ROUTE,
@@ -106,11 +107,6 @@ export function Nav() {
     </nav>
   );
 
-  function canPostFABBeDisplayed(pathname: string) {
-    if (isMessages(pathname) || pathname == '/compose/tweet') return false;
-    return true;
-  }
-
   function createNavLink({
     href,
     label,
@@ -150,5 +146,14 @@ export function Nav() {
 
   function isMessages(pathname: string) {
     return pathname === MESSAGES_ROUTE;
+  }
+
+  function canPostFABBeDisplayed(pathname: string) {
+    if (isMessages(pathname) || isComposeTweet(pathname)) return false;
+    return true;
+  }
+
+  function isComposeTweet(pathname: string): boolean {
+    return pathname == COMPOSE_TWEET_ROUTER;
   }
 }

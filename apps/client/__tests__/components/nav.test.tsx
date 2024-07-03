@@ -41,3 +41,11 @@ test('hides post fab on messages screen', () => {
 
   expect(screen.queryByTestId(POST_FAB_TEST_ID)).not.toBeInTheDocument();
 });
+
+test('hides post fab on compose tweet screen', () => {
+  mockRouter({ pathname: '/compose/tweet' });
+
+  renderSUT();
+
+  expect(screen.queryByTestId(POST_FAB_TEST_ID)).not.toBeInTheDocument();
+});
