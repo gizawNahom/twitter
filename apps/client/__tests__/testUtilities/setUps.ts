@@ -8,28 +8,13 @@ export function setUpMockRouter({
   back,
   push,
   query,
+  pathname,
 }: {
   back?: jest.Mock;
   push?: jest.Mock;
   query?: object;
+  pathname?: string;
 }) {
-  function mockRouter({
-    back,
-    push,
-    query,
-  }: {
-    back?: jest.Mock;
-    push?: jest.Mock;
-    query?: object;
-  }) {
-    const router = useRouter as jest.Mock;
-    router.mockImplementation(() => ({
-      back: back,
-      push: push,
-      query,
-    }));
-  }
-
   beforeEach(() => {
     mockRouter({ back, push, query });
   });
@@ -37,6 +22,26 @@ export function setUpMockRouter({
   afterEach(() => {
     jest.resetAllMocks();
   });
+}
+
+export function mockRouter({
+  back,
+  push,
+  query,
+  pathname,
+}: {
+  back?: jest.Mock;
+  push?: jest.Mock;
+  query?: object;
+  pathname?: string;
+}) {
+  const router = useRouter as jest.Mock;
+  router.mockImplementation(() => ({
+    back: back,
+    push: push,
+    query,
+    pathname,
+  }));
 }
 
 export function setUpApi() {

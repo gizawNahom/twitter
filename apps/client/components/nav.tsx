@@ -1,10 +1,16 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PostFAB } from './postFAB';
-import { HOME_ROUTE } from '../utilities/constants';
+import {
+  HOME_ROUTE,
+  MESSAGES_ROUTE,
+  PROFILE_ROUTE,
+  SEARCH_ROUTE,
+} from '../utilities/constants';
 
 export function Nav() {
   const router = useRouter();
+  const pathname = router.pathname;
 
   return (
     <nav
@@ -20,7 +26,7 @@ export function Nav() {
               viewBox="0 0 24 24"
               aria-hidden="true"
               className={`stroke-black stroke-1 w-7 h-7 ${
-                isHome() ? 'fill-black' : 'fill-white stroke-2'
+                isHome(pathname) ? 'fill-black' : 'fill-white stroke-2'
               }`}
             >
               <g>
@@ -30,14 +36,14 @@ export function Nav() {
           ),
         })}
         {createNavLink({
-          href: '/search',
+          href: SEARCH_ROUTE,
           label: 'Search',
           icon: (
             <svg
               viewBox="0 0 24 24"
               aria-hidden="true"
               className={`fill-black stroke-black w-7 h-7 ${
-                isSearch() ? 'stroke-1' : 'stroke-[0.5px]'
+                isSearch(pathname) ? 'stroke-1' : 'stroke-[0.5px]'
               }`}
             >
               <g>
@@ -54,7 +60,7 @@ export function Nav() {
               viewBox="0 0 24 24"
               aria-hidden="true"
               className={`stroke-black stroke-1 w-7 h-7 ${
-                isProfile() ? 'fill-black' : 'fill-white stroke-2'
+                isProfile(pathname) ? 'fill-black' : 'fill-white stroke-2'
               }`}
             >
               <g>
@@ -63,12 +69,47 @@ export function Nav() {
             </svg>
           ),
         })}
+        {createNavLink({
+          href: MESSAGES_ROUTE,
+          label: 'Messages',
+          icon: (
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              className={`stroke-black stroke-0 w-7 h-7 ${
+                isMessages(pathname) ? 'fill-black' : 'fill-white stroke-2'
+              }`}
+            >
+              <g>
+                <path d="M1.998 4.499c0-.828.671-1.499 1.5-1.499h17c.828 0 1.5.671 1.5 1.499v2.858l-10 4.545-10-4.547V4.499zm0 5.053V19.5c0 .828.671 1.5 1.5 1.5h17c.828 0 1.5-.672 1.5-1.5V9.554l-10 4.545-10-4.547z"></path>
+              </g>
+            </svg>
+          ),
+          // icon: (
+          //   <svg
+          //     viewBox="0 0 24 24"
+          //     aria-hidden="true"
+          //     className={`stroke-black stroke-0 w-7 h-7 ${
+          //       isMessages() ? 'fill-black' : 'fill-white stroke-2'
+          //     }`}
+          //   >
+          //     <g>
+          //       <path d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5v13c0 1.381-1.119 2.5-2.5 2.5h-15c-1.381 0-2.5-1.119-2.5-2.5v-13zm2.5-.5c-.276 0-.5.224-.5.5v2.764l8 3.638 8-3.636V5.5c0-.276-.224-.5-.5-.5h-15zm15.5 5.463l-8 3.636-8-3.638V18.5c0 .276.224.5.5.5h15c.276 0 .5-.224.5-.5v-8.037z"></path>
+          //     </g>
+          //   </svg>
+          // ),
+        })}
       </ul>
       <div className="fixed bottom-24 right-5 sm:static xl:hidden">
-        {router.pathname !== '/compose/tweet' && <PostFAB />}
+        {canPostFABBeDisplayed(pathname) && <PostFAB />}
       </div>
     </nav>
   );
+
+  function canPostFABBeDisplayed(pathname: string) {
+    if (isMessages(pathname) || pathname == '/compose/tweet') return false;
+    return true;
+  }
 
   function createNavLink({
     href,
@@ -85,7 +126,7 @@ export function Nav() {
           {icon}
           <span
             className={`${
-              router.pathname === href ? 'font-bold' : ''
+              pathname === href ? 'font-bold' : ''
             } hidden xl:inline-block`}
           >
             {label}
@@ -95,15 +136,19 @@ export function Nav() {
     );
   }
 
-  function isHome() {
-    return router.pathname === HOME_ROUTE;
+  function isHome(pathname: string) {
+    return pathname === HOME_ROUTE;
   }
 
-  function isProfile() {
-    return router.pathname === '/username';
+  function isProfile(pathname: string) {
+    return pathname === PROFILE_ROUTE;
   }
 
-  function isSearch() {
-    return router.pathname === '/search';
+  function isSearch(pathname: string) {
+    return pathname === '/search';
+  }
+
+  function isMessages(pathname: string) {
+    return pathname === MESSAGES_ROUTE;
   }
 }
