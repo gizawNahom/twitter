@@ -14,8 +14,8 @@ export default function ComposeMessage() {
   const [searchInputValue, setSearchInputValue] = useState<string>('');
 
   return (
-    <Page header={renderHeader()}>
-      <div className=" pb-2 pt-4">
+    <Page header={renderHeader()} padded={false}>
+      <div className=" pb-2 pt-4 px-4">
         <UserSearchInput
           onThrottledChange={onChange}
           searchInputValue={searchInputValue}
@@ -23,6 +23,7 @@ export default function ComposeMessage() {
         />
       </div>
       {selectedUser && renderSelectedUser(selectedUser)}
+      <hr className=" border-slate-300" />
       {status == 'loading' && renderProgressBar()}
       {status == 'success' && renderMatchingUsers(users)}
       {status == 'error' && <Error />}
