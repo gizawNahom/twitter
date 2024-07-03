@@ -6,7 +6,13 @@ import {
   getByTestId,
   mockRouter,
 } from '../testUtilities';
-import { HOME, MESSAGES, PROFILE, SEARCH } from '../testUtilities/routes';
+import {
+  COMPOSE_TWEET,
+  HOME,
+  MESSAGES,
+  PROFILE,
+  SEARCH,
+} from '../testUtilities/routes';
 
 function renderSUT() {
   renderElement(<Nav />);
@@ -39,7 +45,7 @@ test('hides post fab on messages screen', () => {
 });
 
 test('hides post fab on compose tweet screen', () => {
-  mockRouter({ pathname: '/compose/tweet' });
+  mockRouter({ pathname: COMPOSE_TWEET });
 
   renderSUT();
 

@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PostFAB } from './postFAB';
 import {
-  COMPOSE_TWEET_ROUTER,
+  COMPOSE_TWEET_ROUTE,
   HOME_ROUTE,
   MESSAGES_ROUTE,
   PROFILE_ROUTE,
@@ -154,6 +154,6 @@ export function Nav() {
   }
 
   function isComposeTweet(pathname: string): boolean {
-    return pathname == COMPOSE_TWEET_ROUTER;
+    return pathname == COMPOSE_TWEET_ROUTE;
   }
 }

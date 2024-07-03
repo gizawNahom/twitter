@@ -1,10 +1,11 @@
 import Link from 'next/link';
+import { COMPOSE_TWEET_ROUTE } from '../utilities/constants';
 
 export function PostFAB() {
   return (
     <Link
       data-testid="post-FAB"
-      href={'compose/tweet'}
+      href={COMPOSE_TWEET_ROUTE}
       aria-label="Compose Tweet"
     >
       <figure className=" bg-sky-400 w-14 h-14 rounded-full flex justify-center items-center shadow-lg active:bg-sky-700">
