@@ -14,8 +14,8 @@ export default function ComposeMessage() {
   const [searchInputValue, setSearchInputValue] = useState<string>('');
 
   return (
-    <Page header={renderHeader()} isPadded={false}>
-      <div className=" pb-2 pt-4 px-4">
+    <Page header={renderHeader()} isPadded>
+      <div className="pb-2 pt-4">
         <UserSearchInput
           onThrottledChange={onChange}
           searchInputValue={searchInputValue}
@@ -23,7 +23,7 @@ export default function ComposeMessage() {
         />
       </div>
       {selectedUser && renderSelectedUser(selectedUser)}
-      <hr className=" border-slate-300" />
+      <hr className="border-slate-300 absolute left-0 w-full" />
       {status == 'loading' && renderProgressBar()}
       {status == 'success' && renderMatchingUsers(users)}
       {status == 'error' && <Error />}
@@ -72,7 +72,7 @@ export default function ComposeMessage() {
 
   function renderMatchingUsers(users: User[]) {
     return (
-      <div>
+      <div className="flex flex-col pt-4">
         {users.map((u, i) => {
           return (
             <div
@@ -82,15 +82,20 @@ export default function ComposeMessage() {
                 setSearchInputValue('');
                 setStatus('selected');
               }}
+              className="flex gap-x-2 items-center cursor-pointer py-4"
             >
-              <Image
-                src={u.profilePic}
-                alt={`${u.username}'s profile picture`}
-                width={200}
-                height={200}
-              />
-              <span>{u.displayName}</span>
-              <span>@{u.username}</span>
+              <div className="w-10 h-10 relative rounded-full overflow-hidden">
+                <Image
+                  src={u.profilePic}
+                  alt={`${u.username}'s profile picture`}
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold">{u.displayName}</span>
+                <span className=" text-sm text-gray-500">@{u.username}</span>
+              </div>
             </div>
           );
         })}

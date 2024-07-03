@@ -11,7 +11,7 @@ export function Page({
   isPadded?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-y-2 pt-4">
+    <div className="flex flex-col gap-y-2 pt-4 relative">
       <div className="px-4">{header}</div>
       <div className={isPadded ? 'px-4' : ''}>{children}</div>
     </div>
