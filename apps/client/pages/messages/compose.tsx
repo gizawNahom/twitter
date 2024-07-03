@@ -4,6 +4,7 @@ import { Page } from '../../components/page';
 import { useEffect, useRef, useState } from 'react';
 import { User, getUsers } from '../../../client/utilities/getUsers';
 import { Error } from '../../components/error';
+import { MESSAGES_ROUTE } from '../../utilities/constants';
 
 export default function ComposeMessage() {
   const [status, setStatus] = useState<
@@ -124,7 +125,7 @@ export function CloseMessagePageButton() {
     <div data-testid="close-message-page-button" className=" flex items-center">
       <button
         onClick={() => {
-          router.push('/messages');
+          router.push(MESSAGES_ROUTE);
         }}
         aria-label="Close"
       >

@@ -6,11 +6,7 @@ import {
   getByTestId,
   mockRouter,
 } from '../testUtilities';
-
-const HOME_LINK = '/home';
-const PROFILE_LINK = '/username';
-const SEARCH_LINK = '/search';
-const MESSAGES_LINK = '/messages';
+import { HOME, MESSAGES, PROFILE, SEARCH } from '../testUtilities/routes';
 
 function renderSUT() {
   renderElement(<Nav />);
@@ -27,15 +23,15 @@ test('initial', () => {
 
   renderSUT();
 
-  expect(screen.queryByRole('link', { name: HOME_LINK }));
-  expect(screen.queryByRole('link', { name: PROFILE_LINK }));
-  expect(screen.queryByRole('link', { name: SEARCH_LINK }));
-  expect(screen.queryByRole('link', { name: MESSAGES_LINK }));
+  expect(screen.queryByRole('link', { name: HOME }));
+  expect(screen.queryByRole('link', { name: PROFILE }));
+  expect(screen.queryByRole('link', { name: SEARCH }));
+  expect(screen.queryByRole('link', { name: MESSAGES }));
   expect(getByTestId(POST_FAB_TEST_ID)).toBeInTheDocument();
 });
 
 test('hides post fab on messages screen', () => {
-  mockRouter({ pathname: MESSAGES_LINK });
+  mockRouter({ pathname: MESSAGES });
 
   renderSUT();
 

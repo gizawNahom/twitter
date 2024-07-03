@@ -5,6 +5,7 @@ import {
   renderElement,
   setUpMockRouter,
 } from '../../testUtilities';
+import { MESSAGES } from '../../testUtilities/routes';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -33,5 +34,5 @@ test('closes message page', async () => {
 
   await clickElement(getCloseButton());
 
-  expect(push).toHaveBeenCalledWith('/messages');
+  expect(push).toHaveBeenCalledWith(MESSAGES);
 });
