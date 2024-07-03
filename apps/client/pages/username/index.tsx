@@ -5,7 +5,7 @@ import { fetchPosts } from '../../lib/redux/slices/postsSlice/fetchPosts';
 export default function Profile() {
   return (
     <div>
-      <Page padded={false}>
+      <Page isPadded={false}>
         <div className="p-2 border-b-[1px]">
           <h4 className="font-bold text-base">Posts</h4>
         </div>

@@ -14,7 +14,7 @@ export default function ComposeMessage() {
   const [searchInputValue, setSearchInputValue] = useState<string>('');
 
   return (
-    <Page header={renderHeader()} padded={false}>
+    <Page header={renderHeader()} isPadded={false}>
       <div className=" pb-2 pt-4 px-4">
         <UserSearchInput
           onThrottledChange={onChange}
