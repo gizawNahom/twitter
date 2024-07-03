@@ -17,3 +17,5 @@ export const SEARCH_BAR_TEST_ID = 'searchBar';
 export const CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID = 'close-message-page-button';
 
 export const PEOPLE_SEARCH_TEST_ID = 'people-search';
+
+export const COMPOSE_MESSAGE_FAB_TEST_ID = 'compose-message-FAB';
