@@ -35,7 +35,7 @@ export default function ComposeMessage() {
       <div className="flex justify-between items-center gap-x-9">
         <div className="flex gap-x-10 items-center">
           <CloseMessagePageButton />
-          <span className=" font-semibold">New message</span>
+          <h1 className=" font-semibold">New message</h1>
         </div>
         <NextButton isDisabled={selectedUser ? false : true} />
       </div>
@@ -72,10 +72,10 @@ export default function ComposeMessage() {
 
   function renderMatchingUsers(users: User[]) {
     return (
-      <div className="flex flex-col pt-4">
+      <ul className="flex flex-col pt-4">
         {users.map((u, i) => {
           return (
-            <div
+            <li
               key={i}
               onClick={() => {
                 setSelectedUser(u);
@@ -93,13 +93,13 @@ export default function ComposeMessage() {
                 />
               </div>
               <div className="flex flex-col">
-                <span className="font-bold">{u.displayName}</span>
-                <span className=" text-sm text-gray-500">@{u.username}</span>
+                <h2 className="font-bold">{u.displayName}</h2>
+                <p className=" text-sm text-gray-500">@{u.username}</p>
               </div>
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ul>
     );
   }
 }
