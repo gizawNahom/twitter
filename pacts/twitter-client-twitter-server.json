@@ -229,6 +229,63 @@
       }
     },
     {
+      "description": "a request to fetch messages with an invalid chat id, offset and limit",
+      "request": {
+        "body": {
+          "operationName": "ReadMessages",
+          "query": "\n          query ReadMessages($chatId: String!, $limit: Int!, $offset: Int!) {\n            messages(limit: $limit, offset: $offset, chatId: $chatId) {\n              id\n              senderId\n              chatId\n              text\n              createdAt\n              __typename\n            }\n          }\n          ",
+          "variables": {
+            "chatId": "",
+            "limit": -10,
+            "offset": -1
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "\\s*query\\s*ReadMessages\\(\\$chatId:\\s*String!,\\s*\\$limit:\\s*Int!,\\s*\\$offset:\\s*Int!\\)\\s*\\{\\s*messages\\(limit:\\s*\\$limit,\\s*offset:\\s*\\$offset,\\s*chatId:\\s*\\$chatId\\)\\s*\\{\\s*id\\s*senderId\\s*chatId\\s*text\\s*createdAt\\s*__typename\\s*\\}\\s*\\}\\s*"
+          },
+          "$.body.variables.chatId": {
+            "match": "type"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": null,
+          "errors": [
+            {
+              "message": "Generic error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
       "description": "a request to fetch users with invalid id, offset and limit",
       "request": {
         "body": {
@@ -481,7 +538,7 @@
           "$.body.variables.offset": {
             "match": "type"
           },
-          "$.header.$.authorization[0]": {
+          "$.header.$": {
             "match": "type"
           }
         },

@@ -7,12 +7,16 @@ export async function readMessages(
   offset: number,
   limit: number
 ): Promise<Message[]> {
-  const res = await Client.client.query({
-    query: getQuery(),
-    variables: getVariables(chatId, offset, limit),
-  });
+  try {
+    const res = await Client.client.query({
+      query: getQuery(),
+      variables: getVariables(chatId, offset, limit),
+    });
 
-  return res.data.messages as Array<Message>;
+    return res.data.messages as Array<Message>;
+  } catch (error) {
+    throw new Error();
+  }
 
   function getQuery() {
     return gql`

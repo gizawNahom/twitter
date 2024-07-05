@@ -6,6 +6,9 @@ import {
   createBaseInteraction,
 } from '../../testUtilities';
 import {
+  GENERIC_SERVER_ERROR,
+  sampleInvalidLimit,
+  sampleInvalidOffset,
   sampleLimit,
   sampleMessageResponse,
   sampleOffset,
@@ -40,6 +43,33 @@ export async function testReadMessages(provider: Pact, baseUrl: URL) {
       );
 
       expect(messages).toStrictEqual([sampleMessageResponse]);
+    });
+
+    test('handles error', async () => {
+      const invalidChatId = '';
+      const invalidOffset = sampleInvalidOffset;
+      const invalidLimit = sampleInvalidLimit;
+      const interaction = createInteraction({
+        data: null,
+        errors: [
+          {
+            message: like(GENERIC_SERVER_ERROR),
+          },
+        ],
+      })
+        .uponReceiving(
+          'a request to fetch messages with an invalid chat id, offset and limit'
+        )
+        .withVariables({
+          chatId: like(invalidChatId),
+          offset: like(invalidOffset),
+          limit: like(invalidLimit),
+        });
+      await addInteraction(provider, interaction);
+
+      await expect(async () => {
+        await readMessages(invalidChatId, invalidLimit, invalidOffset);
+      }).rejects.toThrow(new Error());
     });
   });
 
