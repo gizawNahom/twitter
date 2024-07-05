@@ -5,7 +5,11 @@ import {
   addInteraction,
   createBaseInteraction,
 } from '../../testUtilities';
-import { sampleChatResponse, sampleUserResponse } from '../../../mocks/values';
+import {
+  GENERIC_SERVER_ERROR,
+  sampleChatResponse,
+  sampleUserResponse,
+} from '../../../mocks/values';
 import { getOrCreateChat } from '../../../utilities/getOrCreateChat';
 
 export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
@@ -26,6 +30,29 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
 
       expect(chat).toStrictEqual(sampleChatResponse);
     });
+  });
+
+  test('handles error', async () => {
+    const invalidUsername = '1';
+    const interaction = createInteraction({
+      data: {
+        chat: null,
+      },
+      errors: [
+        {
+          message: like(GENERIC_SERVER_ERROR),
+        },
+      ],
+    })
+      .uponReceiving('a request to get or create chat with an invalid username')
+      .withVariables({
+        username: like(invalidUsername),
+      });
+    await addInteraction(provider, interaction);
+
+    await expect(async () => {
+      await getOrCreateChat(invalidUsername);
+    }).rejects.toThrow(new Error());
   });
 
   function createInteraction(responseBody: AnyTemplate) {
