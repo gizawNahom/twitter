@@ -6,7 +6,7 @@ import { FAB } from '../../components/fab';
 export default function Messages() {
   return (
     <Page header={<div className="text-center">Messages</div>}>
-      <div>
+      <div className="fixed bottom-24 right-5 sm:static xl:hidden">
         <ComposeMessageFAB />
       </div>
     </Page>
