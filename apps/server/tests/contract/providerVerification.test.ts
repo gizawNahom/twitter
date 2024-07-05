@@ -46,6 +46,10 @@ describe('Pact verification', () => {
           userRepoSpy.getUsersResponse = [sampleUser1];
           userRepoSpy.getUserResponse = sampleUser2;
         },
+        'a chat with the chat id exists': async () => {
+          const messageGatewaySpy = Context.messageGateway as MessageGatewaySpy;
+          messageGatewaySpy.doesChatExistResponse = true;
+        },
       },
       beforeEach: async () => {
         Context.postRepository = new InMemoryPostRepository();
