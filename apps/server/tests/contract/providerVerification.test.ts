@@ -9,6 +9,10 @@ import { UserRepositorySpy } from '../doubles/userRepositorySpy';
 import { sampleUser1, sampleUser2 } from '../utilities/samples';
 import { IdGeneratorStub } from '../doubles/idGeneratorStub';
 import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
+import { stubGetChatResponse } from '../core/getOrCreateChatUseCase.test';
+import { ChatMother } from '../utilities/ChatMother';
+import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
+import { MessageMother } from '../utilities/MessageMother';
 
 const port = 8081;
 const baseUrl = `http://localhost:${port}`;
@@ -49,6 +53,12 @@ describe('Pact verification', () => {
         'a chat with the chat id exists': async () => {
           const messageGatewaySpy = Context.messageGateway as MessageGatewaySpy;
           messageGatewaySpy.doesChatExistResponse = true;
+          stubGetChatResponse(messageGatewaySpy);
+          messageGatewaySpy.getChatWithIdResponse = ChatMother.chat()
+            .withParticipants([DefaultGateKeeper.defaultUser, sampleUser2])
+            .build();
+          const message = MessageMother.message();
+          messageGatewaySpy.getMessagesResponse = [message];
         },
       },
       beforeEach: async () => {

@@ -6,4 +6,5 @@ export enum Operations {
   GetUsers = 'GetUsers',
   GetOrCreateChat = 'GetOrCreateChat',
   SendMessage = 'SendMessage',
+  ReadMessages = 'ReadMessages',
 }

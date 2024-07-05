@@ -52,7 +52,7 @@ function getSaveChatCalls() {
   return (Context.messageGateway as MessageGatewaySpy).saveChatCalls;
 }
 
-function stubGetChatResponse(msgGateway: MessageGatewaySpy) {
+export function stubGetChatResponse(msgGateway: MessageGatewaySpy) {
   msgGateway.getChatResponse = ChatMother.chat()
     .withParticipants([sampleUser1, sampleUser2])
     .build();

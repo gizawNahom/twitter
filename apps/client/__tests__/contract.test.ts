@@ -8,6 +8,7 @@ import { testSearchPosts } from './contracts/searchPostsTest';
 import { testGetUsers } from './contracts/messages/getUsersTest';
 import { testGetOrCreateChat } from './contracts/messages/getOrCreateChatTest';
 import { testSendMessage } from './contracts/messages/sendMessageTest';
+import { testReadMessages } from './contracts/messages/readMessagesTest';
 
 function getBaseUrl() {
   return new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
@@ -55,3 +56,5 @@ testGetUsers(provider, baseUrl);
 testGetOrCreateChat(provider, baseUrl);
 
 testSendMessage(provider, baseUrl);
+
+testReadMessages(provider, baseUrl);
