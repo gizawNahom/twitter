@@ -21,6 +21,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
         },
       })
         .uponReceiving('a request to get or create chat with a valid username')
+        .given('a user with the username exists')
         .withVariables({
           username: like(sampleUserResponse.username),
         });
@@ -35,9 +36,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
   test('handles error', async () => {
     const invalidUsername = '1';
     const interaction = createInteraction({
-      data: {
-        chat: null,
-      },
+      data: null,
       errors: [
         {
           message: like(GENERIC_SERVER_ERROR),

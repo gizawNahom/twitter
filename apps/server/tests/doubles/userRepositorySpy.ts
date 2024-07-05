@@ -10,8 +10,13 @@ export class UserRepositorySpy implements UserRepository {
   getUsersResponse: User[];
   getUsersCalls: { username: Username; limit: Limit; offset: Offset }[] = [];
 
-  getById(): Promise<User | null> {
-    throw new Error('Method not implemented.');
+  async getById(): Promise<User | null> {
+    return new User(
+      'userId1',
+      new Username('dummy'),
+      'displayName',
+      'https://sample'
+    );
   }
 
   async getUser(username: Username): Promise<User | null> {

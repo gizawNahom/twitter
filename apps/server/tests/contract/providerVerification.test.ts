@@ -6,8 +6,9 @@ import { Post } from '../../src/core/entities/post';
 import { PostIndexGatewaySpy } from '../doubles/postIndexGatewaySpy';
 import { createServer } from '../../src/adapter-api-express/server';
 import { UserRepositorySpy } from '../doubles/userRepositorySpy';
-import { sampleUser1 } from '../utilities/samples';
-import { DummyUserRepository } from '../../src/adapter-api-express/dummyUserRepository';
+import { sampleUser1, sampleUser2 } from '../utilities/samples';
+import { IdGeneratorStub } from '../doubles/idGeneratorStub';
+import { MessageGatewaySpy } from '../doubles/messageGatewaySpy';
 
 const port = 8081;
 const baseUrl = `http://localhost:${port}`;
@@ -41,15 +42,17 @@ describe('Pact verification', () => {
           await savePost();
         },
         'a user with the username exists': async () => {
-          const userRepoSpy = new UserRepositorySpy();
+          const userRepoSpy = Context.userRepository as UserRepositorySpy;
           userRepoSpy.getUsersResponse = [sampleUser1];
-          Context.userRepository = userRepoSpy;
+          userRepoSpy.getUserResponse = sampleUser2;
         },
       },
       beforeEach: async () => {
         Context.postRepository = new InMemoryPostRepository();
         Context.postIndexGateway = new PostIndexGatewaySpy();
-        Context.userRepository = new DummyUserRepository();
+        Context.userRepository = new UserRepositorySpy();
+        Context.idGenerator = new IdGeneratorStub();
+        Context.messageGateway = new MessageGatewaySpy();
       },
     })
       .verifyProvider()
