@@ -309,7 +309,7 @@
           "$.body.variables.username": {
             "match": "type"
           },
-          "$.header.$.authorization[0]": {
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -389,6 +389,64 @@
         },
         "matchingRules": {
           "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to send a message with a valid text and a valid chatId",
+      "providerState": "a chat with the chat id exists",
+      "request": {
+        "body": {
+          "operationName": "SendMessage",
+          "query": "mutation SendMessage($text: String!, $chatId: String!) {\n          sendMessage(text: $text, chatId: $chatId) {\n            id\n            senderId\n            chatId\n            text\n            createdAt\n            __typename\n          }\n        }",
+          "variables": {
+            "chatId": "chatId124",
+            "text": "hello world"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "mutation\\s*SendMessage\\(\\$text:\\s*String!,\\s*\\$chatId:\\s*String!\\)\\s*\\{\\s*sendMessage\\(text:\\s*\\$text,\\s*chatId:\\s*\\$chatId\\)\\s*\\{\\s*id\\s*senderId\\s*chatId\\s*text\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.chatId": {
+            "match": "type"
+          },
+          "$.body.variables.text": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "sendMessage": {
+              "__typename": "Message",
+              "chatId": "chatId124",
+              "createdAt": "2024-07-05T15:11:55.306Z",
+              "id": "messageId124",
+              "senderId": "senderId123",
+              "text": "hello world"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.sendMessage": {
             "match": "type"
           }
         },

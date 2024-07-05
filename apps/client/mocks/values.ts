@@ -30,4 +30,13 @@ export const sampleChatResponse = {
   __typename: 'Chat',
 };
 
+export const sampleMessageResponse = {
+  id: 'messageId124',
+  senderId: 'senderId123',
+  chatId: 'chatId124',
+  text: 'hello world',
+  createdAt: '2024-07-05T15:11:55.306Z',
+  __typename: 'Message',
+};
+
 export const GENERIC_SERVER_ERROR = 'Generic error';
