@@ -258,7 +258,7 @@
           "$.body.variables.username": {
             "match": "type"
           },
-          "$.header.$.authorization[0]": {
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -281,6 +281,56 @@
         },
         "matchingRules": {
           "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to get or create chat with a valid username",
+      "request": {
+        "body": {
+          "operationName": "GetOrCreateChat",
+          "query": "mutation GetOrCreateChat($username: String!) {\n          chat(username: $username) {\n            id\n            createdAt\n            __typename\n          }\n        }",
+          "variables": {
+            "username": "johnDoe"
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "mutation\\s*GetOrCreateChat\\(\\$username:\\s*String!\\)\\s*\\{\\s*chat\\(username:\\s*\\$username\\)\\s*\\{\\s*id\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.username": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "chat": {
+              "__typename": "Chat",
+              "createdAt": "2024-07-05T15:11:55.306Z",
+              "id": "chatId124"
+            }
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.chat": {
             "match": "type"
           }
         },

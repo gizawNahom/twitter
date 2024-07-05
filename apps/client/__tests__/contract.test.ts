@@ -6,6 +6,7 @@ import { Pact } from '@pact-foundation/pact';
 import path from 'path';
 import { testSearchPosts } from './contracts/searchPostsTest';
 import { testGetUsers } from './contracts/messages/getUsersTest';
+import { testGetOrCreateChat } from './contracts/messages/getOrCreateChatTest';
 
 function getBaseUrl() {
   return new URL(process.env.NEXT_PUBLIC_API_BASE_URL as string);
@@ -49,3 +50,5 @@ testFetchPosts(provider, baseUrl);
 testSearchPosts(provider, baseUrl);
 
 testGetUsers(provider, baseUrl);
+
+testGetOrCreateChat(provider, baseUrl);

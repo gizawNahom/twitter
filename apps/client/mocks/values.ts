@@ -24,4 +24,10 @@ export const sampleUserResponse = {
   __typename: 'User',
 };
 
+export const sampleChatResponse = {
+  id: 'chatId124',
+  createdAt: '2024-07-05T15:11:55.306Z',
+  __typename: 'Chat',
+};
+
 export const GENERIC_SERVER_ERROR = 'Generic error';
