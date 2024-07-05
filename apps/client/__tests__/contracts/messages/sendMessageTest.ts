@@ -5,7 +5,10 @@ import {
   addInteraction,
   createBaseInteraction,
 } from '../../testUtilities';
-import { sampleMessageResponse } from '../../../mocks/values';
+import {
+  GENERIC_SERVER_ERROR,
+  sampleMessageResponse,
+} from '../../../mocks/values';
 import { sendMessage } from '../../../utilities/sendMessage';
 
 export function testSendMessage(provider: Pact, baseUrl: URL) {
@@ -32,6 +35,33 @@ export function testSendMessage(provider: Pact, baseUrl: URL) {
       );
 
       expect(message).toStrictEqual(sampleMessageResponse);
+    });
+
+    test('handles error', async () => {
+      const invalidText = '';
+      const invalidChatId = '';
+      const interaction = createInteraction({
+        data: {
+          sendMessage: null,
+        },
+        errors: [
+          {
+            message: like(GENERIC_SERVER_ERROR),
+          },
+        ],
+      })
+        .uponReceiving(
+          'a request to send a message with an invalid text and an invalid chatId'
+        )
+        .withVariables({
+          text: like(invalidText),
+          chatId: like(invalidChatId),
+        });
+      await addInteraction(provider, interaction);
+
+      await expect(async () => {
+        await sendMessage(invalidText, invalidChatId);
+      }).rejects.toThrow(new Error());
     });
   });
 

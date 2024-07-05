@@ -5,12 +5,16 @@ export async function sendMessage(
   text: string,
   chatId: string
 ): Promise<Message | null> {
-  const res = await Client.client.mutate({
-    mutation: getMutation(),
-    variables: getVariables(text, chatId),
-  });
+  try {
+    const res = await Client.client.mutate({
+      mutation: getMutation(),
+      variables: getVariables(text, chatId),
+    });
 
-  return res.data.sendMessage as Message;
+    return res.data.sendMessage as Message;
+  } catch (error) {
+    throw new Error();
+  }
 
   function getMutation() {
     return gql`
