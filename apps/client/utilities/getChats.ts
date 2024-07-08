@@ -2,12 +2,16 @@ import { gql } from '@apollo/client';
 import { Client } from './client';
 
 export async function getChats(offset: number, limit: number): Promise<Chat[]> {
-  const res = await Client.client.query({
-    query: getQuery(),
-    variables: getVariables(offset, limit),
-  });
+  try {
+    const res = await Client.client.query({
+      query: getQuery(),
+      variables: getVariables(offset, limit),
+    });
 
-  return res.data.chats as Array<Chat>;
+    return res.data.chats as Array<Chat>;
+  } catch (error) {
+    throw new Error();
+  }
 
   function getQuery() {
     return gql`

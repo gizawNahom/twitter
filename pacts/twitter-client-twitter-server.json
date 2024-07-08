@@ -170,6 +170,59 @@
       }
     },
     {
+      "description": "a request to fetch chats with an invalid offset and limit",
+      "request": {
+        "body": {
+          "operationName": "GetChats",
+          "query": "query GetChats($limit: Int!, $offset: Int!) {\n          chats(limit: $limit, offset: $offset) {\n            id\n            createdAtISO\n            participant {\n              username\n              displayName\n              profilePic\n              __typename\n            }\n            __typename\n          }\n        }",
+          "variables": {
+            "limit": -10,
+            "offset": -1
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "query\\s*GetChats\\(\\$limit:\\s*Int!,\\s*\\$offset:\\s*Int!\\)\\s*\\{\\s*chats\\(limit:\\s*\\$limit,\\s*offset:\\s*\\$offset\\)\\s*\\{\\s*id\\s*createdAtISO\\s*participant\\s*\\{\\s*username\\s*displayName\\s*profilePic\\s*__typename\\s*\\}\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": null,
+          "errors": [
+            {
+              "message": "Generic error"
+            }
+          ]
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.errors[0].message": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
       "description": "a request to fetch created posts with invalid id, offset and limit",
       "request": {
         "body": {
@@ -871,7 +924,7 @@
           "$.body.variables.offset": {
             "match": "type"
           },
-          "$.header.$.authorization[0]": {
+          "$.header.$": {
             "match": "type"
           }
         },

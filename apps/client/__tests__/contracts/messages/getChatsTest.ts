@@ -9,6 +9,9 @@ import {
   sampleLimit,
   sampleOffset,
   sampleChatResponse,
+  sampleInvalidOffset,
+  sampleInvalidLimit,
+  GENERIC_SERVER_ERROR,
 } from '../../../mocks/values';
 import { getChats } from '../../../utilities/getChats';
 
@@ -33,6 +36,31 @@ export function testGetChats(provider: Pact, baseUrl: URL) {
       const chats = await getChats(validOffset, validLimit);
 
       expect(chats).toStrictEqual([sampleChatResponse]);
+    });
+
+    test('handles error', async () => {
+      const invalidOffset = sampleInvalidOffset;
+      const invalidLimit = sampleInvalidLimit;
+      const interaction = createInteraction({
+        data: null,
+        errors: [
+          {
+            message: like(GENERIC_SERVER_ERROR),
+          },
+        ],
+      })
+        .uponReceiving(
+          'a request to fetch chats with an invalid offset and limit'
+        )
+        .withVariables({
+          offset: like(invalidOffset),
+          limit: like(invalidLimit),
+        });
+      await addInteraction(provider, interaction);
+
+      await expect(async () => {
+        await getChats(invalidOffset, invalidLimit);
+      }).rejects.toThrow(new Error());
     });
   });
 
