@@ -3,7 +3,6 @@ import { Post } from '../../src/core/entities/post';
 import { removeSeconds } from './helpers';
 import { LOG_EXTRACTED_USER } from './logMessages';
 import { DefaultGateKeeper } from '../../src/adapter-api-express/defaultGateKeeper';
-import { Chat } from '../../src/core/entities/chat';
 
 export async function assertValidationErrorWithMessage(
   task: () => Promise<unknown>,
