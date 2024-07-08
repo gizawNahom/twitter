@@ -24,10 +24,20 @@ export const sampleUserResponse = {
   __typename: 'User',
 };
 
-export const sampleChatResponse = {
+export const samplePartialChatResponse = {
   id: 'chatId124',
   createdAt: '2024-07-05T15:11:55.306Z',
   __typename: 'Chat',
+};
+
+export const sampleChatResponse = {
+  id: samplePartialChatResponse.id,
+  createdAtISO: samplePartialChatResponse.createdAt,
+  participant: {
+    username: sampleUserResponse.username,
+    displayName: sampleUserResponse.displayName,
+    profilePic: sampleUserResponse.profilePic,
+  },
 };
 
 export const sampleMessageResponse = {

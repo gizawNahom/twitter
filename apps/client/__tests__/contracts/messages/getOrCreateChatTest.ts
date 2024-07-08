@@ -7,7 +7,7 @@ import {
 } from '../../testUtilities';
 import {
   GENERIC_SERVER_ERROR,
-  sampleChatResponse,
+  samplePartialChatResponse,
   sampleUserResponse,
 } from '../../../mocks/values';
 import { getOrCreateChat } from '../../../utilities/getOrCreateChat';
@@ -17,7 +17,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
     test('gets chat', async () => {
       const interaction = createInteraction({
         data: {
-          chat: like(sampleChatResponse),
+          chat: like(samplePartialChatResponse),
         },
       })
         .uponReceiving('a request to get or create chat with a valid username')
@@ -29,7 +29,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
 
       const chat = await getOrCreateChat(sampleUserResponse.username);
 
-      expect(chat).toStrictEqual(sampleChatResponse);
+      expect(chat).toStrictEqual(samplePartialChatResponse);
     });
   });
 

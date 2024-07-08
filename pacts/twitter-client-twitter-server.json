@@ -258,7 +258,7 @@
           "$.body.variables.offset": {
             "match": "type"
           },
-          "$.header.$.authorization[0]": {
+          "$.header.$": {
             "match": "type"
           }
         },
@@ -838,6 +838,67 @@
             "match": "type"
           },
           "$.body.data.searchPosts[0].userId": {
+            "match": "type"
+          }
+        },
+        "status": 200
+      }
+    },
+    {
+      "description": "a request to fetch chats with a valid offset and limit",
+      "providerState": "a user has one or more chats",
+      "request": {
+        "body": {
+          "operationName": "GetChats",
+          "query": "query GetChats($limit: Int!, $offset: Int!) {\n          chats(limit: $limit, offset: $offset) {\n            id\n            createdAtISO\n            participant {\n              username\n              displayName\n              profilePic\n              __typename\n            }\n            __typename\n          }\n        }",
+          "variables": {
+            "limit": 10,
+            "offset": 0
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json",
+          "authorization": "Bearer sampleUserToken"
+        },
+        "matchingRules": {
+          "$.body.query": {
+            "match": "regex",
+            "regex": "query\\s*GetChats\\(\\$limit:\\s*Int!,\\s*\\$offset:\\s*Int!\\)\\s*\\{\\s*chats\\(limit:\\s*\\$limit,\\s*offset:\\s*\\$offset\\)\\s*\\{\\s*id\\s*createdAtISO\\s*participant\\s*\\{\\s*username\\s*displayName\\s*profilePic\\s*__typename\\s*\\}\\s*__typename\\s*\\}\\s*\\}"
+          },
+          "$.body.variables.limit": {
+            "match": "type"
+          },
+          "$.body.variables.offset": {
+            "match": "type"
+          },
+          "$.header.$.authorization[0]": {
+            "match": "type"
+          }
+        },
+        "method": "POST",
+        "path": "/graphql"
+      },
+      "response": {
+        "body": {
+          "data": {
+            "chats": [
+              {
+                "createdAtISO": "2024-07-05T15:11:55.306Z",
+                "id": "chatId124",
+                "participant": {
+                  "displayName": "Jonny",
+                  "profilePic": "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
+                  "username": "johnDoe"
+                }
+              }
+            ]
+          }
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
+        },
+        "matchingRules": {
+          "$.body.data.chats[0]": {
             "match": "type"
           }
         },

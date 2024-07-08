@@ -52,13 +52,25 @@ describe('Pact verification', () => {
         },
         'a chat with the chat id exists': async () => {
           const messageGatewaySpy = Context.messageGateway as MessageGatewaySpy;
+
           messageGatewaySpy.doesChatExistResponse = true;
+
           stubGetChatResponse(messageGatewaySpy);
+
           messageGatewaySpy.getChatWithIdResponse = ChatMother.chat()
             .withParticipants([DefaultGateKeeper.defaultUser, sampleUser2])
             .build();
+
           const message = MessageMother.message();
           messageGatewaySpy.getMessagesResponse = [message];
+        },
+        'a user has one or more chats': async () => {
+          const messageGatewaySpy = Context.messageGateway as MessageGatewaySpy;
+
+          const sampleChat = ChatMother.chat()
+            .withTheSecondParticipant(sampleUser1)
+            .build();
+          messageGatewaySpy.getChatsResponse = [sampleChat];
         },
       },
       beforeEach: async () => {
