@@ -35,3 +35,7 @@ export function assertPostEquality(post: Post | null) {
 }
 
 export const POST_EXISTS_STATE = 'a user has created a post';
+
+export const USERNAME_EXISTS_STATE = 'a user with the username exists';
+
+export const CHAT_ID_EXISTS_STATE = 'a chat with the chat id exists';

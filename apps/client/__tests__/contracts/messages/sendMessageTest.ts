@@ -1,6 +1,7 @@
 import { Pact } from '@pact-foundation/pact';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import {
+  CHAT_ID_EXISTS_STATE,
   Operations,
   addInteraction,
   createBaseInteraction,
@@ -22,7 +23,7 @@ export function testSendMessage(provider: Pact, baseUrl: URL) {
         .uponReceiving(
           'a request to send a message with a valid text and a valid chatId'
         )
-        .given('a chat with the chat id exists')
+        .given(CHAT_ID_EXISTS_STATE)
         .withVariables({
           text: like(sampleMessageResponse.text),
           chatId: like(sampleMessageResponse.chatId),

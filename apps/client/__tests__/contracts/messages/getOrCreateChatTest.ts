@@ -2,6 +2,7 @@ import { Pact } from '@pact-foundation/pact';
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import {
   Operations,
+  USERNAME_EXISTS_STATE,
   addInteraction,
   createBaseInteraction,
 } from '../../testUtilities';
@@ -21,7 +22,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
         },
       })
         .uponReceiving('a request to get or create chat with a valid username')
-        .given('a user with the username exists')
+        .given(USERNAME_EXISTS_STATE)
         .withVariables({
           username: like(sampleUserResponse.username),
         });

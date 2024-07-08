@@ -2,6 +2,7 @@ import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import { Pact } from '@pact-foundation/pact';
 import {
   Operations,
+  USERNAME_EXISTS_STATE,
   addInteraction,
   createBaseInteraction,
 } from '../../testUtilities';
@@ -28,7 +29,7 @@ export function testGetUsers(provider: Pact, baseUrl: URL) {
         .uponReceiving(
           'a request to fetch users with valid username, offset and limit'
         )
-        .given('a user with the username exists')
+        .given(USERNAME_EXISTS_STATE)
         .withVariables({
           username: like(sampleUserResponse.username),
           offset: like(validOffset),

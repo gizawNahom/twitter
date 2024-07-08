@@ -1,6 +1,7 @@
 import { AnyTemplate, like } from '@pact-foundation/pact/src/dsl/matchers';
 import { Pact } from '@pact-foundation/pact';
 import {
+  CHAT_ID_EXISTS_STATE,
   Operations,
   addInteraction,
   createBaseInteraction,
@@ -28,7 +29,7 @@ export async function testReadMessages(provider: Pact, baseUrl: URL) {
         .uponReceiving(
           'a request to fetch messages with a valid chatId, offset and limit'
         )
-        .given('a chat with the chat id exists')
+        .given(CHAT_ID_EXISTS_STATE)
         .withVariables({
           chatId: like(sampleMessageResponse.chatId),
           offset: like(validOffset),
