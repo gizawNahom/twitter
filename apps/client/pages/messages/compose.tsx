@@ -14,6 +14,8 @@ export default function ComposeMessage() {
   const [selectedUser, setSelectedUser] = useState<User>();
   const [searchInputValue, setSearchInputValue] = useState<string>('');
 
+  const router = useRouter();
+
   return (
     <Page header={renderHeader()} isPadded>
       <div className="pb-2 pt-4">
@@ -38,8 +40,24 @@ export default function ComposeMessage() {
           <CloseMessagePageButton />
           <h1 className=" font-semibold">New message</h1>
         </div>
-        <NextButton isDisabled={selectedUser ? false : true} />
+        {renderNextButton(selectedUser ? false : true)}
       </div>
+    );
+  }
+
+  function renderNextButton(isDisabled: boolean) {
+    return (
+      <button
+        disabled={isDisabled}
+        className={`px-4 py-1 text-white rounded-full transition text-sm font-bold ${
+          isDisabled ? 'bg-gray-400' : 'bg-black'
+        }`}
+        onClick={() =>
+          router.push(`/messages/loggedInUsername-${selectedUser?.username}`)
+        }
+      >
+        Next
+      </button>
     );
   }
 

@@ -10,6 +10,7 @@ import {
   getByText,
   renderElement,
   setUpApi,
+  setUpMockRouter,
   waitForErrorToBeInTheDocument,
 } from '../../testUtilities';
 import { screen, waitFor } from '@testing-library/react';
@@ -18,11 +19,14 @@ import { server } from '../../../mocks/server';
 import {
   assertNextButtonIsDisabled,
   assertNextButtonIsNotDisabled,
+  getNextButton,
 } from './nextButton.test';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
+
+const push = jest.fn();
 
 function renderSUT() {
   renderElement(<ComposeMessage />);
@@ -32,6 +36,7 @@ function queryProgressbar(): HTMLElement | null {
   return screen.queryByRole('progressbar');
 }
 
+setUpMockRouter({ push });
 setUpApi();
 
 beforeEach(() => getUsersCalls.splice(0, getUsersCalls.length));
@@ -103,10 +108,15 @@ test('can select a user', async () => {
     expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument()
   );
   await clickElement(getByText(sampleUserResponse.displayName));
+  await clickElement(getNextButton());
 
   assertNextButtonIsNotDisabled();
   expect(screen.queryByDisplayValue('a')).not.toBeInTheDocument();
   assertSelectedUserIsDisplayed();
+  expect(push).toHaveBeenCalledTimes(1);
+  expect(push).toHaveBeenCalledWith(
+    `/messages/loggedInUsername-${sampleUserResponse.username}`
+  );
 
   function assertSelectedUserIsDisplayed() {
     expect(getByRole('img')).toHaveAttribute(
