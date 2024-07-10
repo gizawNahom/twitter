@@ -4,7 +4,7 @@ import { Client } from './client';
 export async function sendMessage(
   text: string,
   chatId: string
-): Promise<Message | null> {
+): Promise<Message> {
   try {
     const res = await Client.client.mutate({
       mutation: getMutation(),
