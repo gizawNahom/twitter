@@ -6,6 +6,7 @@ import {
   typeText,
   clickElement,
 } from '../../../../testUtilities';
+import { screen } from '@testing-library/react';
 
 const onSend = jest.fn();
 
@@ -53,9 +54,11 @@ describe('Given the component is rendered', () => {
         await clickElement(getSendButton());
       });
 
-      test('Then the message is stripped from white space', () => {
+      test(`Then the message is stripped from white space
+            And the input is cleared`, () => {
         expect(onSend).toHaveBeenCalledTimes(1);
         expect(onSend).toHaveBeenCalledWith(sampleText);
+        expect(screen.queryByDisplayValue(sampleText)).not.toBeInTheDocument();
       });
     });
   });

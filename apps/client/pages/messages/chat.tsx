@@ -52,6 +52,7 @@ export function MessageSendInput({
   onSend: (message: string) => void;
 }) {
   const [message, setMessage] = useState('');
+  const trimmedMessage = message.trim();
 
   return (
     <div data-testid="message-send-input">
@@ -59,12 +60,15 @@ export function MessageSendInput({
         type="text"
         placeholder="Start a new message"
         value={message}
-        onChange={(e) => setMessage(e.target.value.trim())}
+        onChange={(e) => setMessage(e.target.value)}
       />
       <button
         aria-label="send"
-        disabled={isEmpty(message)}
-        onClick={() => onSend(message)}
+        disabled={isEmpty(trimmedMessage)}
+        onClick={() => {
+          onSend(trimmedMessage);
+          setMessage('');
+        }}
       >
         send
       </button>
