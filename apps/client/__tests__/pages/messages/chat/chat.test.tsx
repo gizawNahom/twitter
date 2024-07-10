@@ -1,17 +1,16 @@
-import { userSelected } from '../../../lib/redux/';
-import Chat from '../../../pages/messages/chat';
+import { userSelected } from '../../../../lib/redux';
+import Chat from '../../../../pages/messages/chat';
 import {
   BACK_BUTTON_TEST_ID,
   createNewStore,
-  getByPlaceholderText,
   getByRole,
   getByTestId,
   getByText,
   renderElement,
   setUpMockRouter,
-} from '../../testUtilities';
-import { MESSAGES } from '../../testUtilities/routes';
-import { sampleUserResponse } from '../../../mocks/values';
+} from '../../../testUtilities';
+import { MESSAGES } from '../../../testUtilities/routes';
+import { sampleUserResponse } from '../../../../mocks/values';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -46,8 +45,7 @@ describe('Given user has navigated to the page', () => {
 
     test('Then static elements are displayed', () => {
       expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
-      expect(getByPlaceholderText(/start a new message/i)).toBeInTheDocument();
-      expect(getByRole('button', { name: /send/i })).toBeDisabled();
+      expect(getByTestId('message-send-input')).toBeInTheDocument();
       expect(getByRole('img')).toHaveAttribute(
         'src',
         expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))

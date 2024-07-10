@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { createDefaultHeader, Page } from '../../components/page';
 import { useRouter } from 'next/router';
 import { MESSAGES_ROUTE } from '../../utilities/constants';
@@ -36,11 +36,42 @@ export default function Chat() {
       )}
     >
       <div>
-        <input type="text" placeholder="Start a new message" />
-        <button aria-label="send" disabled>
-          send
-        </button>
+        <MessageSendInput
+          onSend={() => {
+            //
+          }}
+        />
       </div>
     </Page>
   );
+}
+
+export function MessageSendInput({
+  onSend,
+}: {
+  onSend: (message: string) => void;
+}) {
+  const [message, setMessage] = useState('');
+
+  return (
+    <div data-testid="message-send-input">
+      <input
+        type="text"
+        placeholder="Start a new message"
+        value={message}
+        onChange={(e) => setMessage(e.target.value.trim())}
+      />
+      <button
+        aria-label="send"
+        disabled={isEmpty(message)}
+        onClick={() => onSend(message)}
+      >
+        send
+      </button>
+    </div>
+  );
+
+  function isEmpty(message: string) {
+    return message.length == 0;
+  }
 }
