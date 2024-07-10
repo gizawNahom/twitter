@@ -6,6 +6,7 @@ import {
   getByRole,
   getByTestId,
   getByText,
+  MESSAGE_SEND_INPUT_TEST_ID,
   renderElement,
   setUpMockRouter,
 } from '../../../testUtilities';
@@ -45,7 +46,7 @@ describe('Given user has navigated to the page', () => {
 
     test('Then static elements are displayed', () => {
       expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
-      expect(getByTestId('message-send-input')).toBeInTheDocument();
+      expect(getByTestId(MESSAGE_SEND_INPUT_TEST_ID)).toBeInTheDocument();
       expect(getByRole('img')).toHaveAttribute(
         'src',
         expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
