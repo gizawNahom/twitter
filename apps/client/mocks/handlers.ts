@@ -1,6 +1,7 @@
 import { GraphQLVariables, graphql } from 'msw';
 import {
   GENERIC_SERVER_ERROR,
+  sampleMessageResponse,
   samplePostResponse,
   sampleUserResponse,
   searchPostsResponse,
@@ -13,6 +14,7 @@ export let wasPostsCalled = false;
 export let postsVariables: GraphQLVariables;
 export const searchPostsCalls: GraphQLVariables[] = [];
 export const getUsersCalls: GraphQLVariables[] = [];
+export const sendMessageCalls: GraphQLVariables[] = [];
 export const genericErrorHandlerCalls: GraphQLVariables[] = [];
 
 export const handlers = [
@@ -78,6 +80,15 @@ export const handlers = [
       ctx.delay(1),
       ctx.data({
         users: [sampleUserResponse],
+      })
+    );
+  }),
+  graphql.mutation(Operations.SendMessage, ({ variables }, res, ctx) => {
+    sendMessageCalls.push(variables);
+    return res(
+      ctx.delay(1),
+      ctx.data({
+        sendMessage: sampleMessageResponse,
       })
     );
   }),
