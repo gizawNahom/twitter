@@ -1,6 +1,6 @@
-import { sampleUserResponse } from '../../../mocks/values';
-import { genericErrorHandler, getUsersCalls } from '../../../mocks/handlers';
-import ComposeMessage from '../../../pages/messages/compose';
+import { sampleUserResponse } from '../../../../mocks/values';
+import { genericErrorHandler, getUsersCalls } from '../../../../mocks/handlers';
+import ComposeMessage from '../../../../pages/messages/compose';
 import {
   CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID,
   PEOPLE_SEARCH_TEST_ID,
@@ -12,10 +12,10 @@ import {
   setUpApi,
   setUpMockRouter,
   waitForErrorToBeInTheDocument,
-} from '../../testUtilities';
+} from '../../../testUtilities';
 import { screen, waitFor } from '@testing-library/react';
-import { typeOnInput } from './userSearchInput.test';
-import { server } from '../../../mocks/server';
+import { typeOnInput } from './components/userSearchInput.test';
+import { server } from '../../../../mocks/server';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),

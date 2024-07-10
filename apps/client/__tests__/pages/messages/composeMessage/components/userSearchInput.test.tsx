@@ -1,10 +1,10 @@
 import { waitFor } from '@testing-library/react';
-import { UserSearchInput } from '../../../pages/messages/compose';
+import { UserSearchInput } from '../../../../../pages/messages/compose';
 import {
   getByPlaceholderText,
   renderElement,
   typeText,
-} from '../../testUtilities';
+} from '../../../../testUtilities';
 import { useState } from 'react';
 
 const onThrottledChange = jest.fn();

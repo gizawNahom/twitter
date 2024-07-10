@@ -1,11 +1,11 @@
-import { CloseMessagePageButton } from '../../../pages/messages/compose';
+import { CloseMessagePageButton } from '../../../../../pages/messages/compose';
 import {
   clickElement,
   getByRole,
   renderElement,
   setUpMockRouter,
-} from '../../testUtilities';
-import { MESSAGES } from '../../testUtilities/routes';
+} from '../../../../testUtilities';
+import { MESSAGES } from '../../../../testUtilities/routes';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
