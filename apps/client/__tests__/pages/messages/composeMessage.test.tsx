@@ -16,11 +16,6 @@ import {
 import { screen, waitFor } from '@testing-library/react';
 import { typeOnInput } from './userSearchInput.test';
 import { server } from '../../../mocks/server';
-import {
-  assertNextButtonIsDisabled,
-  assertNextButtonIsNotDisabled,
-  getNextButton,
-} from './nextButton.test';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -34,6 +29,18 @@ function renderSUT() {
 
 function queryProgressbar(): HTMLElement | null {
   return screen.queryByRole('progressbar');
+}
+
+function getNextButton(): HTMLElement {
+  return getByRole('button', { name: /next/i });
+}
+
+function assertNextButtonIsDisabled() {
+  expect(getNextButton()).toBeDisabled();
+}
+
+function assertNextButtonIsNotDisabled() {
+  expect(getNextButton()).not.toBeDisabled();
 }
 
 setUpMockRouter({ push });

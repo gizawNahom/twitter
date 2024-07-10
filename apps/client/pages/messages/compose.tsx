@@ -123,19 +123,6 @@ export default function ComposeMessage() {
   }
 }
 
-export function NextButton({ isDisabled }: { isDisabled: boolean }) {
-  return (
-    <button
-      disabled={isDisabled}
-      className={`px-4 py-1 text-white rounded-full transition text-sm font-bold ${
-        isDisabled ? 'bg-gray-400' : 'bg-black'
-      }`}
-    >
-      Next
-    </button>
-  );
-}
-
 export function CloseMessagePageButton() {
   const router = useRouter();
 
