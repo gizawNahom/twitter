@@ -12,15 +12,14 @@ import {
 
 /* Instruments */
 import { reducer } from './rootReducer';
-// import { middleware } from './middleware';
+import { middleware } from './middleware';
 
 export const reduxStore = configureStore({
   reducer,
   middleware: (getDefaultMiddleware) => {
-    // return getDefaultMiddleware({ serializableCheck: false }).concat(
-    //   middleware
-    // );
-    return getDefaultMiddleware({ serializableCheck: false });
+    return getDefaultMiddleware({ serializableCheck: false }).concat(
+      middleware
+    );
   },
 });
 export const useDispatch = () => useReduxDispatch<ReduxDispatch>();

@@ -12,7 +12,11 @@ const initialState: PostsSliceState = {
 export const postsSlice = createSlice({
   name: 'posts',
   initialState,
-  reducers: {},
+  reducers: {
+    idleCreateStatus: (state) => {
+      state.createStatus = 'idle';
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(createPostAsync.pending, (state) => {
@@ -39,6 +43,8 @@ export const postsSlice = createSlice({
       });
   },
 });
+
+export const { idleCreateStatus } = postsSlice.actions;
 
 export interface PostsSliceState {
   createdPost: Post | null;
