@@ -7,11 +7,22 @@ import {
   getByTestId,
   getByText,
   MESSAGE_SEND_INPUT_TEST_ID,
+  Operations,
   renderElement,
+  setUpApi,
   setUpMockRouter,
 } from '../../../testUtilities';
 import { MESSAGES } from '../../../testUtilities/routes';
-import { sampleUserResponse } from '../../../../mocks/values';
+import {
+  sampleChatResponse,
+  sampleUserResponse,
+} from '../../../../mocks/values';
+import { typeAndClickSend } from './components/messageSendInput.test';
+import {
+  getOrCreateChatCalls,
+  sendMessageCalls,
+} from '../../../../mocks/handlers';
+import { waitFor } from '@testing-library/react';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -20,6 +31,10 @@ jest.mock('next/router', () => ({
 const push = jest.fn();
 
 setUpMockRouter({ push });
+
+setUpApi();
+
+beforeEach(() => sendMessageCalls.splice(0, sendMessageCalls.length));
 
 describe('Given user has navigated to the page', () => {
   describe('And user did not select a participant', () => {
@@ -33,7 +48,7 @@ describe('Given user has navigated to the page', () => {
     });
   });
 
-  describe('And user has selected a participant', () => {
+  describe('And user has selected a new participant', () => {
     beforeEach(() => {
       const store = createNewStore();
       store.dispatch(userSelected(sampleUserResponse));
@@ -52,6 +67,28 @@ describe('Given user has navigated to the page', () => {
         expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
       );
       expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument();
+    });
+
+    describe('When the user sends a message', () => {
+      const message = 'test';
+
+      beforeEach(async () => {
+        await typeAndClickSend(message);
+      });
+
+      test(`Then there is a single api call to ${Operations.GetOrCreateChat}
+            And there is a single api call to ${Operations.SendMessage}`, async () => {
+        await waitFor(() => expect(getOrCreateChatCalls).toHaveLength(1));
+        expect(getOrCreateChatCalls[0]).toStrictEqual({
+          username: sampleUserResponse.username,
+        });
+
+        expect(sendMessageCalls).toHaveLength(1);
+        expect(sendMessageCalls[0]).toStrictEqual({
+          text: message,
+          chatId: sampleChatResponse.id,
+        });
+      });
     });
   });
 });

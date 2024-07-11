@@ -5,6 +5,8 @@ import { useRouter } from 'next/router';
 import { MESSAGES_ROUTE } from '../../utilities/constants';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../lib/redux/';
+import { getOrCreateChat } from '../../utilities/getOrCreateChat';
+import { sendMessage } from '../../utilities/sendMessage';
 
 export default function Chat() {
   const router = useRouter();
@@ -37,8 +39,9 @@ export default function Chat() {
     >
       <div>
         <MessageSendInput
-          onSend={() => {
-            //
+          onSend={async (text) => {
+            const chat = await getOrCreateChat(user?.username as string);
+            await sendMessage(text, chat.id);
           }}
         />
       </div>

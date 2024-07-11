@@ -10,6 +10,11 @@ import { screen } from '@testing-library/react';
 
 const onSend = jest.fn();
 
+export async function typeAndClickSend(message: string) {
+  await typeText(message, getMessageInput());
+  await clickElement(getSendButton());
+}
+
 function getMessageInput(): HTMLElement {
   return getByPlaceholderText(/start a new message/i);
 }
