@@ -57,7 +57,11 @@ export default function Chat() {
             try {
               const chat = await getOrCreateChat(user?.username as string);
               setMessage(message);
-              router.push(`${MESSAGES_CHAT_ROUTE}/${chat.id}`);
+              window.history.replaceState(
+                null,
+                '',
+                `${MESSAGES_CHAT_ROUTE}/${chat.id}`
+              );
               await sendMessage(message, chat.id);
             } catch (error) {
               setMessage('');

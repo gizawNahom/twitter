@@ -99,12 +99,12 @@ describe('Given user has navigated to the page', () => {
 
         test(`Then the message is displayed
               And there is a single api call to ${Operations.GetOrCreateChat}
-              And user is routed to the chat page`, async () => {
+              And the chat id is added to the url`, async () => {
           await assertMessageIsDisplayed();
+
           assertASingleApiCallToGetOrCreateChat();
 
-          expect(push).toHaveBeenCalledTimes(1);
-          expect(push).toHaveBeenCalledWith(
+          expect(window.location.pathname).toBe(
             MESSAGES_CHAT + `/${sampleChatResponse.id}`
           );
         });
