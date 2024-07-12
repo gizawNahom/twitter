@@ -4,7 +4,9 @@ import { Page } from '../../components/page';
 import { useEffect, useRef, useState } from 'react';
 import { User, getUsers } from '../../../client/utilities/getUsers';
 import { Error } from '../../components/error';
-import { MESSAGES_ROUTE } from '../../utilities/constants';
+import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../../utilities/constants';
+import { useDispatch } from 'react-redux';
+import { userSelected } from '../../lib/redux';
 
 export default function ComposeMessage() {
   const [status, setStatus] = useState<
@@ -15,6 +17,7 @@ export default function ComposeMessage() {
   const [searchInputValue, setSearchInputValue] = useState<string>('');
 
   const router = useRouter();
+  const dispatch = useDispatch();
 
   return (
     <Page header={renderHeader()} isPadded>
@@ -52,9 +55,10 @@ export default function ComposeMessage() {
         className={`px-4 py-1 text-white rounded-full transition text-sm font-bold ${
           isDisabled ? 'bg-gray-400' : 'bg-black'
         }`}
-        onClick={() =>
-          router.push(`/messages/loggedInUsername-${selectedUser?.username}`)
-        }
+        onClick={() => {
+          dispatch(userSelected(selectedUser as User));
+          router.push(MESSAGES_CHAT_ROUTE);
+        }}
       >
         Next
       </button>

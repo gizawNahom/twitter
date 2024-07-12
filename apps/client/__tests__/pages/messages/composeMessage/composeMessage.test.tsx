@@ -5,6 +5,7 @@ import {
   CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID,
   PEOPLE_SEARCH_TEST_ID,
   clickElement,
+  createNewStore,
   getByRole,
   getByTestId,
   getByText,
@@ -16,15 +17,19 @@ import {
 import { screen, waitFor } from '@testing-library/react';
 import { typeOnInput } from './components/userSearchInput.test';
 import { server } from '../../../../mocks/server';
+import { MESSAGES_CHAT } from '../../../testUtilities';
+import { ReduxStore, selectSelectedUser } from '../../../../lib/redux';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
 const push = jest.fn();
+let store: ReduxStore;
 
 function renderSUT() {
-  renderElement(<ComposeMessage />);
+  store = createNewStore();
+  renderElement(<ComposeMessage />, store);
 }
 
 function queryProgressbar(): HTMLElement | null {
@@ -117,13 +122,16 @@ test('can select a user', async () => {
   await clickElement(getByText(sampleUserResponse.displayName));
   await clickElement(getNextButton());
 
+  await waitFor(() =>
+    expect(selectSelectedUser(store.getState())).toStrictEqual(
+      sampleUserResponse
+    )
+  );
   assertNextButtonIsNotDisabled();
   expect(screen.queryByDisplayValue('a')).not.toBeInTheDocument();
   assertSelectedUserIsDisplayed();
   expect(push).toHaveBeenCalledTimes(1);
-  expect(push).toHaveBeenCalledWith(
-    `/messages/loggedInUsername-${sampleUserResponse.username}`
-  );
+  expect(push).toHaveBeenCalledWith(MESSAGES_CHAT);
 
   function assertSelectedUserIsDisplayed() {
     expect(getByRole('img')).toHaveAttribute(

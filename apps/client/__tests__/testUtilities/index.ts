@@ -7,3 +7,4 @@ export * from './helpers';
 export * from './operations';
 export * from './testIds';
 export * from './texts';
+export * from './routes';
