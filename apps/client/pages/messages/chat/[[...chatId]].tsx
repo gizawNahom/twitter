@@ -1,12 +1,15 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { createDefaultHeader, Page } from '../../components/page';
+import { createDefaultHeader, Page } from '../../../components/page';
 import { useRouter } from 'next/router';
-import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../../utilities/constants';
+import {
+  MESSAGES_CHAT_ROUTE,
+  MESSAGES_ROUTE,
+} from '../../../utilities/constants';
 import { useSelector } from 'react-redux';
-import { selectSelectedUser } from '../../lib/redux/';
-import { getOrCreateChat } from '../../utilities/getOrCreateChat';
-import { sendMessage } from '../../utilities/sendMessage';
+import { selectSelectedUser } from '../../../lib/redux';
+import { getOrCreateChat } from '../../../utilities/getOrCreateChat';
+import { sendMessage } from '../../../utilities/sendMessage';
 
 export default function Chat() {
   const router = useRouter();

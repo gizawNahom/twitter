@@ -1,6 +1,6 @@
 import { waitFor, screen } from '@testing-library/react';
 import { userSelected } from '../../../../lib/redux';
-import Chat from '../../../../pages/messages/chat';
+import Chat from '../../../../pages/messages/chat/[[...chatId]]';
 import {
   BACK_BUTTON_TEST_ID,
   createNewStore,
