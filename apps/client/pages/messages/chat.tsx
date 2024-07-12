@@ -57,6 +57,7 @@ export default function Chat() {
               await sendMessage(message, chat.id);
             } catch (error) {
               setMessage('');
+              setMessageInput(message);
             }
           }}
           messageInput={messageInput}

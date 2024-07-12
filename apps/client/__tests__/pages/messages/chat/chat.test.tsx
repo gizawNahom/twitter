@@ -80,16 +80,11 @@ describe('Given user has navigated to the page', () => {
     });
 
     describe('When the user sends a message', () => {
-      let isChatCreationFailure: boolean;
-
-      beforeEach(async () => {
-        if (isChatCreationFailure) server.use(genericErrorHandler);
-        await typeAndClickSend(message);
-      });
-
-      afterEach(() => (isChatCreationFailure = false));
-
       describe('And chat creation is successful', () => {
+        beforeEach(async () => {
+          await typeAndClickSend(message);
+        });
+
         async function assertMessageIsDisplayed() {
           await waitFor(() => expect(getByText(message)).toBeInTheDocument());
           expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
@@ -107,26 +102,32 @@ describe('Given user has navigated to the page', () => {
           await assertMessageIsDisplayed();
           assertASingleApiCallToGetOrCreateChat();
         });
+
+        describe('And the message is sent successfully', () => {
+          test(`And there is a single api call to ${Operations.SendMessage}`, async () => {
+            expect(sendMessageCalls).toHaveLength(1);
+            expect(sendMessageCalls[0]).toStrictEqual({
+              text: message,
+              chatId: sampleChatResponse.id,
+            });
+          });
+        });
       });
 
       describe('But chat creation is not successful', () => {
-        beforeEach(() => {
-          isChatCreationFailure = true;
+        beforeEach(async () => {
+          server.use(genericErrorHandler);
+          await typeAndClickSend(message);
         });
 
-        test('Then the message is not displayed', async () => {
-          expect(screen.queryByText(message)).not.toBeInTheDocument();
+        test(`Then the message is not displayed
+              And the message remains on the input`, async () => {
+          await waitFor(() =>
+            expect(screen.queryByText(message)).not.toBeInTheDocument()
+          );
           expect(getByText(NO_MESSAGES_TEXT)).toBeInTheDocument();
-        });
-      });
 
-      describe('And the message is sent successfully', () => {
-        test(`And there is a single api call to ${Operations.SendMessage}`, async () => {
-          expect(sendMessageCalls).toHaveLength(1);
-          expect(sendMessageCalls[0]).toStrictEqual({
-            text: message,
-            chatId: sampleChatResponse.id,
-          });
+          expect(screen.getByDisplayValue(message)).toBeInTheDocument();
         });
       });
     });
