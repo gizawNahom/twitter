@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { createDefaultHeader, Page } from '../../components/page';
 import { useRouter } from 'next/router';
-import { MESSAGES_ROUTE } from '../../utilities/constants';
+import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../../utilities/constants';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../lib/redux/';
 import { getOrCreateChat } from '../../utilities/getOrCreateChat';
@@ -54,6 +54,7 @@ export default function Chat() {
             try {
               const chat = await getOrCreateChat(user?.username as string);
               setMessage(message);
+              router.push(`${MESSAGES_CHAT_ROUTE}/${chat.id}`);
               await sendMessage(message, chat.id);
             } catch (error) {
               setMessage('');

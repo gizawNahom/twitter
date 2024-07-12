@@ -13,7 +13,7 @@ import {
   setUpApi,
   setUpMockRouter,
 } from '../../../testUtilities';
-import { MESSAGES } from '../../../testUtilities/routes';
+import { MESSAGES, MESSAGES_CHAT } from '../../../testUtilities/routes';
 import {
   sampleChatResponse,
   sampleUserResponse,
@@ -98,9 +98,15 @@ describe('Given user has navigated to the page', () => {
         }
 
         test(`Then the message is displayed
-              And there is a single api call to ${Operations.GetOrCreateChat}`, async () => {
+              And there is a single api call to ${Operations.GetOrCreateChat}
+              And user is routed to the chat page`, async () => {
           await assertMessageIsDisplayed();
           assertASingleApiCallToGetOrCreateChat();
+
+          expect(push).toHaveBeenCalledTimes(1);
+          expect(push).toHaveBeenCalledWith(
+            MESSAGES_CHAT + `/${sampleChatResponse.id}`
+          );
         });
 
         describe('And the message is sent successfully', () => {
