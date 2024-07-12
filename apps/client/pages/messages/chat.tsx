@@ -11,6 +11,7 @@ import { sendMessage } from '../../utilities/sendMessage';
 export default function Chat() {
   const router = useRouter();
   const user = useSelector(selectSelectedUser);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (!user) router.push(MESSAGES_ROUTE);
@@ -38,10 +39,20 @@ export default function Chat() {
       )}
     >
       <div>
+        {!message && <p>No messages</p>}
+        <p>{message}</p>
+        {/* <p>
+          {new Date().toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: 'numeric',
+            hour12: true,
+          })}
+        </p> */}
         <MessageSendInput
-          onSend={async (text) => {
+          onSend={async (message) => {
+            setMessage(message);
             const chat = await getOrCreateChat(user?.username as string);
-            await sendMessage(text, chat.id);
+            await sendMessage(message, chat.id);
           }}
         />
       </div>
