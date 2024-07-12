@@ -50,9 +50,13 @@ export default function Chat() {
         </p> */}
         <MessageSendInput
           onSend={async (message) => {
-            setMessage(message);
-            const chat = await getOrCreateChat(user?.username as string);
-            await sendMessage(message, chat.id);
+            try {
+              const chat = await getOrCreateChat(user?.username as string);
+              setMessage(message);
+              await sendMessage(message, chat.id);
+            } catch (error) {
+              setMessage('');
+            }
           }}
         />
       </div>

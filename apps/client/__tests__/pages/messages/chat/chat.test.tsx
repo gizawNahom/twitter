@@ -1,3 +1,4 @@
+import { waitFor, screen } from '@testing-library/react';
 import { userSelected } from '../../../../lib/redux';
 import Chat from '../../../../pages/messages/chat';
 import {
@@ -19,10 +20,11 @@ import {
 } from '../../../../mocks/values';
 import { typeAndClickSend } from './components/messageSendInput.test';
 import {
+  genericErrorHandler,
   getOrCreateChatCalls,
   sendMessageCalls,
 } from '../../../../mocks/handlers';
-import { waitFor, screen } from '@testing-library/react';
+import { server } from '../../../../mocks/server';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -78,23 +80,48 @@ describe('Given user has navigated to the page', () => {
     });
 
     describe('When the user sends a message', () => {
+      let isChatCreationFailure: boolean;
+
       beforeEach(async () => {
+        if (isChatCreationFailure) server.use(genericErrorHandler);
         await typeAndClickSend(message);
       });
 
-      test('Then the message is displayed', async () => {
-        expect(getByText(message)).toBeInTheDocument();
-        expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
-      });
+      afterEach(() => (isChatCreationFailure = false));
 
-      describe('And the message is sent successfully', () => {
-        test(`Then there is a single api call to ${Operations.GetOrCreateChat}
-              And there is a single api call to ${Operations.SendMessage}`, async () => {
-          await waitFor(() => expect(getOrCreateChatCalls).toHaveLength(1));
+      describe('And chat creation is successful', () => {
+        async function assertMessageIsDisplayed() {
+          await waitFor(() => expect(getByText(message)).toBeInTheDocument());
+          expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
+        }
+
+        function assertASingleApiCallToGetOrCreateChat() {
+          expect(getOrCreateChatCalls).toHaveLength(1);
           expect(getOrCreateChatCalls[0]).toStrictEqual({
             username: sampleUserResponse.username,
           });
+        }
 
+        test(`Then the message is displayed
+              And there is a single api call to ${Operations.GetOrCreateChat}`, async () => {
+          await assertMessageIsDisplayed();
+          assertASingleApiCallToGetOrCreateChat();
+        });
+      });
+
+      describe('But chat creation is not successful', () => {
+        beforeEach(() => {
+          isChatCreationFailure = true;
+        });
+
+        test('Then the message is not displayed', async () => {
+          expect(screen.queryByText(message)).not.toBeInTheDocument();
+          expect(getByText(NO_MESSAGES_TEXT)).toBeInTheDocument();
+        });
+      });
+
+      describe('And the message is sent successfully', () => {
+        test(`And there is a single api call to ${Operations.SendMessage}`, async () => {
           expect(sendMessageCalls).toHaveLength(1);
           expect(sendMessageCalls[0]).toStrictEqual({
             text: message,
