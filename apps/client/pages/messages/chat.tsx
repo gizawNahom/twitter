@@ -12,6 +12,7 @@ export default function Chat() {
   const router = useRouter();
   const user = useSelector(selectSelectedUser);
   const [message, setMessage] = useState('');
+  const [messageInput, setMessageInput] = useState('');
 
   useEffect(() => {
     if (!user) router.push(MESSAGES_ROUTE);
@@ -58,6 +59,8 @@ export default function Chat() {
               setMessage('');
             }
           }}
+          messageInput={messageInput}
+          setMessageInput={setMessageInput}
         />
       </div>
     </Page>
@@ -66,26 +69,29 @@ export default function Chat() {
 
 export function MessageSendInput({
   onSend,
+  messageInput,
+  setMessageInput,
 }: {
   onSend: (message: string) => void;
+  messageInput: string;
+  setMessageInput: (messageInput: string) => void;
 }) {
-  const [message, setMessage] = useState('');
-  const trimmedMessage = message.trim();
+  const trimmedMessage = messageInput.trim();
 
   return (
     <div data-testid="message-send-input">
       <input
         type="text"
         placeholder="Start a new message"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        value={messageInput}
+        onChange={(e) => setMessageInput(e.target.value)}
       />
       <button
         aria-label="send"
         disabled={isEmpty(trimmedMessage)}
         onClick={() => {
           onSend(trimmedMessage);
-          setMessage('');
+          setMessageInput('');
         }}
       >
         send

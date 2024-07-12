@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MessageSendInput } from '../../../../../pages/messages/chat';
 import {
   renderElement,
@@ -29,7 +30,19 @@ function getSendButton(): HTMLElement {
 
 describe('Given the component is rendered', () => {
   beforeEach(() => {
-    renderElement(<MessageSendInput onSend={onSend} />);
+    renderElement(<Container />);
+
+    function Container() {
+      const [messageInput, setMessageInput] = useState<string>('');
+
+      return (
+        <MessageSendInput
+          onSend={onSend}
+          messageInput={messageInput}
+          setMessageInput={setMessageInput}
+        />
+      );
+    }
   });
 
   test('Then static elements are rendered', () => {
