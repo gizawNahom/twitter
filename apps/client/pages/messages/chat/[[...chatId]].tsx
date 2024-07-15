@@ -10,6 +10,8 @@ import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../lib/redux';
 import { getOrCreateChat } from '../../../utilities/getOrCreateChat';
 import { sendMessage } from '../../../utilities/sendMessage';
+import { formatTimeForMessage } from '../../../utilities/formatTimeForMessage';
+import { formatDayForMessage } from '../../../utilities/formatDayForMessage';
 
 export default function Chat() {
   const router = useRouter();
@@ -44,14 +46,16 @@ export default function Chat() {
     >
       <div>
         {!message && <p>No messages</p>}
-        <p>{message}</p>
-        {/* <p>
-          {new Date().toLocaleTimeString('en-US', {
-            hour: 'numeric',
-            minute: 'numeric',
-            hour12: true,
-          })}
-        </p> */}
+        {message && (
+          <div role="log">
+            {formatDayForMessage(new Date())}
+
+            <div data-testid="message">
+              <p>{message}</p>
+              <p>{formatTimeForMessage(new Date())}</p>
+            </div>
+          </div>
+        )}
         <MessageSendInput
           onSend={async (message) => {
             try {

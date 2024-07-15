@@ -1,4 +1,4 @@
-import { waitFor, screen } from '@testing-library/react';
+import { waitFor, screen, within } from '@testing-library/react';
 import { userSelected } from '../../../../lib/redux';
 import Chat from '../../../../pages/messages/chat/[[...chatId]]';
 import {
@@ -25,6 +25,8 @@ import {
   sendMessageCalls,
 } from '../../../../mocks/handlers';
 import { server } from '../../../../mocks/server';
+import { formatTimeForMessage } from '../../../../utilities/formatTimeForMessage';
+import { formatDayForMessage } from '../../../../utilities/formatDayForMessage';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -55,7 +57,7 @@ describe('Given user has navigated to the page', () => {
   });
 
   describe('And user has selected a new participant', () => {
-    const message = 'test';
+    const messageText = 'test';
 
     beforeEach(() => {
       const store = createNewStore();
@@ -76,17 +78,27 @@ describe('Given user has navigated to the page', () => {
       );
       expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument();
       expect(getByText(NO_MESSAGES_TEXT)).toBeInTheDocument();
-      expect(screen.queryByText(message)).not.toBeInTheDocument();
+      expect(screen.queryByRole('log')).not.toBeInTheDocument();
     });
 
     describe('When the user sends a message', () => {
       describe('And chat creation is successful', () => {
         beforeEach(async () => {
-          await typeAndClickSend(message);
+          await typeAndClickSend(messageText);
         });
 
         async function assertMessageIsDisplayed() {
-          await waitFor(() => expect(getByText(message)).toBeInTheDocument());
+          const messageList = await screen.findByRole('log');
+
+          expect(
+            within(messageList).getByText(formatDayForMessage(new Date()))
+          ).toBeInTheDocument();
+
+          const MESSAGE_TEST_ID = 'message';
+          const message = within(messageList).getByTestId(MESSAGE_TEST_ID);
+          expect(message).toHaveTextContent(messageText);
+          expect(message).toHaveTextContent(formatTimeForMessage(new Date()));
+
           expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
         }
 
@@ -113,7 +125,7 @@ describe('Given user has navigated to the page', () => {
           test(`And there is a single api call to ${Operations.SendMessage}`, async () => {
             expect(sendMessageCalls).toHaveLength(1);
             expect(sendMessageCalls[0]).toStrictEqual({
-              text: message,
+              text: messageText,
               chatId: sampleChatResponse.id,
             });
           });
@@ -123,17 +135,17 @@ describe('Given user has navigated to the page', () => {
       describe('But chat creation is not successful', () => {
         beforeEach(async () => {
           server.use(genericErrorHandler);
-          await typeAndClickSend(message);
+          await typeAndClickSend(messageText);
         });
 
         test(`Then the message is not displayed
               And the message remains on the input`, async () => {
           await waitFor(() =>
-            expect(screen.queryByText(message)).not.toBeInTheDocument()
+            expect(screen.queryByText(messageText)).not.toBeInTheDocument()
           );
           expect(getByText(NO_MESSAGES_TEXT)).toBeInTheDocument();
 
-          expect(screen.getByDisplayValue(message)).toBeInTheDocument();
+          expect(screen.getByDisplayValue(messageText)).toBeInTheDocument();
         });
       });
     });
