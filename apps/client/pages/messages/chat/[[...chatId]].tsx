@@ -12,12 +12,14 @@ import { getOrCreateChat } from '../../../utilities/getOrCreateChat';
 import { sendMessage } from '../../../utilities/sendMessage';
 import { formatTimeForMessage } from '../../../utilities/formatTimeForMessage';
 import { formatDayForMessage } from '../../../utilities/formatDayForMessage';
+import { Spinner } from '../../../components/spinner';
 
 export default function Chat() {
   const router = useRouter();
   const user = useSelector(selectSelectedUser);
   const [message, setMessage] = useState('');
   const [messageInput, setMessageInput] = useState('');
+  const [status, setStatus] = useState<'loading' | 'success'>();
 
   useEffect(() => {
     if (!user) router.push(MESSAGES_ROUTE);
@@ -53,6 +55,8 @@ export default function Chat() {
             <div data-testid="message">
               <p>{message}</p>
               <p>{formatTimeForMessage(new Date())}</p>
+              {status === 'loading' && <Spinner />}
+              {status === 'success' && <div aria-label="sent"></div>}
             </div>
           </div>
         )}
@@ -61,12 +65,14 @@ export default function Chat() {
             try {
               const chat = await getOrCreateChat(user?.username as string);
               setMessage(message);
+              setStatus('loading');
               window.history.replaceState(
                 null,
                 '',
                 `${MESSAGES_CHAT_ROUTE}/${chat.id}`
               );
               await sendMessage(message, chat.id);
+              setStatus('success');
             } catch (error) {
               setMessage('');
               setMessageInput(message);

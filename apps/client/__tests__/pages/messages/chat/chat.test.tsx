@@ -12,6 +12,7 @@ import {
   renderElement,
   setUpApi,
   setUpMockRouter,
+  SPINNER_TEST_ID,
 } from '../../../testUtilities';
 import { MESSAGES, MESSAGES_CHAT } from '../../../testUtilities/routes';
 import {
@@ -89,17 +90,42 @@ describe('Given user has navigated to the page', () => {
 
         async function assertMessageIsDisplayed() {
           const messageList = await screen.findByRole('log');
-
-          expect(
-            within(messageList).getByText(formatDayForMessage(new Date()))
-          ).toBeInTheDocument();
-
           const MESSAGE_TEST_ID = 'message';
           const message = within(messageList).getByTestId(MESSAGE_TEST_ID);
-          expect(message).toHaveTextContent(messageText);
-          expect(message).toHaveTextContent(formatTimeForMessage(new Date()));
 
+          assertMessageDayIsDisplayed(messageList);
+          assertMessageTextAndMessageTimeAreDisplayed(message);
+          assertLoadingIsDisplayed(message);
+          await assertSuccessIsDisplayed(message);
           expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
+
+          function assertMessageDayIsDisplayed(messageList: HTMLElement) {
+            expect(
+              within(messageList).getByText(formatDayForMessage(new Date()))
+            ).toBeInTheDocument();
+          }
+
+          function assertMessageTextAndMessageTimeAreDisplayed(
+            message: HTMLElement
+          ) {
+            expect(message).toHaveTextContent(messageText);
+            expect(message).toHaveTextContent(formatTimeForMessage(new Date()));
+          }
+
+          function assertLoadingIsDisplayed(message: HTMLElement) {
+            expect(
+              within(message).getByTestId(SPINNER_TEST_ID)
+            ).toBeInTheDocument();
+          }
+
+          async function assertSuccessIsDisplayed(message: HTMLElement) {
+            await waitFor(() =>
+              expect(
+                within(message).queryByTestId(SPINNER_TEST_ID)
+              ).not.toBeInTheDocument()
+            );
+            expect(within(message).getByLabelText('sent')).toBeInTheDocument();
+          }
         }
 
         function assertASingleApiCallToGetOrCreateChat() {
@@ -122,7 +148,7 @@ describe('Given user has navigated to the page', () => {
         });
 
         describe('And the message is sent successfully', () => {
-          test(`And there is a single api call to ${Operations.SendMessage}`, async () => {
+          test(`Then there is a single api call to ${Operations.SendMessage}`, async () => {
             expect(sendMessageCalls).toHaveLength(1);
             expect(sendMessageCalls[0]).toStrictEqual({
               text: messageText,
