@@ -1,2 +1,2 @@
 export * from './postsSlice';
-export * from './messagesSlice';
+export * from '../../messages/adapters/store/messagesSlice';

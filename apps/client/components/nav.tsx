@@ -4,10 +4,10 @@ import { PostFAB } from './postFAB';
 import {
   COMPOSE_TWEET_ROUTE,
   HOME_ROUTE,
-  MESSAGES_ROUTE,
   PROFILE_ROUTE,
   SEARCH_ROUTE,
 } from '../utilities/constants';
+import { MESSAGES_ROUTE } from '../lib/messages/routes';
 
 export function Nav() {
   const router = useRouter();

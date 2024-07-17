@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Client } from './client';
+import { Client } from '../../utilities/client';
 
 export async function getOrCreateChat(username: string): Promise<PartialChat> {
   try {

@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { Message } from './sendMessage';
-import { Client } from './client';
+import { Client } from '../../utilities/client';
 
 export async function readMessages(
   chatId: string,

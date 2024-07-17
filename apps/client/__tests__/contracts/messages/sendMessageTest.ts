@@ -10,7 +10,7 @@ import {
   GENERIC_SERVER_ERROR,
   sampleMessageResponse,
 } from '../../../mocks/values';
-import { sendMessage } from '../../../utilities/sendMessage';
+import { sendMessage } from '../../../lib/messages/sendMessage';
 
 export function testSendMessage(provider: Pact, baseUrl: URL) {
   describe('Send Message', () => {

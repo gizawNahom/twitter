@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MessageSendInput } from '../../../../../pages/messages/chat/[[...chatId]]';
+import { MessageSendInput } from '../../../../../lib/messages/presentation/pages/chat';
 import {
   renderElement,
   getByPlaceholderText,

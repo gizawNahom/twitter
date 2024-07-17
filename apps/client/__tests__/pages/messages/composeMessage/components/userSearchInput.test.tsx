@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { UserSearchInput } from '../../../../../pages/messages/compose';
+import { UserSearchInput } from '../../../../../lib/messages/presentation/pages/composeMessage';
 import {
   getByPlaceholderText,
   renderElement,

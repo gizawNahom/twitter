@@ -1,6 +1,6 @@
 import { sampleUserResponse } from '../../../../mocks/values';
 import { genericErrorHandler, getUsersCalls } from '../../../../mocks/handlers';
-import ComposeMessage from '../../../../pages/messages/compose';
+import ComposeMessage from '../../../../lib/messages/presentation/pages/composeMessage';
 import {
   CLOSE_MESSAGE_PAGE_BUTTON_TEST_ID,
   PEOPLE_SEARCH_TEST_ID,

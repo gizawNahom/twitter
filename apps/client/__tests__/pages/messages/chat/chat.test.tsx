@@ -1,6 +1,6 @@
 import { waitFor, screen, within } from '@testing-library/react';
 import { userSelected } from '../../../../lib/redux';
-import Chat from '../../../../pages/messages/chat/[[...chatId]]';
+import Chat from '../../../../lib/messages/presentation/pages/chat';
 import {
   BACK_BUTTON_TEST_ID,
   createNewStore,
@@ -26,8 +26,8 @@ import {
   sendMessageCalls,
 } from '../../../../mocks/handlers';
 import { server } from '../../../../mocks/server';
-import { formatTimeForMessage } from '../../../../utilities/formatTimeForMessage';
-import { formatDayForMessage } from '../../../../utilities/formatDayForMessage';
+import { formatTimeForMessage } from '../../../../lib/messages/formatTimeForMessage';
+import { formatDayForMessage } from '../../../../lib/messages/formatDayForMessage';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { User } from '../../../../utilities/getUsers';
+import { User } from '../../../../../utilities/getUsers';
 
 const initialState: MessagesSliceState = {
   selectedUser: null,
