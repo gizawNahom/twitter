@@ -7,8 +7,7 @@ import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
 import { getOrCreateChat } from '../../getOrCreateChat';
 import { sendMessage } from '../../sendMessage';
-import { formatTimeForMessage } from '../../formatTimeForMessage';
-import { formatDayForMessage } from '../../formatDayForMessage';
+import { formatTimeForMessage, formatDayForMessage } from '../utilities';
 import { Spinner } from '../../../../components/spinner';
 
 export default function Chat() {

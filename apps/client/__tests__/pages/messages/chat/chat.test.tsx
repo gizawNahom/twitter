@@ -26,8 +26,10 @@ import {
   sendMessageCalls,
 } from '../../../../mocks/handlers';
 import { server } from '../../../../mocks/server';
-import { formatTimeForMessage } from '../../../../lib/messages/formatTimeForMessage';
-import { formatDayForMessage } from '../../../../lib/messages/formatDayForMessage';
+import {
+  formatTimeForMessage,
+  formatDayForMessage,
+} from '../../../../lib/messages/presentation/utilities';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
