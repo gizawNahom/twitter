@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Message } from './sendMessage';
+import { Message } from './core/domain/message';
 import { Client } from '../../utilities/client';
 
 export async function readMessages(

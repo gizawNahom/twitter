@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import { Client } from '../../utilities/client';
+import { PartialChat } from './core/domain/partialChat';
 
 export async function getOrCreateChat(username: string): Promise<PartialChat> {
   try {
@@ -29,9 +30,4 @@ export async function getOrCreateChat(username: string): Promise<PartialChat> {
       username,
     };
   }
-}
-
-export interface PartialChat {
-  id: string;
-  createdAt: string;
 }

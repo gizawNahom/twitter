@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import { Client } from '../../utilities/client';
+import { Chat } from './core/domain/chat';
 
 export async function getChats(offset: number, limit: number): Promise<Chat[]> {
   try {
@@ -35,14 +36,4 @@ export async function getChats(offset: number, limit: number): Promise<Chat[]> {
       limit,
     };
   }
-}
-
-export interface Chat {
-  id: string;
-  createdAtISO: string;
-  participant: {
-    username: string;
-    displayName: string;
-    profilePic: string;
-  };
 }

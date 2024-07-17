@@ -1,5 +1,6 @@
 import { gql } from '@apollo/client';
 import { Client } from '../../utilities/client';
+import { Message } from './core/domain/message';
 
 export async function sendMessage(
   text: string,
@@ -36,12 +37,4 @@ export async function sendMessage(
       chatId,
     };
   }
-}
-
-export interface Message {
-  id: string;
-  senderId: string;
-  chatId: string;
-  text: string;
-  createdAt: string;
 }
