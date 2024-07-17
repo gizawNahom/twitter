@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { createDefaultHeader, Page } from '../../../../components/page';
 import { useRouter } from 'next/router';
-import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../../routes';
+import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
 import { getOrCreateChat } from '../../adapters/api/getOrCreateChat';

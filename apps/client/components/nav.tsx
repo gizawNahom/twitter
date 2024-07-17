@@ -7,7 +7,7 @@ import {
   PROFILE_ROUTE,
   SEARCH_ROUTE,
 } from '../utilities/constants';
-import { MESSAGES_ROUTE } from '../lib/messages/routes';
+import { MESSAGES_ROUTE } from '../lib/messages/presentation/utilities/routes';
 
 export function Nav() {
   const router = useRouter();

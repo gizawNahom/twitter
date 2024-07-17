@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Page } from '../../../../components/page';
-import { MESSAGES_COMPOSE_ROUTE } from '../../../../lib/messages/routes';
+import { MESSAGES_COMPOSE_ROUTE } from '../utilities/routes';
 import { FAB } from '../../../../components/fab';
 
 export default function Messages() {
