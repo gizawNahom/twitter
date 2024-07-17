@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
-import { Client } from '../../utilities/client';
-import { Chat } from './core/domain/chat';
+import { Client } from '../../../../utilities/client';
+import { Chat } from '../../core/domain/chat';
 
 export async function getChats(offset: number, limit: number): Promise<Chat[]> {
   try {

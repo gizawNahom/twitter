@@ -5,8 +5,8 @@ import { useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../../routes';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
-import { getOrCreateChat } from '../../getOrCreateChat';
-import { sendMessage } from '../../sendMessage';
+import { getOrCreateChat } from '../../adapters/api/getOrCreateChat';
+import { sendMessage } from '../../adapters/api/sendMessage';
 import { formatTimeForMessage, formatDayForMessage } from '../utilities';
 import { Spinner } from '../../../../components/spinner';
 

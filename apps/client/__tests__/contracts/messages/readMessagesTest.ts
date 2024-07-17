@@ -14,7 +14,7 @@ import {
   sampleMessageResponse,
   sampleOffset,
 } from '../../../mocks/values';
-import { readMessages } from '../../../lib/messages/readMessages';
+import { readMessages } from '../../../lib/messages/adapters/api/readMessages';
 
 export async function testReadMessages(provider: Pact, baseUrl: URL) {
   describe('Read messages', () => {

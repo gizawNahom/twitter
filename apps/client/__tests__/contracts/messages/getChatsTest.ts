@@ -13,7 +13,7 @@ import {
   sampleInvalidLimit,
   GENERIC_SERVER_ERROR,
 } from '../../../mocks/values';
-import { getChats } from '../../../lib/messages/getChats';
+import { getChats } from '../../../lib/messages/adapters/api/getChats';
 
 export function testGetChats(provider: Pact, baseUrl: URL) {
   describe('Get Chats', () => {

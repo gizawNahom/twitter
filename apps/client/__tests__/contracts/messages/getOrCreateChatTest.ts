@@ -11,7 +11,7 @@ import {
   samplePartialChatResponse,
   sampleUserResponse,
 } from '../../../mocks/values';
-import { getOrCreateChat } from '../../../lib/messages/getOrCreateChat';
+import { getOrCreateChat } from '../../../lib/messages/adapters/api/getOrCreateChat';
 
 export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
   describe('Get Or Create Chat', () => {
