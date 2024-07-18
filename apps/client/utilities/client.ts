@@ -2,10 +2,10 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
 export class Client {
-  static client: ApolloClient<unknown>;
+  static client: ApolloClient<object>;
 }
 
-export function createClient(httpLink: HttpLink): ApolloClient<unknown> {
+export function createClient(httpLink: HttpLink): ApolloClient<object> {
   const authLink = setContext((_, { headers }) => {
     return {
       headers: {

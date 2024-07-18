@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Message } from '../../core/domain/message';
 import { SEND_MESSAGE } from '../api/sendMessage';
-import { ApolloClient, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { Client } from '../../../../utilities/client';
 import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
 import { SendMessageDataSource } from '../../core/ports/sendMessageDataSource';
@@ -15,7 +15,7 @@ export function useSendMessage() {
     onError: (error) => {
       setError('error');
     },
-    client: Client.client as ApolloClient<object>,
+    client: Client.client,
   });
 
   return {

@@ -1,4 +1,4 @@
-import { ApolloClient, useMutation } from '@apollo/client';
+import { useMutation } from '@apollo/client';
 import { GET_OR_CREATE_CHAT } from '../api/getOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useState } from 'react';
@@ -15,7 +15,7 @@ export function useGetOrCreateChat() {
     onError: (error) => {
       setError('error');
     },
-    client: Client.client as ApolloClient<object>,
+    client: Client.client,
   });
 
   const handleGetOrCreateChat = async (
