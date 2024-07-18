@@ -18,10 +18,19 @@ export function useGetOrCreateChat() {
     client: Client.client,
   });
 
-  const handleGetOrCreateChat = async (
-    username: string
-  ): Promise<PartialChat | null | undefined> => {
-    const dataSource: GetOrCreateChatDataSource = {
+  return {
+    handleGetOrCreateChat,
+    isLoading: loading,
+    chat: chat?.chat,
+    error,
+  };
+
+  async function handleGetOrCreateChat(username: string) {
+    return new GetOrCreateChatUseCase(createDataSource()).execute(username);
+  }
+
+  function createDataSource(): GetOrCreateChatDataSource {
+    return {
       async getOrCreateChat(username): Promise<PartialChat | null> {
         return (
           await getOrCreateChat({
@@ -32,13 +41,5 @@ export function useGetOrCreateChat() {
         ).data?.chat as PartialChat | null;
       },
     };
-    return new GetOrCreateChatUseCase(dataSource).execute(username);
-  };
-
-  return {
-    handleGetOrCreateChat,
-    isLoading: loading,
-    chat: chat?.chat,
-    error,
-  };
+  }
 }
