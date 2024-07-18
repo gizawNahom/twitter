@@ -5,10 +5,11 @@ import { useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
-import { getOrCreateChat } from '../../adapters/api/getOrCreateChat';
 import { sendMessage } from '../../adapters/api/sendMessage';
 import { formatTimeForMessage, formatDayForMessage } from '../utilities';
 import { Spinner } from '../../../../components/spinner';
+import { useGetOrCreateChat } from '../../adapters/hooks/useGetOrCreateChat';
+import { PartialChat } from '../../core/domain/partialChat';
 
 export default function Chat() {
   const router = useRouter();
@@ -16,11 +17,20 @@ export default function Chat() {
   const [message, setMessage] = useState('');
   const [messageInput, setMessageInput] = useState('');
   const [status, setStatus] = useState<'loading' | 'success'>();
+  const { handleGetOrCreateChat, chat, error } = useGetOrCreateChat();
 
   useEffect(() => {
     if (!user) router.push(MESSAGES_ROUTE);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (error) {
+      setMessage('');
+      setMessageInput(message);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   return (
     <Page
@@ -44,7 +54,7 @@ export default function Chat() {
     >
       <div>
         {!message && <p>No messages</p>}
-        {message && (
+        {chat && (
           <div role="log">
             {formatDayForMessage(new Date())}
 
@@ -58,20 +68,20 @@ export default function Chat() {
         )}
         <MessageSendInput
           onSend={async (message) => {
-            try {
-              const chat = await getOrCreateChat(user?.username as string);
+            const chat = (await handleGetOrCreateChat(
+              user?.username as string
+            )) as PartialChat;
+            if (chat) {
               setMessage(message);
-              setStatus('loading');
               window.history.replaceState(
                 null,
                 '',
                 `${MESSAGES_CHAT_ROUTE}/${chat.id}`
               );
+              setMessageInput('');
+              setStatus('loading');
               await sendMessage(message, chat.id);
               setStatus('success');
-            } catch (error) {
-              setMessage('');
-              setMessageInput(message);
             }
           }}
           messageInput={messageInput}
@@ -106,7 +116,6 @@ export function MessageSendInput({
         disabled={isEmpty(trimmedMessage)}
         onClick={() => {
           onSend(trimmedMessage);
-          setMessageInput('');
         }}
       >
         send

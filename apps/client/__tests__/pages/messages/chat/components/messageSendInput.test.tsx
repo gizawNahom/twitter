@@ -72,11 +72,9 @@ describe('Given the component is rendered', () => {
         await clickElement(getSendButton());
       });
 
-      test(`Then the message is stripped from white space
-            And the input is cleared`, () => {
+      test(`Then the message is stripped from white space`, () => {
         expect(onSend).toHaveBeenCalledTimes(1);
         expect(onSend).toHaveBeenCalledWith(sampleText);
-        expect(screen.queryByDisplayValue(sampleText)).not.toBeInTheDocument();
       });
     });
   });

@@ -139,7 +139,8 @@ describe('Given user has navigated to the page', () => {
 
         test(`Then the message is displayed
               And there is a single api call to ${Operations.GetOrCreateChat}
-              And the chat id is added to the url`, async () => {
+              And the chat id is added to the url
+              And the input is cleared`, async () => {
           await assertMessageIsDisplayed();
 
           assertASingleApiCallToGetOrCreateChat();
@@ -147,6 +148,10 @@ describe('Given user has navigated to the page', () => {
           expect(window.location.pathname).toBe(
             MESSAGES_CHAT + `/${sampleChatResponse.id}`
           );
+
+          expect(
+            screen.queryByDisplayValue(messageText)
+          ).not.toBeInTheDocument();
         });
 
         describe('And the message is sent successfully', () => {

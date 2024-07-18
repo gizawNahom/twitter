@@ -15,14 +15,7 @@ export async function getOrCreateChat(username: string): Promise<PartialChat> {
   }
 
   function getMutation() {
-    return gql`
-      mutation GetOrCreateChat($username: String!) {
-        chat(username: $username) {
-          id
-          createdAt
-        }
-      }
-    `;
+    return GET_OR_CREATE_CHAT;
   }
 
   function getVariables(username: string) {
@@ -31,3 +24,12 @@ export async function getOrCreateChat(username: string): Promise<PartialChat> {
     };
   }
 }
+
+export const GET_OR_CREATE_CHAT = gql`
+  mutation GetOrCreateChat($username: String!) {
+    chat(username: $username) {
+      id
+      createdAt
+    }
+  }
+`;
