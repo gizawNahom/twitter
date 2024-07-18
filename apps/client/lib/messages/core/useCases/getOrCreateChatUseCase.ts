@@ -1,10 +1,10 @@
 import { PartialChat } from '../domain/partialChat';
-import { GetOrCreateChatDataSource } from '../ports/getOrCreateChatDataSource';
+import { GetOrCreateChatGateway } from '../ports/getOrCreateChatGateway';
 
 export class GetOrCreateChatUseCase {
-  constructor(private dataSource: GetOrCreateChatDataSource) {}
+  constructor(private gateway: GetOrCreateChatGateway) {}
 
   async execute(username: string): Promise<PartialChat | null> {
-    return await this.dataSource.getOrCreateChat(username);
+    return await this.gateway.getOrCreateChat(username);
   }
 }

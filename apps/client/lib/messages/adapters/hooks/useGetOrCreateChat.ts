@@ -4,7 +4,8 @@ import { PartialChat } from '../../core/domain/partialChat';
 import { useState } from 'react';
 import { Client } from '../../../../utilities/client';
 import { GetOrCreateChatUseCase } from '../../core/useCases/getOrCreateChatUseCase';
-import { GetOrCreateChatDataSource } from '../../core/ports/getOrCreateChatDataSource';
+import { GetOrCreateChatGateway } from '../../core/ports/getOrCreateChatGateway';
+import { GetOrCreateChatGatewayImpl } from '../gateways/getOrCreateChatGatewayImpl';
 
 export function useGetOrCreateChat() {
   const [error, setError] = useState('');
@@ -26,20 +27,18 @@ export function useGetOrCreateChat() {
   };
 
   async function handleGetOrCreateChat(username: string) {
-    return new GetOrCreateChatUseCase(createDataSource()).execute(username);
+    return new GetOrCreateChatUseCase(buildGateway()).execute(username);
   }
 
-  function createDataSource(): GetOrCreateChatDataSource {
-    return {
-      async getOrCreateChat(username): Promise<PartialChat | null> {
-        return (
-          await getOrCreateChat({
-            variables: {
-              username,
-            },
-          })
-        ).data?.chat as PartialChat | null;
-      },
-    };
+  function buildGateway(): GetOrCreateChatGateway {
+    return new GetOrCreateChatGatewayImpl(async (username: string) => {
+      return (
+        await getOrCreateChat({
+          variables: {
+            username,
+          },
+        })
+      ).data?.chat as PartialChat | null;
+    });
   }
 }

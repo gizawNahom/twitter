@@ -30,13 +30,10 @@ export function useSendMessage() {
     text: string,
     chatId: string
   ): Promise<Message | null | undefined> {
-    return await new SendMessageUseCase(buildSendMessageGateway()).execute(
-      text,
-      chatId
-    );
+    return await new SendMessageUseCase(buildGateway()).execute(text, chatId);
   }
 
-  function buildSendMessageGateway(): SendMessageGateway {
+  function buildGateway(): SendMessageGateway {
     return new SendMessageGatewayImpl(async (text: string, chatId: string) => {
       return (
         await sendMessage({
