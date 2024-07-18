@@ -5,19 +5,19 @@ import { useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
-import { sendMessage } from '../../adapters/api/sendMessage';
 import { formatTimeForMessage, formatDayForMessage } from '../utilities';
 import { Spinner } from '../../../../components/spinner';
 import { useGetOrCreateChat } from '../../adapters/hooks/useGetOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
+import { useSendMessage } from '../../adapters/hooks/useSendMessage';
 
 export default function Chat() {
   const router = useRouter();
   const user = useSelector(selectSelectedUser);
   const [message, setMessage] = useState('');
   const [messageInput, setMessageInput] = useState('');
-  const [status, setStatus] = useState<'loading' | 'success'>();
   const { handleGetOrCreateChat, chat, error } = useGetOrCreateChat();
+  const { handleSendMessage, isLoading, message: msg } = useSendMessage();
 
   useEffect(() => {
     if (!user) router.push(MESSAGES_ROUTE);
@@ -61,8 +61,8 @@ export default function Chat() {
             <div data-testid="message">
               <p>{message}</p>
               <p>{formatTimeForMessage(new Date())}</p>
-              {status === 'loading' && <Spinner />}
-              {status === 'success' && <div aria-label="sent"></div>}
+              {isLoading && <Spinner />}
+              {msg && <div aria-label="sent"></div>}
             </div>
           </div>
         )}
@@ -79,9 +79,7 @@ export default function Chat() {
                 `${MESSAGES_CHAT_ROUTE}/${chat.id}`
               );
               setMessageInput('');
-              setStatus('loading');
-              await sendMessage(message, chat.id);
-              setStatus('success');
+              await handleSendMessage(message, chat.id);
             }
           }}
           messageInput={messageInput}

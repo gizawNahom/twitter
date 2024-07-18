@@ -18,17 +18,7 @@ export async function sendMessage(
   }
 
   function getMutation() {
-    return gql`
-      mutation SendMessage($text: String!, $chatId: String!) {
-        sendMessage(text: $text, chatId: $chatId) {
-          id
-          senderId
-          chatId
-          text
-          createdAt
-        }
-      }
-    `;
+    return SEND_MESSAGE;
   }
 
   function getVariables(text: string, chatId: string) {
@@ -38,3 +28,15 @@ export async function sendMessage(
     };
   }
 }
+
+export const SEND_MESSAGE = gql`
+  mutation SendMessage($text: String!, $chatId: String!) {
+    sendMessage(text: $text, chatId: $chatId) {
+      id
+      senderId
+      chatId
+      text
+      createdAt
+    }
+  }
+`;
