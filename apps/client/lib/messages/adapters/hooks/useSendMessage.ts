@@ -4,7 +4,8 @@ import { SEND_MESSAGE } from '../api/sendMessage';
 import { useMutation } from '@apollo/client';
 import { Client } from '../../../../utilities/client';
 import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
-import { SendMessageDataSource } from '../../core/ports/sendMessageDataSource';
+import { SendMessageGateway } from '../../core/ports/sendMessageGateway';
+import { SendMessageGatewayImpl } from '../gateways/sendMessageGatewayImpl';
 
 export function useSendMessage() {
   const [error, setError] = useState('');
@@ -29,24 +30,22 @@ export function useSendMessage() {
     text: string,
     chatId: string
   ): Promise<Message | null | undefined> {
-    return await new SendMessageUseCase(createSendMessageDataSource()).execute(
+    return await new SendMessageUseCase(buildSendMessageGateway()).execute(
       text,
       chatId
     );
   }
 
-  function createSendMessageDataSource(): SendMessageDataSource {
-    return {
-      async sendMessage(text, chatId): Promise<Message | null> {
-        return (
-          await sendMessage({
-            variables: {
-              text,
-              chatId,
-            },
-          })
-        ).data?.sendMessage as Message | null;
-      },
-    };
+  function buildSendMessageGateway(): SendMessageGateway {
+    return new SendMessageGatewayImpl(async (text: string, chatId: string) => {
+      return (
+        await sendMessage({
+          variables: {
+            text,
+            chatId,
+          },
+        })
+      ).data?.sendMessage as Message | null;
+    });
   }
 }
