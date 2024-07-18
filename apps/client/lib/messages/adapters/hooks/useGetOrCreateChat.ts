@@ -3,6 +3,8 @@ import { GET_OR_CREATE_CHAT } from '../api/getOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useState } from 'react';
 import { Client } from '../../../../utilities/client';
+import { GetOrCreateChatUseCase } from '../../core/useCases/getOrCreateChatUseCase';
+import { GetOrCreateChatDataSource } from '../../core/ports/getOrCreateChatDataSource';
 
 export function useGetOrCreateChat() {
   const [error, setError] = useState('');
@@ -19,13 +21,18 @@ export function useGetOrCreateChat() {
   const handleGetOrCreateChat = async (
     username: string
   ): Promise<PartialChat | null | undefined> => {
-    return (
-      await getOrCreateChat({
-        variables: {
-          username,
-        },
-      })
-    ).data?.chat;
+    const dataSource: GetOrCreateChatDataSource = {
+      async getOrCreateChat(username): Promise<PartialChat | null> {
+        return (
+          await getOrCreateChat({
+            variables: {
+              username,
+            },
+          })
+        ).data?.chat as PartialChat | null;
+      },
+    };
+    return new GetOrCreateChatUseCase(dataSource).execute(username);
   };
 
   return {
