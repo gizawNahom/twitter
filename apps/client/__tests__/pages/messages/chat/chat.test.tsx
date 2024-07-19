@@ -197,9 +197,11 @@ describe('Given user has navigated to the page', () => {
 
       test(`Then is a single api call to ${Operations.GetOrCreateChat}
             And the messages are displayed
+            And there are two api calls to ${Operations.SendMessage}
             `, async () => {
         assertASingleApiCallToGetOrCreateChat();
         await assertMessagesAreDisplayed();
+        assertTwoSendMessageCalls();
 
         async function assertMessagesAreDisplayed() {
           const messageList = await findMessageList();
@@ -222,6 +224,18 @@ describe('Given user has navigated to the page', () => {
           });
 
           assertNoMessageTextIsNotDisplayed();
+        }
+
+        function assertTwoSendMessageCalls() {
+          expect(sendMessageCalls).toHaveLength(2);
+          expect(sendMessageCalls[0]).toStrictEqual({
+            text: messageText,
+            chatId: sampleChatResponse.id,
+          });
+          expect(sendMessageCalls[1]).toStrictEqual({
+            text: secondMessageText,
+            chatId: sampleChatResponse.id,
+          });
         }
       });
     });
