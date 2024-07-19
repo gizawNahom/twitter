@@ -8,6 +8,7 @@ import {
   getByTestId,
   getByText,
   MESSAGE_SEND_INPUT_TEST_ID,
+  MESSAGE_TEST_ID,
   Operations,
   renderElement,
   setUpApi,
@@ -91,6 +92,38 @@ describe('Given user has navigated to the page', () => {
       });
     }
 
+    async function findMessageList() {
+      return await screen.findByRole('log');
+    }
+
+    function assertMessageDayIsDisplayed(messageList: HTMLElement) {
+      expect(
+        within(messageList).getByText(formatDayForMessage(new Date()))
+      ).toBeInTheDocument();
+    }
+
+    function assertMessageTextAndMessageTimeAreDisplayed(message: HTMLElement) {
+      expect(message).toHaveTextContent(messageText);
+      expect(message).toHaveTextContent(formatTimeForMessage(new Date()));
+    }
+
+    function assertLoadingIsDisplayed(message: HTMLElement) {
+      expect(within(message).getByTestId(SPINNER_TEST_ID)).toBeInTheDocument();
+    }
+
+    async function assertSuccessIsDisplayed(message: HTMLElement) {
+      await waitFor(() =>
+        expect(
+          within(message).queryByTestId(SPINNER_TEST_ID)
+        ).not.toBeInTheDocument()
+      );
+      expect(within(message).getByLabelText('sent')).toBeInTheDocument();
+    }
+
+    function assertNoMessageTextIsNotDisplayed() {
+      expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
+    }
+
     describe('When the user sends a message', () => {
       describe('And chat creation is successful', () => {
         beforeEach(async () => {
@@ -98,43 +131,14 @@ describe('Given user has navigated to the page', () => {
         });
 
         async function assertMessageIsDisplayed() {
-          const messageList = await screen.findByRole('log');
-          const MESSAGE_TEST_ID = 'message';
+          const messageList = await findMessageList();
           const message = within(messageList).getByTestId(MESSAGE_TEST_ID);
 
           assertMessageDayIsDisplayed(messageList);
           assertMessageTextAndMessageTimeAreDisplayed(message);
           assertLoadingIsDisplayed(message);
           await assertSuccessIsDisplayed(message);
-          expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
-
-          function assertMessageDayIsDisplayed(messageList: HTMLElement) {
-            expect(
-              within(messageList).getByText(formatDayForMessage(new Date()))
-            ).toBeInTheDocument();
-          }
-
-          function assertMessageTextAndMessageTimeAreDisplayed(
-            message: HTMLElement
-          ) {
-            expect(message).toHaveTextContent(messageText);
-            expect(message).toHaveTextContent(formatTimeForMessage(new Date()));
-          }
-
-          function assertLoadingIsDisplayed(message: HTMLElement) {
-            expect(
-              within(message).getByTestId(SPINNER_TEST_ID)
-            ).toBeInTheDocument();
-          }
-
-          async function assertSuccessIsDisplayed(message: HTMLElement) {
-            await waitFor(() =>
-              expect(
-                within(message).queryByTestId(SPINNER_TEST_ID)
-              ).not.toBeInTheDocument()
-            );
-            expect(within(message).getByLabelText('sent')).toBeInTheDocument();
-          }
+          assertNoMessageTextIsNotDisplayed();
         }
 
         test(`Then the message is displayed
@@ -192,14 +196,33 @@ describe('Given user has navigated to the page', () => {
       });
 
       test(`Then is a single api call to ${Operations.GetOrCreateChat}
-            Then the messages are displayed
+            And the messages are displayed
             `, async () => {
         assertASingleApiCallToGetOrCreateChat();
+        await assertMessagesAreDisplayed();
 
-        // const messageList = await screen.findByRole('log');
-        // const MESSAGE_TEST_ID = 'message';
-        // const messages = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
-        // expect(messages).toHaveLength(2);
+        async function assertMessagesAreDisplayed() {
+          const messageList = await findMessageList();
+
+          const messages = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
+          expect(messages).toHaveLength(2);
+
+          assertMessageDayIsDisplayed(messageList);
+
+          messages.forEach((message) => {
+            assertMessageTextAndMessageTimeAreDisplayed(message);
+          });
+
+          messages.forEach((message) => {
+            assertLoadingIsDisplayed(message);
+          });
+
+          messages.forEach(async (message) => {
+            await assertSuccessIsDisplayed(message);
+          });
+
+          assertNoMessageTextIsNotDisplayed();
+        }
       });
     });
   });

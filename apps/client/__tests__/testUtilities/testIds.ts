@@ -21,3 +21,5 @@ export const PEOPLE_SEARCH_TEST_ID = 'people-search';
 export const COMPOSE_MESSAGE_FAB_TEST_ID = 'compose-message-FAB';
 
 export const MESSAGE_SEND_INPUT_TEST_ID = 'message-send-input';
+
+export const MESSAGE_TEST_ID = 'message';

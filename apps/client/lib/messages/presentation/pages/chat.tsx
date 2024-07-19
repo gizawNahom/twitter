@@ -69,6 +69,8 @@ export default function Chat() {
                 );
                 setMessageInput('');
               }
+            } else {
+              setMessages([...messages, message]);
             }
           }}
           messageInput={messageInput}

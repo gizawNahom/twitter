@@ -88,8 +88,7 @@ export const handlers = [
   graphql.mutation(Operations.SendMessage, ({ variables }, res, ctx) => {
     sendMessageCalls.push(variables);
     return res(
-      // ctx.delay(1),
-      ctx.delay(100),
+      ctx.delay(450),
       ctx.data({
         sendMessage: sampleMessageResponse,
       })
