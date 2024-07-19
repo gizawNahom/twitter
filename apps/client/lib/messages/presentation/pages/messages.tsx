@@ -5,7 +5,9 @@ import { FAB } from '../../../../components/fab';
 
 export default function Messages() {
   return (
-    <Page header={<div className="text-center">Messages</div>}>
+    <Page header={<h2 className="text-center">Messages</h2>}>
+      <h1>Welcome to your inbox!</h1>
+      <Link href={MESSAGES_COMPOSE_ROUTE}>Write a message</Link>
       <div className="fixed bottom-24 right-5 sm:static xl:hidden">
         <ComposeMessageFAB />
       </div>
