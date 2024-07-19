@@ -1,5 +1,5 @@
 import { waitFor, screen, within } from '@testing-library/react';
-import { userSelected } from '../../../../lib/redux';
+import { ReduxStore, userSelected } from '../../../../lib/redux';
 import Chat from '../../../../lib/messages/presentation/pages/chat';
 import {
   BACK_BUTTON_TEST_ID,
@@ -38,6 +38,10 @@ jest.mock('next/router', () => ({
 
 const NO_MESSAGES_TEXT = /no messages/i;
 
+function renderSUT(store?: ReduxStore) {
+  renderElement(<Chat />, store);
+}
+
 function assertInitialElementsAreDisplayed() {
   expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
   expect(getByTestId(MESSAGE_SEND_INPUT_TEST_ID)).toBeInTheDocument();
@@ -63,7 +67,7 @@ describe('Given user has navigated to a new chat page', () => {
 
   describe('And user did not select a participant', () => {
     beforeEach(() => {
-      renderElement(<Chat />);
+      renderSUT();
     });
 
     test(`Then user gets redirected to ${MESSAGES}`, () => {
@@ -78,7 +82,7 @@ describe('Given user has navigated to a new chat page', () => {
     beforeEach(() => {
       const store = createNewStore();
       store.dispatch(userSelected(sampleUserResponse));
-      renderElement(<Chat />, store);
+      renderSUT(store);
     });
 
     test(`Then user does not get redirected to ${MESSAGES}`, () => {
@@ -258,7 +262,7 @@ describe('Given the user has navigated to an existing chat', () => {
         id: sampleChatResponse.id,
       },
     });
-    renderElement(<Chat />);
+    renderSUT();
   });
 
   describe('And there are no messages', () => {
