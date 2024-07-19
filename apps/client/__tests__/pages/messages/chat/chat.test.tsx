@@ -9,10 +9,10 @@ import {
   getByText,
   MESSAGE_SEND_INPUT_TEST_ID,
   MESSAGE_TEST_ID,
+  mockRouter,
   Operations,
   renderElement,
   setUpApi,
-  setUpMockRouter,
   SPINNER_TEST_ID,
 } from '../../../testUtilities';
 import { MESSAGES, MESSAGES_CHAT } from '../../../testUtilities/routes';
@@ -36,10 +36,14 @@ jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
-const push = jest.fn();
 const NO_MESSAGES_TEXT = /no messages/i;
 
-setUpMockRouter({ push });
+function assertInitialElementsAreDisplayed() {
+  expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
+  expect(getByTestId(MESSAGE_SEND_INPUT_TEST_ID)).toBeInTheDocument();
+  expect(getByText(NO_MESSAGES_TEXT)).toBeInTheDocument();
+  expect(screen.queryByRole('log')).not.toBeInTheDocument();
+}
 
 setUpApi();
 
@@ -48,7 +52,15 @@ beforeEach(() => {
   sendMessageCalls.splice(0, sendMessageCalls.length);
 });
 
-describe('Given user has navigated to the page', () => {
+afterEach(() => jest.resetAllMocks());
+
+describe('Given user has navigated to a new chat page', () => {
+  const push = jest.fn();
+
+  beforeEach(() => {
+    mockRouter({ push });
+  });
+
   describe('And user did not select a participant', () => {
     beforeEach(() => {
       renderElement(<Chat />);
@@ -74,15 +86,12 @@ describe('Given user has navigated to the page', () => {
     });
 
     test('Then correct initial elements are displayed', () => {
-      expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
-      expect(getByTestId(MESSAGE_SEND_INPUT_TEST_ID)).toBeInTheDocument();
+      assertInitialElementsAreDisplayed();
       expect(getByRole('img')).toHaveAttribute(
         'src',
         expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
       );
       expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument();
-      expect(getByText(NO_MESSAGES_TEXT)).toBeInTheDocument();
-      expect(screen.queryByRole('log')).not.toBeInTheDocument();
     });
 
     function assertASingleApiCallToGetOrCreateChat() {
@@ -238,6 +247,23 @@ describe('Given user has navigated to the page', () => {
           });
         }
       });
+    });
+  });
+});
+
+describe('Given the user has navigated to an existing chat', () => {
+  beforeEach(() => {
+    mockRouter({
+      query: {
+        id: sampleChatResponse.id,
+      },
+    });
+    renderElement(<Chat />);
+  });
+
+  describe('And there are no messages', () => {
+    test('Then initial elements are displayed', () => {
+      assertInitialElementsAreDisplayed();
     });
   });
 });

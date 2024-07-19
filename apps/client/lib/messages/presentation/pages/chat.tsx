@@ -19,7 +19,7 @@ export default function Chat() {
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!user) router.push(MESSAGES_ROUTE);
+    if (!user && !router?.query?.id) router.push(MESSAGES_ROUTE);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
