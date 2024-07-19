@@ -14,23 +14,14 @@ import { useSendMessage } from '../../adapters/hooks/useSendMessage';
 export default function Chat() {
   const router = useRouter();
   const user = useSelector(selectSelectedUser);
-  const [message, setMessage] = useState('');
   const [messageInput, setMessageInput] = useState('');
-  const { handleGetOrCreateChat, chat, error } = useGetOrCreateChat();
-  const { handleSendMessage, isLoading, message: msg } = useSendMessage();
+  const { handleGetOrCreateChat, chat } = useGetOrCreateChat();
+  const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
     if (!user) router.push(MESSAGES_ROUTE);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (error) {
-      setMessage('');
-      setMessageInput(message);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [error]);
 
   return (
     <Page
@@ -53,33 +44,31 @@ export default function Chat() {
       )}
     >
       <div>
-        {!message && <p>No messages</p>}
+        {messages.length === 0 && <p>No messages</p>}
         {chat && (
           <div role="log">
             {formatDayForMessage(new Date())}
 
-            <div data-testid="message">
-              <p>{message}</p>
-              <p>{formatTimeForMessage(new Date())}</p>
-              {isLoading && <Spinner />}
-              {msg && <div aria-label="sent"></div>}
-            </div>
+            {messages.map((message, i) => {
+              return <Message key={i} messageText={message} chatId={chat.id} />;
+            })}
           </div>
         )}
         <MessageSendInput
           onSend={async (message) => {
-            const chat = (await handleGetOrCreateChat(
-              user?.username as string
-            )) as PartialChat;
-            if (chat) {
-              setMessage(message);
-              window.history.replaceState(
-                null,
-                '',
-                `${MESSAGES_CHAT_ROUTE}/${chat.id}`
-              );
-              setMessageInput('');
-              await handleSendMessage(message, chat.id);
+            if (!chat) {
+              const c = (await handleGetOrCreateChat(
+                user?.username as string
+              )) as PartialChat;
+              if (c) {
+                setMessages([...messages, message]);
+                window.history.replaceState(
+                  null,
+                  '',
+                  `${MESSAGES_CHAT_ROUTE}/${c.id}`
+                );
+                setMessageInput('');
+              }
             }
           }}
           messageInput={messageInput}
@@ -87,6 +76,30 @@ export default function Chat() {
         />
       </div>
     </Page>
+  );
+}
+
+function Message({
+  messageText,
+  chatId,
+}: {
+  messageText: string;
+  chatId: string;
+}) {
+  const { handleSendMessage, isLoading, message } = useSendMessage();
+
+  useEffect(() => {
+    (async () => await handleSendMessage(messageText, chatId))();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  return (
+    <div data-testid="message">
+      <p>{messageText}</p>
+      <p>{formatTimeForMessage(new Date())}</p>
+      {isLoading && <Spinner />}
+      {message && <div aria-label="sent"></div>}
+    </div>
   );
 }
 

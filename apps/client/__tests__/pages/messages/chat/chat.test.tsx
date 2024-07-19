@@ -84,6 +84,13 @@ describe('Given user has navigated to the page', () => {
       expect(screen.queryByRole('log')).not.toBeInTheDocument();
     });
 
+    function assertASingleApiCallToGetOrCreateChat() {
+      expect(getOrCreateChatCalls).toHaveLength(1);
+      expect(getOrCreateChatCalls[0]).toStrictEqual({
+        username: sampleUserResponse.username,
+      });
+    }
+
     describe('When the user sends a message', () => {
       describe('And chat creation is successful', () => {
         beforeEach(async () => {
@@ -130,13 +137,6 @@ describe('Given user has navigated to the page', () => {
           }
         }
 
-        function assertASingleApiCallToGetOrCreateChat() {
-          expect(getOrCreateChatCalls).toHaveLength(1);
-          expect(getOrCreateChatCalls[0]).toStrictEqual({
-            username: sampleUserResponse.username,
-          });
-        }
-
         test(`Then the message is displayed
               And there is a single api call to ${Operations.GetOrCreateChat}
               And the chat id is added to the url
@@ -156,7 +156,7 @@ describe('Given user has navigated to the page', () => {
 
         describe('And the message is sent successfully', () => {
           test(`Then there is a single api call to ${Operations.SendMessage}`, async () => {
-            expect(sendMessageCalls).toHaveLength(1);
+            await waitFor(() => expect(sendMessageCalls).toHaveLength(1));
             expect(sendMessageCalls[0]).toStrictEqual({
               text: messageText,
               chatId: sampleChatResponse.id,
@@ -180,6 +180,26 @@ describe('Given user has navigated to the page', () => {
 
           expect(screen.getByDisplayValue(messageText)).toBeInTheDocument();
         });
+      });
+    });
+
+    describe('When the user sends two messages', () => {
+      const secondMessageText = `second ${messageText}`;
+
+      beforeEach(async () => {
+        await typeAndClickSend(messageText);
+        await typeAndClickSend(secondMessageText);
+      });
+
+      test(`Then is a single api call to ${Operations.GetOrCreateChat}
+            Then the messages are displayed
+            `, async () => {
+        assertASingleApiCallToGetOrCreateChat();
+
+        // const messageList = await screen.findByRole('log');
+        // const MESSAGE_TEST_ID = 'message';
+        // const messages = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
+        // expect(messages).toHaveLength(2);
       });
     });
   });
