@@ -24,6 +24,7 @@
     "tw-elements": "^1.1.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "@nx/cypress": "16.2.2",
     "@nx/eslint-plugin": "16.2.2",
     "@nx/express": "^16.2.2",

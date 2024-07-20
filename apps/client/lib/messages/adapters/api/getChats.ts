@@ -15,19 +15,7 @@ export async function getChats(offset: number, limit: number): Promise<Chat[]> {
   }
 
   function getQuery() {
-    return gql`
-      query GetChats($limit: Int!, $offset: Int!) {
-        chats(limit: $limit, offset: $offset) {
-          id
-          createdAtISO
-          participant {
-            username
-            displayName
-            profilePic
-          }
-        }
-      }
-    `;
+    return GET_CHATS;
   }
 
   function getVariables(offset: number, limit: number) {
@@ -37,3 +25,17 @@ export async function getChats(offset: number, limit: number): Promise<Chat[]> {
     };
   }
 }
+
+export const GET_CHATS = gql`
+  query GetChats($limit: Int!, $offset: Int!) {
+    chats(limit: $limit, offset: $offset) {
+      id
+      createdAtISO
+      participant {
+        username
+        displayName
+        profilePic
+      }
+    }
+  }
+`;
