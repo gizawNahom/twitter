@@ -2,17 +2,55 @@ import Link from 'next/link';
 import { Page } from '../../../../components/page';
 import { MESSAGES_COMPOSE_ROUTE } from '../utilities/routes';
 import { FAB } from '../../../../components/fab';
+import { useGetChats } from '../../adapters/hooks/useGetChats';
+import { useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Messages() {
+  const { handleGetChats, chats } = useGetChats();
+
+  useEffect(() => {
+    handleGetChats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <Page header={<h2 className="text-center">Messages</h2>}>
-      <h1>Welcome to your inbox!</h1>
-      <Link href={MESSAGES_COMPOSE_ROUTE}>Write a message</Link>
+      {chats ? renderChats() : renderPlaceholders()}
       <div className="fixed bottom-24 right-5 sm:static xl:hidden">
         <ComposeMessageFAB />
       </div>
     </Page>
   );
+
+  function renderChats() {
+    return (
+      <>
+        {chats?.map((chat) => {
+          return (
+            <div key={chat.id}>
+              <p>{chat.participant.displayName}</p>
+              <Image
+                src={chat.participant.profilePic}
+                alt={`${chat.participant.displayName}'s profile pic`}
+                width={100}
+                height={100}
+              />
+            </div>
+          );
+        })}
+      </>
+    );
+  }
+
+  function renderPlaceholders() {
+    return (
+      <>
+        <h1>Welcome to your inbox!</h1>
+        <Link href={MESSAGES_COMPOSE_ROUTE}>Write a message</Link>
+      </>
+    );
+  }
 }
 
 export function ComposeMessageFAB() {

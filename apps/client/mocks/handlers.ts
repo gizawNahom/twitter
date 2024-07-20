@@ -108,7 +108,7 @@ export const handlers = [
     return res(
       ctx.delay(1),
       ctx.data({
-        chats: await chatsDB.read(variables.chatId),
+        chats: await chatsDB.read(variables.offset, variables.limit),
       })
     );
   }),

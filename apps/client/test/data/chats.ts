@@ -7,8 +7,8 @@ async function create(chat: Chat) {
   return chat;
 }
 
-async function read(chatId: string) {
-  return chats.find((chat) => chat.id === chatId);
+async function read(offset: number, limit: number): Promise<Chat[]> {
+  return chats.slice(offset, offset + limit);
 }
 
 const chatsDB = { create, read };

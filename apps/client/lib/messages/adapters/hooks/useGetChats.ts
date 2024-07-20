@@ -21,6 +21,6 @@ export function useGetChats() {
         })
       ).data?.chats;
     },
-    chats,
+    chats: chats?.chats,
   };
 }
