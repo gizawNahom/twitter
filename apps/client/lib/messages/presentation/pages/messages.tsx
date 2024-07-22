@@ -5,9 +5,10 @@ import { FAB } from '../../../../components/fab';
 import { useGetChats } from '../../adapters/hooks/useGetChats';
 import { useEffect } from 'react';
 import Image from 'next/image';
+import { Spinner } from '../../../../components/spinner';
 
 export default function Messages() {
-  const { handleGetChats, chats } = useGetChats();
+  const { handleGetChats, chats, isLoading } = useGetChats();
 
   useEffect(() => {
     handleGetChats();
@@ -16,7 +17,8 @@ export default function Messages() {
 
   return (
     <Page header={<h2 className="text-center">Messages</h2>}>
-      {chats ? renderChats() : renderPlaceholders()}
+      {isLoading && <Spinner />}
+      {chats?.length == 0 ? renderPlaceholders() : renderChats()}
       <div className="fixed bottom-24 right-5 sm:static xl:hidden">
         <ComposeMessageFAB />
       </div>

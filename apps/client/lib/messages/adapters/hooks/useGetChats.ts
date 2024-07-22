@@ -4,7 +4,7 @@ import { Chat } from '../../core/domain/chat';
 import { Client } from '../../../../utilities/client';
 
 export function useGetChats() {
-  const [getChats, { data: chats }] = useLazyQuery<{
+  const [getChats, { data: chats, loading }] = useLazyQuery<{
     chats: Chat[];
   }>(GET_CHATS, {
     client: Client.client,
@@ -22,5 +22,6 @@ export function useGetChats() {
       ).data?.chats;
     },
     chats: chats?.chats,
+    isLoading: loading,
   };
 }

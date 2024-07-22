@@ -9,6 +9,7 @@ import {
   MESSAGES_COMPOSE,
   getByText,
   setUpApi,
+  querySpinner,
 } from '../../testUtilities';
 import { buildChat } from '../../../test/generator';
 
@@ -21,6 +22,13 @@ const writeTextFinder: [string, object] = ['link', { name: WRITE_TEXT }];
 setUpApi();
 
 describe('Given the user has navigated to the page', () => {
+  async function assertSpinnerIsDisplayedAndRemoved() {
+    expect(querySpinner()).toBeInTheDocument();
+    await waitFor(() => {
+      expect(querySpinner()).not.toBeInTheDocument();
+    });
+  }
+
   describe('And the user has no chats', () => {
     beforeEach(() => {
       renderElement(<Messages />);
@@ -34,9 +42,10 @@ describe('Given the user has navigated to the page', () => {
       );
     }
 
-    test('Then the initial elements are displayed', () => {
+    test('Then the initial elements are displayed', async () => {
       expect(getByRole('heading', { name: /messages/i }));
       expect(getByTestId(COMPOSE_MESSAGE_FAB_TEST_ID)).toBeInTheDocument();
+      await assertSpinnerIsDisplayedAndRemoved();
       assertPlaceholdersAreDisplayed();
     });
   });
@@ -70,6 +79,7 @@ describe('Given the user has navigated to the page', () => {
       Then placeholder elements are not displayed
       And chats are displayed
       `, async () => {
+      await assertSpinnerIsDisplayedAndRemoved();
       await assertPlaceholdersAreNotDisplayed();
       assertChatsAreDisplayed();
     });
