@@ -6,9 +6,10 @@ import { useGetChats } from '../../adapters/hooks/useGetChats';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import { Spinner } from '../../../../components/spinner';
+import { Error } from '../../../../components/error';
 
 export default function Messages() {
-  const { handleGetChats, chats, isLoading } = useGetChats();
+  const { handleGetChats, chats, isLoading, error } = useGetChats();
 
   useEffect(() => {
     handleGetChats();
@@ -19,6 +20,7 @@ export default function Messages() {
     <Page header={<h2 className="text-center">Messages</h2>}>
       {isLoading && <Spinner />}
       {chats?.length == 0 ? renderPlaceholders() : renderChats()}
+      {error && <Error />}
       <div className="fixed bottom-24 right-5 sm:static xl:hidden">
         <ComposeMessageFAB />
       </div>

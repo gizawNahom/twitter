@@ -10,8 +10,11 @@ import {
   getByText,
   setUpApi,
   querySpinner,
+  queryErrorComponent,
 } from '../../testUtilities';
 import { buildChat } from '../../../test/generator';
+import { server } from '../../../mocks/server';
+import { genericErrorHandler } from '../../../mocks/handlers';
 
 const WELCOME_TEXT = /welcome to your inbox!/i;
 const WRITE_TEXT = /write a message/i;
@@ -50,6 +53,13 @@ describe('Given the user has navigated to the page', () => {
     });
   });
 
+  async function assertPlaceholdersAreNotDisplayed() {
+    await waitFor(() => {
+      expect(screen.queryByRole(...welcomeTextFinder)).not.toBeInTheDocument();
+    });
+    expect(screen.queryByRole(...writeTextFinder)).not.toBeInTheDocument();
+  }
+
   describe('And the user has chats', () => {
     const chat = buildChat();
 
@@ -57,15 +67,6 @@ describe('Given the user has navigated to the page', () => {
       await chatsDB.create(chat);
       renderElement(<Messages />);
     });
-
-    async function assertPlaceholdersAreNotDisplayed() {
-      await waitFor(() => {
-        expect(
-          screen.queryByRole(...welcomeTextFinder)
-        ).not.toBeInTheDocument();
-      });
-      expect(screen.queryByRole(...writeTextFinder)).not.toBeInTheDocument();
-    }
 
     function assertChatsAreDisplayed() {
       expect(getByText(chat.participant.displayName)).toBeInTheDocument();
@@ -82,6 +83,21 @@ describe('Given the user has navigated to the page', () => {
       await assertSpinnerIsDisplayedAndRemoved();
       await assertPlaceholdersAreNotDisplayed();
       assertChatsAreDisplayed();
+    });
+  });
+
+  describe('And there is error when fetching chats', () => {
+    beforeEach(async () => {
+      server.use(genericErrorHandler);
+      renderElement(<Messages />);
+    });
+
+    test('Then error is displayed', async () => {
+      await assertSpinnerIsDisplayedAndRemoved();
+      await assertPlaceholdersAreNotDisplayed();
+      await waitFor(() => {
+        expect(queryErrorComponent()).toBeInTheDocument();
+      });
     });
   });
 });
