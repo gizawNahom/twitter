@@ -10,11 +10,19 @@ import {
   getByText,
   setUpApi,
   querySpinner,
-  queryErrorComponent,
+  clickElement,
+  waitForErrorToBeInTheDocument,
+  setUpMockRouter,
+  MESSAGES_CHAT,
 } from '../../testUtilities';
 import { buildChat } from '../../../test/generator';
 import { server } from '../../../mocks/server';
 import { genericErrorHandler } from '../../../mocks/handlers';
+import { Chat } from '../../../lib/messages/core/domain/chat';
+
+jest.mock('next/router', () => ({
+  useRouter: jest.fn(),
+}));
 
 const WELCOME_TEXT = /welcome to your inbox!/i;
 const WRITE_TEXT = /write a message/i;
@@ -61,10 +69,13 @@ describe('Given the user has navigated to the page', () => {
   }
 
   describe('And the user has chats', () => {
-    const chat = buildChat();
+    let chat: Chat;
+
+    beforeAll(async () => {
+      chat = await chatsDB.create(buildChat());
+    });
 
     beforeEach(async () => {
-      await chatsDB.create(chat);
       renderElement(<Messages />);
     });
 
@@ -84,9 +95,25 @@ describe('Given the user has navigated to the page', () => {
       await assertPlaceholdersAreNotDisplayed();
       assertChatsAreDisplayed();
     });
+
+    describe('When the user clicks a chat', () => {
+      const push = jest.fn();
+
+      setUpMockRouter({ push });
+
+      beforeEach(async () => {
+        await assertSpinnerIsDisplayedAndRemoved();
+        await clickElement(getByText(chat.participant.displayName));
+      });
+
+      test('Then the user is redirected to the chat page', async () => {
+        expect(push).toHaveBeenCalledTimes(1);
+        expect(push).toHaveBeenCalledWith(`${MESSAGES_CHAT}/${chat.id}`);
+      });
+    });
   });
 
-  describe('And there is error when fetching chats', () => {
+  describe('And there is an error when fetching chats', () => {
     beforeEach(async () => {
       server.use(genericErrorHandler);
       renderElement(<Messages />);
@@ -95,9 +122,7 @@ describe('Given the user has navigated to the page', () => {
     test('Then error is displayed', async () => {
       await assertSpinnerIsDisplayedAndRemoved();
       await assertPlaceholdersAreNotDisplayed();
-      await waitFor(() => {
-        expect(queryErrorComponent()).toBeInTheDocument();
-      });
+      await waitForErrorToBeInTheDocument();
     });
   });
 });

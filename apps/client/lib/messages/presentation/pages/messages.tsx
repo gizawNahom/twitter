@@ -1,14 +1,19 @@
 import Link from 'next/link';
 import { Page } from '../../../../components/page';
-import { MESSAGES_COMPOSE_ROUTE } from '../utilities/routes';
+import {
+  MESSAGES_CHAT_ROUTE,
+  MESSAGES_COMPOSE_ROUTE,
+} from '../utilities/routes';
 import { FAB } from '../../../../components/fab';
 import { useGetChats } from '../../adapters/hooks/useGetChats';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import { Spinner } from '../../../../components/spinner';
 import { Error } from '../../../../components/error';
+import { useRouter } from 'next/router';
 
 export default function Messages() {
+  const router = useRouter();
   const { handleGetChats, chats, isLoading, error } = useGetChats();
 
   useEffect(() => {
@@ -32,7 +37,10 @@ export default function Messages() {
       <>
         {chats?.map((chat) => {
           return (
-            <div key={chat.id}>
+            <div
+              key={chat.id}
+              onClick={() => router.push(`${MESSAGES_CHAT_ROUTE}/${chat.id}`)}
+            >
               <p>{chat.participant.displayName}</p>
               <Image
                 src={chat.participant.profilePic}
