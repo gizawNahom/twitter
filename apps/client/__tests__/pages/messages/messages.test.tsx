@@ -69,10 +69,12 @@ describe('Given the user has navigated to the page', () => {
   }
 
   describe('And the user has chats', () => {
-    let chat: Chat;
+    let chat1: Chat;
+    let chat2: Chat;
 
     beforeAll(async () => {
-      chat = await chatsDB.create(buildChat());
+      chat1 = await chatsDB.create(buildChat());
+      chat2 = await chatsDB.create(buildChat());
     });
 
     beforeEach(async () => {
@@ -80,11 +82,20 @@ describe('Given the user has navigated to the page', () => {
     });
 
     function assertChatsAreDisplayed() {
-      expect(getByText(chat.participant.displayName)).toBeInTheDocument();
-      expect(getByRole('img')).toHaveAttribute(
-        'src',
-        expect.stringMatching(encodeURIComponent(chat.participant.profilePic))
-      );
+      assertChatIsDisplayed(chat1);
+      assertChatIsDisplayed(chat2);
+
+      function assertChatIsDisplayed(chat: Chat) {
+        const participant = chat.participant;
+        const displayName = participant.displayName;
+        expect(getByText(displayName)).toBeInTheDocument();
+        const img = screen.getByAltText(`${displayName}'s profile pic`);
+        expect(img).toBeInTheDocument();
+        expect(img).toHaveAttribute(
+          'src',
+          expect.stringMatching(encodeURIComponent(participant.profilePic))
+        );
+      }
     }
 
     test(`
@@ -103,12 +114,12 @@ describe('Given the user has navigated to the page', () => {
 
       beforeEach(async () => {
         await assertSpinnerIsDisplayedAndRemoved();
-        await clickElement(getByText(chat.participant.displayName));
+        await clickElement(getByText(chat1.participant.displayName));
       });
 
       test('Then the user is redirected to the chat page', async () => {
         expect(push).toHaveBeenCalledTimes(1);
-        expect(push).toHaveBeenCalledWith(`${MESSAGES_CHAT}/${chat.id}`);
+        expect(push).toHaveBeenCalledWith(`${MESSAGES_CHAT}/${chat1.id}`);
       });
     });
   });
