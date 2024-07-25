@@ -1,11 +1,12 @@
 import chatsDB from '../../test/data/chats';
 import { setUpApi } from '../testUtilities';
-import { renderHook, waitFor } from '@testing-library/react';
+import { act, renderHook, waitFor } from '@testing-library/react';
 import { buildChat } from '../../test/generator';
 import {
   ApolloChatsGetter,
   useApolloGetChats,
 } from '../../lib/messages/data/apolloChatsGetter';
+import { Chat } from '../../lib/messages/core/domain/chat';
 
 const generatedChats = [buildChat(), buildChat(), buildChat(), buildChat()];
 
@@ -25,6 +26,14 @@ function createSUT(limit = 2) {
   };
 }
 
+async function getChats(chatsGetter: ApolloChatsGetter) {
+  let chats: Chat[] | undefined;
+  await act(async () => {
+    chats = await chatsGetter.getChats();
+  });
+  return chats;
+}
+
 setUpApi();
 
 beforeEach(() => {
@@ -34,7 +43,7 @@ beforeEach(() => {
 test('works if there are no chats', async () => {
   const { chatsGetter, result } = createSUT();
 
-  const chats = await chatsGetter.getChats();
+  const chats = await getChats(chatsGetter);
 
   expect(chats).toStrictEqual([]);
   expect(result.current.chats?.chats).toStrictEqual([]);
@@ -45,7 +54,7 @@ test('works when called once', async () => {
   await chatsDB.create(generatedChats[1]);
   const { chatsGetter, result } = createSUT();
 
-  const chats = await chatsGetter.getChats();
+  const chats = await getChats(chatsGetter);
 
   expect(chats).toStrictEqual([generatedChats[0], generatedChats[1]]);
   expect(result.current.chats?.chats).toStrictEqual([
@@ -61,8 +70,8 @@ test('works when called twice', async () => {
   await chatsDB.create(generatedChats[3]);
   const { chatsGetter, result } = createSUT();
 
-  const chats1 = await chatsGetter.getChats();
-  const chats2 = await chatsGetter.getChats();
+  const chats1 = await getChats(chatsGetter);
+  const chats2 = await getChats(chatsGetter);
 
   expect(chats1).toStrictEqual(generatedChats.slice(0, 2));
   expect(chats2).toStrictEqual(generatedChats.slice(2, 4));
@@ -78,10 +87,10 @@ test('works when called four times', async () => {
   await chatsDB.create(generatedChats[3]);
   const { chatsGetter, result } = createSUT();
 
-  const chats1 = await chatsGetter.getChats();
-  const chats2 = await chatsGetter.getChats();
-  const chats3 = await chatsGetter.getChats();
-  const chats4 = await chatsGetter.getChats();
+  const chats1 = await getChats(chatsGetter);
+  const chats2 = await getChats(chatsGetter);
+  const chats3 = await getChats(chatsGetter);
+  const chats4 = await getChats(chatsGetter);
 
   expect(chats1).toStrictEqual(generatedChats.slice(0, 2));
   expect(chats2).toStrictEqual(generatedChats.slice(2, 4));
