@@ -53,7 +53,6 @@ export class ApolloChatsGetter {
   private readChatsCache() {
     return Client.client.readQuery({
       query: GET_CHATS,
-      variables: { offset: 0, limit: this.limit },
     })?.chats;
   }
 
