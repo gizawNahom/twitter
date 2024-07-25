@@ -39,6 +39,14 @@ module.exports = (phase, context) => {
             protocol: 'https',
             hostname: 'images.unsplash.com',
           },
+          {
+            protocol: 'https',
+            hostname: 'cloudflare-ipfs.com',
+          },
+          {
+            protocol: 'https',
+            hostname: 'avatars.githubusercontent.com',
+          },
         ],
       },
     };

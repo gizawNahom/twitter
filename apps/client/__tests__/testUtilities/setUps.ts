@@ -1,4 +1,4 @@
-import { HttpLink, InMemoryCache } from '@apollo/client';
+import { HttpLink } from '@apollo/client';
 import fetch from 'cross-fetch';
 import { Client, createClient } from '../../utilities/client';
 import { server } from '../../mocks/server';
@@ -65,13 +65,11 @@ export function setUpClient() {
   });
 
   function setCLient() {
-    const client = createClient(
+    Client.client = createClient(
       new HttpLink({
         uri: process.env.NEXT_PUBLIC_API_BASE_URL,
         fetch: fetch,
       })
     );
-    client.cache = new InMemoryCache();
-    Client.client = client;
   }
 }

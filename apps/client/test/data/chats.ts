@@ -1,6 +1,14 @@
 import { Chat } from '../../lib/messages/core/domain/chat';
+import { buildChat } from '../generator';
 
-const chats: Chat[] = [];
+const chats: Chat[] = [
+  buildChat(),
+  buildChat(),
+  buildChat(),
+  buildChat(),
+  buildChat(),
+  buildChat(),
+];
 
 async function create(chat: Chat) {
   chats.push(chat);
@@ -8,8 +16,13 @@ async function create(chat: Chat) {
 }
 
 async function read(offset: number, limit: number): Promise<Chat[]> {
-  return chats.slice(offset, offset + limit);
+  const start = offset * limit;
+  return chats.slice(start, start + limit);
 }
 
-const chatsDB = { create, read };
+function clear() {
+  chats.splice(0, chats.length);
+}
+
+const chatsDB = { create, read, clear };
 export default chatsDB;

@@ -8,7 +8,7 @@ export function buildChat(): Chat {
     participant: {
       username: faker.internet.userName(),
       displayName: faker.internet.displayName(),
-      profilePic: faker.image.avatar(),
+      profilePic: faker.image.avatarGitHub(),
     },
   };
 }

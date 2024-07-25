@@ -33,6 +33,10 @@ const writeTextFinder: [string, object] = ['link', { name: WRITE_TEXT }];
 setUpApi();
 
 describe('Given the user has navigated to the page', () => {
+  beforeAll(() => {
+    chatsDB.clear();
+  });
+
   async function assertSpinnerIsDisplayedAndRemoved() {
     expect(querySpinner()).toBeInTheDocument();
     await waitFor(() => {

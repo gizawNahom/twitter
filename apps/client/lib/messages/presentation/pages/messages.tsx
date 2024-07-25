@@ -5,7 +5,7 @@ import {
   MESSAGES_COMPOSE_ROUTE,
 } from '../utilities/routes';
 import { FAB } from '../../../../components/fab';
-import { useGetChats } from '../../adapters/hooks/useGetChats';
+import { useGetChats } from '../hooks/useGetChats';
 import { useEffect } from 'react';
 import Image from 'next/image';
 import { Spinner } from '../../../../components/spinner';
@@ -26,6 +26,13 @@ export default function Messages() {
       {isLoading && <Spinner />}
       {chats?.length == 0 ? renderPlaceholders() : renderChats()}
       {error && <Error />}
+      <button
+        onClick={() => {
+          handleGetChats();
+        }}
+      >
+        Fetch More
+      </button>
       <div className="fixed bottom-24 right-5 sm:static xl:hidden">
         <ComposeMessageFAB />
       </div>
