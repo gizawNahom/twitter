@@ -67,7 +67,7 @@ export default function Messages() {
       <InfiniteScroll
         pageStart={1}
         loadMore={fetchChats}
-        hasMore={!isFinished || isError}
+        hasMore={!isError && !isFinished}
         loader={<Spinner key="loader" />}
       >
         {renderChats()}

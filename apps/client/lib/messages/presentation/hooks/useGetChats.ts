@@ -4,7 +4,7 @@ import { GetChatsUseCase } from '../../core/useCases/getChatsUseCase';
 import { GetChatsGateway } from '../../core/ports/getChatsGateway';
 import { GetChatsGatewayImpl } from '../../adapters/gateways/getChatsGatewayImpl';
 import { EndOfListError } from '../../../../utilities/client';
-import { ApChatsGetter } from '../../data/apolloChatsGetter';
+import { ApolloChatsGetter } from '../../data/apolloChatsGetter';
 
 export function useGetChats() {
   const [status, setStatus] = useState<
@@ -35,7 +35,7 @@ export function useGetChats() {
     return new GetChatsUseCase(buildGateway(offset));
 
     function buildGateway(offset: number): GetChatsGateway {
-      return new GetChatsGatewayImpl(new ApChatsGetter(offset));
+      return new GetChatsGatewayImpl(new ApolloChatsGetter(offset));
     }
   }
 }
