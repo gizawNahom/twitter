@@ -3,31 +3,39 @@ import { useState } from 'react';
 import { GetChatsUseCase } from '../../core/useCases/getChatsUseCase';
 import { GetChatsGateway } from '../../core/ports/getChatsGateway';
 import { GetChatsGatewayImpl } from '../../adapters/gateways/getChatsGatewayImpl';
-import {
-  ApolloChatsGetter,
-  useApolloGetChats,
-} from '../../data/apolloChatsGetter';
+import { EndOfListError } from '../../../../utilities/client';
+import { ApChatsGetter } from '../../data/apolloChatsGetter';
 
 export function useGetChats() {
-  const [error, setError] = useState('');
-  const { getChats, chats, loading, fetchMore } = useApolloGetChats((error) =>
-    setError('error')
-  );
+  const [status, setStatus] = useState<
+    'loading' | 'idle' | 'finished' | 'error'
+  >('idle');
+  const [chats, setChats] = useState<Chat[]>([]);
 
   return {
     handleGetChats,
-    chats: chats?.chats,
-    isLoading: loading,
-    error,
+    chats,
+    isLoading: status == 'loading',
+    isFinished: status == 'finished',
+    isError: status == 'error',
   };
 
-  async function handleGetChats(): Promise<Chat[] | undefined> {
-    return new GetChatsUseCase(buildGateway()).execute();
+  async function handleGetChats(offset: number) {
+    try {
+      setStatus('loading');
+      setChats((await buildUseCase(offset).execute()) as Chat[]);
+      setStatus('idle');
+    } catch (error) {
+      if (error instanceof EndOfListError) setStatus('finished');
+      else setStatus('error');
+    }
   }
 
-  function buildGateway(): GetChatsGateway {
-    return new GetChatsGatewayImpl(
-      new ApolloChatsGetter(getChats, fetchMore, 5)
-    );
+  function buildUseCase(offset: number) {
+    return new GetChatsUseCase(buildGateway(offset));
+
+    function buildGateway(offset: number): GetChatsGateway {
+      return new GetChatsGatewayImpl(new ApChatsGetter(offset));
+    }
   }
 }

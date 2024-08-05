@@ -5,44 +5,87 @@ import {
   MESSAGES_COMPOSE_ROUTE,
 } from '../utilities/routes';
 import { FAB } from '../../../../components/fab';
-import { useGetChats } from '../hooks/useGetChats';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Spinner } from '../../../../components/spinner';
 import { Error } from '../../../../components/error';
 import { useRouter } from 'next/router';
+import InfiniteScroll from 'react-infinite-scroller';
+import { Chat } from '../../core/domain/chat';
+import { useGetChats } from '../hooks/useGetChats';
 
 export default function Messages() {
   const router = useRouter();
-  const { handleGetChats, chats, isLoading, error } = useGetChats();
+  const [offset, setOffset] = useState(0);
+  const [isLoadingFirstPage, setIsLoadingFirstPage] = useState(true);
+  const { handleGetChats, chats, isLoading, isFinished, isError } =
+    useGetChats();
 
-  useEffect(() => {
-    handleGetChats();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  useFetchChatsOnMount();
 
   return (
     <Page header={<h2 className="text-center">Messages</h2>}>
-      {isLoading && <Spinner />}
-      {chats?.length == 0 ? renderPlaceholders() : renderChats()}
-      {error && <Error />}
-      <button
-        onClick={() => {
-          handleGetChats();
-        }}
-      >
-        Fetch More
-      </button>
+      {isLoadingFirstPage && <Spinner />}
+      {canRenderPlaceholders() && renderPlaceholders()}
+      {canRenderInfiniteScroll() && renderInfiniteScroll()}
+      {isError && <Error />}
       <div className="fixed bottom-24 right-5 sm:static xl:hidden">
         <ComposeMessageFAB />
       </div>
     </Page>
   );
 
+  function useFetchChatsOnMount() {
+    useEffect(() => {
+      (async () => {
+        await fetchChats();
+        setIsLoadingFirstPage(false);
+      })();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+  }
+
+  function canRenderPlaceholders() {
+    return !isLoadingFirstPage && chats.length == 0 && !isError;
+  }
+
+  function renderPlaceholders() {
+    return (
+      <>
+        <h1>Welcome to your inbox!</h1>
+        <Link href={MESSAGES_COMPOSE_ROUTE}>Write a message</Link>
+      </>
+    );
+  }
+
+  function canRenderInfiniteScroll() {
+    return !isLoadingFirstPage && chats.length != 0;
+  }
+
+  function renderInfiniteScroll() {
+    return (
+      <InfiniteScroll
+        pageStart={1}
+        loadMore={fetchChats}
+        hasMore={!isFinished || isError}
+        loader={<Spinner key="loader" />}
+      >
+        {renderChats()}
+      </InfiniteScroll>
+    );
+  }
+
+  async function fetchChats() {
+    if (!isLoading) {
+      await handleGetChats(offset);
+      setOffset(offset + 1);
+    }
+  }
+
   function renderChats() {
     return (
       <>
-        {chats?.map((chat) => {
+        {chats.map((chat: Chat) => {
           return (
             <div
               key={chat.id}
@@ -58,15 +101,6 @@ export default function Messages() {
             </div>
           );
         })}
-      </>
-    );
-  }
-
-  function renderPlaceholders() {
-    return (
-      <>
-        <h1>Welcome to your inbox!</h1>
-        <Link href={MESSAGES_COMPOSE_ROUTE}>Write a message</Link>
       </>
     );
   }

@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client';
-import { Client } from '../../../../utilities/client';
+import { Client, EndOfListError } from '../../../../utilities/client';
 import { Chat } from '../../core/domain/chat';
 
 export async function getChats(offset: number, limit: number): Promise<Chat[]> {
@@ -7,10 +7,12 @@ export async function getChats(offset: number, limit: number): Promise<Chat[]> {
     const res = await Client.client.query({
       query: getQuery(),
       variables: getVariables(offset, limit),
+      fetchPolicy: 'network-only',
     });
 
     return res.data.chats as Array<Chat>;
   } catch (error) {
+    if (error instanceof EndOfListError) throw error;
     throw new Error();
   }
 

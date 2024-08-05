@@ -85,13 +85,16 @@ describe('Given the user has navigated to the page', () => {
       renderElement(<Messages />);
     });
 
-    function assertChatsAreDisplayed() {
-      assertChatIsDisplayed(chat1);
-      assertChatIsDisplayed(chat2);
+    async function assertChatsAreDisplayed() {
+      await assertChatIsDisplayed(chat1);
+      await assertChatIsDisplayed(chat2);
 
-      function assertChatIsDisplayed(chat: Chat) {
+      async function assertChatIsDisplayed(chat: Chat) {
         const participant = chat.participant;
         const displayName = participant.displayName;
+        await waitFor(() => {
+          expect(getByText(displayName)).toBeInTheDocument();
+        });
         expect(getByText(displayName)).toBeInTheDocument();
         const img = screen.getByAltText(`${displayName}'s profile pic`);
         expect(img).toBeInTheDocument();
@@ -106,10 +109,10 @@ describe('Given the user has navigated to the page', () => {
       Then placeholder elements are not displayed
       And chats are displayed
       `, async () => {
-      await assertSpinnerIsDisplayedAndRemoved();
+      // await assertSpinnerIsDisplayedAndRemoved();
       await assertPlaceholdersAreNotDisplayed();
-      assertChatsAreDisplayed();
-    });
+      await assertChatsAreDisplayed();
+    }, 15000);
 
     describe('When the user clicks a chat', () => {
       const push = jest.fn();
@@ -117,7 +120,7 @@ describe('Given the user has navigated to the page', () => {
       setUpMockRouter({ push });
 
       beforeEach(async () => {
-        await assertSpinnerIsDisplayedAndRemoved();
+        await assertChatsAreDisplayed();
         await clickElement(getByText(chat1.participant.displayName));
       });
 

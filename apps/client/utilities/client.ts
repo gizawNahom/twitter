@@ -41,20 +41,8 @@ export function createClient(httpLink: HttpLink): ApolloClient<object> {
             },
             chats: {
               keyArgs: false,
-              merge(
-                existing,
-                incoming,
-                // @ts-expect-error offset don't exist on args
-                { args: { offset = 0 } }
-              ) {
-                // Slicing is necessary because the existing data is
-                // immutable, and frozen in development.
-                const merged = existing ? existing.slice(0) : [];
-
-                for (let i = 0; i < incoming.length; ++i) {
-                  merged[offset + i] = incoming[i];
-                }
-                return merged;
+              merge(existing, incoming) {
+                return merger(existing, incoming);
               },
             },
           },
@@ -62,4 +50,22 @@ export function createClient(httpLink: HttpLink): ApolloClient<object> {
       },
     }),
   });
+}
+
+export class EndOfListError extends Error {}
+
+export function merger(
+  existing: { id: string }[] = [],
+  incoming: { id: string }[]
+) {
+  if (incoming.length == 0) throw new EndOfListError();
+  const mergedElements = [...existing];
+  incoming.forEach((ie) => {
+    if (!isDuplicate(ie)) mergedElements.push(ie);
+  });
+  return mergedElements;
+
+  function isDuplicate(ie: { id: string }) {
+    return mergedElements.findIndex((me) => me.id === ie.id) !== -1;
+  }
 }
