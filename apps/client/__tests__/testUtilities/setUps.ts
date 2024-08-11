@@ -41,6 +41,7 @@ export function mockRouter({
     push: push,
     query,
     pathname,
+    isReady: true,
   }));
 }
 

@@ -12,7 +12,6 @@ export async function readMessages(
       query: getQuery(),
       variables: getVariables(chatId, offset, limit),
     });
-
     return res.data.messages as Array<Message>;
   } catch (error) {
     throw new Error();

@@ -9,6 +9,7 @@ import {
 } from './values';
 import { Operations } from '../__tests__/testUtilities/operations';
 import chatsDB from '../test/data/chats';
+import messagesDB from '../test/data/messages';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
@@ -109,6 +110,14 @@ export const handlers = [
       ctx.delay(1),
       ctx.data({
         chats: await chatsDB.read(variables.offset, variables.limit),
+      })
+    );
+  }),
+  graphql.query(Operations.ReadMessages, async ({ variables }, res, ctx) => {
+    return res(
+      ctx.delay(1),
+      ctx.data({
+        messages: await messagesDB.read(variables.chatId),
       })
     );
   }),

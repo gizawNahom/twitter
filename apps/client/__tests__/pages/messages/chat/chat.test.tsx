@@ -31,12 +31,16 @@ import {
   formatTimeForMessage,
   formatDayForMessage,
 } from '../../../../lib/messages/presentation/utilities';
+import messagesDB from '../../../../test/data/messages';
+import { buildMessage } from '../../../../test/generator';
+import { Message } from '../../../../lib/messages/core/domain/message';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
 }));
 
 const NO_MESSAGES_TEXT = /no messages/i;
+const messageText = 'test';
 
 function renderSUT(store?: ReduxStore) {
   renderElement(<Chat />, store);
@@ -49,11 +53,47 @@ function assertInitialElementsAreDisplayed() {
   expect(screen.queryByRole('log')).not.toBeInTheDocument();
 }
 
+async function findMessageList() {
+  return await screen.findByRole('log');
+}
+
+function assertMessageDayIsDisplayed(
+  messageList: HTMLElement,
+  day = new Date()
+) {
+  expect(
+    within(messageList).getByText(formatDayForMessage(day))
+  ).toBeInTheDocument();
+}
+
+function assertNoMessageTextIsNotDisplayed() {
+  expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
+}
+
+function assertMessageTextAndMessageTimeAreDisplayed(
+  messageElement: HTMLElement,
+  message?: { text: string; createdAt: string }
+) {
+  const { text, createdAt } = message || {
+    text: messageText,
+    createdAt: new Date().toISOString(),
+  };
+  expect(messageElement).toHaveTextContent(text);
+  expect(messageElement).toHaveTextContent(
+    formatTimeForMessage(new Date(createdAt))
+  );
+}
+
+function assertMessageTickIsDisplayed(messageElement: HTMLElement) {
+  expect(within(messageElement).getByLabelText('sent')).toBeInTheDocument();
+}
+
 setUpApi();
 
 beforeEach(() => {
   getOrCreateChatCalls.splice(0, getOrCreateChatCalls.length);
   sendMessageCalls.splice(0, sendMessageCalls.length);
+  messagesDB.clear();
 });
 
 afterEach(() => jest.resetAllMocks());
@@ -77,8 +117,6 @@ describe('Given user has navigated to a new chat page', () => {
   });
 
   describe('And user has selected a new participant', () => {
-    const messageText = 'test';
-
     beforeEach(() => {
       const store = createNewStore();
       store.dispatch(userSelected(sampleUserResponse));
@@ -105,21 +143,6 @@ describe('Given user has navigated to a new chat page', () => {
       });
     }
 
-    async function findMessageList() {
-      return await screen.findByRole('log');
-    }
-
-    function assertMessageDayIsDisplayed(messageList: HTMLElement) {
-      expect(
-        within(messageList).getByText(formatDayForMessage(new Date()))
-      ).toBeInTheDocument();
-    }
-
-    function assertMessageTextAndMessageTimeAreDisplayed(message: HTMLElement) {
-      expect(message).toHaveTextContent(messageText);
-      expect(message).toHaveTextContent(formatTimeForMessage(new Date()));
-    }
-
     function assertLoadingIsDisplayed(message: HTMLElement) {
       expect(within(message).getByTestId(SPINNER_TEST_ID)).toBeInTheDocument();
     }
@@ -130,11 +153,7 @@ describe('Given user has navigated to a new chat page', () => {
           within(message).queryByTestId(SPINNER_TEST_ID)
         ).not.toBeInTheDocument()
       );
-      expect(within(message).getByLabelText('sent')).toBeInTheDocument();
-    }
-
-    function assertNoMessageTextIsNotDisplayed() {
-      expect(screen.queryByText(NO_MESSAGES_TEXT)).not.toBeInTheDocument();
+      assertMessageTickIsDisplayed(message);
     }
 
     describe('When the user sends a message', () => {
@@ -218,25 +237,19 @@ describe('Given user has navigated to a new chat page', () => {
 
         async function assertMessagesAreDisplayed() {
           const messageList = await findMessageList();
-
           const messages = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
           expect(messages).toHaveLength(2);
 
           assertMessageDayIsDisplayed(messageList);
-
-          messages.forEach((message) => {
-            assertMessageTextAndMessageTimeAreDisplayed(message);
-          });
-
-          messages.forEach((message) => {
-            assertLoadingIsDisplayed(message);
-          });
-
-          messages.forEach(async (message) => {
-            await assertSuccessIsDisplayed(message);
-          });
-
+          await assertMessageIsDisplayed(messages[0]);
+          await assertMessageIsDisplayed(messages[1]);
           assertNoMessageTextIsNotDisplayed();
+
+          async function assertMessageIsDisplayed(message: HTMLElement) {
+            assertMessageTextAndMessageTimeAreDisplayed(message);
+            assertLoadingIsDisplayed(message);
+            await assertSuccessIsDisplayed(message);
+          }
         }
 
         function assertTwoSendMessageCalls() {
@@ -256,18 +269,59 @@ describe('Given user has navigated to a new chat page', () => {
 });
 
 describe('Given the user has navigated to an existing chat', () => {
+  const push = jest.fn();
+
   beforeEach(() => {
     mockRouter({
       query: {
-        id: sampleChatResponse.id,
+        chatId: sampleChatResponse.id,
       },
+      push,
     });
-    renderSUT();
   });
 
   describe('And there are no messages', () => {
+    beforeEach(() => {
+      renderSUT();
+    });
+
     test('Then initial elements are displayed', () => {
       assertInitialElementsAreDisplayed();
+      expect(push).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('And there are two messages on two separate dates', () => {
+    const message1 = buildMessage();
+    const message2 = buildMessage();
+
+    beforeEach(async () => {
+      await messagesDB.create(sampleChatResponse.id, message1);
+      await messagesDB.create(sampleChatResponse.id, message2);
+      renderSUT();
+    });
+
+    test('Then the messages and the dates are displayed', async () => {
+      await waitFor(() => assertNoMessageTextIsNotDisplayed());
+      await assertMessagesAreDisplayed();
+
+      async function assertMessagesAreDisplayed() {
+        const messageList = await findMessageList();
+        const messages = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
+        expect(messages).toHaveLength(2);
+
+        assertMessageIsDisplayed(messages[0], message1);
+        assertMessageIsDisplayed(messages[1], message2);
+
+        function assertMessageIsDisplayed(
+          messageElement: HTMLElement,
+          message: Message
+        ) {
+          assertMessageDayIsDisplayed(messageList, new Date(message.createdAt));
+          assertMessageTextAndMessageTimeAreDisplayed(messageElement, message);
+          assertMessageTickIsDisplayed(messageElement);
+        }
+      }
     });
   });
 });

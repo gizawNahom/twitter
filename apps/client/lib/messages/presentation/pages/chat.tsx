@@ -10,18 +10,38 @@ import { Spinner } from '../../../../components/spinner';
 import { useGetOrCreateChat } from '../../adapters/hooks/useGetOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useSendMessage } from '../../adapters/hooks/useSendMessage';
+import { readMessages } from '../../adapters/api/readMessages';
+import { Message as Msg } from '../../core/domain/message';
 
 export default function Chat() {
   const router = useRouter();
   const user = useSelector(selectSelectedUser);
   const [messageInput, setMessageInput] = useState('');
   const { handleGetOrCreateChat, chat } = useGetOrCreateChat();
+  const [previousMessages, setPreviousMessageGroups] = useState<
+    Map<string, Msg[]>
+  >(new Map());
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
-    if (!user && !router?.query?.id) router.push(MESSAGES_ROUTE);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (router.isReady) {
+      if (!user && !router.query?.chatId) router.push(MESSAGES_ROUTE);
+    }
+  }, [router, user]);
+
+  useEffect(() => {
+    (async () => {
+      const chatId = router?.query?.chatId;
+      if (chatId) {
+        try {
+          const messages = await readMessages(chatId as string, 0, 3);
+          setPreviousMessageGroups(buildPreviousMessages(messages));
+        } catch (error) {
+          //
+        }
+      }
+    })();
+  }, [router]);
 
   return (
     <Page
@@ -44,14 +64,46 @@ export default function Chat() {
       )}
     >
       <div>
-        {messages.length === 0 && <p>No messages</p>}
-        {chat && (
+        {messages.length === 0 && previousMessages.size == 0 && (
+          <p>No messages</p>
+        )}
+        {(previousMessages.size > 0 || chat) && (
           <div role="log">
-            {formatDayForMessage(new Date())}
-
-            {messages.map((message, i) => {
-              return <Message key={i} messageText={message} chatId={chat.id} />;
+            {Array.from(previousMessages.entries()).map(([day, messages]) => {
+              return (
+                <div key={day}>
+                  <h3>{day}</h3>
+                  {messages.map((message) => (
+                    <Message
+                      key={message.id}
+                      message={message}
+                      chatId={chat?.id as string}
+                      isToBeSent={false}
+                    />
+                  ))}
+                </div>
+              );
             })}
+
+            {messages.length != 0 && (
+              <>
+                {formatDayForMessage(new Date())}
+
+                {messages.map((message, i) => {
+                  return (
+                    <Message
+                      key={i}
+                      message={{
+                        text: message,
+                        createdAt: new Date().toISOString(),
+                      }}
+                      chatId={chat?.id as string}
+                      isToBeSent
+                    />
+                  );
+                })}
+              </>
+            )}
           </div>
         )}
         <MessageSendInput
@@ -79,30 +131,49 @@ export default function Chat() {
       </div>
     </Page>
   );
+
+  function buildPreviousMessages(messages: Msg[]) {
+    const prevMsgs = new Map<string, Msg[]>();
+    messages.forEach((m) => {
+      const day = formatDayForMessage(new Date(m.createdAt));
+      if (prevMsgs.has(day)) prevMsgs.get(day)?.push(m);
+      else prevMsgs.set(day, [m]);
+    });
+    return prevMsgs;
+  }
 }
 
 function Message({
-  messageText,
+  message: msg,
   chatId,
+  isToBeSent,
 }: {
-  messageText: string;
+  message: { text: string; createdAt: string };
   chatId: string;
+  isToBeSent: boolean;
 }) {
   const { handleSendMessage, isLoading, message } = useSendMessage();
 
   useEffect(() => {
-    (async () => await handleSendMessage(messageText, chatId))();
+    (async () => {
+      if (isToBeSent) await handleSendMessage(msg.text, chatId);
+    })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <div data-testid="message">
-      <p>{messageText}</p>
-      <p>{formatTimeForMessage(new Date())}</p>
-      {isLoading && <Spinner />}
-      {message && <div aria-label="sent"></div>}
+      <p>{msg.text}</p>
+      <p>{formatTimeForMessage(new Date(msg.createdAt))}</p>
+      {renderStatus()}
     </div>
   );
+
+  function renderStatus() {
+    if (!isToBeSent) return <div aria-label="sent"></div>;
+    else if (isLoading) return <Spinner />;
+    else if (message) return <div aria-label="sent"></div>;
+  }
 }
 
 export function MessageSendInput({
