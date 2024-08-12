@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { createDefaultHeader, Page } from '../../../../components/page';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
@@ -12,104 +12,117 @@ import { PartialChat } from '../../core/domain/partialChat';
 import { useSendMessage } from '../../adapters/hooks/useSendMessage';
 import { readMessages } from '../../adapters/api/readMessages';
 import { Message as Msg } from '../../core/domain/message';
+import { User } from '../../../../utilities/getUsers';
+
+type MessagesType = Map<string, { isToBeSent: boolean; message: Msg }[]>;
 
 export default function Chat() {
-  const router = useRouter();
-  const chatId = router.query?.chatId;
-
-  const user = useSelector(selectSelectedUser);
   const [messageInput, setMessageInput] = useState('');
+
+  const router = useRouter();
+  const chatId = router.query?.chatId as string;
+  const user = useSelector(selectSelectedUser);
   const { handleGetOrCreateChat, chat } = useGetOrCreateChat();
-  const [messages, setMessages] = useState<
-    Map<string, { isToBeSent: boolean; message: Msg }[]>
-  >(new Map());
-
-  useEffect(() => {
-    if (router.isReady) {
-      if (!user && !chatId) router.push(MESSAGES_ROUTE);
-    }
-  }, [router, user, chatId]);
-
-  useEffect(() => {
-    (async () => {
-      if (chatId) {
-        try {
-          const messages = await readMessages(chatId as string, 0, 3);
-          setMessages(buildMessages1(messages));
-        } catch (error) {
-          //
-        }
-      }
-    })();
-  }, [router, chatId]);
+  const { messages, setMessages } = useReadMessages(chatId);
+  useChatGuard(router, user, chatId);
 
   return (
-    <Page
-      header={createDefaultHeader(
-        <div>
-          {user && (
-            <div>
-              <div className="w-10 h-10 relative rounded-full overflow-hidden">
-                <Image
-                  src={user.profilePic}
-                  alt={`${user.username}'s profile picture`}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <p>{user.displayName}</p>
-            </div>
-          )}
-        </div>
-      )}
-    >
+    <Page header={renderHeader()}>
       <div>
         {messages.size == 0 && <p>No messages</p>}
-        {messages.size > 0 && (
-          <div role="log">
-            {Array.from(messages.entries()).map(([day, messageObjects]) => {
-              return (
-                <div key={day}>
-                  <h3>{day}</h3>
-                  {messageObjects.map(({ isToBeSent, message }) => (
-                    <Message
-                      key={message.id}
-                      message={message}
-                      chatId={chat?.id as string}
-                      isToBeSent={isToBeSent}
-                    />
-                  ))}
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {messages.size > 0 && renderMessages()}
         <MessageSendInput
-          onSend={async (message) => {
-            if (!chat) {
-              const c = (await handleGetOrCreateChat(
-                user?.username as string
-              )) as PartialChat;
-              if (c) {
-                addToMessages(message);
-
-                window.history.replaceState(
-                  null,
-                  '',
-                  `${MESSAGES_CHAT_ROUTE}/${c.id}`
-                );
-                setMessageInput('');
-              }
-            } else {
-              addToMessages(message);
-            }
-          }}
+          onSend={sendMessage}
           messageInput={messageInput}
-          setMessageInput={setMessageInput}
+          onChange={setMessageInput}
         />
       </div>
     </Page>
   );
+
+  function useReadMessages(chatId: string) {
+    const [messages, setMessages] = useState<MessagesType>(new Map());
+
+    useEffect(() => {
+      (async () => {
+        if (chatId) {
+          try {
+            const messages = await readMessages(chatId as string, 0, 3);
+            setMessages(buildMessages(messages));
+          } catch (error) {
+            //
+          }
+        }
+      })();
+    }, [chatId]);
+
+    return { messages, setMessages };
+  }
+
+  function useChatGuard(router: NextRouter, user: User | null, chatId: string) {
+    useEffect(() => {
+      if (router.isReady) {
+        if (!user && !chatId) router.push(MESSAGES_ROUTE);
+      }
+    }, [router, user, chatId]);
+  }
+
+  function renderHeader() {
+    return createDefaultHeader(
+      <div>
+        {user && (
+          <div>
+            <div className="w-10 h-10 relative rounded-full overflow-hidden">
+              <Image
+                src={user.profilePic}
+                alt={`${user.username}'s profile picture`}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <p>{user.displayName}</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  function renderMessages() {
+    return (
+      <div role="log">
+        {Array.from(messages.entries()).map(([day, messageObjects]) => {
+          return (
+            <div key={day}>
+              <h3>{day}</h3>
+              {messageObjects.map(({ isToBeSent, message }) => (
+                <Message
+                  key={message.id}
+                  message={message}
+                  chatId={chat?.id as string}
+                  isToBeSent={isToBeSent}
+                />
+              ))}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
+  async function sendMessage(message: string) {
+    if (!chat) {
+      const c = (await handleGetOrCreateChat(
+        user?.username as string
+      )) as PartialChat;
+      if (c) {
+        addToMessages(message);
+        window.history.replaceState(null, '', `${MESSAGES_CHAT_ROUTE}/${c.id}`);
+        setMessageInput('');
+      }
+    } else {
+      addToMessages(message);
+    }
+  }
 
   function addToMessages(message: string) {
     const newMessages = new Map(messages);
@@ -127,19 +140,15 @@ export default function Chat() {
     setMessages(newMessages);
   }
 
-  function buildMessages1(messages: Msg[]) {
-    const prevMsgs = new Map<string, { isToBeSent: boolean; message: Msg }[]>();
+  function buildMessages(messages: Msg[]) {
+    const prevMsgs: MessagesType = new Map();
     messages.forEach((m) => {
       addMessage(m, prevMsgs);
     });
     return prevMsgs;
   }
 
-  function addMessage(
-    m: Msg,
-    prevMsgs: Map<string, { isToBeSent: boolean; message: Msg }[]>,
-    isToBeSent = false
-  ) {
+  function addMessage(m: Msg, prevMsgs: MessagesType, isToBeSent = false) {
     const day = formatDayForMessage(new Date(m.createdAt));
     if (prevMsgs.has(day)) prevMsgs.get(day)?.push({ isToBeSent, message: m });
     else prevMsgs.set(day, [{ isToBeSent, message: m }]);
@@ -182,11 +191,11 @@ function Message({
 export function MessageSendInput({
   onSend,
   messageInput,
-  setMessageInput,
+  onChange,
 }: {
   onSend: (message: string) => void;
   messageInput: string;
-  setMessageInput: (messageInput: string) => void;
+  onChange: (messageInput: string) => void;
 }) {
   const trimmedMessage = messageInput.trim();
 
@@ -196,7 +205,7 @@ export function MessageSendInput({
         type="text"
         placeholder="Start a new message"
         value={messageInput}
-        onChange={(e) => setMessageInput(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       />
       <button
         aria-label="send"

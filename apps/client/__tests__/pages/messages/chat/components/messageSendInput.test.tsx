@@ -39,7 +39,7 @@ describe('Given the component is rendered', () => {
         <MessageSendInput
           onSend={onSend}
           messageInput={messageInput}
-          setMessageInput={setMessageInput}
+          onChange={setMessageInput}
         />
       );
     }
