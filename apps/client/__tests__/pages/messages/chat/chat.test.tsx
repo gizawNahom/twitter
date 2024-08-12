@@ -41,6 +41,7 @@ jest.mock('next/router', () => ({
 
 const NO_MESSAGES_TEXT = /no messages/i;
 const messageText = 'test';
+const chatId = sampleChatResponse.id;
 
 function renderSUT(store?: ReduxStore) {
   renderElement(<Chat />, store);
@@ -123,6 +124,14 @@ async function assertSuccessIsDisplayed(message: HTMLElement) {
   assertMessageTickIsDisplayed(message);
 }
 
+async function assertASingleApiCallToSendMessage(variables: {
+  text: string;
+  chatId: string;
+}) {
+  await waitFor(() => expect(sendMessageCalls).toHaveLength(1));
+  expect(sendMessageCalls[0]).toStrictEqual(variables);
+}
+
 setUpApi();
 
 beforeEach(() => {
@@ -195,9 +204,7 @@ describe('Given user has navigated to a new chat page', () => {
 
           assertASingleApiCallToGetOrCreateChat();
 
-          expect(window.location.pathname).toBe(
-            MESSAGES_CHAT + `/${sampleChatResponse.id}`
-          );
+          expect(window.location.pathname).toBe(MESSAGES_CHAT + `/${chatId}`);
 
           expect(
             screen.queryByDisplayValue(messageText)
@@ -206,10 +213,9 @@ describe('Given user has navigated to a new chat page', () => {
 
         describe('And the message is sent successfully', () => {
           test(`Then there is a single api call to ${Operations.SendMessage}`, async () => {
-            await waitFor(() => expect(sendMessageCalls).toHaveLength(1));
-            expect(sendMessageCalls[0]).toStrictEqual({
+            await assertASingleApiCallToSendMessage({
               text: messageText,
-              chatId: sampleChatResponse.id,
+              chatId,
             });
           });
         });
@@ -270,11 +276,11 @@ describe('Given user has navigated to a new chat page', () => {
           expect(sendMessageCalls).toHaveLength(2);
           expect(sendMessageCalls[0]).toStrictEqual({
             text: messageText,
-            chatId: sampleChatResponse.id,
+            chatId,
           });
           expect(sendMessageCalls[1]).toStrictEqual({
             text: secondMessageText,
-            chatId: sampleChatResponse.id,
+            chatId,
           });
         }
       });
@@ -288,7 +294,7 @@ describe('Given the user has navigated to an existing chat', () => {
   beforeEach(() => {
     mockRouter({
       query: {
-        chatId: sampleChatResponse.id,
+        chatId,
       },
       push,
     });
@@ -310,8 +316,8 @@ describe('Given the user has navigated to an existing chat', () => {
     const message2 = buildMessage();
 
     beforeEach(async () => {
-      await messagesDB.create(sampleChatResponse.id, message1);
-      await messagesDB.create(sampleChatResponse.id, message2);
+      await messagesDB.create(chatId, message1);
+      await messagesDB.create(chatId, message2);
       renderSUT();
     });
 
@@ -345,11 +351,18 @@ describe('Given the user has navigated to an existing chat', () => {
 
       test(`Then there is no call to ${Operations.GetOrCreateChat}
             And message is displayed
+            And there is a single api call to ${Operations.SendMessage}
         `, async () => {
         expect(getOrCreateChatCalls).toHaveLength(0);
+
         await assertSentMessageIsDisplayed({
           text: messageText,
           createdAt: new Date().toISOString(),
+        });
+
+        await assertASingleApiCallToSendMessage({
+          text: messageText,
+          chatId,
         });
       });
     });

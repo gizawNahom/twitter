@@ -25,9 +25,11 @@ async function create(chatId: string, param: Message | string) {
   }
 
   async function createMessage(chatId: string, message: Message) {
-    if (messages.has(chatId)) messages.get(chatId)?.push(message);
-    else {
-      messages.set(chatId, [message]);
+    if (chatId) {
+      if (messages.has(chatId)) messages.get(chatId)?.push(message);
+      else {
+        messages.set(chatId, [message]);
+      }
     }
     return message;
   }

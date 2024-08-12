@@ -98,7 +98,7 @@ export default function Chat() {
                 <Message
                   key={message.id}
                   message={message}
-                  chatId={chat?.id as string}
+                  chatId={message.chatId || (chat?.id as string)}
                   isToBeSent={isToBeSent}
                 />
               ))}
