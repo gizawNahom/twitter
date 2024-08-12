@@ -15,33 +15,33 @@ import { Message as Msg } from '../../core/domain/message';
 
 export default function Chat() {
   const router = useRouter();
+  const chatId = router.query?.chatId;
+
   const user = useSelector(selectSelectedUser);
   const [messageInput, setMessageInput] = useState('');
   const { handleGetOrCreateChat, chat } = useGetOrCreateChat();
-  const [previousMessages, setPreviousMessageGroups] = useState<
-    Map<string, Msg[]>
+  const [messages, setMessages] = useState<
+    Map<string, { isToBeSent: boolean; message: Msg }[]>
   >(new Map());
-  const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
     if (router.isReady) {
-      if (!user && !router.query?.chatId) router.push(MESSAGES_ROUTE);
+      if (!user && !chatId) router.push(MESSAGES_ROUTE);
     }
-  }, [router, user]);
+  }, [router, user, chatId]);
 
   useEffect(() => {
     (async () => {
-      const chatId = router?.query?.chatId;
       if (chatId) {
         try {
           const messages = await readMessages(chatId as string, 0, 3);
-          setPreviousMessageGroups(buildPreviousMessages(messages));
+          setMessages(buildMessages1(messages));
         } catch (error) {
           //
         }
       }
     })();
-  }, [router]);
+  }, [router, chatId]);
 
   return (
     <Page
@@ -64,46 +64,24 @@ export default function Chat() {
       )}
     >
       <div>
-        {messages.length === 0 && previousMessages.size == 0 && (
-          <p>No messages</p>
-        )}
-        {(previousMessages.size > 0 || chat) && (
+        {messages.size == 0 && <p>No messages</p>}
+        {messages.size > 0 && (
           <div role="log">
-            {Array.from(previousMessages.entries()).map(([day, messages]) => {
+            {Array.from(messages.entries()).map(([day, messageObjects]) => {
               return (
                 <div key={day}>
                   <h3>{day}</h3>
-                  {messages.map((message) => (
+                  {messageObjects.map(({ isToBeSent, message }) => (
                     <Message
                       key={message.id}
                       message={message}
                       chatId={chat?.id as string}
-                      isToBeSent={false}
+                      isToBeSent={isToBeSent}
                     />
                   ))}
                 </div>
               );
             })}
-
-            {messages.length != 0 && (
-              <>
-                {formatDayForMessage(new Date())}
-
-                {messages.map((message, i) => {
-                  return (
-                    <Message
-                      key={i}
-                      message={{
-                        text: message,
-                        createdAt: new Date().toISOString(),
-                      }}
-                      chatId={chat?.id as string}
-                      isToBeSent
-                    />
-                  );
-                })}
-              </>
-            )}
           </div>
         )}
         <MessageSendInput
@@ -113,7 +91,8 @@ export default function Chat() {
                 user?.username as string
               )) as PartialChat;
               if (c) {
-                setMessages([...messages, message]);
+                addToMessages(message);
+
                 window.history.replaceState(
                   null,
                   '',
@@ -122,7 +101,7 @@ export default function Chat() {
                 setMessageInput('');
               }
             } else {
-              setMessages([...messages, message]);
+              addToMessages(message);
             }
           }}
           messageInput={messageInput}
@@ -132,14 +111,38 @@ export default function Chat() {
     </Page>
   );
 
-  function buildPreviousMessages(messages: Msg[]) {
-    const prevMsgs = new Map<string, Msg[]>();
+  function addToMessages(message: string) {
+    const newMessages = new Map(messages);
+    addMessage(
+      {
+        id: `${Math.floor(Math.random() * 100000)}`,
+        text: message,
+        senderId: 'randomId1',
+        chatId: chatId as string,
+        createdAt: new Date().toISOString(),
+      },
+      newMessages,
+      true
+    );
+    setMessages(newMessages);
+  }
+
+  function buildMessages1(messages: Msg[]) {
+    const prevMsgs = new Map<string, { isToBeSent: boolean; message: Msg }[]>();
     messages.forEach((m) => {
-      const day = formatDayForMessage(new Date(m.createdAt));
-      if (prevMsgs.has(day)) prevMsgs.get(day)?.push(m);
-      else prevMsgs.set(day, [m]);
+      addMessage(m, prevMsgs);
     });
     return prevMsgs;
+  }
+
+  function addMessage(
+    m: Msg,
+    prevMsgs: Map<string, { isToBeSent: boolean; message: Msg }[]>,
+    isToBeSent = false
+  ) {
+    const day = formatDayForMessage(new Date(m.createdAt));
+    if (prevMsgs.has(day)) prevMsgs.get(day)?.push({ isToBeSent, message: m });
+    else prevMsgs.set(day, [{ isToBeSent, message: m }]);
   }
 }
 
