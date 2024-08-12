@@ -14,12 +14,16 @@ export function buildChat(): Chat {
   };
 }
 
-export function buildMessage(): Message {
+export function buildMessage(msgTemplate?: {
+  text?: string;
+  createdAt?: string;
+}): Message {
   return {
     id: faker.string.uuid(),
     senderId: faker.string.uuid(),
     chatId: faker.string.uuid(),
-    text: faker.string.sample(10),
-    createdAt: faker.date.recent({ days: 10 }).toISOString(),
+    text: msgTemplate?.text || faker.string.sample(10),
+    createdAt:
+      msgTemplate?.createdAt || faker.date.recent({ days: 10 }).toISOString(),
   };
 }

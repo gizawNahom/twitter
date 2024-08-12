@@ -8,12 +8,29 @@ const messages: Map<string, Message[]> = new Map(
   })
 );
 
-async function create(chatId: string, message: Message) {
-  if (messages.has(chatId)) messages.get(chatId)?.push(message);
-  else {
-    messages.set(chatId, [message]);
+function create(chatId: string, message: Message): Promise<Message>;
+function create(chatId: string, text: string): Promise<Message>;
+
+async function create(chatId: string, param: Message | string) {
+  return createMessage(chatId, getMessage(param));
+
+  function getMessage(param: Message | string): Message {
+    if (typeof param === 'string') {
+      return buildMessage({
+        text: param,
+        createdAt: new Date().toISOString(),
+      });
+    }
+    return param;
   }
-  return message;
+
+  async function createMessage(chatId: string, message: Message) {
+    if (messages.has(chatId)) messages.get(chatId)?.push(message);
+    else {
+      messages.set(chatId, [message]);
+    }
+    return message;
+  }
 }
 
 async function read(chatId: string): Promise<Message[] | undefined> {
@@ -24,5 +41,5 @@ function clear() {
   messages.clear();
 }
 
-const messagesDB = { create, read, clear };
+const messagesDB = { read, clear, create };
 export default messagesDB;
