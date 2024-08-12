@@ -110,7 +110,7 @@ export default function Chat() {
   }
 
   async function sendMessage(message: string) {
-    if (!chat) {
+    if (!chatId && !chat) {
       const c = (await handleGetOrCreateChat(
         user?.username as string
       )) as PartialChat;

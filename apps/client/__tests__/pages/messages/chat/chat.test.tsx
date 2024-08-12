@@ -88,6 +88,41 @@ function assertMessageTickIsDisplayed(messageElement: HTMLElement) {
   expect(within(messageElement).getByLabelText('sent')).toBeInTheDocument();
 }
 
+async function assertSentMessageIsDisplayed(message: {
+  text: string;
+  createdAt: string;
+}) {
+  const messageList = await findMessageList();
+  const messageElement = findMessageElement(messageList, message.text);
+
+  assertMessageDayIsDisplayed(messageList, new Date(message.createdAt));
+  assertMessageTextAndMessageTimeAreDisplayed(messageElement, message);
+  assertLoadingIsDisplayed(messageElement);
+  await assertSuccessIsDisplayed(messageElement);
+  assertNoMessageTextIsNotDisplayed();
+
+  function findMessageElement(messageList: HTMLElement, text: string) {
+    const messageElements = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
+    const messageElement = messageElements.find((messageElement) =>
+      within(messageElement).queryByText(text)
+    ) as HTMLElement;
+    return messageElement;
+  }
+}
+
+function assertLoadingIsDisplayed(message: HTMLElement) {
+  expect(within(message).getByTestId(SPINNER_TEST_ID)).toBeInTheDocument();
+}
+
+async function assertSuccessIsDisplayed(message: HTMLElement) {
+  await waitFor(() =>
+    expect(
+      within(message).queryByTestId(SPINNER_TEST_ID)
+    ).not.toBeInTheDocument()
+  );
+  assertMessageTickIsDisplayed(message);
+}
+
 setUpApi();
 
 beforeEach(() => {
@@ -143,41 +178,20 @@ describe('Given user has navigated to a new chat page', () => {
       });
     }
 
-    function assertLoadingIsDisplayed(message: HTMLElement) {
-      expect(within(message).getByTestId(SPINNER_TEST_ID)).toBeInTheDocument();
-    }
-
-    async function assertSuccessIsDisplayed(message: HTMLElement) {
-      await waitFor(() =>
-        expect(
-          within(message).queryByTestId(SPINNER_TEST_ID)
-        ).not.toBeInTheDocument()
-      );
-      assertMessageTickIsDisplayed(message);
-    }
-
     describe('When the user sends a message', () => {
       describe('And chat creation is successful', () => {
         beforeEach(async () => {
           await typeAndClickSend(messageText);
         });
 
-        async function assertMessageIsDisplayed() {
-          const messageList = await findMessageList();
-          const message = within(messageList).getByTestId(MESSAGE_TEST_ID);
-
-          assertMessageDayIsDisplayed(messageList);
-          assertMessageTextAndMessageTimeAreDisplayed(message);
-          assertLoadingIsDisplayed(message);
-          await assertSuccessIsDisplayed(message);
-          assertNoMessageTextIsNotDisplayed();
-        }
-
         test(`Then the message is displayed
               And there is a single api call to ${Operations.GetOrCreateChat}
               And the chat id is added to the url
               And the input is cleared`, async () => {
-          await assertMessageIsDisplayed();
+          await assertSentMessageIsDisplayed({
+            text: messageText,
+            createdAt: new Date().toISOString(),
+          });
 
           assertASingleApiCallToGetOrCreateChat();
 
@@ -227,7 +241,7 @@ describe('Given user has navigated to a new chat page', () => {
         await typeAndClickSend(secondMessageText);
       });
 
-      test(`Then is a single api call to ${Operations.GetOrCreateChat}
+      test(`Then there is a single api call to ${Operations.GetOrCreateChat}
             And the messages are displayed
             And there are two api calls to ${Operations.SendMessage}
             `, async () => {
@@ -322,6 +336,22 @@ describe('Given the user has navigated to an existing chat', () => {
           assertMessageTickIsDisplayed(messageElement);
         }
       }
+    });
+
+    describe('When the user sends a message', () => {
+      beforeEach(async () => {
+        await typeAndClickSend(messageText);
+      });
+
+      test(`Then there is no call to ${Operations.GetOrCreateChat}
+            And message is displayed
+        `, async () => {
+        expect(getOrCreateChatCalls).toHaveLength(0);
+        await assertSentMessageIsDisplayed({
+          text: messageText,
+          createdAt: new Date().toISOString(),
+        });
+      });
     });
   });
 });
