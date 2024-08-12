@@ -103,12 +103,16 @@ async function assertSentMessageIsDisplayed(message: {
   assertNoMessageTextIsNotDisplayed();
 
   function findMessageElement(messageList: HTMLElement, text: string) {
-    const messageElements = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
+    const messageElements = getMessageElements(messageList);
     const messageElement = messageElements.find((messageElement) =>
       within(messageElement).queryByText(text)
     ) as HTMLElement;
     return messageElement;
   }
+}
+
+function getMessageElements(messageList: HTMLElement) {
+  return within(messageList).getAllByTestId(MESSAGE_TEST_ID);
 }
 
 function assertLoadingIsDisplayed(message: HTMLElement) {
@@ -257,7 +261,7 @@ describe('Given user has navigated to a new chat page', () => {
 
         async function assertMessagesAreDisplayed() {
           const messageList = await findMessageList();
-          const messages = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
+          const messages = getMessageElements(messageList);
           expect(messages).toHaveLength(2);
 
           assertMessageDayIsDisplayed(messageList);
@@ -327,7 +331,7 @@ describe('Given the user has navigated to an existing chat', () => {
 
       async function assertMessagesAreDisplayed() {
         const messageList = await findMessageList();
-        const messages = within(messageList).getAllByTestId(MESSAGE_TEST_ID);
+        const messages = getMessageElements(messageList);
         expect(messages).toHaveLength(2);
 
         assertMessageIsDisplayed(messages[0], message1);
