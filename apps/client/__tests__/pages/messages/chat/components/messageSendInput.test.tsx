@@ -7,7 +7,6 @@ import {
   typeText,
   clickElement,
 } from '../../../../testUtilities';
-import { screen } from '@testing-library/react';
 
 const onSend = jest.fn();
 
@@ -16,7 +15,7 @@ export async function typeAndClickSend(message: string) {
   await clickElement(getSendButton());
 }
 
-function getMessageInput(): HTMLElement {
+export function getMessageInput(): HTMLElement {
   return getByPlaceholderText(/start a new message/i);
 }
 

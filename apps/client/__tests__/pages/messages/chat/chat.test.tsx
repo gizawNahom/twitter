@@ -20,7 +20,10 @@ import {
   sampleChatResponse,
   sampleUserResponse,
 } from '../../../../mocks/values';
-import { typeAndClickSend } from './components/messageSendInput.test';
+import {
+  getMessageInput,
+  typeAndClickSend,
+} from './components/messageSendInput.test';
 import {
   genericErrorHandler,
   getOrCreateChatCalls,
@@ -136,6 +139,10 @@ async function assertASingleApiCallToSendMessage(variables: {
   expect(sendMessageCalls[0]).toStrictEqual(variables);
 }
 
+function assertMessageInputIsCleared() {
+  expect(getMessageInput()).toHaveValue('');
+}
+
 setUpApi();
 
 beforeEach(() => {
@@ -198,9 +205,9 @@ describe('Given user has navigated to a new chat page', () => {
         });
 
         test(`Then the message is displayed
-              And there is a single api call to ${Operations.GetOrCreateChat}
-              And the chat id is added to the url
-              And the input is cleared`, async () => {
+          And there is a single api call to ${Operations.GetOrCreateChat}
+          And the chat id is added to the url
+          And the input is cleared`, async () => {
           await assertSentMessageIsDisplayed({
             text: messageText,
             createdAt: new Date().toISOString(),
@@ -210,9 +217,7 @@ describe('Given user has navigated to a new chat page', () => {
 
           expect(window.location.pathname).toBe(MESSAGES_CHAT + `/${chatId}`);
 
-          expect(
-            screen.queryByDisplayValue(messageText)
-          ).not.toBeInTheDocument();
+          assertMessageInputIsCleared();
         });
 
         describe('And the message is sent successfully', () => {
@@ -232,7 +237,7 @@ describe('Given user has navigated to a new chat page', () => {
         });
 
         test(`Then the message is not displayed
-              And the message remains on the input`, async () => {
+            And the message remains on the input`, async () => {
           await waitFor(() =>
             expect(screen.queryByText(messageText)).not.toBeInTheDocument()
           );
@@ -254,10 +259,12 @@ describe('Given user has navigated to a new chat page', () => {
       test(`Then there is a single api call to ${Operations.GetOrCreateChat}
             And the messages are displayed
             And there are two api calls to ${Operations.SendMessage}
+            And the message input is cleared
             `, async () => {
         assertASingleApiCallToGetOrCreateChat();
         await assertMessagesAreDisplayed();
         assertTwoSendMessageCalls();
+        assertMessageInputIsCleared();
 
         async function assertMessagesAreDisplayed() {
           const messageList = await findMessageList();
@@ -356,6 +363,7 @@ describe('Given the user has navigated to an existing chat', () => {
       test(`Then there is no call to ${Operations.GetOrCreateChat}
             And message is displayed
             And there is a single api call to ${Operations.SendMessage}
+            And message input is cleared
         `, async () => {
         expect(getOrCreateChatCalls).toHaveLength(0);
 
@@ -368,6 +376,8 @@ describe('Given the user has navigated to an existing chat', () => {
           text: messageText,
           chatId,
         });
+
+        assertMessageInputIsCleared();
       });
     });
   });

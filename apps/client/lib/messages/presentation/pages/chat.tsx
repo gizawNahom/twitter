@@ -121,6 +121,7 @@ export default function Chat() {
       }
     } else {
       addToMessages(message);
+      setMessageInput('');
     }
   }
 
