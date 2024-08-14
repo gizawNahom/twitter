@@ -10,9 +10,9 @@ import { Spinner } from '../../../../components/spinner';
 import { useGetOrCreateChat } from '../../adapters/hooks/useGetOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useSendMessage } from '../../adapters/hooks/useSendMessage';
-import { readMessages } from '../../adapters/api/readMessages';
 import { Message as Msg } from '../../core/domain/message';
 import { User } from '../../../../utilities/getUsers';
+import { useReadMessages } from '../hooks/useReadMessages';
 
 type MessagesType = Map<string, { isToBeSent: boolean; message: Msg }[]>;
 
@@ -23,8 +23,10 @@ export default function Chat() {
   const chatId = router.query?.chatId as string;
   const user = useSelector(selectSelectedUser);
   const { handleGetOrCreateChat, chat } = useGetOrCreateChat();
-  const { messages, setMessages } = useReadMessages(chatId);
+  const { handleReadMessages, messages, setMessages } = useReadMessages();
+
   useChatGuard(router, user, chatId);
+  useReadMessagesOnMount(chatId);
 
   return (
     <Page header={renderHeader()}>
@@ -40,23 +42,18 @@ export default function Chat() {
     </Page>
   );
 
-  function useReadMessages(chatId: string) {
-    const [messages, setMessages] = useState<MessagesType>(new Map());
-
+  function useReadMessagesOnMount(chatId: string) {
     useEffect(() => {
       (async () => {
         if (chatId) {
           try {
-            const messages = await readMessages(chatId as string, 0, 3);
-            setMessages(buildMessages(messages));
+            await handleReadMessages(chatId);
           } catch (error) {
             //
           }
         }
       })();
     }, [chatId]);
-
-    return { messages, setMessages };
   }
 
   function useChatGuard(router: NextRouter, user: User | null, chatId: string) {
@@ -139,14 +136,6 @@ export default function Chat() {
       true
     );
     setMessages(newMessages);
-  }
-
-  function buildMessages(messages: Msg[]) {
-    const prevMsgs: MessagesType = new Map();
-    messages.forEach((m) => {
-      addMessage(m, prevMsgs);
-    });
-    return prevMsgs;
   }
 
   function addMessage(m: Msg, prevMsgs: MessagesType, isToBeSent = false) {
