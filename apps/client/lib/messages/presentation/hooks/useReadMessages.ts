@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Message } from '../../core/domain/message';
-import { readMessages } from '../../adapters/api/readMessages';
 import { formatDayForMessage } from '../utilities';
 import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
+import { ReadMessagesImpl } from '../../adapters/gateways/readMessagesImpl';
 
 type MessagesType = Map<string, { isToBeSent: boolean; message: Message }[]>;
 
@@ -16,13 +16,13 @@ export function useReadMessages() {
   };
 
   async function handleReadMessages(chatId: string): Promise<Message[]> {
-    const messages = await new ReadMessagesUseCase({
-      async readMessages(chatId: string) {
-        return readMessages(chatId as string, 0, 3);
-      },
-    }).execute(chatId);
+    const messages = await buildUseCase().execute(chatId);
     setMessages(buildMessages(messages));
     return messages;
+  }
+
+  function buildUseCase() {
+    return new ReadMessagesUseCase(new ReadMessagesImpl());
   }
 
   function buildMessages(messages: Message[]) {
