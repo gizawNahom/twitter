@@ -3,6 +3,8 @@ import { Message } from '../../core/domain/message';
 import { formatDayForMessage } from '../utilities';
 import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
 import { ReadMessagesImpl } from '../../adapters/gateways/readMessagesImpl';
+import { ApolloMessagesReader } from '../../data/apolloMessagesReader';
+import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
 
 type MessagesType = Map<string, { isToBeSent: boolean; message: Message }[]>;
 
@@ -22,7 +24,11 @@ export function useReadMessages() {
   }
 
   function buildUseCase() {
-    return new ReadMessagesUseCase(new ReadMessagesImpl());
+    return new ReadMessagesUseCase(buildGateway());
+  }
+
+  function buildGateway(): ReadMessagesGateway {
+    return new ReadMessagesImpl(new ApolloMessagesReader());
   }
 
   function buildMessages(messages: Message[]) {
