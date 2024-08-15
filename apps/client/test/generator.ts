@@ -17,11 +17,12 @@ export function buildChat(): Chat {
 export function buildMessage(msgTemplate?: {
   text?: string;
   createdAt?: string;
+  chatId?: string;
 }): Message {
   return {
     id: faker.string.uuid(),
     senderId: faker.string.uuid(),
-    chatId: faker.string.uuid(),
+    chatId: msgTemplate?.chatId || faker.string.uuid(),
     text: msgTemplate?.text || faker.string.sample(10),
     createdAt:
       msgTemplate?.createdAt || faker.date.recent({ days: 10 }).toISOString(),

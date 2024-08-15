@@ -12,13 +12,14 @@ function create(chatId: string, message: Message): Promise<Message>;
 function create(chatId: string, text: string): Promise<Message>;
 
 async function create(chatId: string, param: Message | string) {
-  return createMessage(chatId, getMessage(param));
+  return createMessage(chatId, getMessage(param, chatId));
 
-  function getMessage(param: Message | string): Message {
+  function getMessage(param: Message | string, chatId: string): Message {
     if (typeof param === 'string') {
       return buildMessage({
         text: param,
         createdAt: new Date().toISOString(),
+        chatId,
       });
     }
     return param;
