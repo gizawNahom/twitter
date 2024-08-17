@@ -20,7 +20,7 @@ export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
 
   const router = useRouter();
-  const chatId = router.query?.chatId as string;
+  const chatId = getChatId(router.query?.chatId);
   const user = useSelector(selectSelectedUser);
   const { handleGetOrCreateChat, chat } = useGetOrCreateChat();
   const { handleReadMessages, messages, setMessages } = useReadMessages();
@@ -42,7 +42,13 @@ export default function Chat() {
     </Page>
   );
 
-  function useReadMessagesOnMount(chatId: string) {
+  function getChatId(
+    chatId: string[] | string | undefined
+  ): string | undefined {
+    return Array.isArray(chatId) ? chatId[0] : chatId;
+  }
+
+  function useReadMessagesOnMount(chatId: string | undefined) {
     useEffect(() => {
       (async () => {
         if (chatId) {
@@ -56,7 +62,11 @@ export default function Chat() {
     }, [chatId]);
   }
 
-  function useChatGuard(router: NextRouter, user: User | null, chatId: string) {
+  function useChatGuard(
+    router: NextRouter,
+    user: User | null,
+    chatId: string | undefined
+  ) {
     useEffect(() => {
       if (router.isReady) {
         if (!user && !chatId) router.push(MESSAGES_ROUTE);

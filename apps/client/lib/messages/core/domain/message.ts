@@ -4,4 +4,5 @@ export interface Message {
   chatId: string;
   text: string;
   createdAt: string;
+  isLoading?: boolean;
 }
