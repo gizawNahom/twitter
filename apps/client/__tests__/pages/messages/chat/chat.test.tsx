@@ -301,6 +301,7 @@ describe('Given user has navigated to a new chat page', () => {
 
 describe('Given the user has navigated to an existing chat', () => {
   const push = jest.fn();
+  const chatId = [sampleChatResponse.id];
 
   beforeEach(() => {
     mockRouter({
@@ -327,8 +328,8 @@ describe('Given the user has navigated to an existing chat', () => {
     const message2 = buildMessage();
 
     beforeEach(async () => {
-      await messagesDB.create(chatId, message1);
-      await messagesDB.create(chatId, message2);
+      await messagesDB.create(chatId[0], message1);
+      await messagesDB.create(chatId[0], message2);
       renderSUT();
     });
 
@@ -374,7 +375,7 @@ describe('Given the user has navigated to an existing chat', () => {
 
         await assertASingleApiCallToSendMessage({
           text: messageText,
-          chatId,
+          chatId: chatId[0],
         });
 
         assertMessageInputIsCleared();
