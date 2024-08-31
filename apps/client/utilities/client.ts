@@ -1,5 +1,7 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, makeVar } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
+
+export const loadingMessagesVar = makeVar<string[]>([]);
 
 export class Client {
   static client: ApolloClient<object>;
@@ -48,7 +50,16 @@ export function createClient(httpLink: HttpLink): ApolloClient<object> {
             messages: {
               keyArgs: ['chatId'],
               merge(existing, incoming) {
-                return merger(existing, incoming);
+                return merger1(existing, incoming);
+              },
+            },
+          },
+        },
+        Message: {
+          fields: {
+            isLoading: {
+              read(_, { readField }) {
+                return loadingMessagesVar().includes(readField('id') ?? '');
               },
             },
           },
@@ -73,5 +84,21 @@ export function merger(
 
   function isDuplicate(ie: { id: string }) {
     return mergedElements.findIndex((me) => me.id === ie.id) !== -1;
+  }
+}
+
+export function merger1(
+  existing: { __ref: string }[] = [],
+  incoming: { __ref: string }[]
+) {
+  if (existing.length != 0 && incoming.length == 0) throw new EndOfListError();
+  const mergedElements = [...existing];
+  incoming.forEach((ie) => {
+    if (!isDuplicate(ie)) mergedElements.push(ie);
+  });
+  return mergedElements;
+
+  function isDuplicate(ie: { __ref: string }) {
+    return mergedElements.findIndex((me) => me.__ref === ie.__ref) !== -1;
   }
 }

@@ -5,4 +5,5 @@ export interface Message {
   text: string;
   createdAt: string;
   isLoading?: boolean;
+  __typename: string;
 }

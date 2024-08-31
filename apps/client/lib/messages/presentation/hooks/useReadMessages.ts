@@ -1,26 +1,61 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Message } from '../../core/domain/message';
 import { formatDayForMessage } from '../utilities';
 import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
 import { ReadMessagesImpl } from '../../adapters/gateways/readMessagesImpl';
 import { ApolloMessagesReader } from '../../data/apolloMessagesReader';
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
+import { gql, ObservableQuery } from '@apollo/client';
+import { Client } from '../../../../utilities/client';
 
-type MessagesType = Map<string, { isToBeSent: boolean; message: Message }[]>;
+export type MessagesByDay = Map<string, Message[]>;
 
-export function useReadMessages() {
-  const [messages, setMessages] = useState<MessagesType>(new Map());
+const READ_MESSAGES = gql`
+  query ReadMessages($chatId: ID) {
+    messages(chatId: $chatId) {
+      id
+      senderId
+      chatId
+      text
+      createdAt
+      isLoading @client
+    }
+  }
+`;
+
+export function useReadMessages(chatId: string | undefined) {
+  const [messagesByDay, setMessagesByDay] = useState<MessagesByDay>(new Map());
+  const observable = useRef<ObservableQuery<any, { chatId: string }>>();
+
+  useEffect(() => {
+    if (chatId) {
+      observable.current = Client.client.watchQuery({
+        query: READ_MESSAGES,
+        variables: {
+          chatId: chatId,
+        },
+        fetchPolicy: 'cache-only',
+      });
+
+      observable.current?.subscribe({
+        next({ data: { messages } }) {
+          setMessagesByDay(buildMessagesByDay(messages || []));
+        },
+        error(errorValue) {
+          //
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId]);
 
   return {
     handleReadMessages,
-    messages,
-    setMessages,
+    messagesByDay,
   };
 
-  async function handleReadMessages(chatId: string): Promise<Message[]> {
-    const messages = await buildUseCase().execute(chatId);
-    setMessages(buildMessages(messages));
-    return messages;
+  async function handleReadMessages(chatId: string) {
+    await buildUseCase().execute(chatId);
   }
 
   function buildUseCase() {
@@ -31,17 +66,17 @@ export function useReadMessages() {
     return new ReadMessagesImpl(new ApolloMessagesReader());
   }
 
-  function buildMessages(messages: Message[]) {
-    const prevMsgs: MessagesType = new Map();
+  function buildMessagesByDay(messages: Message[]) {
+    const prevMsgs: MessagesByDay = new Map();
     messages.forEach((m) => {
       addMessage(m, prevMsgs);
     });
     return prevMsgs;
   }
 
-  function addMessage(m: Message, prevMsgs: MessagesType, isToBeSent = false) {
-    const day = formatDayForMessage(new Date(m.createdAt));
-    if (prevMsgs.has(day)) prevMsgs.get(day)?.push({ isToBeSent, message: m });
-    else prevMsgs.set(day, [{ isToBeSent, message: m }]);
+  function addMessage(msg: Message, prevMsgs: MessagesByDay) {
+    const day = formatDayForMessage(new Date(msg.createdAt));
+    if (prevMsgs.has(day)) prevMsgs.get(day)?.push(msg);
+    else prevMsgs.set(day, [msg]);
   }
 }

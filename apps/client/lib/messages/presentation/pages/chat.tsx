@@ -5,34 +5,33 @@ import { NextRouter, useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
-import { formatTimeForMessage, formatDayForMessage } from '../utilities';
+import { formatTimeForMessage } from '../utilities';
 import { Spinner } from '../../../../components/spinner';
 import { useGetOrCreateChat } from '../../adapters/hooks/useGetOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useSendMessage } from '../../adapters/hooks/useSendMessage';
 import { Message as Msg } from '../../core/domain/message';
 import { User } from '../../../../utilities/getUsers';
-import { useReadMessages } from '../hooks/useReadMessages';
-
-type MessagesType = Map<string, { isToBeSent: boolean; message: Msg }[]>;
+import { MessagesByDay, useReadMessages } from '../hooks/useReadMessages';
 
 export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
 
   const router = useRouter();
-  const chatId = getChatId(router.query?.chatId);
   const user = useSelector(selectSelectedUser);
-  const { handleGetOrCreateChat, chat } = useGetOrCreateChat();
-  const { handleReadMessages, messages, setMessages } = useReadMessages();
+  const { handleGetOrCreateChat } = useGetOrCreateChat();
+  const { chatId, setChatId } = useChatGuard(router, user);
+  const { handleReadMessages, messagesByDay } = useReadMessages(chatId);
+  const { handleSendMessage } = useSendMessage();
 
-  useChatGuard(router, user, chatId);
   useReadMessagesOnMount(chatId);
 
   return (
     <Page header={renderHeader()}>
       <div>
-        {messages.size == 0 && <p>No messages</p>}
-        {messages.size > 0 && renderMessages()}
+        {canRenderMessages(messagesByDay)
+          ? renderMessages()
+          : renderPlaceholder()}
         <MessageSendInput
           onSend={sendMessage}
           messageInput={messageInput}
@@ -42,10 +41,24 @@ export default function Chat() {
     </Page>
   );
 
-  function getChatId(
-    chatId: string[] | string | undefined
-  ): string | undefined {
-    return Array.isArray(chatId) ? chatId[0] : chatId;
+  function useChatGuard(router: NextRouter, user: User | null) {
+    const [chatId, setChatId] = useState<string | undefined>();
+
+    useEffect(() => {
+      if (router.isReady) {
+        if (!user && !getChatId(router.query?.chatId))
+          router.push(MESSAGES_ROUTE);
+        else if (!chatId) setChatId(getChatId(router.query?.chatId));
+      }
+    }, [router, user, chatId]);
+
+    return { chatId, setChatId };
+
+    function getChatId(
+      chatId: string[] | string | undefined
+    ): string | undefined {
+      return Array.isArray(chatId) ? chatId[0] : chatId;
+    }
   }
 
   function useReadMessagesOnMount(chatId: string | undefined) {
@@ -60,18 +73,6 @@ export default function Chat() {
         }
       })();
     }, [chatId]);
-  }
-
-  function useChatGuard(
-    router: NextRouter,
-    user: User | null,
-    chatId: string | undefined
-  ) {
-    useEffect(() => {
-      if (router.isReady) {
-        if (!user && !chatId) router.push(MESSAGES_ROUTE);
-      }
-    }, [router, user, chatId]);
   }
 
   function renderHeader() {
@@ -94,21 +95,24 @@ export default function Chat() {
     );
   }
 
+  function canRenderMessages(messagesByDay: MessagesByDay) {
+    return messagesByDay.size > 0;
+  }
+
+  function renderPlaceholder() {
+    return <p>No messages</p>;
+  }
+
   function renderMessages() {
     return (
       <div role="log">
-        {Array.from(messages.entries()).map(([day, messageObjects]) => {
+        {Array.from(messagesByDay.entries()).map(([day, messages]) => {
           return (
             <div key={day}>
               <h3>{day}</h3>
-              {messageObjects.map(({ isToBeSent, message }) => (
-                <Message
-                  key={message.id}
-                  message={message}
-                  chatId={message.chatId || (chat?.id as string)}
-                  isToBeSent={isToBeSent}
-                />
-              ))}
+              {messages.map((message) => {
+                return <Message key={message.id} message={message} />;
+              })}
             </div>
           );
         })}
@@ -116,75 +120,41 @@ export default function Chat() {
     );
   }
 
-  async function sendMessage(message: string) {
-    if (!chatId && !chat) {
-      const c = (await handleGetOrCreateChat(
+  async function sendMessage(text: string) {
+    if (!chatId) {
+      const chat = (await handleGetOrCreateChat(
         user?.username as string
       )) as PartialChat;
-      if (c) {
-        addToMessages(message);
-        window.history.replaceState(null, '', `${MESSAGES_CHAT_ROUTE}/${c.id}`);
-        setMessageInput('');
+      if (chat) {
+        window.history.replaceState(
+          null,
+          '',
+          `${MESSAGES_CHAT_ROUTE}/${chat.id}`
+        );
+        setChatId(chat.id);
+        send(text, chat.id);
       }
-    } else {
-      addToMessages(message);
+    } else send(text, chatId as string);
+
+    function send(text: string, chatId: string) {
       setMessageInput('');
+      handleSendMessage(text, chatId);
     }
-  }
-
-  function addToMessages(message: string) {
-    const newMessages = new Map(messages);
-    addMessage(
-      {
-        id: `${Math.floor(Math.random() * 100000)}`,
-        text: message,
-        senderId: 'randomId1',
-        chatId: chatId as string,
-        createdAt: new Date().toISOString(),
-      },
-      newMessages,
-      true
-    );
-    setMessages(newMessages);
-  }
-
-  function addMessage(m: Msg, prevMsgs: MessagesType, isToBeSent = false) {
-    const day = formatDayForMessage(new Date(m.createdAt));
-    if (prevMsgs.has(day)) prevMsgs.get(day)?.push({ isToBeSent, message: m });
-    else prevMsgs.set(day, [{ isToBeSent, message: m }]);
   }
 }
 
-function Message({
-  message: msg,
-  chatId,
-  isToBeSent,
-}: {
-  message: { text: string; createdAt: string };
-  chatId: string;
-  isToBeSent: boolean;
-}) {
-  const { handleSendMessage, isLoading, message } = useSendMessage();
-
-  useEffect(() => {
-    (async () => {
-      if (isToBeSent) await handleSendMessage(msg.text, chatId);
-    })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+function Message({ message }: { message: Msg }) {
   return (
     <div data-testid="message">
-      <p>{msg.text}</p>
-      <p>{formatTimeForMessage(new Date(msg.createdAt))}</p>
-      {renderStatus()}
+      <p>{message.text}</p>
+      <p>{formatTimeForMessage(new Date(message.createdAt))}</p>
+      {renderStatus(message.isLoading)}
     </div>
   );
 
-  function renderStatus() {
-    if (!isToBeSent) return <div aria-label="sent"></div>;
-    else if (isLoading) return <Spinner />;
-    else if (message) return <div aria-label="sent"></div>;
+  function renderStatus(isLoading: boolean | undefined) {
+    if (isLoading) return <Spinner />;
+    else return <div aria-label="sent"></div>;
   }
 }
 

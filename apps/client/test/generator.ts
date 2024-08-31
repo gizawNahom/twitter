@@ -26,5 +26,6 @@ export function buildMessage(msgTemplate?: {
     text: msgTemplate?.text || faker.string.sample(10),
     createdAt:
       msgTemplate?.createdAt || faker.date.recent({ days: 10 }).toISOString(),
+    __typename: 'Message',
   };
 }

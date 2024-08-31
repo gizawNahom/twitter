@@ -10,7 +10,12 @@ import {
   GENERIC_SERVER_ERROR,
   sampleMessageResponse,
 } from '../../../mocks/values';
-import { sendMessage } from '../../../lib/messages/adapters/api/sendMessage';
+import { ApolloMessageSender } from '../../../lib/messages/data/apolloMessageSender';
+import { Client } from '../../../utilities/client';
+
+async function executeSUT(text: string, chatId: string) {
+  return await new ApolloMessageSender(Client.client).sendMessage(text, chatId);
+}
 
 export function testSendMessage(provider: Pact, baseUrl: URL) {
   describe('Send Message', () => {
@@ -30,7 +35,7 @@ export function testSendMessage(provider: Pact, baseUrl: URL) {
         });
       await addInteraction(provider, interaction);
 
-      const message = await sendMessage(
+      const message = await executeSUT(
         sampleMessageResponse.text,
         sampleMessageResponse.chatId
       );
@@ -61,7 +66,7 @@ export function testSendMessage(provider: Pact, baseUrl: URL) {
       await addInteraction(provider, interaction);
 
       await expect(async () => {
-        await sendMessage(invalidText, invalidChatId);
+        await executeSUT(invalidText, invalidChatId);
       }).rejects.toThrow(new Error());
     });
   });
