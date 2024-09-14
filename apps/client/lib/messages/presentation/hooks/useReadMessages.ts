@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Message } from '../../core/domain/message';
 import { formatDayForMessage } from '../utilities';
 import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
-import { ReadMessagesImpl } from '../../adapters/gateways/readMessagesImpl';
+import { ReadMessagesGatewayImpl } from '../../adapters/gateways/readMessagesGatewayImpl';
 import { ApolloMessagesReader } from '../../data/apolloMessagesReader';
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
 import { gql, ObservableQuery } from '@apollo/client';
@@ -63,7 +63,7 @@ export function useReadMessages(chatId: string | undefined) {
   }
 
   function buildGateway(): ReadMessagesGateway {
-    return new ReadMessagesImpl(new ApolloMessagesReader());
+    return new ReadMessagesGatewayImpl(new ApolloMessagesReader());
   }
 
   function buildMessagesByDay(messages: Message[]) {

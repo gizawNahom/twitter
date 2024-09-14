@@ -1,5 +1,5 @@
 import { readMessages } from '../adapters/api/readMessages';
-import { MessagesReader } from '../adapters/gateways/readMessagesImpl';
+import { MessagesReader } from '../adapters/gateways/readMessagesGatewayImpl';
 import { Message } from '../core/domain/message';
 
 export class ApolloMessagesReader implements MessagesReader {

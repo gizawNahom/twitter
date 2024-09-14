@@ -1,7 +1,7 @@
 import { Message } from '../../core/domain/message';
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
 
-export class ReadMessagesImpl implements ReadMessagesGateway {
+export class ReadMessagesGatewayImpl implements ReadMessagesGateway {
   constructor(private messagesReader: MessagesReader) {}
 
   async readMessages(chatId: string): Promise<Message[]> {
