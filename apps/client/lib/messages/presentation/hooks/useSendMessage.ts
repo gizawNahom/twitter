@@ -3,7 +3,7 @@ import { Message } from '../../core/domain/message';
 import { Client } from '../../../../utilities/client';
 import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
 import { SendMessageGateway } from '../../core/ports/sendMessageGateway';
-import { SendMessageGatewayImpl } from '../gateways/sendMessageGatewayImpl';
+import { SendMessageGatewayImpl } from '../../adapters/gateways/sendMessageGatewayImpl';
 import { ApolloMessageSender } from '../../data/apolloMessageSender';
 
 export function useSendMessage() {

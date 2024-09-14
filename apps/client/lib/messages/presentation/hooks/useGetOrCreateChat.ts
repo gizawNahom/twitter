@@ -1,11 +1,11 @@
 import { useMutation } from '@apollo/client';
-import { GET_OR_CREATE_CHAT } from '../api/getOrCreateChat';
+import { GET_OR_CREATE_CHAT } from '../../adapters/api/getOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useState } from 'react';
 import { Client } from '../../../../utilities/client';
 import { GetOrCreateChatUseCase } from '../../core/useCases/getOrCreateChatUseCase';
 import { GetOrCreateChatGateway } from '../../core/ports/getOrCreateChatGateway';
-import { GetOrCreateChatGatewayImpl } from '../gateways/getOrCreateChatGatewayImpl';
+import { GetOrCreateChatGatewayImpl } from '../../adapters/gateways/getOrCreateChatGatewayImpl';
 
 export function useGetOrCreateChat() {
   const [error, setError] = useState('');
