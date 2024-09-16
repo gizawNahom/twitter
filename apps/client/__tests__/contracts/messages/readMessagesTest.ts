@@ -16,6 +16,10 @@ import {
 } from '../../../mocks/values';
 import { readMessages } from '../../../lib/messages/adapters/api/readMessages';
 
+async function sendRequest(chatId: string, limit: number, offset: number) {
+  return await readMessages(chatId, limit, offset);
+}
+
 export async function testReadMessages(provider: Pact, baseUrl: URL) {
   describe('Read messages', () => {
     test('reads messages', async () => {
@@ -37,7 +41,7 @@ export async function testReadMessages(provider: Pact, baseUrl: URL) {
         });
       await addInteraction(provider, interaction);
 
-      const messages = await readMessages(
+      const messages = await sendRequest(
         sampleMessageResponse.chatId,
         validOffset,
         validLimit
@@ -69,7 +73,7 @@ export async function testReadMessages(provider: Pact, baseUrl: URL) {
       await addInteraction(provider, interaction);
 
       await expect(async () => {
-        await readMessages(invalidChatId, invalidLimit, invalidOffset);
+        await sendRequest(invalidChatId, invalidLimit, invalidOffset);
       }).rejects.toThrow(new Error());
     });
   });

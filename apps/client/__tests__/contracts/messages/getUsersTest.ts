@@ -16,6 +16,10 @@ import {
 } from '../../../mocks/values';
 import { getUsers } from '../../../utilities/getUsers';
 
+async function sendRequest(username: string, limit: number, offset: number) {
+  return await getUsers(username, limit, offset);
+}
+
 export function testGetUsers(provider: Pact, baseUrl: URL) {
   describe('Get Users', () => {
     test('gets users', async () => {
@@ -37,7 +41,7 @@ export function testGetUsers(provider: Pact, baseUrl: URL) {
         });
       await addInteraction(provider, interaction);
 
-      const users = await getUsers(
+      const users = await sendRequest(
         sampleUserResponse.username,
         validLimit,
         validOffset
@@ -72,7 +76,7 @@ export function testGetUsers(provider: Pact, baseUrl: URL) {
       await addInteraction(provider, interaction);
 
       await expect(async () => {
-        await getUsers(invalidUsername, invalidLimit, invalidOffset);
+        await sendRequest(invalidUsername, invalidLimit, invalidOffset);
       }).rejects.toThrow(new Error());
     });
   });

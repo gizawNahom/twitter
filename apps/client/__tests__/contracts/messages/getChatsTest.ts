@@ -15,6 +15,10 @@ import {
 } from '../../../mocks/values';
 import { getChats } from '../../../lib/messages/adapters/api/getChats';
 
+async function sendRequest(offset: number, limit: number) {
+  return await getChats(offset, limit);
+}
+
 export function testGetChats(provider: Pact, baseUrl: URL) {
   describe('Get Chats', () => {
     test('gets chats', async () => {
@@ -33,7 +37,7 @@ export function testGetChats(provider: Pact, baseUrl: URL) {
         });
       await addInteraction(provider, interaction);
 
-      const chats = await getChats(validOffset, validLimit);
+      const chats = await sendRequest(validOffset, validLimit);
 
       expect(chats).toStrictEqual([sampleChatResponse]);
     });
@@ -59,7 +63,7 @@ export function testGetChats(provider: Pact, baseUrl: URL) {
       await addInteraction(provider, interaction);
 
       await expect(async () => {
-        await getChats(invalidOffset, invalidLimit);
+        await sendRequest(invalidOffset, invalidLimit);
       }).rejects.toThrow(new Error());
     });
   });
