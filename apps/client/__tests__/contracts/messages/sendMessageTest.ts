@@ -10,7 +10,7 @@ import {
   GENERIC_SERVER_ERROR,
   sampleMessageResponse,
 } from '../../../mocks/values';
-import { ApolloMessageSender } from '../../../lib/messages/data/apolloMessageSender';
+import { ApolloMessageSender } from '../../../lib/messages/data-source-apollo/apolloMessageSender';
 import { Client } from '../../../utilities/client';
 
 async function executeSUT(text: string, chatId: string) {

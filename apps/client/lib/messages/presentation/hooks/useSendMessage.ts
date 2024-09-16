@@ -4,7 +4,7 @@ import { Client } from '../../../../utilities/client';
 import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
 import { SendMessageGateway } from '../../core/ports/sendMessageGateway';
 import { SendMessageGatewayImpl } from '../../adapters/gateways/sendMessageGatewayImpl';
-import { ApolloMessageSender } from '../../data/apolloMessageSender';
+import { ApolloMessageSender } from '../../data-source-apollo/apolloMessageSender';
 
 export function useSendMessage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');

@@ -4,7 +4,7 @@ import { GetChatsUseCase } from '../../core/useCases/getChatsUseCase';
 import { GetChatsGateway } from '../../core/ports/getChatsGateway';
 import { GetChatsGatewayImpl } from '../../adapters/gateways/getChatsGatewayImpl';
 import { EndOfListError } from '../../../../utilities/client';
-import { ApolloChatsGetter } from '../../data/apolloChatsGetter';
+import { ApolloChatsGetter } from '../../data-source-apollo/apolloChatsGetter';
 
 export function useGetChats() {
   const [status, setStatus] = useState<

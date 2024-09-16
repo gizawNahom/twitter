@@ -3,7 +3,7 @@ import { Message } from '../../core/domain/message';
 import { formatDayForMessage } from '../utilities';
 import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
 import { ReadMessagesGatewayImpl } from '../../adapters/gateways/readMessagesGatewayImpl';
-import { ApolloMessagesReader } from '../../data/apolloMessagesReader';
+import { ApolloMessagesReader } from '../../data-source-apollo/apolloMessagesReader';
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
 import { gql, ObservableQuery } from '@apollo/client';
 import { Client } from '../../../../utilities/client';

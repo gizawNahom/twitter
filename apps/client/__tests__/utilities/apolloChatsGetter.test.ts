@@ -1,7 +1,7 @@
 import chatsDB from '../../test/data/chats';
 import { setUpApi } from '../testUtilities';
 import { buildChat } from '../../test/generator';
-import { ApolloChatsGetter } from '../../lib/messages/data/apolloChatsGetter';
+import { ApolloChatsGetter } from '../../lib/messages/data-source-apollo/apolloChatsGetter';
 import { EndOfListError } from '../../utilities/client';
 
 const generatedChats = [buildChat(), buildChat(), buildChat(), buildChat()];
