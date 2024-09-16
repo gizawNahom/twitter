@@ -13,6 +13,10 @@ import {
 } from '../../../mocks/values';
 import { getOrCreateChat } from '../../../lib/messages/adapters/api/getOrCreateChat';
 
+async function sendRequest(username: string) {
+  return await getOrCreateChat(username);
+}
+
 export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
   describe('Get Or Create Chat', () => {
     test('gets chat', async () => {
@@ -28,7 +32,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
         });
       await addInteraction(provider, interaction);
 
-      const chat = await getOrCreateChat(sampleUserResponse.username);
+      const chat = await sendRequest(sampleUserResponse.username);
 
       expect(chat).toStrictEqual(samplePartialChatResponse);
     });
@@ -51,7 +55,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
     await addInteraction(provider, interaction);
 
     await expect(async () => {
-      await getOrCreateChat(invalidUsername);
+      await sendRequest(invalidUsername);
     }).rejects.toThrow(new Error());
   });
 
