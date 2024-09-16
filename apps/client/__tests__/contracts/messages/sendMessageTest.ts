@@ -13,7 +13,7 @@ import {
 import { ApolloMessageSender } from '../../../lib/messages/data-source-apollo/apolloMessageSender';
 import { Client } from '../../../utilities/client';
 
-async function executeSUT(text: string, chatId: string) {
+async function sendRequest(text: string, chatId: string) {
   return await new ApolloMessageSender(Client.client).sendMessage(text, chatId);
 }
 
@@ -35,7 +35,7 @@ export function testSendMessage(provider: Pact, baseUrl: URL) {
         });
       await addInteraction(provider, interaction);
 
-      const message = await executeSUT(
+      const message = await sendRequest(
         sampleMessageResponse.text,
         sampleMessageResponse.chatId
       );
@@ -66,7 +66,7 @@ export function testSendMessage(provider: Pact, baseUrl: URL) {
       await addInteraction(provider, interaction);
 
       await expect(async () => {
-        await executeSUT(invalidText, invalidChatId);
+        await sendRequest(invalidText, invalidChatId);
       }).rejects.toThrow(new Error());
     });
   });
