@@ -14,12 +14,7 @@ import {
 export type MessagesByDay = Map<string, Message[]>;
 
 export function useReadMessages(chatId: string | undefined) {
-  const [messagesByDay, setMessagesByDay] = useState<MessagesByDay>(new Map());
-  useSubscribeToMessages(
-    chatId,
-    (messages) => {
-      setMessagesByDay(buildMessagesByDay(messages || []));
-    },
+  const { messages, subscribe } = useSubscribeToMessages(
     new ApolloMessageStore(Client.client)
   );
 
@@ -27,6 +22,7 @@ export function useReadMessages(chatId: string | undefined) {
     (async () => {
       if (chatId) {
         try {
+          subscribe(chatId);
           await handleReadMessages(chatId);
         } catch (error) {
           //
@@ -37,7 +33,7 @@ export function useReadMessages(chatId: string | undefined) {
   }, [chatId]);
 
   return {
-    messagesByDay,
+    messagesByDay: buildMessagesByDay(messages || []),
   };
 
   async function handleReadMessages(chatId: string) {
@@ -67,19 +63,24 @@ export function useReadMessages(chatId: string | undefined) {
   }
 }
 
-function useSubscribeToMessages(
-  chatId: string | undefined,
-  onMessages: (messages: Message[]) => void,
-  messageStore: MessageStore
-) {
+function useSubscribeToMessages(messageStore: MessageStore) {
+  const [messages, setMessages] = useState<Message[] | undefined>();
+  const [chatId, setChatId] = useState<string | undefined>();
+
   useEffect(() => {
     if (chatId) {
-      messageStore.messagesUpdated.add(onMessages, chatId);
+      messageStore.messagesUpdated.add(setMessages, chatId);
     }
 
     return () => {
-      messageStore.messagesUpdated.remove(onMessages, chatId as string);
+      messageStore.messagesUpdated.remove(setMessages, chatId as string);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId]);
+
+  return { messages, subscribe };
+
+  function subscribe(chatId: string) {
+    setChatId(chatId);
+  }
 }
