@@ -52,10 +52,10 @@ export function useReadMessages(chatId: string | undefined) {
 
   function buildUseCase() {
     return new ReadMessagesUseCase(buildGateway());
-  }
 
-  function buildGateway(): ReadMessagesGateway {
-    return new ReadMessagesGatewayImpl(new ApolloMessagesReader());
+    function buildGateway(): ReadMessagesGateway {
+      return new ReadMessagesGatewayImpl(new ApolloMessagesReader());
+    }
   }
 
   function buildMessagesByDay(messages: Message[]) {
@@ -64,12 +64,12 @@ export function useReadMessages(chatId: string | undefined) {
       addMessage(m, prevMsgs);
     });
     return prevMsgs;
-  }
 
-  function addMessage(msg: Message, prevMsgs: MessagesByDay) {
-    const day = formatDayForMessage(new Date(msg.createdAt));
-    if (prevMsgs.has(day)) prevMsgs.get(day)?.push(msg);
-    else prevMsgs.set(day, [msg]);
+    function addMessage(msg: Message, prevMsgs: MessagesByDay) {
+      const day = formatDayForMessage(new Date(msg.createdAt));
+      if (prevMsgs.has(day)) prevMsgs.get(day)?.push(msg);
+      else prevMsgs.set(day, [msg]);
+    }
   }
 }
 
