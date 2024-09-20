@@ -25,29 +25,9 @@ const READ_MESSAGES = gql`
 
 export function useReadMessages(chatId: string | undefined) {
   const [messagesByDay, setMessagesByDay] = useState<MessagesByDay>(new Map());
-  const observable = useRef<ObservableQuery<any, { chatId: string }>>();
-
-  useEffect(() => {
-    if (chatId) {
-      observable.current = Client.client.watchQuery({
-        query: READ_MESSAGES,
-        variables: {
-          chatId: chatId,
-        },
-        fetchPolicy: 'cache-only',
-      });
-
-      observable.current?.subscribe({
-        next({ data: { messages } }) {
-          setMessagesByDay(buildMessagesByDay(messages || []));
-        },
-        error(errorValue) {
-          //
-        },
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatId]);
+  useSubscribeToMessages(chatId, (messages) => {
+    setMessagesByDay(buildMessagesByDay(messages || []));
+  });
 
   return {
     handleReadMessages,
@@ -79,4 +59,33 @@ export function useReadMessages(chatId: string | undefined) {
     if (prevMsgs.has(day)) prevMsgs.get(day)?.push(msg);
     else prevMsgs.set(day, [msg]);
   }
+}
+
+function useSubscribeToMessages(
+  chatId: string | undefined,
+  onMessages: (messages: Message[]) => void
+) {
+  const observable = useRef<ObservableQuery<any, { chatId: string }>>();
+
+  useEffect(() => {
+    if (chatId) {
+      observable.current = Client.client.watchQuery({
+        query: READ_MESSAGES,
+        variables: {
+          chatId: chatId,
+        },
+        fetchPolicy: 'cache-only',
+      });
+
+      observable.current?.subscribe({
+        next({ data: { messages } }) {
+          onMessages(messages);
+        },
+        error(_errorValue) {
+          //
+        },
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId]);
 }
