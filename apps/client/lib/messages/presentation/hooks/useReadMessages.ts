@@ -1,33 +1,27 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Message } from '../../core/domain/message';
 import { formatDayForMessage } from '../utilities';
 import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
 import { ReadMessagesGatewayImpl } from '../../adapters/gateways/readMessagesGatewayImpl';
 import { ApolloMessagesReader } from '../../data-source-apollo/apolloMessagesReader';
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
-import { gql, ObservableQuery } from '@apollo/client';
 import { Client } from '../../../../utilities/client';
+import {
+  ApolloMessageStore,
+  MessageStore,
+} from '../../data-source-apollo/apolloMessageStore';
 
 export type MessagesByDay = Map<string, Message[]>;
 
-const READ_MESSAGES = gql`
-  query ReadMessages($chatId: ID) {
-    messages(chatId: $chatId) {
-      id
-      senderId
-      chatId
-      text
-      createdAt
-      isLoading @client
-    }
-  }
-`;
-
 export function useReadMessages(chatId: string | undefined) {
   const [messagesByDay, setMessagesByDay] = useState<MessagesByDay>(new Map());
-  useSubscribeToMessages(chatId, (messages) => {
-    setMessagesByDay(buildMessagesByDay(messages || []));
-  });
+  useSubscribeToMessages(
+    chatId,
+    (messages) => {
+      setMessagesByDay(buildMessagesByDay(messages || []));
+    },
+    new ApolloMessageStore(Client.client)
+  );
 
   useEffect(() => {
     (async () => {
@@ -75,29 +69,17 @@ export function useReadMessages(chatId: string | undefined) {
 
 function useSubscribeToMessages(
   chatId: string | undefined,
-  onMessages: (messages: Message[]) => void
+  onMessages: (messages: Message[]) => void,
+  messageStore: MessageStore
 ) {
-  const observable = useRef<ObservableQuery<any, { chatId: string }>>();
-
   useEffect(() => {
     if (chatId) {
-      observable.current = Client.client.watchQuery({
-        query: READ_MESSAGES,
-        variables: {
-          chatId: chatId,
-        },
-        fetchPolicy: 'cache-only',
-      });
-
-      observable.current?.subscribe({
-        next({ data: { messages } }) {
-          onMessages(messages);
-        },
-        error(_errorValue) {
-          //
-        },
-      });
+      messageStore.messagesUpdated.add(onMessages, chatId);
     }
+
+    return () => {
+      messageStore.messagesUpdated.remove(onMessages, chatId as string);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId]);
 }
