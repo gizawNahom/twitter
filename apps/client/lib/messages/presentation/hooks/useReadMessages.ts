@@ -29,8 +29,20 @@ export function useReadMessages(chatId: string | undefined) {
     setMessagesByDay(buildMessagesByDay(messages || []));
   });
 
+  useEffect(() => {
+    (async () => {
+      if (chatId) {
+        try {
+          await handleReadMessages(chatId);
+        } catch (error) {
+          //
+        }
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId]);
+
   return {
-    handleReadMessages,
     messagesByDay,
   };
 

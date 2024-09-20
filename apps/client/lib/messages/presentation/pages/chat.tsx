@@ -21,10 +21,8 @@ export default function Chat() {
   const user = useSelector(selectSelectedUser);
   const { handleGetOrCreateChat } = useGetOrCreateChat();
   const { chatId, setChatId } = useChatGuard(router, user);
-  const { handleReadMessages, messagesByDay } = useReadMessages(chatId);
+  const { messagesByDay } = useReadMessages(chatId);
   const { handleSendMessage } = useSendMessage();
-
-  useReadMessagesOnMount(chatId);
 
   return (
     <Page header={renderHeader()}>
@@ -59,20 +57,6 @@ export default function Chat() {
     ): string | undefined {
       return Array.isArray(chatId) ? chatId[0] : chatId;
     }
-  }
-
-  function useReadMessagesOnMount(chatId: string | undefined) {
-    useEffect(() => {
-      (async () => {
-        if (chatId) {
-          try {
-            await handleReadMessages(chatId);
-          } catch (error) {
-            //
-          }
-        }
-      })();
-    }, [chatId]);
   }
 
   function renderHeader() {
