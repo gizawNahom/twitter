@@ -63,7 +63,7 @@ export function useReadMessages(chatId: string | undefined) {
   }
 }
 
-function useSubscribeToMessages(messageStore: MessageStore) {
+export function useSubscribeToMessages(messageStore: MessageStore) {
   const [messages, setMessages] = useState<Message[] | undefined>();
   const [chatId, setChatId] = useState<string | undefined>();
 
@@ -82,5 +82,13 @@ function useSubscribeToMessages(messageStore: MessageStore) {
 
   function subscribe(chatId: string) {
     setChatId(chatId);
+  }
+}
+
+export function useSubscribeToMessages1(messageStore: MessageStore) {
+  return { subscribe };
+
+  function subscribe(chatId: string | undefined) {
+    //
   }
 }

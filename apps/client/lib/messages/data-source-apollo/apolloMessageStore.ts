@@ -3,7 +3,7 @@ import { Message } from '../core/domain/message';
 
 type EventHandler<T = unknown> = (param: T) => void;
 
-class CustomEvent<T = unknown> {
+export class CustomEvent<T = unknown> {
   private handlers: EventHandler<T>[] = [];
   private subscribeFn: (chatId: string) => void;
   private unsubscribeFn: (chatId: string) => void;
