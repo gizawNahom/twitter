@@ -4,7 +4,7 @@ import { Message } from '../core/domain/message';
 type EventHandler<T = unknown> = (param: T) => void;
 
 export class CustomEvent<T = unknown> {
-  private handlers: EventHandler<T>[] = [];
+  private handlers: Map<string, EventHandler<T>[]> = new Map();
   private subscribeFn: (chatId: string) => void;
   private unsubscribeFn: (chatId: string) => void;
 
@@ -17,17 +17,29 @@ export class CustomEvent<T = unknown> {
   }
 
   add(handler: EventHandler<T>, chatId: string) {
-    this.handlers.push(handler);
+    if (!this.handlers.has(chatId)) {
+      this.handlers.set(chatId, []);
+    }
+    this.handlers.get(chatId)?.push(handler);
     this.subscribeFn(chatId);
   }
 
   remove(handler: EventHandler<T>, chatId: string) {
-    this.handlers = this.handlers.filter((h) => h !== handler);
-    this.unsubscribeFn(chatId);
+    if (this.handlers.has(chatId)) {
+      const handlersForChat = this.handlers.get(chatId) as EventHandler<T>[];
+      this.handlers.set(
+        chatId,
+        handlersForChat.filter((h) => h !== handler)
+      );
+      this.unsubscribeFn(chatId);
+    }
   }
 
-  dispatch(param: T) {
-    this.handlers.forEach((handler) => handler(param));
+  dispatch(param: T, chatId: string) {
+    if (this.handlers.has(chatId)) {
+      const handlersForChat = this.handlers.get(chatId);
+      handlersForChat?.forEach((handler) => handler(param));
+    }
   }
 }
 
@@ -72,7 +84,8 @@ export class ApolloMessageStore implements MessageStore {
 
       const subscription = observable.subscribe({
         next: ({ data: { messages } }) => {
-          this.messagesUpdated.dispatch(messages);
+          // this.messagesUpdated.dispatch(messages);
+          this.messagesUpdated.dispatch(messages, chatId);
         },
       });
 

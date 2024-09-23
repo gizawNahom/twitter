@@ -86,9 +86,14 @@ export function useSubscribeToMessages(messageStore: MessageStore) {
 }
 
 export function useSubscribeToMessages1(messageStore: MessageStore) {
-  return { subscribe };
+  const [messages, setMessages] = useState<Message[]>();
+
+  return { messages, subscribe };
 
   function subscribe(chatId: string | undefined) {
-    //
+    if (chatId)
+      messageStore.messagesUpdated.add((messages) => {
+        setMessages(messages);
+      }, chatId);
   }
 }
