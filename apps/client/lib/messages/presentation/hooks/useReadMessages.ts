@@ -87,13 +87,24 @@ export function useSubscribeToMessages(messageStore: MessageStore) {
 
 export function useSubscribeToMessages1(messageStore: MessageStore) {
   const [messages, setMessages] = useState<Message[]>();
+  const [chatId, setChatId] = useState<string>();
+
+  useEffect(() => {
+    if (chatId) messageStore.messagesUpdated.add(handlerMessagesUpdate, chatId);
+
+    return () => {
+      if (chatId)
+        messageStore.messagesUpdated.remove(handlerMessagesUpdate, chatId);
+    };
+  }, [chatId]);
 
   return { messages, subscribe };
 
   function subscribe(chatId: string | undefined) {
-    if (chatId)
-      messageStore.messagesUpdated.add((messages) => {
-        setMessages(messages);
-      }, chatId);
+    setChatId(chatId);
+  }
+
+  function handlerMessagesUpdate(messages: Message[]) {
+    setMessages(messages);
   }
 }

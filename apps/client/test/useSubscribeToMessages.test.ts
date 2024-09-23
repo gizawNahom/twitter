@@ -9,24 +9,24 @@ import { act } from 'react-dom/test-utils';
 import { buildMessage } from './generator';
 
 function renderSUT(
-  spy: FakeMessageStore
+  fakeSpy: FakeSpyMessageStore
 ): RenderHookResult<ReturnType<typeof useSubscribeToMessages1>, unknown> {
-  return renderHook(() => useSubscribeToMessages1(spy));
+  return renderHook(() => useSubscribeToMessages1(fakeSpy));
 }
 
-let fake: FakeMessageStore;
+let fakeSpy: FakeSpyMessageStore;
 
 beforeEach(() => {
-  fake = new FakeMessageStore();
+  fakeSpy = new FakeSpyMessageStore();
 });
 
 describe('does not subscribe', () => {
   test.each([[''], [undefined]])('if chatId is %s', (chatId) => {
-    const { result } = renderSUT(fake);
+    const { result } = renderSUT(fakeSpy);
 
     act(() => {
       result.current.subscribe(chatId);
-      fake.messagesUpdated.dispatch([buildMessage()], chatId as string);
+      fakeSpy.messagesUpdated.dispatch([buildMessage()], chatId as string);
     });
 
     expect(result.current.messages).toStrictEqual(undefined);
@@ -35,25 +35,41 @@ describe('does not subscribe', () => {
 
 test('subscribes to messages', async () => {
   const chatId = 'chatId1';
-  const { result } = renderSUT(fake);
+  const { result } = renderSUT(fakeSpy);
   const message = buildMessage();
 
   act(() => {
     result.current.subscribe(chatId);
-    fake.messagesUpdated.dispatch([message], chatId);
+  });
+  act(() => {
+    fakeSpy.messagesUpdated.dispatch([message], chatId);
   });
 
   expect(result.current.messages).toStrictEqual([message]);
 });
 
-test.todo('unsubscribes on unmount');
+test('removes handler on unmount', async () => {
+  const chatId = 'chatId1';
+  const { result, unmount } = renderSUT(fakeSpy);
+
+  act(() => {
+    result.current.subscribe(chatId);
+  });
+  act(() => {
+    unmount();
+  });
+
+  expect(fakeSpy.unsubscribeCalls).toStrictEqual([chatId]);
+});
+
 test.todo('does not subscribe if called with the same chat id');
 test.todo(
   'unsubscribes chat id if subscribe is called with a different chatId'
 );
 
-class FakeMessageStore implements MessageStore {
+class FakeSpyMessageStore implements MessageStore {
   messagesUpdated: CustomEvent<Message[]>;
+  unsubscribeCalls: string[] = [];
 
   constructor() {
     this.messagesUpdated = new CustomEvent<Message[]>(
@@ -66,6 +82,6 @@ class FakeMessageStore implements MessageStore {
     //
   }
   private unsubscribeFromMessages(chatId: string) {
-    //
+    this.unsubscribeCalls.push(chatId);
   }
 }
