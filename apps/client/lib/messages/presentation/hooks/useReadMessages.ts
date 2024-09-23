@@ -64,28 +64,6 @@ export function useReadMessages(chatId: string | undefined) {
 }
 
 export function useSubscribeToMessages(messageStore: MessageStore) {
-  const [messages, setMessages] = useState<Message[] | undefined>();
-  const [chatId, setChatId] = useState<string | undefined>();
-
-  useEffect(() => {
-    if (chatId) {
-      messageStore.messagesUpdated.add(setMessages, chatId);
-    }
-
-    return () => {
-      messageStore.messagesUpdated.remove(setMessages, chatId as string);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [chatId]);
-
-  return { messages, subscribe };
-
-  function subscribe(chatId: string) {
-    setChatId(chatId);
-  }
-}
-
-export function useSubscribeToMessages1(messageStore: MessageStore) {
   const [messages, setMessages] = useState<Message[]>();
   const [chatId, setChatId] = useState<string>();
 
@@ -96,6 +74,7 @@ export function useSubscribeToMessages1(messageStore: MessageStore) {
       if (chatId)
         messageStore.messagesUpdated.remove(handlerMessagesUpdate, chatId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId]);
 
   return { messages, subscribe };

@@ -1,5 +1,5 @@
 import { renderHook, RenderHookResult } from '@testing-library/react';
-import { useSubscribeToMessages1 } from '../lib/messages/presentation/hooks/useReadMessages';
+import { useSubscribeToMessages } from '../lib/messages/presentation/hooks/useReadMessages';
 import {
   MessageStore,
   CustomEvent,
@@ -10,8 +10,8 @@ import { buildMessage } from './generator';
 
 function renderSUT(
   fakeSpy: FakeSpyMessageStore
-): RenderHookResult<ReturnType<typeof useSubscribeToMessages1>, unknown> {
-  return renderHook(() => useSubscribeToMessages1(fakeSpy));
+): RenderHookResult<ReturnType<typeof useSubscribeToMessages>, unknown> {
+  return renderHook(() => useSubscribeToMessages(fakeSpy));
 }
 
 function subscribe(
@@ -89,9 +89,15 @@ test('does not subscribe if called with the same chat id', () => {
   expect(fakeSpy.subscribeCalls).toStrictEqual([chatId]);
 });
 
-test.todo(
-  'unsubscribes chat id if subscribe is called with a different chatId'
-);
+test('unsubscribes chat id if subscribe is called with a different chatId', () => {
+  const chatId = 'chatId1';
+  const { result } = renderSUT(fakeSpy);
+
+  subscribe(result.current, chatId);
+  subscribe(result.current, chatId + '1');
+
+  expect(fakeSpy.unsubscribeCalls).toStrictEqual([chatId]);
+});
 
 class FakeSpyMessageStore implements MessageStore {
   messagesUpdated: CustomEvent<Message[]>;
