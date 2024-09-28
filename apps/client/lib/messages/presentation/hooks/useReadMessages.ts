@@ -7,15 +7,16 @@ import { ApolloMessagesReader } from '../../data-source-apollo/apolloMessagesRea
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
 import { Client } from '../../../../utilities/client';
 import {
-  ApolloMessageStore,
+  ApolloMessageStore1,
   MessageStore,
+  MessageStore1,
 } from '../../data-source-apollo/apolloMessageStore';
 
 export type MessagesByDay = Map<string, Message[]>;
 
 export function useReadMessages(chatId: string | undefined) {
-  const { messages, subscribe } = useSubscribeToMessages(
-    new ApolloMessageStore(Client.client)
+  const { messages, subscribe } = useSubscribeToMessages1(
+    new ApolloMessageStore1(Client.client)
   );
 
   useEffect(() => {
@@ -64,6 +65,31 @@ export function useReadMessages(chatId: string | undefined) {
 }
 
 export function useSubscribeToMessages(messageStore: MessageStore) {
+  const [messages, setMessages] = useState<Message[]>();
+  const [chatId, setChatId] = useState<string>();
+
+  useEffect(() => {
+    if (chatId) messageStore.messagesUpdated.add(handlerMessagesUpdate, chatId);
+
+    return () => {
+      if (chatId)
+        messageStore.messagesUpdated.remove(handlerMessagesUpdate, chatId);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [chatId]);
+
+  return { messages, subscribe };
+
+  function subscribe(chatId: string | undefined) {
+    setChatId(chatId);
+  }
+
+  function handlerMessagesUpdate(messages: Message[]) {
+    setMessages(messages);
+  }
+}
+
+export function useSubscribeToMessages1(messageStore: MessageStore1) {
   const [messages, setMessages] = useState<Message[]>();
   const [chatId, setChatId] = useState<string>();
 

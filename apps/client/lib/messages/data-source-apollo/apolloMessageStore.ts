@@ -43,6 +43,84 @@ export class CustomEvent<T = unknown> {
   }
 }
 
+// interface CustomEvent1<ResultType, ResultKey> {
+//   add(handler: EventHandler<ResultType>, key?: ResultKey): void;
+//   remove(handler: EventHandler<ResultType>, key?: ResultKey): void;
+// }
+
+export abstract class CustomEvent1<ResultType, ResultKey> {
+  private handlers: Map<ResultKey, EventHandler<ResultType>[]> = new Map();
+
+  add(handler: EventHandler<ResultType>, key: ResultKey) {
+    if (!this.handlers.has(key)) {
+      this.handlers.set(key, []);
+    }
+    this.handlers.get(key)?.push(handler);
+  }
+
+  remove(handler: EventHandler<ResultType>, key: ResultKey) {
+    if (this.handlers.has(key)) {
+      const handlersForChat = this.handlers.get(
+        key
+      ) as EventHandler<ResultType>[];
+      this.handlers.set(
+        key,
+        handlersForChat.filter((h) => h !== handler)
+      );
+    }
+  }
+
+  dispatch(param: ResultType, key: ResultKey) {
+    if (this.handlers.has(key)) {
+      const handlersForChat = this.handlers.get(key);
+      handlersForChat?.forEach((handler) => handler(param));
+    }
+  }
+}
+
+class ApolloMessagesUpdated extends CustomEvent1<Message[], string> {
+  private subscriptions: Map<string, { unsubscribe: () => void }> = new Map();
+
+  constructor(private client: ApolloClient<object>) {
+    super();
+  }
+
+  add(handler: EventHandler<Message[]>, chatId: string) {
+    super.add(handler, chatId);
+    this.subscribeToMessages(chatId);
+  }
+  remove(handler: EventHandler<Message[]>, chatId: string) {
+    super.remove(handler, chatId);
+    this.unsubscribeFromMessages(chatId);
+  }
+
+  private subscribeToMessages(chatId: string) {
+    if (!this.subscriptions.has(chatId)) {
+      const observable = this.client.watchQuery({
+        query: READ_MESSAGES,
+        variables: { chatId },
+        fetchPolicy: 'cache-only',
+      });
+
+      const subscription = observable.subscribe({
+        next: ({ data: { messages } }) => {
+          super.dispatch(messages, chatId);
+        },
+      });
+
+      this.subscriptions.set(chatId, subscription);
+    }
+  }
+
+  private unsubscribeFromMessages(chatId: string) {
+    const subscription = this.subscriptions.get(chatId);
+    if (subscription) {
+      subscription.unsubscribe();
+      this.subscriptions.delete(chatId);
+    }
+  }
+}
+
 const READ_MESSAGES = gql`
   query ReadMessages($chatId: ID) {
     messages(chatId: $chatId) {
@@ -58,6 +136,9 @@ const READ_MESSAGES = gql`
 
 export interface MessageStore {
   messagesUpdated: CustomEvent<Message[]>;
+}
+export interface MessageStore1 {
+  messagesUpdated: CustomEvent1<Message[], string>;
 }
 
 export class ApolloMessageStore implements MessageStore {
@@ -98,5 +179,12 @@ export class ApolloMessageStore implements MessageStore {
       subscription.unsubscribe();
       this.subscriptions.delete(chatId);
     }
+  }
+}
+export class ApolloMessageStore1 implements MessageStore1 {
+  public messagesUpdated: CustomEvent1<Message[], string>;
+
+  constructor(client: ApolloClient<object>) {
+    this.messagesUpdated = new ApolloMessagesUpdated(client);
   }
 }
