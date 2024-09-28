@@ -3,6 +3,7 @@ import { useSubscribeToMessages } from '../lib/messages/presentation/hooks/useRe
 import {
   MessageStore,
   CustomEvent,
+  EventHandler,
 } from '../lib/messages/data-source-apollo/apolloMessageStore';
 import { Message } from '../lib/messages/core/domain/message';
 import { act } from 'react-dom/test-utils';
@@ -76,7 +77,7 @@ test('removes handler on unmount', () => {
     unmount();
   });
 
-  expect(fakeSpy.unsubscribeCalls).toStrictEqual([chatId]);
+  expect(fakeSpy.messagesUpdated.removeCalls).toStrictEqual([chatId]);
 });
 
 test('does not subscribe if called with the same chat id', () => {
@@ -86,7 +87,7 @@ test('does not subscribe if called with the same chat id', () => {
   subscribe(result.current, chatId);
   subscribe(result.current, chatId);
 
-  expect(fakeSpy.subscribeCalls).toStrictEqual([chatId]);
+  expect(fakeSpy.messagesUpdated.addCalls).toStrictEqual([chatId]);
 });
 
 test('unsubscribes chat id if subscribe is called with a different chatId', () => {
@@ -96,25 +97,24 @@ test('unsubscribes chat id if subscribe is called with a different chatId', () =
   subscribe(result.current, chatId);
   subscribe(result.current, chatId + '1');
 
-  expect(fakeSpy.unsubscribeCalls).toStrictEqual([chatId]);
+  expect(fakeSpy.messagesUpdated.removeCalls).toStrictEqual([chatId]);
 });
 
 class FakeSpyMessageStore implements MessageStore {
-  messagesUpdated: CustomEvent<Message[]>;
-  subscribeCalls: string[] = [];
-  unsubscribeCalls: string[] = [];
+  messagesUpdated: MessagesUpdatedSpy = new MessagesUpdatedSpy();
+}
 
-  constructor() {
-    this.messagesUpdated = new CustomEvent<Message[]>(
-      this.subscribeToMessages.bind(this),
-      this.unsubscribeFromMessages.bind(this)
-    );
+class MessagesUpdatedSpy extends CustomEvent<Message[], string> {
+  removeCalls: string[] = [];
+  addCalls: string[] = [];
+
+  remove(handler: EventHandler<Message[]>, chatId: string) {
+    super.remove(handler, chatId);
+    this.removeCalls.push(chatId);
   }
 
-  private subscribeToMessages(chatId: string) {
-    this.subscribeCalls.push(chatId);
-  }
-  private unsubscribeFromMessages(chatId: string) {
-    this.unsubscribeCalls.push(chatId);
+  add(handler: EventHandler<Message[]>, chatId: string) {
+    super.add(handler, chatId);
+    this.addCalls.push(chatId);
   }
 }
