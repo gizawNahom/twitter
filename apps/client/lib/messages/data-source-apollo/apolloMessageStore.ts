@@ -84,7 +84,6 @@ export class ApolloMessageStore implements MessageStore {
 
       const subscription = observable.subscribe({
         next: ({ data: { messages } }) => {
-          // this.messagesUpdated.dispatch(messages);
           this.messagesUpdated.dispatch(messages, chatId);
         },
       });
