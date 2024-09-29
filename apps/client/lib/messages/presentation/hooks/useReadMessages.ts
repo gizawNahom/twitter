@@ -5,19 +5,15 @@ import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
 import { ReadMessagesGatewayImpl } from '../../adapters/gateways/readMessagesGatewayImpl';
 import { ApolloMessagesReader } from '../../data-source-apollo/apolloMessagesReader';
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
-import { Client } from '../../../../utilities/client';
 import {
-  ApolloMessagesUpdated,
+  buildMessageStore,
   MessageStore,
-  MessageStoreImpl,
 } from '../../data-source-apollo/apolloMessageStore';
 
 export type MessagesByDay = Map<string, Message[]>;
 
 export function useReadMessages(chatId: string | undefined) {
-  const { messages, subscribe } = useSubscribeToMessages(
-    new MessageStoreImpl(new ApolloMessagesUpdated(Client.client))
-  );
+  const { messages, subscribe } = useSubscribeToMessages(buildMessageStore());
 
   useEffect(() => {
     (async () => {

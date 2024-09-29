@@ -1,5 +1,6 @@
 import { ApolloClient, gql } from '@apollo/client';
 import { Message } from '../core/domain/message';
+import { Client } from '../../../utilities/client';
 
 export type EventHandler<T = unknown> = (param: T) => void;
 
@@ -99,4 +100,8 @@ export class MessageStoreImpl implements MessageStore {
   get messagesUpdated(): CustomEvent<Message[], string> {
     return this._messagesUpdated;
   }
+}
+
+export function buildMessageStore(): MessageStore {
+  return new MessageStoreImpl(new ApolloMessagesUpdated(Client.client));
 }
