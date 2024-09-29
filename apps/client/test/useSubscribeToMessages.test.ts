@@ -1,10 +1,7 @@
 import { renderHook, RenderHookResult } from '@testing-library/react';
 import { useSubscribeToMessages } from '../lib/messages/presentation/hooks/useReadMessages';
-import {
-  MessageStore,
-  CustomEvent,
-  EventHandler,
-} from '../lib/messages/data-source-apollo/apolloMessageStore';
+import { MessageStore } from '../lib/messages/data-source-apollo/apolloMessageStore';
+import { CustomEvent, EventHandler } from '../lib/shared/customEvent';
 import { Message } from '../lib/messages/core/domain/message';
 import { act } from 'react-dom/test-utils';
 import { buildMessage } from './generator';
