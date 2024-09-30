@@ -5,7 +5,7 @@ import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
 import { ReadMessagesGatewayImpl } from '../../adapters/gateways/readMessagesGatewayImpl';
 import { ApolloMessagesReader } from '../../data-source-apollo/apolloMessagesReader';
 import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
-import { buildMessageStore } from '../../data-source-apollo/apolloMessageStore';
+import { buildMessageStore } from '../../adapters/messageStoreImpl';
 import { MessageStore } from '../../core/ports/messageStore';
 
 export type MessagesByDay = Map<string, Message[]>;

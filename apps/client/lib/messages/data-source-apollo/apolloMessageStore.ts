@@ -1,8 +1,6 @@
 import { ApolloClient, gql } from '@apollo/client';
 import { Message } from '../core/domain/message';
-import { Client } from '../../../utilities/client';
 import { CustomEvent, EventHandler } from '../../shared/customEvent';
-import { MessageStore } from '../core/ports/messageStore';
 
 export class ApolloMessagesUpdated extends CustomEvent<Message[], string> {
   private subscriptions: Map<string, { unsubscribe: () => void }> = new Map();
@@ -59,15 +57,3 @@ const READ_MESSAGES = gql`
     }
   }
 `;
-
-export class MessageStoreImpl implements MessageStore {
-  constructor(private _messagesUpdated: CustomEvent<Message[], string>) {}
-
-  get messagesUpdated(): CustomEvent<Message[], string> {
-    return this._messagesUpdated;
-  }
-}
-
-export function buildMessageStore(): MessageStore {
-  return new MessageStoreImpl(new ApolloMessagesUpdated(Client.client));
-}
