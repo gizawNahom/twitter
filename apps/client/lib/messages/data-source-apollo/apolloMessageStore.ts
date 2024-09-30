@@ -2,6 +2,19 @@ import { ApolloClient, gql } from '@apollo/client';
 import { Message } from '../core/domain/message';
 import { CustomEvent, EventHandler } from '../../shared/customEvent';
 
+const READ_MESSAGES_QUERY = gql`
+  query ReadMessages($chatId: ID) {
+    messages(chatId: $chatId) {
+      id
+      senderId
+      chatId
+      text
+      createdAt
+      isLoading @client
+    }
+  }
+`;
+
 export class ApolloMessagesUpdated extends CustomEvent<Message[], string> {
   private subscriptions: Map<string, { unsubscribe: () => void }> = new Map();
 
@@ -21,7 +34,7 @@ export class ApolloMessagesUpdated extends CustomEvent<Message[], string> {
   private subscribeToMessages(chatId: string) {
     if (!this.subscriptions.has(chatId)) {
       const observable = this.client.watchQuery({
-        query: READ_MESSAGES,
+        query: READ_MESSAGES_QUERY,
         variables: { chatId },
         fetchPolicy: 'cache-only',
       });
@@ -44,16 +57,3 @@ export class ApolloMessagesUpdated extends CustomEvent<Message[], string> {
     }
   }
 }
-
-const READ_MESSAGES = gql`
-  query ReadMessages($chatId: ID) {
-    messages(chatId: $chatId) {
-      id
-      senderId
-      chatId
-      text
-      createdAt
-      isLoading @client
-    }
-  }
-`;
