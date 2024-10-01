@@ -36,96 +36,32 @@ test('a single "remove" call does not prevent other subscribers', async () => {
 });
 
 function updateCache(cache: ApolloCache<object>, message: Message) {
-  const chatId = message.chatId;
-  const newMessageRef = createNewMessageRef(cache, message);
-  addToMessages(cache, newMessageRef);
+  cache.writeQuery({
+    ...buildMessagesQuery(message.chatId),
+    data: {
+      messages: [message],
+    },
+  });
 
-  function createNewMessageRef(
-    cache: ApolloCache<object>,
-    sendMessage: Message
-  ) {
-    return cache.writeFragment({
-      data: sendMessage,
-      fragment: gql`
-        fragment NewMessage on Message {
-          id
-          senderId
-          chatId
-          text
-          createdAt
+  function buildMessagesQuery(chatId: string): {
+    query: DocumentNode;
+    variables: { chatId: string };
+  } {
+    return {
+      query: gql`
+        query ReadMessages($chatId: String!) {
+          messages(chatId: $chatId) {
+            id
+            senderId
+            chatId
+            text
+            createdAt
+          }
         }
       `,
-    });
-  }
-
-  function addToMessages(
-    cache: ApolloCache<object>,
-    newMessageRef: Reference | undefined
-  ) {
-    const messagesQuery = buildMessagesQuery(chatId);
-    const existingMessages = getExistingMessages(cache, messagesQuery);
-    if (!existingMessages)
-      initializeMessagesWithEmptyArray(cache, messagesQuery);
-    modifyMessages(cache, newMessageRef);
-
-    function buildMessagesQuery(chatId: string): {
-      query: DocumentNode;
-      variables: { chatId: string };
-    } {
-      return {
-        query: gql`
-          query ReadMessages($chatId: String!) {
-            messages(chatId: $chatId) {
-              id
-              senderId
-              chatId
-              text
-              createdAt
-            }
-          }
-        `,
-        variables: {
-          chatId: chatId,
-        },
-      };
-    }
-
-    function getExistingMessages(
-      cache: ApolloCache<object>,
-      messagesQuery: {
-        query: DocumentNode;
-        variables: { chatId: string };
-      }
-    ) {
-      return cache.readQuery(messagesQuery);
-    }
-
-    function initializeMessagesWithEmptyArray(
-      cache: ApolloCache<object>,
-      messagesQuery: {
-        query: DocumentNode;
-        variables: { chatId: string };
-      }
-    ) {
-      cache.writeQuery({
-        ...messagesQuery,
-        data: {
-          messages: [],
-        },
-      });
-    }
-
-    function modifyMessages(
-      cache: ApolloCache<object>,
-      newMessageRef: Reference | undefined
-    ) {
-      cache.modify({
-        fields: {
-          messages(existingMessages = []) {
-            return [...existingMessages, newMessageRef];
-          },
-        },
-      });
-    }
+      variables: {
+        chatId: chatId,
+      },
+    };
   }
 }
