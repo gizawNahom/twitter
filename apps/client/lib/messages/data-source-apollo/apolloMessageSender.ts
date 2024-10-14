@@ -1,10 +1,4 @@
-import {
-  ApolloCache,
-  ApolloClient,
-  DocumentNode,
-  gql,
-  Reference,
-} from '@apollo/client';
+import { ApolloCache, ApolloClient, DocumentNode, gql } from '@apollo/client';
 import { MessageSender } from '../adapters/gateways/sendMessageGatewayImpl';
 import { Message } from '../core/domain/message';
 import { loadingMessagesVar } from '../../../utilities/client';

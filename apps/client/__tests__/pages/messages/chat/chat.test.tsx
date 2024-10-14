@@ -122,14 +122,14 @@ function assertLoadingIsDisplayed(message: HTMLElement) {
   expect(within(message).getByTestId(SPINNER_TEST_ID)).toBeInTheDocument();
 }
 
-async function assertSuccessIsDisplayed(message: HTMLElement) {
-  await waitFor(() =>
-    expect(
-      within(message).queryByTestId(SPINNER_TEST_ID)
-    ).not.toBeInTheDocument()
-  );
-  assertMessageTickIsDisplayed(message);
-}
+// async function assertSuccessIsDisplayed(message: HTMLElement) {
+//   await waitFor(() =>
+//     expect(
+//       within(message).queryByTestId(SPINNER_TEST_ID)
+//     ).not.toBeInTheDocument()
+//   );
+//   assertMessageTickIsDisplayed(message);
+// }
 
 async function assertASingleApiCallToSendMessage(variables: {
   text: string;

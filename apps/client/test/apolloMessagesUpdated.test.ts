@@ -1,4 +1,4 @@
-import { ApolloCache, DocumentNode, gql, Reference } from '@apollo/client';
+import { ApolloCache, DocumentNode, gql } from '@apollo/client';
 import { setUpClient } from '../__tests__/testUtilities';
 import { ApolloMessagesUpdated } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
 import { Client } from '../utilities/client';

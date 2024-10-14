@@ -1,7 +1,6 @@
 import { GraphQLVariables, graphql } from 'msw';
 import {
   GENERIC_SERVER_ERROR,
-  sampleMessageResponse,
   samplePartialChatResponse,
   samplePostResponse,
   sampleUserResponse,
