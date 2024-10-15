@@ -5,11 +5,13 @@ import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
 import { SendMessageGateway } from '../../core/ports/sendMessageGateway';
 import { SendMessageGatewayImpl } from '../../adapters/gateways/sendMessageGatewayImpl';
 import { ApolloMessageSender } from '../../data-source-apollo/apolloMessageSender';
+import { useAuth } from '../../../auth/authContext';
 
 export function useSendMessage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [message, setMessage] = useState<Message | null>();
-  const senderId = 'userId1';
+  const { user } = useAuth();
+  const senderId = user?.id || '';
 
   return {
     handleSendMessage,
