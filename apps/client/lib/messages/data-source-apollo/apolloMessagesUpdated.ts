@@ -2,7 +2,7 @@ import { ApolloClient, gql } from '@apollo/client';
 import { Message } from '../core/domain/message';
 import { CustomEvent, EventHandler } from '../../shared/customEvent';
 
-const READ_MESSAGES_QUERY = gql`
+export const READ_MESSAGES_QUERY = gql`
   query ReadMessages($chatId: ID) {
     messages(chatId: $chatId) {
       id
