@@ -14,7 +14,11 @@ import { ApolloMessageSender } from '../../../lib/messages/data-source-apollo/ap
 import { Client } from '../../../utilities/client';
 
 async function sendRequest(text: string, chatId: string) {
-  return await new ApolloMessageSender(Client.client).sendMessage(text, chatId);
+  return await new ApolloMessageSender(Client.client).sendMessage(
+    sampleMessageResponse.senderId,
+    text,
+    chatId
+  );
 }
 
 export function testSendMessage(provider: Pact, baseUrl: URL) {

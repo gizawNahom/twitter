@@ -6,16 +6,20 @@ import { loadingMessagesVar } from '../../../utilities/client';
 export class ApolloMessageSender implements MessageSender {
   constructor(private client: ApolloClient<object>) {}
 
-  async sendMessage(text: string, chatId: string): Promise<Message> {
+  async sendMessage(
+    senderId: string,
+    text: string,
+    chatId: string
+  ): Promise<Message> {
     try {
-      return await this.trySendMessage(text, chatId);
+      return await this.trySendMessage(senderId, text, chatId);
     } catch (error) {
       throw new Error();
     }
   }
 
-  private async trySendMessage(text: string, chatId: string) {
-    const opRes = this.createOptimisticResponse(text, chatId);
+  private async trySendMessage(senderId: string, text: string, chatId: string) {
+    const opRes = this.createOptimisticResponse(senderId, text, chatId);
     this.addToLoadingMessages(opRes);
     const res = await this.sendMessageWithOptimisticResponse(
       text,
@@ -26,12 +30,16 @@ export class ApolloMessageSender implements MessageSender {
     return res.data?.sendMessage as Message;
   }
 
-  private createOptimisticResponse(text: string, chatId: string): Message {
+  private createOptimisticResponse(
+    senderId: string,
+    text: string,
+    chatId: string
+  ): Message {
     const tempMessageId = `${Math.floor(Math.random() * 100000)}`;
     const message = {
       id: tempMessageId,
       text,
-      senderId: 'randomId1',
+      senderId,
       chatId: chatId as string,
       createdAt: new Date().toISOString(),
       __typename: 'Message',

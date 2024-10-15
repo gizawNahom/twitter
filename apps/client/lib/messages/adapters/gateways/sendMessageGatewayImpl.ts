@@ -4,11 +4,15 @@ import { SendMessageGateway } from '../../core/ports/sendMessageGateway';
 export class SendMessageGatewayImpl implements SendMessageGateway {
   constructor(private sender: MessageSender) {}
 
-  sendMessage(text: string, chatId: string): Promise<Message | null> {
-    return this.sender.sendMessage(text, chatId);
+  sendMessage(
+    senderId: string,
+    text: string,
+    chatId: string
+  ): Promise<Message | null> {
+    return this.sender.sendMessage(senderId, text, chatId);
   }
 }
 
 export interface MessageSender {
-  sendMessage(text: string, chatId: string): Promise<Message>;
+  sendMessage(senderId: string, text: string, chatId: string): Promise<Message>;
 }

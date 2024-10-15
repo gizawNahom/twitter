@@ -10,7 +10,7 @@ test('returns sent message', async () => {
   const chatId = 'chatId1';
   const text = 'sample';
   const sender = new ApolloMessageSender(Client.client);
-  await sender.sendMessage(text, chatId);
+  await sender.sendMessage('senderId', text, chatId);
 
   const messages = readCache(chatId).messages as Message[];
   expect(messages).toHaveLength(1);
