@@ -9,6 +9,7 @@ import { ApolloMessageSender } from '../../data-source-apollo/apolloMessageSende
 export function useSendMessage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
   const [message, setMessage] = useState<Message | null>();
+  const senderId = 'userId1';
 
   return {
     handleSendMessage,
@@ -22,7 +23,7 @@ export function useSendMessage() {
   ): Promise<Message | null | undefined> {
     try {
       setStatus('loading');
-      const message = await buildUseCase().execute(text, chatId);
+      const message = await buildUseCase().execute({ senderId, text, chatId });
       setMessage(message);
       setStatus('idle');
       return message;
