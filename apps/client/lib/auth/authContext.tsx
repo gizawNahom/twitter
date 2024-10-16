@@ -1,10 +1,11 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
+import { GetLoggedInUserUseCase } from './getLoggedInUserUseCase';
 
 const AuthContext = createContext<{ user: SignedInUser | null }>({
   user: null,
 });
 
-interface SignedInUser {
+export interface SignedInUser {
   id: string;
 }
 
@@ -13,9 +14,8 @@ export function useAuth(): { user: SignedInUser | null } {
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user] = useState<SignedInUser>({
-    id: 'senderId',
-  });
+  const useCase = new GetLoggedInUserUseCase();
+  const [user] = useState<SignedInUser>(() => useCase.execute());
 
   return (
     <AuthContext.Provider

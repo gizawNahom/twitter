@@ -1,4 +1,5 @@
 import { setUpApi } from '../__tests__/testUtilities';
+import { GetLoggedInUserUseCase } from '../lib/auth/getLoggedInUserUseCase';
 import { Message } from '../lib/messages/core/domain/message';
 import { ApolloMessageSender } from '../lib/messages/data-source-apollo/apolloMessageSender';
 import { READ_MESSAGES_QUERY } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
@@ -9,7 +10,7 @@ setUpApi();
 test('returns sent message', async () => {
   const chatId = 'chatId1';
   const text = 'sample';
-  const senderId = 'senderId';
+  const senderId = new GetLoggedInUserUseCase().execute().id;
   const sender = new ApolloMessageSender(Client.client);
   await sender.sendMessage(senderId, text, chatId);
 
