@@ -1,5 +1,7 @@
 import { setUpApi } from '../__tests__/testUtilities';
+import { SignedInUser } from '../lib/auth/authContext';
 import { DI } from '../lib/auth/DI';
+import { AuthGateway } from '../lib/auth/getLoggedInUserUseCase';
 import { Message } from '../lib/messages/core/domain/message';
 import { ApolloMessageSender } from '../lib/messages/data-source-apollo/apolloMessageSender';
 import { READ_MESSAGES_QUERY } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
@@ -10,7 +12,9 @@ setUpApi();
 test('returns sent message', async () => {
   const chatId = 'chatId1';
   const text = 'sample';
-  const senderId = DI.getLoggedInUserUseCase.execute().id;
+  const authStub = new AuthGatewayStub();
+  DI.authGateway = authStub;
+  const senderId = authStub.loggedInUserId;
   const sender = new ApolloMessageSender(Client.client);
   await sender.sendMessage(senderId, text, chatId);
 
@@ -72,3 +76,13 @@ function removeSeconds(isoString: string) {
 
 test.todo(`creates optimistic message`);
 test.todo(`only adds message to its chat`);
+
+class AuthGatewayStub implements AuthGateway {
+  loggedInUserId = 'senderId';
+
+  getLoggedInUser(): SignedInUser {
+    return {
+      id: this.loggedInUserId,
+    };
+  }
+}
