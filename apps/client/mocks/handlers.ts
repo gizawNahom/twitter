@@ -88,12 +88,15 @@ export const handlers = [
   }),
   graphql.mutation(Operations.SendMessage, async ({ variables }, res, ctx) => {
     sendMessageCalls.push(variables);
+    const senderId = 'senderId';
+
     return res(
       ctx.delay(450),
       ctx.data({
         sendMessage: await messagesDB.create(
           variables.chatId as string,
-          variables.text as string
+          variables.text as string,
+          senderId
         ),
       })
     );

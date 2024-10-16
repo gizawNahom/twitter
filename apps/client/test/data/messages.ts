@@ -10,8 +10,17 @@ const messages: Map<string, Message[]> = new Map(
 
 function create(chatId: string, message: Message): Promise<Message>;
 function create(chatId: string, text: string): Promise<Message>;
+function create(
+  chatId: string,
+  text: string,
+  senderId: string
+): Promise<Message>;
 
-async function create(chatId: string, param: Message | string) {
+async function create(
+  chatId: string,
+  param: Message | string,
+  senderId?: string
+) {
   return createMessage(chatId, getMessage(param, chatId));
 
   function getMessage(param: Message | string, chatId: string): Message {
@@ -20,6 +29,7 @@ async function create(chatId: string, param: Message | string) {
         text: param,
         createdAt: new Date().toISOString(),
         chatId,
+        senderId,
       });
     }
     return param;

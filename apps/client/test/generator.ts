@@ -18,10 +18,11 @@ export function buildMessage(msgTemplate?: {
   text?: string;
   createdAt?: string;
   chatId?: string;
+  senderId?: string;
 }): Message {
   return {
     id: faker.string.uuid(),
-    senderId: faker.string.uuid(),
+    senderId: msgTemplate?.senderId || faker.string.uuid(),
     chatId: msgTemplate?.chatId || faker.string.uuid(),
     text: msgTemplate?.text || faker.string.sample(10),
     createdAt:

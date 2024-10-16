@@ -9,18 +9,20 @@ setUpApi();
 test('returns sent message', async () => {
   const chatId = 'chatId1';
   const text = 'sample';
+  const senderId = 'senderId';
   const sender = new ApolloMessageSender(Client.client);
-  await sender.sendMessage('senderId', text, chatId);
+  await sender.sendMessage(senderId, text, chatId);
 
   const messages = readCache(chatId).messages as Message[];
   expect(messages).toHaveLength(1);
   assertSentMessage(messages[0]);
 
   function assertSentMessage(message: Message) {
-    expect(messages[0].text).toBe(text);
-    expect(messages[0].chatId).toBe(chatId);
-    expect(messages[0].isLoading).toBe(false);
-    expect(removeSeconds(messages[0].createdAt)).toBe(
+    expect(message.text).toBe(text);
+    expect(message.chatId).toBe(chatId);
+    expect(message.isLoading).toBe(false);
+    expect(message.senderId).toBe(senderId);
+    expect(removeSeconds(message.createdAt)).toBe(
       removeSeconds(new Date().toISOString())
     );
   }
