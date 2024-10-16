@@ -7,51 +7,38 @@ import { ApolloMessageSender } from '../lib/messages/data-source-apollo/apolloMe
 import { READ_MESSAGES_QUERY } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
 import { Client } from '../utilities/client';
 
-setUpApi();
+function buildExpectedMessage(isLoading: boolean) {
+  return {
+    senderId: getStubbedAuthGateway().loggedInUserId,
+    text: 'sample',
+    chatId: 'chatId1',
+    createdAt: new Date().toISOString(),
+    isLoading,
+  };
+}
 
-test('returns sent message', async () => {
-  const chatId = 'chatId1';
-  const text = 'sample';
+function getStubbedAuthGateway() {
   const authStub = new AuthGatewayStub();
   DI.authGateway = authStub;
-  const senderId = authStub.loggedInUserId;
+  return authStub;
+}
+
+async function sendMessage(senderId: string, text: string, chatId: string) {
   const sender = new ApolloMessageSender(Client.client);
-  await sender.sendMessage(senderId, text, chatId);
+  return sender.sendMessage(senderId, text, chatId);
+}
 
-  const messages = readCache(chatId).messages as Message[];
-  expect(messages).toHaveLength(1);
-  assertSentMessage(messages[0], {
-    text,
-    chatId,
-    isLoading: false,
-    senderId,
-    createdAt: new Date().toISOString(),
-  });
-});
+function readMessages(chatId: string): Message[] {
+  return Client.client.readQuery(
+    {
+      query: READ_MESSAGES_QUERY,
+      variables: { chatId },
+    },
+    true
+  ).messages as Message[];
+}
 
-test('creates optimistic response', async () => {
-  const chatId = 'chatId1';
-  const text = 'sample';
-  const authStub = new AuthGatewayStub();
-  DI.authGateway = authStub;
-  const senderId = authStub.loggedInUserId;
-
-  const sender = new ApolloMessageSender(Client.client);
-  const responsePromise = sender.sendMessage(senderId, text, chatId);
-
-  const messages = readCache(chatId).messages as Message[];
-  await responsePromise;
-  expect(messages).toHaveLength(1);
-  assertSentMessage(messages[0], {
-    text,
-    chatId,
-    isLoading: true,
-    senderId,
-    createdAt: new Date().toISOString(),
-  });
-});
-
-function assertSentMessage(message: Message, obj: Partial<Message>) {
+function assertMessageEquality(message: Message, obj: Partial<Message>) {
   expect(message.text).toBe(obj.text);
   expect(message.chatId).toBe(obj.chatId);
   expect(message.isLoading).toBe(obj.isLoading);
@@ -61,19 +48,40 @@ function assertSentMessage(message: Message, obj: Partial<Message>) {
   );
 }
 
-function readCache(chatId: string) {
-  return Client.client.readQuery(
-    {
-      query: READ_MESSAGES_QUERY,
-      variables: { chatId },
-    },
-    true
-  );
-}
-
 function removeSeconds(isoString: string) {
   return isoString.slice(0, isoString.lastIndexOf(':'));
 }
+
+setUpApi();
+
+test('returns sent message', async () => {
+  const expectedMessage = buildExpectedMessage(false);
+
+  await sendMessage(
+    expectedMessage.senderId,
+    expectedMessage.text,
+    expectedMessage.chatId
+  );
+
+  const messages = readMessages(expectedMessage.chatId);
+  expect(messages).toHaveLength(1);
+  assertMessageEquality(messages[0], expectedMessage);
+});
+
+test('creates optimistic response', async () => {
+  const expectedMessage = buildExpectedMessage(true);
+
+  const responsePromise = sendMessage(
+    expectedMessage.senderId,
+    expectedMessage.text,
+    expectedMessage.chatId
+  );
+
+  const messages = readMessages(expectedMessage.chatId);
+  await responsePromise;
+  expect(messages).toHaveLength(1);
+  assertMessageEquality(messages[0], expectedMessage);
+});
 
 test.todo(`creates optimistic message`);
 test.todo(`only adds message to its chat`);
