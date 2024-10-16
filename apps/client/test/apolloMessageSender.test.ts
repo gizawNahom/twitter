@@ -20,18 +20,46 @@ test('returns sent message', async () => {
 
   const messages = readCache(chatId).messages as Message[];
   expect(messages).toHaveLength(1);
-  assertSentMessage(messages[0]);
-
-  function assertSentMessage(message: Message) {
-    expect(message.text).toBe(text);
-    expect(message.chatId).toBe(chatId);
-    expect(message.isLoading).toBe(false);
-    expect(message.senderId).toBe(senderId);
-    expect(removeSeconds(message.createdAt)).toBe(
-      removeSeconds(new Date().toISOString())
-    );
-  }
+  assertSentMessage(messages[0], {
+    text,
+    chatId,
+    isLoading: false,
+    senderId,
+    createdAt: new Date().toISOString(),
+  });
 });
+
+test('creates optimistic response', async () => {
+  const chatId = 'chatId1';
+  const text = 'sample';
+  const authStub = new AuthGatewayStub();
+  DI.authGateway = authStub;
+  const senderId = authStub.loggedInUserId;
+
+  const sender = new ApolloMessageSender(Client.client);
+  const responsePromise = sender.sendMessage(senderId, text, chatId);
+
+  const messages = readCache(chatId).messages as Message[];
+  await responsePromise;
+  expect(messages).toHaveLength(1);
+  assertSentMessage(messages[0], {
+    text,
+    chatId,
+    isLoading: true,
+    senderId,
+    createdAt: new Date().toISOString(),
+  });
+});
+
+function assertSentMessage(message: Message, obj: Partial<Message>) {
+  expect(message.text).toBe(obj.text);
+  expect(message.chatId).toBe(obj.chatId);
+  expect(message.isLoading).toBe(obj.isLoading);
+  expect(message.senderId).toBe(obj.senderId);
+  expect(removeSeconds(message.createdAt)).toBe(
+    removeSeconds(obj.createdAt as string)
+  );
+}
 
 function readCache(chatId: string) {
   return Client.client.readQuery(
@@ -46,33 +74,6 @@ function readCache(chatId: string) {
 function removeSeconds(isoString: string) {
   return isoString.slice(0, isoString.lastIndexOf(':'));
 }
-
-// const responsePromise = messageSender.sendMessage(input);
-
-//   // Check the cache immediately after sending the message
-//   const optimisticCacheData = client.cache.readQuery({
-//     query: gql`
-//       query GetMessages {
-//         messages {
-//           id
-//           content
-//         }
-//       }
-//     `,
-//   });
-
-//   // Check that the optimistic data is present in the cache
-//   expect(optimisticCacheData).toEqual({
-//     messages: [
-//       expect.objectContaining({
-//         id: 'temp-id', // This should match the optimistic response ID
-//         content: input.content,
-//       }),
-//     ],
-//   });
-
-//   // Wait for the actual response
-//   const response = await responsePromise;
 
 test.todo(`creates optimistic message`);
 test.todo(`only adds message to its chat`);
