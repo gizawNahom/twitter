@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from 'react';
-import { GetLoggedInUserUseCase } from './getLoggedInUserUseCase';
+import { DI } from './DI';
 
 const AuthContext = createContext<{ user: SignedInUser | null }>({
   user: null,
@@ -14,8 +14,9 @@ export function useAuth(): { user: SignedInUser | null } {
 }
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const useCase = new GetLoggedInUserUseCase();
-  const [user] = useState<SignedInUser>(() => useCase.execute());
+  const [user] = useState<SignedInUser>(() =>
+    DI.getLoggedInUserUseCase.execute()
+  );
 
   return (
     <AuthContext.Provider
