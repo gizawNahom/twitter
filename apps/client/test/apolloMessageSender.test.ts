@@ -1,11 +1,10 @@
 import { setUpApi } from '../__tests__/testUtilities';
 import { SignedInUser } from '../lib/auth/authContext';
 import { DI } from '../lib/auth/DI';
+import { DI as msgsDI } from '../lib/messages/DI';
 import { AuthGateway } from '../lib/auth/getLoggedInUserUseCase';
 import { Message } from '../lib/messages/core/domain/message';
-import { ApolloMessageSender } from '../lib/messages/data-source-apollo/apolloMessageSender';
 import { READ_MESSAGES_QUERY } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
-import { RandomIdGenerator } from '../lib/messages/data-source-apollo/idGenerator';
 import { Client } from '../utilities/client';
 
 function buildExpectedMessage(isLoading: boolean) {
@@ -25,10 +24,7 @@ function getStubbedAuthGateway() {
 }
 
 async function sendMessage(senderId: string, text: string, chatId: string) {
-  const sender = new ApolloMessageSender(
-    Client.client,
-    new RandomIdGenerator()
-  );
+  const sender = msgsDI.messageSender;
   return sender.sendMessage(senderId, text, chatId);
 }
 

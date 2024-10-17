@@ -10,15 +10,14 @@ import {
   GENERIC_SERVER_ERROR,
   sampleMessageResponse,
 } from '../../../mocks/values';
-import { ApolloMessageSender } from '../../../lib/messages/data-source-apollo/apolloMessageSender';
-import { Client } from '../../../utilities/client';
-import { RandomIdGenerator } from 'apps/client/lib/messages/data-source-apollo/idGenerator';
+import { DI } from '../../../lib/messages/DI';
 
 async function sendRequest(text: string, chatId: string) {
-  return await new ApolloMessageSender(
-    Client.client,
-    new RandomIdGenerator()
-  ).sendMessage(sampleMessageResponse.senderId, text, chatId);
+  return await DI.messageSender.sendMessage(
+    sampleMessageResponse.senderId,
+    text,
+    chatId
+  );
 }
 
 export function testSendMessage(provider: Pact, baseUrl: URL) {
