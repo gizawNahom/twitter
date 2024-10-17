@@ -10,10 +10,10 @@ import {
   GENERIC_SERVER_ERROR,
   sampleMessageResponse,
 } from '../../../mocks/values';
-import { DI } from '../../../lib/messages/DI';
+import { Context } from '../../../lib/messages/context';
 
 async function sendRequest(text: string, chatId: string) {
-  return await DI.messageSender.sendMessage(
+  return await Context.messageSender.sendMessage(
     sampleMessageResponse.senderId,
     text,
     chatId

@@ -1,7 +1,7 @@
 import { setUpApi } from '../__tests__/testUtilities';
 import { SignedInUser } from '../lib/auth/authContext';
-import { DI } from '../lib/auth/DI';
-import { DI as msgsDI } from '../lib/messages/DI';
+import { Context } from '../lib/auth/context';
+import { Context as msgsDI } from '../lib/messages/context';
 import { AuthGateway } from '../lib/auth/getLoggedInUserUseCase';
 import { Message } from '../lib/messages/core/domain/message';
 import { READ_MESSAGES_QUERY } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
@@ -19,7 +19,7 @@ function buildExpectedMessage(isLoading: boolean) {
 
 function getStubbedAuthGateway() {
   const authStub = new AuthGatewayStub();
-  DI.authGateway = authStub;
+  Context.authGateway = authStub;
   return authStub;
 }
 

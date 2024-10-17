@@ -11,15 +11,15 @@ import {
   RandomIdGenerator,
 } from './data-source-apollo/idGenerator';
 
-export class DI {
+export class Context {
   static idGenerator: IdGenerator = new RandomIdGenerator();
   static get messageSender(): MessageSender {
-    return new ApolloMessageSender(Client.client, DI.idGenerator);
+    return new ApolloMessageSender(Client.client, Context.idGenerator);
   }
   static get sendMessageGateway(): SendMessageGateway {
-    return new SendMessageGatewayImpl(DI.messageSender);
+    return new SendMessageGatewayImpl(Context.messageSender);
   }
   static get sendMessageUseCase(): SendMessageUseCase {
-    return new SendMessageUseCase(DI.sendMessageGateway);
+    return new SendMessageUseCase(Context.sendMessageGateway);
   }
 }

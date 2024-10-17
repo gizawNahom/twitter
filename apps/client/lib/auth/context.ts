@@ -4,8 +4,8 @@ import {
   GetLoggedInUserUseCase,
 } from './getLoggedInUserUseCase';
 
-export class DI {
+export class Context {
   static authGateway: AuthGateway = new DummyAuthGateway();
   static getLoggedInUserUseCase: GetLoggedInUserUseCase =
-    new GetLoggedInUserUseCase(DI.authGateway);
+    new GetLoggedInUserUseCase(Context.authGateway);
 }
