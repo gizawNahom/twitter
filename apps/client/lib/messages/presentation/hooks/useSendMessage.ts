@@ -6,6 +6,7 @@ import { SendMessageGateway } from '../../core/ports/sendMessageGateway';
 import { SendMessageGatewayImpl } from '../../adapters/gateways/sendMessageGatewayImpl';
 import { ApolloMessageSender } from '../../data-source-apollo/apolloMessageSender';
 import { useAuth } from '../../../auth/authContext';
+import { RandomIdGenerator } from '../../data-source-apollo/idGenerator';
 
 export function useSendMessage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
@@ -39,6 +40,8 @@ export function useSendMessage() {
   }
 
   function buildGateway(): SendMessageGateway {
-    return new SendMessageGatewayImpl(new ApolloMessageSender(Client.client));
+    return new SendMessageGatewayImpl(
+      new ApolloMessageSender(Client.client, new RandomIdGenerator())
+    );
   }
 }

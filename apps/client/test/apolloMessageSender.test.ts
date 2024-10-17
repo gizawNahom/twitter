@@ -5,6 +5,7 @@ import { AuthGateway } from '../lib/auth/getLoggedInUserUseCase';
 import { Message } from '../lib/messages/core/domain/message';
 import { ApolloMessageSender } from '../lib/messages/data-source-apollo/apolloMessageSender';
 import { READ_MESSAGES_QUERY } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
+import { RandomIdGenerator } from '../lib/messages/data-source-apollo/idGenerator';
 import { Client } from '../utilities/client';
 
 function buildExpectedMessage(isLoading: boolean) {
@@ -24,7 +25,10 @@ function getStubbedAuthGateway() {
 }
 
 async function sendMessage(senderId: string, text: string, chatId: string) {
-  const sender = new ApolloMessageSender(Client.client);
+  const sender = new ApolloMessageSender(
+    Client.client,
+    new RandomIdGenerator()
+  );
   return sender.sendMessage(senderId, text, chatId);
 }
 

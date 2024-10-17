@@ -2,9 +2,13 @@ import { ApolloCache, ApolloClient, DocumentNode, gql } from '@apollo/client';
 import { MessageSender } from '../adapters/gateways/sendMessageGatewayImpl';
 import { Message } from '../core/domain/message';
 import { loadingMessagesVar } from '../../../utilities/client';
+import { IdGenerator } from './idGenerator';
 
 export class ApolloMessageSender implements MessageSender {
-  constructor(private client: ApolloClient<object>) {}
+  constructor(
+    private client: ApolloClient<object>,
+    private idGenerator: IdGenerator
+  ) {}
 
   async sendMessage(
     senderId: string,
@@ -35,7 +39,7 @@ export class ApolloMessageSender implements MessageSender {
     text: string,
     chatId: string
   ): Message {
-    const tempMessageId = `${Math.floor(Math.random() * 100000)}`;
+    const tempMessageId = this.idGenerator.generateId();
     const message = {
       id: tempMessageId,
       text,
