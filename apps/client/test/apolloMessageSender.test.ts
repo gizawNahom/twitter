@@ -1,11 +1,14 @@
 import { setUpApi } from '../__tests__/testUtilities';
 import { SignedInUser } from '../lib/auth/authContext';
 import { Context } from '../lib/auth/context';
-import { Context as msgsDI } from '../lib/messages/context';
+import { Context as msgsContext } from '../lib/messages/context';
 import { AuthGateway } from '../lib/auth/getLoggedInUserUseCase';
 import { Message } from '../lib/messages/core/domain/message';
 import { READ_MESSAGES_QUERY } from '../lib/messages/data-source-apollo/apolloMessagesUpdated';
 import { Client } from '../utilities/client';
+import { IdGenerator } from '../lib/messages/data-source-apollo/idGenerator';
+
+let idGenerator: IdGeneratorStub;
 
 function buildExpectedMessage(isLoading: boolean) {
   return {
@@ -24,7 +27,7 @@ function getStubbedAuthGateway() {
 }
 
 async function sendMessage(senderId: string, text: string, chatId: string) {
-  const sender = msgsDI.messageSender;
+  const sender = msgsContext.messageSender;
   return sender.sendMessage(senderId, text, chatId);
 }
 
@@ -54,6 +57,11 @@ function removeSeconds(isoString: string) {
 
 setUpApi();
 
+beforeEach(() => {
+  idGenerator = new IdGeneratorStub();
+  msgsContext.idGenerator = idGenerator;
+});
+
 test('returns sent message', async () => {
   const expectedMessage = buildExpectedMessage(false);
 
@@ -80,10 +88,12 @@ test('creates optimistic response', async () => {
   const messages = readMessages(expectedMessage.chatId);
   await responsePromise;
   expect(messages).toHaveLength(1);
-  assertMessageEquality(messages[0], expectedMessage);
+  assertMessageEquality(messages[0], {
+    ...expectedMessage,
+    id: idGenerator.id,
+  });
 });
 
-test.todo(`creates optimistic message`);
 test.todo(`only adds message to its chat`);
 
 class AuthGatewayStub implements AuthGateway {
@@ -93,5 +103,13 @@ class AuthGatewayStub implements AuthGateway {
     return {
       id: this.loggedInUserId,
     };
+  }
+}
+
+class IdGeneratorStub implements IdGenerator {
+  id = 'sampleId';
+
+  generateId(): string {
+    return this.id;
   }
 }
