@@ -43,7 +43,10 @@ export function testSendMessage(provider: Pact, baseUrl: URL) {
         sampleMessageResponse.chatId
       );
 
-      expect(message).toStrictEqual(sampleMessageResponse);
+      expect(message).toStrictEqual({
+        ...sampleMessageResponse,
+        isLoading: false,
+      });
     });
 
     test('handles error', async () => {

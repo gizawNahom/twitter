@@ -82,6 +82,7 @@ export class ApolloMessageSender implements MessageSender {
             chatId
             text
             createdAt
+            isLoading @client
           }
         }
       `;
