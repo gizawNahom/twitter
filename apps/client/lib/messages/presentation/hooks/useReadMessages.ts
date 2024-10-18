@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Message } from '../../core/domain/message';
 import { formatDayForMessage } from '../utilities';
-import { ReadMessagesUseCase } from '../../core/useCases/readMessagesUseCase';
-import { ReadMessagesGatewayImpl } from '../../adapters/gateways/readMessagesGatewayImpl';
-import { ApolloMessagesReader } from '../../data-source-apollo/apolloMessagesReader';
-import { ReadMessagesGateway } from '../../core/ports/readMessagesGateway';
 import { buildMessageStore } from '../../adapters/messageStoreImpl';
 import { MessageStore } from '../../core/ports/messageStore';
+import { Context } from '../../context';
 
 export type MessagesByDay = Map<string, Message[]>;
 
@@ -32,15 +29,7 @@ export function useReadMessages(chatId: string | undefined) {
   };
 
   async function handleReadMessages(chatId: string) {
-    await buildUseCase().execute(chatId);
-  }
-
-  function buildUseCase() {
-    return new ReadMessagesUseCase(buildGateway());
-
-    function buildGateway(): ReadMessagesGateway {
-      return new ReadMessagesGatewayImpl(new ApolloMessagesReader());
-    }
+    await Context.readMessagesUseCase.execute(chatId);
   }
 
   function buildMessagesByDay(messages: Message[]) {
