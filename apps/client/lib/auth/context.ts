@@ -6,6 +6,7 @@ import {
 
 export class Context {
   static authGateway: AuthGateway = new DummyAuthGateway();
-  static getLoggedInUserUseCase: GetLoggedInUserUseCase =
-    new GetLoggedInUserUseCase(Context.authGateway);
+  static get getLoggedInUserUseCase(): GetLoggedInUserUseCase {
+    return new GetLoggedInUserUseCase(Context.authGateway);
+  }
 }

@@ -9,6 +9,7 @@ import {
 import { Operations } from '../__tests__/testUtilities/operations';
 import chatsDB from '../test/data/chats';
 import messagesDB from '../test/data/messages';
+import { Context } from '../lib/auth/context';
 
 export let wasCreatePostCalled = false;
 export let wasPostCalled = false;
@@ -88,7 +89,7 @@ export const handlers = [
   }),
   graphql.mutation(Operations.SendMessage, async ({ variables }, res, ctx) => {
     sendMessageCalls.push(variables);
-    const senderId = 'senderId';
+    const senderId = Context.getLoggedInUserUseCase.execute().id;
 
     return res(
       ctx.delay(450),

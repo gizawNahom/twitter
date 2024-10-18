@@ -14,13 +14,17 @@ let idGenerator: IdGeneratorStub;
 function buildMessage({
   isLoading,
   chatId = 'chatId1',
+  text = 'sample',
+  senderId = getStubbedAuthGateway().loggedInUserId,
 }: {
   isLoading: boolean;
   chatId?: string;
+  text?: string;
+  senderId?: string;
 }) {
   return {
-    senderId: getStubbedAuthGateway().loggedInUserId,
-    text: 'sample',
+    senderId,
+    text,
     chatId,
     createdAt: new Date().toISOString(),
     isLoading,
@@ -81,10 +85,16 @@ async function assertChatOnlyContainsMessage(
   });
 }
 
-async function getSavedMessageId(chatId1: string) {
-  const savedMessage = (await messagesDB.read(chatId1))?.at(0);
+async function getSavedMessageId(chatId: string, index = 0) {
+  const savedMessage = (await messagesDB.read(chatId))?.at(index);
   const savedId = savedMessage?.id;
   return savedId;
+}
+
+function stubLoggedInUserId(senderId: string) {
+  const stub = new AuthGatewayStub();
+  stub.loggedInUserId = senderId;
+  Context.authGateway = stub;
 }
 
 setUpApi();
@@ -158,7 +168,37 @@ test('creates separate message lists for different chats', async () => {
   await assertChatOnlyContainsMessage(message2.chatId, message2);
 });
 
-test.todo(`appends messages after multiple requests`);
+test(`appends message if it has the same chat id`, async () => {
+  const chatId = 'chatId1';
+  const message1 = buildMessage({
+    isLoading: false,
+    chatId: chatId,
+    text: 'text1',
+    senderId: 'senderId1',
+  });
+  const message2 = buildMessage({
+    isLoading: false,
+    chatId: chatId,
+    text: 'text2',
+    senderId: 'senderId2',
+  });
+
+  stubLoggedInUserId(message1.senderId);
+  await sendMessage(message1.senderId, message1.text, message1.chatId);
+  stubLoggedInUserId(message2.senderId);
+  await sendMessage(message2.senderId, message2.text, message2.chatId);
+
+  const messages = readMessagesInCache(chatId);
+  expect(messages).toHaveLength(2);
+  assertMessageEquality(messages[0], {
+    ...message1,
+    id: await getSavedMessageId(chatId, 0),
+  });
+  assertMessageEquality(messages[1], {
+    ...message2,
+    id: await getSavedMessageId(chatId, 1),
+  });
+});
 
 class AuthGatewayStub implements AuthGateway {
   loggedInUserId = 'senderId';
