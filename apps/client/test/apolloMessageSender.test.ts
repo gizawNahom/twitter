@@ -11,11 +11,17 @@ import messagesDB from './data/messages';
 
 let idGenerator: IdGeneratorStub;
 
-function buildExpectedMessage(isLoading: boolean) {
+function buildMessage({
+  isLoading,
+  chatId = 'chatId1',
+}: {
+  isLoading: boolean;
+  chatId?: string;
+}) {
   return {
     senderId: getStubbedAuthGateway().loggedInUserId,
     text: 'sample',
-    chatId: 'chatId1',
+    chatId,
     createdAt: new Date().toISOString(),
     isLoading,
   };
@@ -32,7 +38,7 @@ async function sendMessage(senderId: string, text: string, chatId: string) {
   return sender.sendMessage(senderId, text, chatId);
 }
 
-function readMessages(chatId: string): Message[] {
+function readMessagesInCache(chatId: string): Message[] {
   return Client.client.readQuery(
     {
       query: READ_MESSAGES_QUERY,
@@ -57,6 +63,30 @@ function removeSeconds(isoString: string) {
   return isoString.slice(0, isoString.lastIndexOf(':'));
 }
 
+async function assertChatOnlyContainsMessage(
+  chatId: string,
+  message: {
+    senderId: string;
+    text: string;
+    chatId: string;
+    createdAt: string;
+    isLoading: boolean;
+  }
+) {
+  const messages = readMessagesInCache(chatId);
+  expect(messages).toHaveLength(1);
+  assertMessageEquality(messages[0], {
+    ...message,
+    id: await getSavedMessageId(chatId),
+  });
+}
+
+async function getSavedMessageId(chatId1: string) {
+  const savedMessage = (await messagesDB.read(chatId1))?.at(0);
+  const savedId = savedMessage?.id;
+  return savedId;
+}
+
 setUpApi();
 
 beforeEach(() => {
@@ -66,7 +96,7 @@ beforeEach(() => {
 });
 
 test('saves correct message', async () => {
-  const expectedMessage = buildExpectedMessage(false);
+  const expectedMessage = buildMessage({ isLoading: false });
 
   await sendMessage(
     expectedMessage.senderId,
@@ -74,7 +104,7 @@ test('saves correct message', async () => {
     expectedMessage.chatId
   );
 
-  const messagesInCache = readMessages(expectedMessage.chatId);
+  const messagesInCache = readMessagesInCache(expectedMessage.chatId);
   const messagesInServer = await messagesDB.read(expectedMessage.chatId);
   expect(messagesInCache).toHaveLength(1);
   expect(messagesInServer).toHaveLength(1);
@@ -85,7 +115,7 @@ test('saves correct message', async () => {
 });
 
 test('returns correct message', async () => {
-  const expectedMessage = buildExpectedMessage(false);
+  const expectedMessage = buildMessage({ isLoading: false });
 
   const message = await sendMessage(
     expectedMessage.senderId,
@@ -93,12 +123,14 @@ test('returns correct message', async () => {
     expectedMessage.chatId
   );
 
-  const savedMessage = (await messagesDB.read(expectedMessage.chatId))?.at(0);
-  assertMessageEquality(message, { ...expectedMessage, id: savedMessage?.id });
+  assertMessageEquality(message, {
+    ...expectedMessage,
+    id: await getSavedMessageId(expectedMessage.chatId),
+  });
 });
 
 test('creates optimistic response', async () => {
-  const expectedMessage = buildExpectedMessage(true);
+  const expectedMessage = buildMessage({ isLoading: true });
 
   const responsePromise = sendMessage(
     expectedMessage.senderId,
@@ -106,7 +138,7 @@ test('creates optimistic response', async () => {
     expectedMessage.chatId
   );
 
-  const messages = readMessages(expectedMessage.chatId);
+  const messages = readMessagesInCache(expectedMessage.chatId);
   await responsePromise;
   expect(messages).toHaveLength(1);
   assertMessageEquality(messages[0], {
@@ -115,7 +147,18 @@ test('creates optimistic response', async () => {
   });
 });
 
-test.todo(`only adds message to its chat`);
+test('creates separate message lists for different chats', async () => {
+  const message1 = buildMessage({ isLoading: false, chatId: 'chatId1' });
+  const message2 = buildMessage({ isLoading: false, chatId: 'chatId2' });
+
+  await sendMessage(message1.senderId, message1.text, message1.chatId);
+  await sendMessage(message2.senderId, message2.text, message2.chatId);
+
+  await assertChatOnlyContainsMessage(message1.chatId, message1);
+  await assertChatOnlyContainsMessage(message2.chatId, message2);
+});
+
+test.todo(`appends messages after multiple requests`);
 
 class AuthGatewayStub implements AuthGateway {
   loggedInUserId = 'senderId';
