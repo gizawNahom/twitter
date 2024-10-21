@@ -1,4 +1,4 @@
-import { CloseMessagePageButton } from '../../../../../lib/messages/presentation/pages/composeMessage';
+import { CloseMessagePageButton } from '../../../../../lib/messages/ui/pages/composeMessage';
 import {
   clickElement,
   getByRole,

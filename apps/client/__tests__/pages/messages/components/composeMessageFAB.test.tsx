@@ -1,5 +1,5 @@
 import { getByRole, renderElement } from '../../../testUtilities';
-import { ComposeMessageFAB } from '../../../../lib/messages/presentation/pages/messages';
+import { ComposeMessageFAB } from '../../../../lib/messages/ui/pages/messages';
 import { MESSAGES_COMPOSE } from '../../../testUtilities/routes';
 
 test('renders a link to compose message', () => {

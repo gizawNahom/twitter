@@ -2,11 +2,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Page } from '../../../../components/page';
 import { useEffect, useRef, useState } from 'react';
-import { User, getUsers } from '../../../../../client/utilities/getUsers';
+import { User, getUsers } from '../../../../utilities/getUsers';
 import { Error } from '../../../../components/error';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useDispatch } from 'react-redux';
-import { userSelected } from '../../../../lib/redux';
+import { userSelected } from '../../../redux';
 
 export default function ComposeMessage() {
   const [status, setStatus] = useState<

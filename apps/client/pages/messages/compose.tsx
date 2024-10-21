@@ -1,3 +1,3 @@
-import ComposeMessage from '../../lib/messages/presentation/pages/composeMessage';
+import ComposeMessage from '../../lib/messages/ui/pages/composeMessage';
 
 export default ComposeMessage;

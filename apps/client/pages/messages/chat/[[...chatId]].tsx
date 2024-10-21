@@ -1,3 +1,3 @@
-import Chat from '../../../lib/messages/presentation/pages/chat';
+import Chat from '../../../lib/messages/ui/pages/chat';
 
 export default Chat;

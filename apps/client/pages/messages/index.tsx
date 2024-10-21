@@ -1,3 +1,3 @@
-import Messages from '../../lib/messages/presentation/pages/messages';
+import Messages from '../../lib/messages/ui/pages/messages';
 
 export default Messages;

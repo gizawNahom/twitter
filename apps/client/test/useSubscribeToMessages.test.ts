@@ -1,5 +1,5 @@
 import { renderHook, RenderHookResult } from '@testing-library/react';
-import { useSubscribeToMessages } from '../lib/messages/presentation/hooks/useReadMessages';
+import { useSubscribeToMessages } from '../lib/messages/ui/hooks/useReadMessages';
 import { MessageStore } from '../lib/messages/core/ports/messageStore';
 import { CustomEvent, EventHandler } from '../lib/shared/customEvent';
 import { Message } from '../lib/messages/core/domain/message';

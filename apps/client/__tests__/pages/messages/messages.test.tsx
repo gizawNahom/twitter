@@ -1,6 +1,6 @@
 import { screen, waitFor } from '@testing-library/react';
 import chatsDB from '../../../test/data/chats';
-import Messages from '../../../lib/messages/presentation/pages/messages';
+import Messages from '../../../lib/messages/ui/pages/messages';
 import {
   COMPOSE_MESSAGE_FAB_TEST_ID,
   getByTestId,

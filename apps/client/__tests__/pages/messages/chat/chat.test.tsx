@@ -1,6 +1,6 @@
 import { waitFor, screen, within } from '@testing-library/react';
 import { ReduxStore, userSelected } from '../../../../lib/redux';
-import Chat from '../../../../lib/messages/presentation/pages/chat';
+import Chat from '../../../../lib/messages/ui/pages/chat';
 import {
   BACK_BUTTON_TEST_ID,
   createNewStore,
@@ -33,7 +33,7 @@ import { server } from '../../../../mocks/server';
 import {
   formatTimeForMessage,
   formatDayForMessage,
-} from '../../../../lib/messages/presentation/utilities';
+} from '../../../../lib/messages/ui/utilities';
 import messagesDB from '../../../../test/data/messages';
 import { buildMessage } from '../../../../test/generator';
 import { Message } from '../../../../lib/messages/core/domain/message';
