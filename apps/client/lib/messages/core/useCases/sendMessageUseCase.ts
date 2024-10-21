@@ -14,7 +14,7 @@ export class SendMessageUseCase {
     senderId,
     text,
     chatId,
-  }: SendMessageRequest): Promise<Message | null> {
+  }: SendMessageRequest): Promise<Message> {
     return await this.gateway.sendMessage(senderId, text, chatId);
   }
 }

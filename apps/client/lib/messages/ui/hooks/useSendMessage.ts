@@ -7,7 +7,7 @@ import { Message } from '../../core/domain/message';
 
 export function useSendMessage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
-  const [message, setMessage] = useState<MessageModel | null>();
+  const [message, setMessage] = useState<MessageModel>();
   const { user } = useAuth();
   const senderId = user?.id || '';
 
@@ -20,7 +20,7 @@ export function useSendMessage() {
   async function handleSendMessage(
     text: string,
     chatId: string
-  ): Promise<MessageModel | null | undefined> {
+  ): Promise<void> {
     try {
       setStatus('loading');
       const controller = new SendMessageController(Context.sendMessageUseCase);
@@ -31,7 +31,6 @@ export function useSendMessage() {
       });
       setMessage(message);
       setStatus('idle');
-      return message;
     } catch (error) {
       setStatus('error');
     }
@@ -49,7 +48,7 @@ class SendMessageController {
     senderId: string;
     text: string;
     chatId: string;
-  }): Promise<MessageModel | null> {
+  }): Promise<MessageModel> {
     const message = await this.sendMessageUseCase.execute({
       senderId,
       text,
@@ -58,16 +57,14 @@ class SendMessageController {
     return this.buildMessageModel(message);
   }
 
-  buildMessageModel(message: Message | null) {
-    if (message)
-      return {
-        id: message.id,
-        text: message.text,
-        chatId: message.chatId,
-        senderId: message.senderId,
-        time: formatTimeForMessage(new Date(message.createdAt)),
-      };
-    return null;
+  buildMessageModel(message: Message) {
+    return {
+      id: message.id,
+      text: message.text,
+      chatId: message.chatId,
+      senderId: message.senderId,
+      time: formatTimeForMessage(new Date(message.createdAt)),
+    };
   }
 }
 

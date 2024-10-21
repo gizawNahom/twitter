@@ -8,7 +8,7 @@ export class SendMessageGatewayImpl implements SendMessageGateway {
     senderId: string,
     text: string,
     chatId: string
-  ): Promise<Message | null> {
+  ): Promise<Message> {
     return this.sender.sendMessage(senderId, text, chatId);
   }
 }
