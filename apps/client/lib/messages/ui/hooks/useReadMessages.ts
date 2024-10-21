@@ -52,11 +52,11 @@ export function useSubscribeToMessages(messageStore: MessageStore) {
   const [chatId, setChatId] = useState<string>();
 
   useEffect(() => {
-    if (chatId) messageStore.messagesUpdated.add(handlerMessagesUpdate, chatId);
+    if (chatId) messageStore.messagesUpdated.add(handleMessagesUpdate, chatId);
 
     return () => {
       if (chatId)
-        messageStore.messagesUpdated.remove(handlerMessagesUpdate, chatId);
+        messageStore.messagesUpdated.remove(handleMessagesUpdate, chatId);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chatId]);
@@ -67,7 +67,7 @@ export function useSubscribeToMessages(messageStore: MessageStore) {
     setChatId(chatId);
   }
 
-  function handlerMessagesUpdate(messages: Message[]) {
+  function handleMessagesUpdate(messages: Message[]) {
     setMessages(messages);
   }
 }
