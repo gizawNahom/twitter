@@ -1,4 +1,5 @@
 import { Client } from '../../utilities/client';
+import { SendMessageController } from './adapters/controllers/sendMessage/sendMessageController';
 import {
   MessagesReader,
   ReadMessagesGatewayImpl,
@@ -37,5 +38,8 @@ export class Context {
   }
   static get readMessagesUseCase(): ReadMessagesUseCase {
     return new ReadMessagesUseCase(Context.readMessagesGateway);
+  }
+  static get sendMessageController(): SendMessageController {
+    return new SendMessageController(Context.sendMessageUseCase);
   }
 }

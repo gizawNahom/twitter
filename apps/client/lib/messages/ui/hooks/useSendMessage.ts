@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../../auth/authContext';
 import { Context } from '../../context';
-import { SendMessageController } from '../../adapters/controllers/sendMessage/sendMessageController';
 import { MessageModel } from '../../adapters/controllers/sendMessage/messageModel';
 
 export function useSendMessage() {
@@ -22,8 +21,7 @@ export function useSendMessage() {
   ): Promise<void> {
     try {
       setStatus('loading');
-      const controller = new SendMessageController(Context.sendMessageUseCase);
-      const message = await controller.sendMessage({
+      const message = await Context.sendMessageController.sendMessage({
         senderId,
         text,
         chatId,
