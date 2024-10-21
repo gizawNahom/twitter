@@ -1,12 +1,13 @@
 import { useState } from 'react';
-import { Message } from '../../core/domain/message';
 import { useAuth } from '../../../auth/authContext';
 import { Context } from '../../context';
 import { SendMessageUseCase } from '../../core/useCases/sendMessageUseCase';
+import { formatTimeForMessage } from '../utilities';
+import { Message } from '../../core/domain/message';
 
 export function useSendMessage() {
   const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
-  const [message, setMessage] = useState<Message | null>();
+  const [message, setMessage] = useState<MessageModel | null>();
   const { user } = useAuth();
   const senderId = user?.id || '';
 
@@ -19,11 +20,15 @@ export function useSendMessage() {
   async function handleSendMessage(
     text: string,
     chatId: string
-  ): Promise<Message | null | undefined> {
+  ): Promise<MessageModel | null | undefined> {
     try {
       setStatus('loading');
       const controller = new SendMessageController(Context.sendMessageUseCase);
-      const message = await controller.sendMessage({ senderId, text, chatId });
+      const message = await controller.sendMessage({
+        senderId,
+        text,
+        chatId,
+      });
       setMessage(message);
       setStatus('idle');
       return message;
@@ -44,11 +49,32 @@ class SendMessageController {
     senderId: string;
     text: string;
     chatId: string;
-  }): Promise<Message> {
-    return (await this.sendMessageUseCase.execute({
+  }): Promise<MessageModel | null> {
+    const message = await this.sendMessageUseCase.execute({
       senderId,
       text,
       chatId,
-    })) as Message;
+    });
+    return this.buildMessageModel(message);
   }
+
+  buildMessageModel(message: Message | null) {
+    if (message)
+      return {
+        id: message.id,
+        text: message.text,
+        chatId: message.chatId,
+        senderId: message.senderId,
+        time: formatTimeForMessage(new Date(message.createdAt)),
+      };
+    return null;
+  }
+}
+
+interface MessageModel {
+  id: string;
+  text: string;
+  chatId: string;
+  senderId: string;
+  time: string;
 }
