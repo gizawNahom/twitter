@@ -38,6 +38,8 @@ export function useSendMessage() {
 }
 
 class SendMessageController {
+  private messagePresenter: MessagePresenter = new MessagePresenter();
+
   constructor(private sendMessageUseCase: SendMessageUseCase) {}
 
   async sendMessage({
@@ -54,17 +56,7 @@ class SendMessageController {
       text,
       chatId,
     });
-    return this.buildMessageModel(message);
-  }
-
-  buildMessageModel(message: Message) {
-    return {
-      id: message.id,
-      text: message.text,
-      chatId: message.chatId,
-      senderId: message.senderId,
-      time: formatTimeForMessage(new Date(message.createdAt)),
-    };
+    return this.messagePresenter.toMessageModel(message);
   }
 }
 
@@ -74,4 +66,16 @@ interface MessageModel {
   chatId: string;
   senderId: string;
   time: string;
+}
+
+class MessagePresenter {
+  toMessageModel(message: Message) {
+    return {
+      id: message.id,
+      text: message.text,
+      chatId: message.chatId,
+      senderId: message.senderId,
+      time: formatTimeForMessage(new Date(message.createdAt)),
+    };
+  }
 }
