@@ -4,7 +4,7 @@ import { ReadMessagesGateway } from '../ports/readMessagesGateway';
 export class ReadMessagesUseCase {
   constructor(private gateway: ReadMessagesGateway) {}
 
-  async execute(chatId: string): Promise<Message[]> {
+  async execute(offset: number, chatId: string): Promise<Message[]> {
     return await this.gateway.readMessages(chatId);
   }
 }

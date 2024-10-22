@@ -29,7 +29,7 @@ export function useReadMessages(chatId: string | undefined) {
   };
 
   async function handleReadMessages(chatId: string) {
-    await Context.readMessagesUseCase.execute(chatId);
+    await Context.readMessagesUseCase.execute(0, chatId);
   }
 
   function buildMessagesByDay(messages: Message[]) {
