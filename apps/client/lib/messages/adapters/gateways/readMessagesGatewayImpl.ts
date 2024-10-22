@@ -9,10 +9,14 @@ export class ReadMessagesGatewayImpl implements ReadMessagesGateway {
     limit: number,
     chatId: string
   ): Promise<Message[]> {
-    return await this.messagesReader.readMessages(offset, chatId);
+    return await this.messagesReader.readMessages(offset, limit, chatId);
   }
 }
 
 export interface MessagesReader {
-  readMessages(offset: number, chatId: string): Promise<Message[]>;
+  readMessages(
+    offset: number,
+    limit: number,
+    chatId: string
+  ): Promise<Message[]>;
 }
