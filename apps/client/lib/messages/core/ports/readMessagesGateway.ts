@@ -1,5 +1,9 @@
 import { Message } from '../domain/message';
 
 export interface ReadMessagesGateway {
-  readMessages(offset: number, chatId: string): Promise<Message[]>;
+  readMessages(
+    offset: number,
+    limit: number,
+    chatId: string
+  ): Promise<Message[]>;
 }
