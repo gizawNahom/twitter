@@ -5,10 +5,10 @@ export class ReadMessagesGatewayImpl implements ReadMessagesGateway {
   constructor(private messagesReader: MessagesReader) {}
 
   async readMessages(offset: number, chatId: string): Promise<Message[]> {
-    return await this.messagesReader.readMessages(chatId);
+    return await this.messagesReader.readMessages(offset, chatId);
   }
 }
 
 export interface MessagesReader {
-  readMessages(chatId: string): Promise<Message[]>;
+  readMessages(offset: number, chatId: string): Promise<Message[]>;
 }

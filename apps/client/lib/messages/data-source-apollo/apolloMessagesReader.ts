@@ -3,7 +3,7 @@ import { MessagesReader } from '../adapters/gateways/readMessagesGatewayImpl';
 import { Message } from '../core/domain/message';
 
 export class ApolloMessagesReader implements MessagesReader {
-  readMessages(chatId: string): Promise<Message[]> {
+  readMessages(offset: number, chatId: string): Promise<Message[]> {
     return readMessages(chatId, 0, 3);
   }
 }
