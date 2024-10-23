@@ -31,7 +31,5 @@ test('fetches chats', async () => {
 });
 
 test('throws if it is the end of the list', async () => {
-  await expect(async () => await getChats(0)).rejects.toThrow(
-    new EndOfListError()
-  );
+  await expect(async () => await getChats(0)).rejects.toThrow(EndOfListError);
 });

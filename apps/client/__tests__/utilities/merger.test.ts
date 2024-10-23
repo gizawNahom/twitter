@@ -26,5 +26,5 @@ test.each([
 );
 
 test('throws if the end of the page is reached', () => {
-  expect(() => executeSUT([{ __ref: '1' }], [])).toThrow(new EndOfListError());
+  expect(() => executeSUT([{ __ref: '1' }], [])).toThrow(EndOfListError);
 });
