@@ -11,6 +11,7 @@ export async function readMessages(
     const res = await Client.client.query({
       query: getQuery(),
       variables: getVariables(chatId, offset, limit),
+      fetchPolicy: 'network-only',
     });
     return res.data.messages as Array<Message>;
   } catch (error) {
