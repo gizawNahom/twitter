@@ -86,9 +86,16 @@ async function assertChatOnlyContainsMessage(
 }
 
 async function getSavedMessageId(chatId: string, index = 0) {
-  const savedMessage = (await messagesDB.read(chatId))?.at(index);
+  const savedMessage = (await getMessagesInServer(chatId))?.at(index);
   const savedId = savedMessage?.id;
   return savedId;
+}
+
+async function getMessagesInServer(
+  chatId: string
+): Promise<Message[] | undefined> {
+  const MESSAGES_READ_LIMIT = 10;
+  return await messagesDB.read(0, MESSAGES_READ_LIMIT, chatId);
 }
 
 function stubLoggedInUserId(senderId: string) {
@@ -115,7 +122,7 @@ test('saves correct message', async () => {
   );
 
   const messagesInCache = readMessagesInCache(expectedMessage.chatId);
-  const messagesInServer = await messagesDB.read(expectedMessage.chatId);
+  const messagesInServer = await getMessagesInServer(expectedMessage.chatId);
   expect(messagesInCache).toHaveLength(1);
   expect(messagesInServer).toHaveLength(1);
   assertMessageEquality(messagesInCache[0], {

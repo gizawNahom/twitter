@@ -54,11 +54,7 @@ async function create(
   }
 }
 
-async function read(chatId: string): Promise<Message[] | undefined> {
-  return messages.get(String(chatId)) || [];
-}
-
-async function read1(
+async function read(
   offset: number,
   limit: number,
   chatId: string
@@ -72,5 +68,5 @@ function clear() {
   messages.clear();
 }
 
-const messagesDB = { read, clear, create, read1 };
+const messagesDB = { clear, create, read };
 export default messagesDB;
