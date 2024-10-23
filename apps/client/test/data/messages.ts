@@ -40,6 +40,7 @@ async function create(
         senderId,
       });
     }
+    param.chatId = chatId;
     return param;
   }
 

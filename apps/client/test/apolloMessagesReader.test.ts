@@ -9,10 +9,7 @@ let messagesReader: ApolloMessagesReader;
 
 async function createMessages(n: number) {
   for (let i = 0; i < n; i++) {
-    await messagesDB.create(
-      sampleChatResponse.id,
-      buildMessage({ chatId: sampleChatResponse.id })
-    );
+    await messagesDB.create(sampleChatResponse.id, buildMessage());
   }
 }
 
