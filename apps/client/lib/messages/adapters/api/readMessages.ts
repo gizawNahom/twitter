@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client';
 import { Message } from '../../core/domain/message';
-import { Client } from '../../../../utilities/client';
+import { Client, EndOfListError } from '../../../../utilities/client';
 
 export async function readMessages(
   chatId: string,
@@ -15,6 +15,7 @@ export async function readMessages(
     });
     return res.data.messages as Array<Message>;
   } catch (error) {
+    if (error instanceof EndOfListError) throw error;
     throw new Error();
   }
 

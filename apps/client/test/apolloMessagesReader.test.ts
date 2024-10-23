@@ -2,6 +2,7 @@ import { setUpApi } from '../__tests__/testUtilities';
 import { Message } from '../lib/messages/core/domain/message';
 import { ApolloMessagesReader } from '../lib/messages/data-source-apollo/apolloMessagesReader';
 import { sampleChatResponse } from '../mocks/values';
+import { EndOfListError } from '../utilities/client';
 import messagesDB from './data/messages';
 import { buildMessage } from './generator';
 
@@ -47,4 +48,13 @@ test('works on multiple read calls', async () => {
 
   expect(messages1).toStrictEqual(expectedMessages1);
   expect(messages2).toStrictEqual([...expectedMessages1, ...expectedMessages2]);
+});
+
+test('throws end of list error when empty array is returned', async () => {
+  await createMessages(2);
+  await readMessages(0, 2);
+
+  await expect(async () => await readMessages(1, 2)).rejects.toThrow(
+    EndOfListError
+  );
 });
