@@ -123,7 +123,11 @@ export const handlers = [
     return res(
       ctx.delay(1),
       ctx.data({
-        messages: await messagesDB.read(variables.chatId),
+        messages: await messagesDB.read1(
+          variables.offset,
+          variables.limit,
+          variables.chatId
+        ),
       })
     );
   }),

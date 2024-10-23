@@ -13,6 +13,7 @@ import { useSendMessage } from '../hooks/useSendMessage';
 import { Message as Msg } from '../../core/domain/message';
 import { User } from '../../../../utilities/getUsers';
 import { MessagesByDay, useReadMessages } from '../hooks/useReadMessages';
+import InfiniteScroll from 'react-infinite-scroller';
 
 export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
@@ -21,7 +22,7 @@ export default function Chat() {
   const user = useSelector(selectSelectedUser);
   const { handleGetOrCreateChat } = useGetOrCreateChat();
   const { chatId, setChatId } = useChatGuard(router, user);
-  const { messagesByDay } = useReadMessages(chatId);
+  const { messagesByDay, readMessages, hasMore } = useReadMessages(chatId);
   const { handleSendMessage } = useSendMessage();
 
   return (
@@ -90,16 +91,22 @@ export default function Chat() {
   function renderMessages() {
     return (
       <div role="log">
-        {Array.from(messagesByDay.entries()).map(([day, messages]) => {
-          return (
-            <div key={day}>
-              <h3>{day}</h3>
-              {messages.map((message) => {
-                return <Message key={message.id} message={message} />;
-              })}
-            </div>
-          );
-        })}
+        <InfiniteScroll
+          loadMore={readMessages}
+          hasMore={hasMore}
+          loader={<Spinner key="loader" />}
+        >
+          {Array.from(messagesByDay.entries()).map(([day, messages], index) => {
+            return (
+              <div key={day}>
+                <h3>{day}</h3>
+                {messages.map((message) => {
+                  return <Message key={message.id} message={message} />;
+                })}
+              </div>
+            );
+          })}
+        </InfiniteScroll>
       </div>
     );
   }

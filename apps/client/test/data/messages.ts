@@ -2,9 +2,17 @@ import { sampleChatResponse } from '../../mocks/values';
 import { Message } from '../../lib/messages/core/domain/message';
 import { buildMessage } from '../generator';
 
+function repeatFunction<T>(func: () => T, times: number): T[] {
+  const results: T[] = [];
+  for (let i = 0; i < times; i++) {
+    results.push(func());
+  }
+  return results;
+}
+
 const messages: Map<string, Message[]> = new Map(
   Object.entries({
-    [sampleChatResponse.id]: [buildMessage(), buildMessage(), buildMessage()],
+    [sampleChatResponse.id]: repeatFunction<Message>(buildMessage, 10),
   })
 );
 
@@ -50,9 +58,19 @@ async function read(chatId: string): Promise<Message[] | undefined> {
   return messages.get(String(chatId)) || [];
 }
 
+async function read1(
+  offset: number,
+  limit: number,
+  chatId: string
+): Promise<Message[] | undefined> {
+  const messagesInChat = messages.get(String(chatId)) || [];
+  const page = offset * limit;
+  return messagesInChat.slice(page, page + limit);
+}
+
 function clear() {
   messages.clear();
 }
 
-const messagesDB = { read, clear, create };
+const messagesDB = { read, clear, create, read1 };
 export default messagesDB;
