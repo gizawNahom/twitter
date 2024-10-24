@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { createDefaultHeader, Page } from '../../../../components/page';
+import { createDefaultHeader1, Page1 } from '../../../../components/page';
 import { NextRouter, useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useSelector } from 'react-redux';
@@ -26,18 +26,22 @@ export default function Chat() {
   const { handleSendMessage } = useSendMessage();
 
   return (
-    <Page header={renderHeader()}>
-      <div>
-        {canRenderMessages(messagesByDay)
-          ? renderMessages()
-          : renderPlaceholder()}
-        <MessageSendInput
-          onSend={sendMessage}
-          messageInput={messageInput}
-          onChange={setMessageInput}
-        />
-      </div>
-    </Page>
+    <Page1 header={renderHeader()} isPadded={false}>
+      <>
+        <div className="h-[94%] overflow-y-scroll">
+          {canRenderMessages(messagesByDay)
+            ? renderMessages()
+            : renderPlaceholder()}
+        </div>
+        <div className="h-[6%]">
+          <MessageSendInput
+            onSend={sendMessage}
+            messageInput={messageInput}
+            onChange={setMessageInput}
+          />
+        </div>
+      </>
+    </Page1>
   );
 
   function useChatGuard(router: NextRouter, user: User | null) {
@@ -61,7 +65,7 @@ export default function Chat() {
   }
 
   function renderHeader() {
-    return createDefaultHeader(
+    return createDefaultHeader1(
       <div>
         {user && (
           <div>
@@ -95,6 +99,7 @@ export default function Chat() {
           loadMore={readMessages}
           hasMore={hasMore}
           loader={<Spinner key="loader" />}
+          isReverse={true}
         >
           {Array.from(messagesByDay.entries()).map(([day, messages], index) => {
             return (
