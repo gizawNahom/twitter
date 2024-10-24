@@ -12,7 +12,7 @@ function repeatFunction<T>(func: () => T, times: number): T[] {
 
 const messages: Map<string, Message[]> = new Map(
   Object.entries({
-    [sampleChatResponse.id]: repeatFunction<Message>(buildMessage, 10),
+    [sampleChatResponse.id]: repeatFunction<Message>(buildMessage, 40),
   })
 );
 

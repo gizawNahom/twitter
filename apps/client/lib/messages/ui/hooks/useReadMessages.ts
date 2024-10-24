@@ -4,6 +4,7 @@ import { formatDayForMessage } from '../utilities';
 import { buildMessageStore } from '../../adapters/messageStoreImpl';
 import { MessageStore } from '../../core/ports/messageStore';
 import { Context } from '../../context';
+import { EndOfListError } from '../../../../utilities/client';
 
 export type MessagesByDay = Map<string, Message[]>;
 
@@ -11,7 +12,7 @@ export function useReadMessages(chatId: string | undefined) {
   const { messages, subscribe } = useSubscribeToMessages(buildMessageStore());
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0);
-  const [status, setStatus] = useState<'idle' | 'loading'>('idle');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle');
 
   useEffect(() => {
     (async () => {
@@ -35,17 +36,21 @@ export function useReadMessages(chatId: string | undefined) {
   };
 
   async function readMessages() {
-    if (status != 'loading') {
-      setStatus('loading');
-      if (chatId) await handleReadMessages(chatId);
-      setStatus('idle');
+    try {
+      await tryReadMessages();
+    } catch (error) {
+      setStatus('error');
+      if (error instanceof EndOfListError) setHasMore(false);
     }
-  }
 
-  async function handleReadMessages(chatId: string) {
-    await Context.readMessagesUseCase.execute(offset, chatId);
-    setOffset(offset + 1);
-    if (offset + 1 >= 2) setHasMore(false);
+    async function tryReadMessages() {
+      if (status != 'loading') {
+        setStatus('loading');
+        if (chatId) await Context.readMessagesUseCase.execute(offset, chatId);
+        setOffset(offset + 1);
+        setStatus('idle');
+      }
+    }
   }
 
   function buildMessagesByDay(messages: Message[]) {
