@@ -28,7 +28,7 @@ export default function Chat() {
   return (
     <Page1 header={renderHeader()} isPadded={false}>
       <>
-        <div className="h-[94%] overflow-y-scroll">
+        <div className="h-[94%] overflow-y-auto max-h-[94%]">
           {canRenderMessages(messagesByDay)
             ? renderMessages()
             : renderPlaceholder()}
