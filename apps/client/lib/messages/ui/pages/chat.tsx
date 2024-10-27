@@ -13,7 +13,7 @@ import { useSendMessage } from '../hooks/useSendMessage';
 import { Message as Msg } from '../../core/domain/message';
 import { User } from '../../../../utilities/getUsers';
 import { MessagesByDay, useReadMessages } from '../hooks/useReadMessages';
-import InfiniteScroll from 'react-infinite-scroller';
+import { Infinite } from '../../../../components/infinite';
 
 export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
@@ -28,7 +28,7 @@ export default function Chat() {
   return (
     <Page1 header={renderHeader()} isPadded={false}>
       <>
-        <div className="h-[94%] overflow-y-auto max-h-[94%]">
+        <div className="h-[94%]">
           {canRenderMessages(messagesByDay)
             ? renderMessages()
             : renderPlaceholder()}
@@ -94,13 +94,8 @@ export default function Chat() {
 
   function renderMessages() {
     return (
-      <div role="log">
-        <InfiniteScroll
-          loadMore={readMessages}
-          hasMore={hasMore}
-          loader={<Spinner key="loader" />}
-          isReverse={true}
-        >
+      <div role="log" className=" h-full">
+        <Infinite fetchMethod={readMessages} hasMore={hasMore}>
           {Array.from(messagesByDay.entries()).map(([day, messages], index) => {
             return (
               <div key={day}>
@@ -111,7 +106,7 @@ export default function Chat() {
               </div>
             );
           })}
-        </InfiniteScroll>
+        </Infinite>
       </div>
     );
   }
