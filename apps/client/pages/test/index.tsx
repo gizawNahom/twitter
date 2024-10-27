@@ -10,17 +10,19 @@ export default function Test() {
   return (
     <div>
       <header>test</header>
-      <Infinite hasMore={hasMore} fetchMethod={fetchIntegers}>
-        {integers.map((integer, i) => {
-          return (
-            <p key={i}>
-              <br />
-              {integer}
-              <br />
-            </p>
-          );
-        })}
-      </Infinite>
+      <div className="h-56 max-h-56 bg-green-400">
+        <Infinite hasMore={hasMore} fetchMethod={fetchIntegers}>
+          {integers.map((integer, i) => {
+            return (
+              <p key={i}>
+                <br />
+                {integer}
+                <br />
+              </p>
+            );
+          })}
+        </Infinite>
+      </div>
     </div>
   );
 
@@ -50,7 +52,7 @@ function Infinite({
   const [isLoading, setIsLoading] = useState(false);
 
   return (
-    <div className=" h-56 max-h-56 w-full bg-green-300 overflow-auto ">
+    <div className=" h-[inherit] max-h-inherit w-full overflow-auto ">
       <InfiniteScroll
         hasMore={hasMore}
         loadMore={loadMore}
