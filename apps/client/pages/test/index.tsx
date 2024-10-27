@@ -1,6 +1,5 @@
-import { Spinner } from '../../components/spinner';
-import { ReactNode, useRef, useState } from 'react';
-import InfiniteScroll from 'react-infinite-scroller';
+import { Infinite } from '../../components/infinite';
+import { useRef, useState } from 'react';
 
 export default function Test() {
   const [hasMore, setHasMore] = useState(true);
@@ -39,64 +38,3 @@ function* lazyLoadIntegers(limit: number): Generator<number> {
     yield i;
   }
 }
-
-function Infinite({
-  hasMore,
-  children,
-  fetchMethod,
-}: {
-  hasMore: boolean;
-  children: ReactNode;
-  fetchMethod: () => Promise<void>;
-}) {
-  const [isLoading, setIsLoading] = useState(false);
-
-  return (
-    <div className=" h-[inherit] max-h-inherit w-full overflow-auto ">
-      <InfiniteScroll
-        hasMore={hasMore}
-        loadMore={loadMore}
-        loader={<Spinner key="loader" />}
-        pageStart={0}
-        useWindow={false}
-        isReverse={true}
-      >
-        <div className=" flex flex-col-reverse">{children}</div>
-      </InfiniteScroll>
-    </div>
-  );
-
-  async function loadMore() {
-    if (!isLoading) {
-      setIsLoading(true);
-      await fetchMethod();
-      setIsLoading(false);
-    }
-  }
-}
-
-/**
- * COMPONENT PROPOSITION
- *
- * Gives option to reverse
- * handles Is loading state
- *
- * Accepts children
- * Accepts fetch method
- * Accepts has more
- * Has a way to Accept height
- */
-
-/**
- * VERSION 1
- * DOES not give option to reverse
- * Accepts
- * - has more
- * - children
- * - fetch method
- */
-
-/**
- * VERSION 2
- * gives option to reverse
- */
