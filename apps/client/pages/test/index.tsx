@@ -1,57 +1,75 @@
 import { Spinner } from '../../components/spinner';
-import { useRef, useState } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroller';
 
 export default function Test() {
   const [hasMore, setHasMore] = useState(true);
-  const [isLoading, setIsLoading] = useState(false);
   const lazyLoader = useRef(lazyLoadIntegers(50));
   const [integers, setIntegers] = useState<number[]>([]);
 
   return (
     <div>
       <header>test</header>
-      <div className=" h-56 max-h-56 w-full bg-green-300 overflow-auto ">
-        <InfiniteScroll
-          hasMore={hasMore}
-          loadMore={fetchIntegers}
-          loader={<Spinner key="loader" />}
-          pageStart={0}
-          useWindow={false}
-          isReverse={true}
-        >
-          <div className=" flex flex-col-reverse">
-            {integers.map((integer, i) => {
-              return (
-                <p key={i}>
-                  <br />
-                  {integer}
-                  <br />
-                </p>
-              );
-            })}
-          </div>
-        </InfiniteScroll>
-      </div>
+      <Infinite hasMore={hasMore} fetchMethod={fetchIntegers}>
+        {integers.map((integer, i) => {
+          return (
+            <p key={i}>
+              <br />
+              {integer}
+              <br />
+            </p>
+          );
+        })}
+      </Infinite>
     </div>
   );
 
-  function fetchIntegers() {
-    if (!isLoading) {
-      setIsLoading(true);
-      const { value, done } = lazyLoader.current.next();
-      setIntegers([...integers, value]);
-      if (done) setHasMore(false);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 700);
-    }
+  async function fetchIntegers() {
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    const { value, done } = lazyLoader.current.next();
+    setIntegers([...integers, value]);
+    if (done) setHasMore(false);
   }
 }
 
 function* lazyLoadIntegers(limit: number): Generator<number> {
   for (let i = 0; i < limit; i++) {
     yield i;
+  }
+}
+
+function Infinite({
+  hasMore,
+  children,
+  fetchMethod,
+}: {
+  hasMore: boolean;
+  children: ReactNode;
+  fetchMethod: () => Promise<void>;
+}) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  return (
+    <div className=" h-56 max-h-56 w-full bg-green-300 overflow-auto ">
+      <InfiniteScroll
+        hasMore={hasMore}
+        loadMore={loadMore}
+        loader={<Spinner key="loader" />}
+        pageStart={0}
+        useWindow={false}
+        isReverse={true}
+      >
+        <div className=" flex flex-col-reverse">{children}</div>
+      </InfiniteScroll>
+    </div>
+  );
+
+  async function loadMore() {
+    if (!isLoading) {
+      setIsLoading(true);
+      await fetchMethod();
+      setIsLoading(false);
+    }
   }
 }
 
@@ -64,6 +82,7 @@ function* lazyLoadIntegers(limit: number): Generator<number> {
  * Accepts children
  * Accepts fetch method
  * Accepts has more
+ * Has a way to Accept height
  */
 
 /**
