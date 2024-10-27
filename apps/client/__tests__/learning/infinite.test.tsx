@@ -1,7 +1,8 @@
 import { Infinite } from '../../components/infinite';
-import { useRef, useState } from 'react';
+import { useState, useRef } from 'react';
+import { renderElement } from '../testUtilities';
 
-export default function Test() {
+function Test() {
   const [hasMore, setHasMore] = useState(true);
   const lazyLoader = useRef(lazyLoadIntegers(50));
   const [integers, setIntegers] = useState<number[]>([]);
@@ -38,3 +39,7 @@ function* lazyLoadIntegers(limit: number): Generator<number> {
     yield i;
   }
 }
+
+test('exists', () => {
+  renderElement(<Test />);
+});
