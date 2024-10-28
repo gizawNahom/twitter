@@ -14,10 +14,10 @@ import {
   sampleMessageResponse,
   sampleOffset,
 } from '../../../mocks/values';
-import { readMessages } from '../../../lib/messages/adapters/api/readMessages';
+import { ApolloMessagesReader } from '../../../lib/messages/data-source-apollo/apolloMessagesReader';
 
 async function sendRequest(chatId: string, limit: number, offset: number) {
-  return await readMessages(chatId, limit, offset);
+  return await new ApolloMessagesReader().readMessages(offset, limit, chatId);
 }
 
 export async function testReadMessages(provider: Pact, baseUrl: URL) {
