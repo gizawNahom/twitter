@@ -23,7 +23,7 @@ export function useGetChats() {
   async function handleGetChats(offset: number) {
     try {
       setStatus('loading');
-      setChats((await buildUseCase(offset).execute()) as Chat[]);
+      setChats((await buildUseCase().execute(offset)) as Chat[]);
       setStatus('idle');
     } catch (error) {
       if (error instanceof EndOfListError) setStatus('finished');
@@ -31,11 +31,11 @@ export function useGetChats() {
     }
   }
 
-  function buildUseCase(offset: number) {
-    return new GetChatsUseCase(buildGateway(offset));
+  function buildUseCase() {
+    return new GetChatsUseCase(buildGateway());
 
-    function buildGateway(offset: number): GetChatsGateway {
-      return new GetChatsGatewayImpl(new ApolloChatsGetter(offset));
+    function buildGateway(): GetChatsGateway {
+      return new GetChatsGatewayImpl(new ApolloChatsGetter());
     }
   }
 }

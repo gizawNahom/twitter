@@ -4,11 +4,11 @@ import { GetChatsGateway } from '../../core/ports/getChatsGateway';
 export class GetChatsGatewayImpl implements GetChatsGateway {
   constructor(private chatsGetter: ChatsGetter) {}
 
-  async getChats(): Promise<Chat[] | undefined> {
-    return this.chatsGetter.getChats();
+  async getChats(offset: number): Promise<Chat[] | undefined> {
+    return this.chatsGetter.getChats(offset);
   }
 }
 
 export interface ChatsGetter {
-  getChats(): Promise<Chat[] | undefined>;
+  getChats(offset: number): Promise<Chat[] | undefined>;
 }

@@ -7,8 +7,8 @@ import { EndOfListError } from '../../utilities/client';
 const generatedChats = [buildChat(), buildChat(), buildChat(), buildChat()];
 
 async function getChats(offset: number) {
-  const chatsGetter = new ApolloChatsGetter(offset);
-  return await chatsGetter.getChats();
+  const chatsGetter = new ApolloChatsGetter();
+  return await chatsGetter.getChats(offset);
 }
 
 setUpApi();

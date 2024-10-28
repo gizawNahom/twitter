@@ -4,7 +4,7 @@ import { GetChatsGateway } from '../ports/getChatsGateway';
 export class GetChatsUseCase {
   constructor(private gateway: GetChatsGateway) {}
 
-  async execute(): Promise<Chat[] | undefined> {
-    return await this.gateway.getChats();
+  async execute(offset: number): Promise<Chat[] | undefined> {
+    return await this.gateway.getChats(offset);
   }
 }

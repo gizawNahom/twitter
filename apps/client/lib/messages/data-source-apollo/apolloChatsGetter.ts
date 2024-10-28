@@ -3,9 +3,7 @@ import { ChatsGetter } from '../adapters/gateways/getChatsGatewayImpl';
 import { Chat } from '../core/domain/chat';
 
 export class ApolloChatsGetter implements ChatsGetter {
-  constructor(private offset: number) {}
-
-  async getChats(): Promise<Chat[] | undefined> {
-    return await getChats(this.offset, 3);
+  async getChats(offset: number): Promise<Chat[] | undefined> {
+    return await getChats(offset, 3);
   }
 }
