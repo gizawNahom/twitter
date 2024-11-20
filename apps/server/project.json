@@ -59,6 +59,33 @@
           "coverageReporters": ["text", "cobertura"]
         }
       }
+    },
+    "prisma:migrate": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx prisma migrate dev --schema apps/server/src/adapter-persistence-postgres/schema.prisma"
+      }
+    },
+    "prisma:studio": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/server",
+        "command": "npx prisma studio --schema src/adapter-persistence-postgres/schema.prisma"
+      }
+    },
+    "prisma:deploy": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/server",
+        "command": "npx prisma migrate deploy --schema src/adapter-persistence-postgres/schema.prisma"
+      }
+    },
+    "prisma:push": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/server",
+        "command": "npx prisma db push --schema src/adapter-persistence-postgres/schema.prisma"
+      }
     }
   },
   "tags": []
