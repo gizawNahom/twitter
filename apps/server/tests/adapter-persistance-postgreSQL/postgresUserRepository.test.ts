@@ -32,6 +32,17 @@ function buildUser(userDTO: {
   );
 }
 
+async function saveUser(userDTO: {
+  id: string;
+  username: string;
+  displayName: string;
+  profilePic: string;
+}) {
+  return await prisma.user.create({
+    data: userDTO,
+  });
+}
+
 beforeAll(async () => {
   await prisma.$connect();
 });
@@ -59,13 +70,11 @@ describe('getById', () => {
 
   test('returns user', async () => {
     const repo = createRepository();
-    const savedUser = await prisma.user.create({
-      data: {
-        id: 'userId1',
-        username: 'Username',
-        displayName: 'displayName',
-        profilePic: 'profilePic',
-      },
+    const savedUser = await saveUser({
+      id: 'userId1',
+      username: 'Username',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
     });
 
     const user = await getById(repo, 'userId1');
@@ -75,13 +84,11 @@ describe('getById', () => {
 
   test('throws if an unexpected error occurs', async () => {
     const repo = createRepository({} as PrismaClient);
-    await prisma.user.create({
-      data: {
-        id: 'userId1',
-        username: 'Username',
-        displayName: 'displayName',
-        profilePic: 'profilePic',
-      },
+    await saveUser({
+      id: 'userId1',
+      username: 'Username',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
     });
 
     await expect(async () => {
@@ -105,21 +112,17 @@ describe('getByUsername', () => {
 
   test('returns user with the correct username', async () => {
     const repo = createRepository();
-    const savedUser1 = await prisma.user.create({
-      data: {
-        id: 'userId1',
-        username: 'username1',
-        displayName: 'displayName',
-        profilePic: 'profilePic',
-      },
+    const savedUser1 = await saveUser({
+      id: 'userId1',
+      username: 'username1',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
     });
-    await prisma.user.create({
-      data: {
-        id: 'userId2',
-        username: 'username2',
-        displayName: 'displayName',
-        profilePic: 'profilePic',
-      },
+    await saveUser({
+      id: 'userId2',
+      username: 'username2',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
     });
 
     const user = await getByUsername(repo, savedUser1.username);
