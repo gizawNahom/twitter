@@ -34,7 +34,7 @@ export class PostgresUserRepository implements UserRepository {
   }
 
   private async tryGetByUsername(username: Username) {
-    const userDto = await this.prismaClient.user.findFirstOrThrow({
+    const userDto = await this.prismaClient.user.findUniqueOrThrow({
       where: {
         username: username.getUsername(),
       },
