@@ -10,13 +10,8 @@ export class PostgresUserRepository implements UserRepository {
     try {
       return await this.tryGetById(userId);
     } catch (error) {
-      if (isNotFoundError(error)) return null;
+      if (this.isNotFoundError(error)) return null;
       throw error;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    function isNotFoundError(error: any) {
-      return error.code === 'P2025';
     }
   }
 
@@ -33,7 +28,8 @@ export class PostgresUserRepository implements UserRepository {
     try {
       return await this.tryGetByUsername(username);
     } catch (error) {
-      return null;
+      if (this.isNotFoundError(error)) return null;
+      throw error;
     }
   }
 
@@ -58,6 +54,11 @@ export class PostgresUserRepository implements UserRepository {
       userDto.displayName,
       userDto.profilePic
     );
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private isNotFoundError(error: any) {
+    return error.code === 'P2025';
   }
 
   getUsers(): Promise<User[]> {

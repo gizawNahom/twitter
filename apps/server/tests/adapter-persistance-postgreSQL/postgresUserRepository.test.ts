@@ -37,7 +37,12 @@ async function saveUser(userDTO: {
   username: string;
   displayName: string;
   profilePic: string;
-}) {
+}): Promise<{
+  id: string;
+  username: string;
+  displayName: string;
+  profilePic: string;
+}> {
   return await prisma.user.create({
     data: userDTO,
   });
@@ -128,5 +133,19 @@ describe('getByUsername', () => {
     const user = await getByUsername(repo, savedUser1.username);
 
     expect(user).toStrictEqual(buildUser(savedUser1));
+  });
+
+  test('throws if an unexpected error occurs', async () => {
+    const repo = createRepository({} as PrismaClient);
+    const savedUser = await saveUser({
+      id: 'userId1',
+      username: 'Username',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
+    });
+
+    await expect(async () => {
+      await getByUsername(repo, savedUser.username);
+    }).rejects.toThrow();
   });
 });
