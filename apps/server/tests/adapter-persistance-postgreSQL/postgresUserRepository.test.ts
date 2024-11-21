@@ -81,6 +81,16 @@ describe('getById', () => {
   });
 });
 
+describe('getByUsername', () => {
+  test("returns null if the user can't be found", async () => {
+    const repo = createRepository();
+
+    const user = await repo.getByUsername(new Username('username'));
+
+    expect(user).toBeNull();
+  });
+});
+
 class PostgresUserRepository implements UserRepository {
   constructor(private prismaClient: PrismaClient) {}
 
@@ -107,11 +117,11 @@ class PostgresUserRepository implements UserRepository {
     );
   }
 
-  getByUsername(username: Username): Promise<User | null> {
-    throw new Error('Method not implemented.');
+  async getByUsername(username: Username): Promise<User | null> {
+    return null;
   }
 
-  getUsers(username: Username, limit: Limit, offset: Offset): Promise<User[]> {
+  getUsers(): Promise<User[]> {
     throw new Error('Method not implemented.');
   }
 }
