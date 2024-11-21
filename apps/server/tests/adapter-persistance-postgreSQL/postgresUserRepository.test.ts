@@ -32,51 +32,53 @@ afterAll(async () => {
   await prisma.$disconnect();
 });
 
-test("returns null if the user can't be found", async () => {
-  const repo = createRepository();
+describe('getById', () => {
+  test("returns null if the user can't be found", async () => {
+    const repo = createRepository();
 
-  const user = await repo.getById('userId1');
+    const user = await repo.getById('userId1');
 
-  expect(user).toBeNull();
-});
-
-test('returns user', async () => {
-  const repo = createRepository();
-  const savedUser = await prisma.user.create({
-    data: {
-      id: 'userId1',
-      username: 'Username',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    },
+    expect(user).toBeNull();
   });
 
-  const user = await repo.getById('userId1');
+  test('returns user', async () => {
+    const repo = createRepository();
+    const savedUser = await prisma.user.create({
+      data: {
+        id: 'userId1',
+        username: 'Username',
+        displayName: 'displayName',
+        profilePic: 'profilePic',
+      },
+    });
 
-  expect(user).toStrictEqual(
-    new User(
-      savedUser.id,
-      new Username(savedUser.username),
-      savedUser.displayName,
-      savedUser.profilePic
-    )
-  );
-});
+    const user = await repo.getById('userId1');
 
-test('throws if an unexpected error occurs', async () => {
-  const repo = createRepository({} as PrismaClient);
-  await prisma.user.create({
-    data: {
-      id: 'userId1',
-      username: 'Username',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    },
+    expect(user).toStrictEqual(
+      new User(
+        savedUser.id,
+        new Username(savedUser.username),
+        savedUser.displayName,
+        savedUser.profilePic
+      )
+    );
   });
 
-  await expect(async () => {
-    await repo.getById('userId1');
-  }).rejects.toThrow();
+  test('throws if an unexpected error occurs', async () => {
+    const repo = createRepository({} as PrismaClient);
+    await prisma.user.create({
+      data: {
+        id: 'userId1',
+        username: 'Username',
+        displayName: 'displayName',
+        profilePic: 'profilePic',
+      },
+    });
+
+    await expect(async () => {
+      await repo.getById('userId1');
+    }).rejects.toThrow();
+  });
 });
 
 class PostgresUserRepository implements UserRepository {
