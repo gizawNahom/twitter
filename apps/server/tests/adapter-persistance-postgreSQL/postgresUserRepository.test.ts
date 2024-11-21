@@ -1,8 +1,6 @@
 import { User } from '../../src/core/entities/user';
 import { Username } from '../../src/core/entities/username';
 import { UserRepository } from '../../src/core/ports/userRepository';
-import { Limit } from '../../src/core/valueObjects/limit';
-import { Offset } from '../../src/core/valueObjects/offset';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -89,6 +87,37 @@ describe('getByUsername', () => {
 
     expect(user).toBeNull();
   });
+
+  test('returns user with the correct username', async () => {
+    const repo = createRepository();
+    const savedUser1 = await prisma.user.create({
+      data: {
+        id: 'userId1',
+        username: 'username1',
+        displayName: 'displayName',
+        profilePic: 'profilePic',
+      },
+    });
+    await prisma.user.create({
+      data: {
+        id: 'userId2',
+        username: 'username2',
+        displayName: 'displayName',
+        profilePic: 'profilePic',
+      },
+    });
+
+    const user = await repo.getByUsername(new Username('username1'));
+
+    expect(user).toStrictEqual(
+      new User(
+        savedUser1.id,
+        new Username(savedUser1.username),
+        savedUser1.displayName,
+        savedUser1.profilePic
+      )
+    );
+  });
 });
 
 class PostgresUserRepository implements UserRepository {
@@ -118,7 +147,21 @@ class PostgresUserRepository implements UserRepository {
   }
 
   async getByUsername(username: Username): Promise<User | null> {
-    return null;
+    try {
+      const userDto = await this.prismaClient.user.findFirstOrThrow({
+        where: {
+          username: username.getUsername(),
+        },
+      });
+      return new User(
+        userDto.id,
+        new Username(userDto.username),
+        userDto.displayName,
+        userDto.profilePic
+      );
+    } catch (error) {
+      return null;
+    }
   }
 
   getUsers(): Promise<User[]> {
