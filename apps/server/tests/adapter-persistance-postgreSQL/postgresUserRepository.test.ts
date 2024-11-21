@@ -45,10 +45,14 @@ afterAll(async () => {
 });
 
 describe('getById', () => {
+  async function getById(repo: PostgresUserRepository, userId: string) {
+    return await repo.getById(userId);
+  }
+
   test("returns null if the user can't be found", async () => {
     const repo = createRepository();
 
-    const user = await repo.getById('userId1');
+    const user = await getById(repo, 'userId1');
 
     expect(user).toBeNull();
   });
@@ -64,7 +68,7 @@ describe('getById', () => {
       },
     });
 
-    const user = await repo.getById('userId1');
+    const user = await getById(repo, 'userId1');
 
     expect(user).toStrictEqual(buildUser(savedUser));
   });
@@ -81,7 +85,7 @@ describe('getById', () => {
     });
 
     await expect(async () => {
-      await repo.getById('userId1');
+      await getById(repo, 'userId1');
     }).rejects.toThrow();
   });
 });
