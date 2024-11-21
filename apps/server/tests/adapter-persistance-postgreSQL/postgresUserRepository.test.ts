@@ -18,6 +18,20 @@ async function clearTable() {
   }
 }
 
+function buildUser(userDTO: {
+  id: string;
+  username: string;
+  displayName: string;
+  profilePic: string;
+}): User {
+  return new User(
+    userDTO.id,
+    new Username(userDTO.username),
+    userDTO.displayName,
+    userDTO.profilePic
+  );
+}
+
 beforeAll(async () => {
   await prisma.$connect();
 });
@@ -52,14 +66,7 @@ describe('getById', () => {
 
     const user = await repo.getById('userId1');
 
-    expect(user).toStrictEqual(
-      new User(
-        savedUser.id,
-        new Username(savedUser.username),
-        savedUser.displayName,
-        savedUser.profilePic
-      )
-    );
+    expect(user).toStrictEqual(buildUser(savedUser));
   });
 
   test('throws if an unexpected error occurs', async () => {
@@ -80,10 +87,14 @@ describe('getById', () => {
 });
 
 describe('getByUsername', () => {
+  async function getByUsername(repo: PostgresUserRepository, username: string) {
+    return await repo.getByUsername(new Username(username));
+  }
+
   test("returns null if the user can't be found", async () => {
     const repo = createRepository();
 
-    const user = await repo.getByUsername(new Username('username'));
+    const user = await getByUsername(repo, 'username');
 
     expect(user).toBeNull();
   });
@@ -107,16 +118,9 @@ describe('getByUsername', () => {
       },
     });
 
-    const user = await repo.getByUsername(new Username('username1'));
+    const user = await getByUsername(repo, savedUser1.username);
 
-    expect(user).toStrictEqual(
-      new User(
-        savedUser1.id,
-        new Username(savedUser1.username),
-        savedUser1.displayName,
-        savedUser1.profilePic
-      )
-    );
+    expect(user).toStrictEqual(buildUser(savedUser1));
   });
 });
 
