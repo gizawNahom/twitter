@@ -7,8 +7,8 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-function createRepository() {
-  return new PostgresUserRepository(prisma);
+function createRepository(prismaClient = prisma) {
+  return new PostgresUserRepository(prismaClient);
 }
 
 async function clearTable() {
@@ -63,6 +63,22 @@ test('returns user', async () => {
   );
 });
 
+test('throws if an unexpected error occurs', async () => {
+  const repo = createRepository({} as PrismaClient);
+  await prisma.user.create({
+    data: {
+      id: 'userId1',
+      username: 'Username',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
+    },
+  });
+
+  await expect(async () => {
+    await repo.getById('userId1');
+  }).rejects.toThrow();
+});
+
 class PostgresUserRepository implements UserRepository {
   constructor(private prismaClient: PrismaClient) {}
 
@@ -70,7 +86,8 @@ class PostgresUserRepository implements UserRepository {
     try {
       return await this.tryGetById(userId);
     } catch (error) {
-      return null;
+      if (error.code === 'P2025') return null;
+      throw error;
     }
   }
 
