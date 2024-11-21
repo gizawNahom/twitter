@@ -127,8 +127,13 @@ class PostgresUserRepository implements UserRepository {
     try {
       return await this.tryGetById(userId);
     } catch (error) {
-      if (error.code === 'P2025') return null;
+      if (isNotFoundError(error)) return null;
       throw error;
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function isNotFoundError(error: any) {
+      return error.code === 'P2025';
     }
   }
 
@@ -138,30 +143,38 @@ class PostgresUserRepository implements UserRepository {
         id: userId,
       },
     });
+    return this.buildUser(userDto);
+  }
+
+  async getByUsername(username: Username): Promise<User | null> {
+    try {
+      return await this.tryGetByUsername(username);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  private async tryGetByUsername(username: Username) {
+    const userDto = await this.prismaClient.user.findFirstOrThrow({
+      where: {
+        username: username.getUsername(),
+      },
+    });
+    return this.buildUser(userDto);
+  }
+
+  private buildUser(userDto: {
+    displayName: string;
+    id: string;
+    username: string;
+    profilePic: string;
+  }) {
     return new User(
       userDto.id,
       new Username(userDto.username),
       userDto.displayName,
       userDto.profilePic
     );
-  }
-
-  async getByUsername(username: Username): Promise<User | null> {
-    try {
-      const userDto = await this.prismaClient.user.findFirstOrThrow({
-        where: {
-          username: username.getUsername(),
-        },
-      });
-      return new User(
-        userDto.id,
-        new Username(userDto.username),
-        userDto.displayName,
-        userDto.profilePic
-      );
-    } catch (error) {
-      return null;
-    }
   }
 
   getUsers(): Promise<User[]> {
