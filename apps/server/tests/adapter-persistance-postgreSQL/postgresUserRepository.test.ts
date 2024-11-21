@@ -89,7 +89,7 @@ describe('getById', () => {
 
   test('throws if an unexpected error occurs', async () => {
     const repo = createRepository({} as PrismaClient);
-    await saveUser({
+    const savedUser = await saveUser({
       id: 'userId1',
       username: 'Username',
       displayName: 'displayName',
@@ -97,7 +97,7 @@ describe('getById', () => {
     });
 
     await expect(async () => {
-      await getById(repo, 'userId1');
+      await getById(repo, savedUser.id);
     }).rejects.toThrow();
   });
 });
