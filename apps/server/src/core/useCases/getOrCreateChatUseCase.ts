@@ -62,7 +62,7 @@ export class GetOrCreateChatUseCase {
   }
 
   private async getUser(username: Username) {
-    return await this.userRepository.getUser(username);
+    return await this.userRepository.getByUsername(username);
   }
 
   private makeSureUserExists(user: User) {

@@ -107,7 +107,7 @@ class PostgresUserRepository implements UserRepository {
     );
   }
 
-  getUser(username: Username): Promise<User | null> {
+  getByUsername(username: Username): Promise<User | null> {
     throw new Error('Method not implemented.');
   }
 

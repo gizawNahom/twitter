@@ -19,7 +19,7 @@ export class UserRepositorySpy implements UserRepository {
     );
   }
 
-  async getUser(username: Username): Promise<User | null> {
+  async getByUsername(username: Username): Promise<User | null> {
     this.getUserCalls.push({ username });
     return this.getUserResponse;
   }

@@ -16,7 +16,7 @@ export class DummyUserRepository implements UserRepository {
     );
   }
 
-  async getUser(): Promise<User | null> {
+  async getByUsername(): Promise<User | null> {
     return null;
   }
 
