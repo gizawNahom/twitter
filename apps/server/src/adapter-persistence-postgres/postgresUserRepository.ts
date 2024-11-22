@@ -66,7 +66,9 @@ export class PostgresUserRepository implements UserRepository {
     return (
       await this.prismaClient.user.findMany({
         where: {
-          username: username.getUsername(),
+          username: {
+            contains: username.getUsername(),
+          },
         },
       })
     ).map((userDTO) => {

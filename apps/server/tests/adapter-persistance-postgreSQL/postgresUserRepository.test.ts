@@ -195,4 +195,29 @@ describe('getUsers', () => {
       }),
     ]);
   });
+
+  test('works for username contains query', async () => {
+    const repo = createRepository();
+    await saveUser({
+      id: 'userId1',
+      username: 'test11',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
+    });
+
+    const users = await repo.getUsersByUsername(
+      new Username('test1'),
+      new Limit(1),
+      new Offset(0)
+    );
+
+    expect(users).toStrictEqual([
+      buildUser({
+        id: 'userId1',
+        username: 'test11',
+        displayName: 'displayName',
+        profilePic: 'profilePic',
+      }),
+    ]);
+  });
 });
