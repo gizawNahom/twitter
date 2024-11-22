@@ -3,6 +3,13 @@ import { User } from '../../src/core/entities/user';
 import { Username } from '../../src/core/entities/username';
 import { PrismaClient } from '@prisma/client';
 
+type UserDTO = {
+  id: string;
+  username: string;
+  displayName: string;
+  profilePic: string;
+};
+
 const prisma = new PrismaClient();
 
 function createRepository(prismaClient = prisma) {
@@ -18,12 +25,7 @@ async function clearTable() {
   }
 }
 
-function buildUser(userDTO: {
-  id: string;
-  username: string;
-  displayName: string;
-  profilePic: string;
-}): User {
+function buildUser(userDTO: UserDTO): User {
   return new User(
     userDTO.id,
     new Username(userDTO.username),
@@ -32,17 +34,7 @@ function buildUser(userDTO: {
   );
 }
 
-async function saveUser(userDTO: {
-  id: string;
-  username: string;
-  displayName: string;
-  profilePic: string;
-}): Promise<{
-  id: string;
-  username: string;
-  displayName: string;
-  profilePic: string;
-}> {
+async function saveUser(userDTO: UserDTO): Promise<UserDTO> {
   return await prisma.user.create({
     data: userDTO,
   });
