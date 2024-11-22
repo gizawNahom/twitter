@@ -173,12 +173,13 @@ describe('getUsers', () => {
 
   test('works for exact match', async () => {
     const repo = createRepository();
-    await saveUser({
+    const user = {
       id: 'userId1',
       username: 'test1',
       displayName: 'displayName',
       profilePic: 'profilePic',
-    });
+    };
+    await saveUser(user);
 
     const users = await repo.getUsersByUsername(
       new Username('test1'),
@@ -186,14 +187,7 @@ describe('getUsers', () => {
       new Offset(0)
     );
 
-    expect(users).toStrictEqual([
-      buildUser({
-        id: 'userId1',
-        username: 'test1',
-        displayName: 'displayName',
-        profilePic: 'profilePic',
-      }),
-    ]);
+    expect(users).toStrictEqual([buildUser(user)]);
   });
 
   test('works for username contains query', async () => {
