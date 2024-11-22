@@ -5,6 +5,8 @@ import {
 import { User } from '../../src/core/entities/user';
 import { Username } from '../../src/core/entities/username';
 import { PrismaClient } from '@prisma/client';
+import { Limit } from '../../src/core/valueObjects/limit';
+import { Offset } from '../../src/core/valueObjects/offset';
 
 const prisma = new PrismaClient();
 
@@ -135,5 +137,19 @@ describe('getByUsername', () => {
     await expect(async () => {
       await getByUsername(repo, savedUser.username);
     }).rejects.toThrow();
+  });
+});
+
+describe('getUsers', () => {
+  test("returns empty array if users can't be found", async () => {
+    const repo = createRepository();
+
+    const users = await repo.getUsers(
+      new Username('test1'),
+      new Limit(1),
+      new Offset(0)
+    );
+
+    expect(users).toStrictEqual([]);
   });
 });

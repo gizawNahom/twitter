@@ -2,6 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import { User } from '../core/entities/user';
 import { Username } from '../core/entities/username';
 import { UserRepository } from '../core/ports/userRepository';
+import { Limit } from '../core/valueObjects/limit';
+import { Offset } from '../core/valueObjects/offset';
 
 export class PostgresUserRepository implements UserRepository {
   constructor(private prismaClient: PrismaClient) {}
@@ -56,8 +58,12 @@ export class PostgresUserRepository implements UserRepository {
     return error.code === 'P2025';
   }
 
-  getUsers(): Promise<User[]> {
-    throw new Error('Method not implemented.');
+  async getUsers(
+    username: Username,
+    limit: Limit,
+    offset: Offset
+  ): Promise<User[]> {
+    return [];
   }
 }
 
