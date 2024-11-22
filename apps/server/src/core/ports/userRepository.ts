@@ -6,5 +6,9 @@ import { Offset } from '../valueObjects/offset';
 export interface UserRepository {
   getById(userId: string): Promise<User | null>;
   getByUsername(username: Username): Promise<User | null>;
-  getUsers(username: Username, limit: Limit, offset: Offset): Promise<User[]>;
+  getUsersByUsername(
+    username: Username,
+    limit: Limit,
+    offset: Offset
+  ): Promise<User[]>;
 }

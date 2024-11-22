@@ -58,7 +58,7 @@ export class PostgresUserRepository implements UserRepository {
     return error.code === 'P2025';
   }
 
-  async getUsers(
+  async getUsersByUsername(
     username: Username,
     limit: Limit,
     offset: Offset

@@ -36,7 +36,11 @@ export class GetUsersUseCase {
   }
 
   private async getUsers(username: Username, limit: Limit, offset: Offset) {
-    return await this.userRepository.getUsers(username, limit, offset);
+    return await this.userRepository.getUsersByUsername(
+      username,
+      limit,
+      offset
+    );
   }
 
   private buildResponse(users: User[]): GetUsersResponse {

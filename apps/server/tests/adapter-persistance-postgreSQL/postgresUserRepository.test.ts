@@ -144,7 +144,7 @@ describe('getUsers', () => {
   test('returns empty array if no users are saved', async () => {
     const repo = createRepository();
 
-    const users = await repo.getUsers(
+    const users = await repo.getUsersByUsername(
       new Username('test1'),
       new Limit(1),
       new Offset(0)
@@ -162,7 +162,7 @@ describe('getUsers', () => {
       profilePic: 'profilePic',
     });
 
-    const users = await repo.getUsers(
+    const users = await repo.getUsersByUsername(
       new Username('test1'),
       new Limit(1),
       new Offset(0)
@@ -180,7 +180,7 @@ describe('getUsers', () => {
       profilePic: 'profilePic',
     });
 
-    const users = await repo.getUsers(
+    const users = await repo.getUsersByUsername(
       new Username('test1'),
       new Limit(1),
       new Offset(0)

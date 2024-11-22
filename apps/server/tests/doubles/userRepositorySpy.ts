@@ -24,7 +24,7 @@ export class UserRepositorySpy implements UserRepository {
     return this.getUserResponse;
   }
 
-  async getUsers(
+  async getUsersByUsername(
     username: Username,
     limit: Limit,
     offset: Offset
