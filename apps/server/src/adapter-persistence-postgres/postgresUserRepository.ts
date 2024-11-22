@@ -63,7 +63,15 @@ export class PostgresUserRepository implements UserRepository {
     limit: Limit,
     offset: Offset
   ): Promise<User[]> {
-    return [];
+    return (
+      await this.prismaClient.user.findMany({
+        where: {
+          username: username.getUsername(),
+        },
+      })
+    ).map((userDTO) => {
+      return this.buildUser(userDTO);
+    });
   }
 }
 

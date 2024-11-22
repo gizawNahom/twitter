@@ -141,7 +141,7 @@ describe('getByUsername', () => {
 });
 
 describe('getUsers', () => {
-  test("returns empty array if users can't be found", async () => {
+  test('returns empty array if no users are saved', async () => {
     const repo = createRepository();
 
     const users = await repo.getUsers(
@@ -151,5 +151,48 @@ describe('getUsers', () => {
     );
 
     expect(users).toStrictEqual([]);
+  });
+
+  test('returns empty array if saved user does not match the username', async () => {
+    const repo = createRepository();
+    await saveUser({
+      id: 'userId1',
+      username: 'Username',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
+    });
+
+    const users = await repo.getUsers(
+      new Username('test1'),
+      new Limit(1),
+      new Offset(0)
+    );
+
+    expect(users).toStrictEqual([]);
+  });
+
+  test('works for exact match', async () => {
+    const repo = createRepository();
+    await saveUser({
+      id: 'userId1',
+      username: 'test1',
+      displayName: 'displayName',
+      profilePic: 'profilePic',
+    });
+
+    const users = await repo.getUsers(
+      new Username('test1'),
+      new Limit(1),
+      new Offset(0)
+    );
+
+    expect(users).toStrictEqual([
+      buildUser({
+        id: 'userId1',
+        username: 'test1',
+        displayName: 'displayName',
+        profilePic: 'profilePic',
+      }),
+    ]);
   });
 });
