@@ -140,15 +140,26 @@ describe('getByUsername', () => {
   });
 });
 
-describe('getUsers', () => {
+describe('getUsersByUsername', () => {
+  async function getUsersByUsername(
+    repo: PostgresUserRepository,
+    args: { username: string; limit: number; offset: number }
+  ) {
+    return await repo.getUsersByUsername(
+      new Username(args?.username),
+      new Limit(args.limit),
+      new Offset(args.offset)
+    );
+  }
+
   test('returns empty array if no users are saved', async () => {
     const repo = createRepository();
 
-    const users = await repo.getUsersByUsername(
-      new Username('test1'),
-      new Limit(1),
-      new Offset(0)
-    );
+    const users = await getUsersByUsername(repo, {
+      username: 'test1',
+      limit: 1,
+      offset: 0,
+    });
 
     expect(users).toStrictEqual([]);
   });
@@ -162,11 +173,11 @@ describe('getUsers', () => {
       profilePic: 'profilePic',
     });
 
-    const users = await repo.getUsersByUsername(
-      new Username('test1'),
-      new Limit(1),
-      new Offset(0)
-    );
+    const users = await getUsersByUsername(repo, {
+      username: 'test1',
+      limit: 1,
+      offset: 0,
+    });
 
     expect(users).toStrictEqual([]);
   });
@@ -181,11 +192,11 @@ describe('getUsers', () => {
     };
     await saveUser(user);
 
-    const users = await repo.getUsersByUsername(
-      new Username('test1'),
-      new Limit(1),
-      new Offset(0)
-    );
+    const users = await getUsersByUsername(repo, {
+      username: 'test1',
+      limit: 1,
+      offset: 0,
+    });
 
     expect(users).toStrictEqual([buildUser(user)]);
   });
@@ -200,11 +211,11 @@ describe('getUsers', () => {
     };
     await saveUser(user);
 
-    const users = await repo.getUsersByUsername(
-      new Username('test1'),
-      new Limit(1),
-      new Offset(0)
-    );
+    const users = await getUsersByUsername(repo, {
+      username: 'test1',
+      limit: 1,
+      offset: 0,
+    });
 
     expect(users).toStrictEqual([buildUser(user)]);
   });
