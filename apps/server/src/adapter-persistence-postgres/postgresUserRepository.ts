@@ -42,12 +42,7 @@ export class PostgresUserRepository implements UserRepository {
     return this.buildUser(userDto);
   }
 
-  private buildUser(userDto: {
-    displayName: string;
-    id: string;
-    username: string;
-    profilePic: string;
-  }) {
+  private buildUser(userDto: UserDTO) {
     return new User(
       userDto.id,
       new Username(userDto.username),
@@ -65,3 +60,10 @@ export class PostgresUserRepository implements UserRepository {
     throw new Error('Method not implemented.');
   }
 }
+
+export type UserDTO = {
+  id: string;
+  username: string;
+  displayName: string;
+  profilePic: string;
+};

@@ -1,14 +1,10 @@
-import { PostgresUserRepository } from '../../src/adapter-persistence-postgres/postgresUserRepository';
+import {
+  PostgresUserRepository,
+  UserDTO,
+} from '../../src/adapter-persistence-postgres/postgresUserRepository';
 import { User } from '../../src/core/entities/user';
 import { Username } from '../../src/core/entities/username';
 import { PrismaClient } from '@prisma/client';
-
-type UserDTO = {
-  id: string;
-  username: string;
-  displayName: string;
-  profilePic: string;
-};
 
 const prisma = new PrismaClient();
 
