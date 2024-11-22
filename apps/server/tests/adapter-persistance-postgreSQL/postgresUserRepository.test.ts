@@ -166,12 +166,7 @@ describe('getUsersByUsername', () => {
 
   test('returns empty array if saved user does not match the username', async () => {
     const repo = createRepository();
-    await saveUser({
-      id: 'userId1',
-      username: 'Username',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    });
+    await saveUser(generateUserDTO('Username'));
 
     const users = await getUsersByUsername(repo, {
       username: 'test1',
@@ -184,12 +179,7 @@ describe('getUsersByUsername', () => {
 
   test('works for exact match', async () => {
     const repo = createRepository();
-    const user = {
-      id: 'userId1',
-      username: 'test1',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    };
+    const user = generateUserDTO('test1');
     await saveUser(user);
 
     const users = await getUsersByUsername(repo, {
@@ -201,14 +191,9 @@ describe('getUsersByUsername', () => {
     expect(users).toStrictEqual([buildUser(user)]);
   });
 
-  test('works for username contains query', async () => {
+  test('works for username that contains query', async () => {
     const repo = createRepository();
-    const user = {
-      id: 'userId1',
-      username: 'test11',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    };
+    const user = generateUserDTO('test11');
     await saveUser(user);
 
     const users = await getUsersByUsername(repo, {
@@ -219,4 +204,17 @@ describe('getUsersByUsername', () => {
 
     expect(users).toStrictEqual([buildUser(user)]);
   });
+
+  // test('paginates users', async () => {
+
+  // })
 });
+
+function generateUserDTO(username: string): UserDTO {
+  return {
+    id: 'userId1',
+    username: username,
+    displayName: 'displayName',
+    profilePic: 'profilePic',
+  };
+}
