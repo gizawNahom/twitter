@@ -38,6 +38,27 @@ async function saveUser(userDTO: UserDTO): Promise<UserDTO> {
   });
 }
 
+function generateUsersThatMatchQuery(usernameQuery: string, count: number) {
+  const users: UserDTO[] = [];
+  for (let i = 0; i < count; i++)
+    users.push(generateUserDTO(usernameQuery + `${i + 1}`));
+  return users;
+}
+
+async function saveUsers(users: UserDTO[]) {
+  for (let index = 0; index < users.length; index++)
+    await saveUser(users[index]);
+}
+
+function generateUserDTO(username: string): UserDTO {
+  return {
+    id: `${Math.floor(Math.random() * 100000)}`,
+    username: username,
+    displayName: 'displayName',
+    profilePic: 'profilePic',
+  };
+}
+
 beforeAll(async () => {
   await prisma.$connect();
 });
@@ -208,7 +229,7 @@ describe('getUsersByUsername', () => {
   test('paginates users', async () => {
     const usernameQuery = 'matching';
     const repo = createRepository();
-    const matchingUsers = generateMatchingUsers(usernameQuery, 5);
+    const matchingUsers = generateUsersThatMatchQuery(usernameQuery, 5);
     await saveUsers([
       generateUserDTO('not1'),
       ...matchingUsers,
@@ -243,24 +264,3 @@ describe('getUsersByUsername', () => {
     }
   });
 });
-
-function generateMatchingUsers(usernameQuery: string, count: number) {
-  const users: UserDTO[] = [];
-  for (let i = 0; i < count; i++)
-    users.push(generateUserDTO(usernameQuery + `${i + 1}`));
-  return users;
-}
-
-async function saveUsers(users: UserDTO[]) {
-  for (let index = 0; index < users.length; index++)
-    await saveUser(users[index]);
-}
-
-function generateUserDTO(username: string): UserDTO {
-  return {
-    id: `${Math.floor(Math.random() * 100000)}`,
-    username: username,
-    displayName: 'displayName',
-    profilePic: 'profilePic',
-  };
-}
