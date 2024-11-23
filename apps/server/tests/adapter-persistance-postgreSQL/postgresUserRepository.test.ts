@@ -205,14 +205,56 @@ describe('getUsersByUsername', () => {
     expect(users).toStrictEqual([buildUser(user)]);
   });
 
-  // test('paginates users', async () => {
+  test('paginates users', async () => {
+    const repo = createRepository();
+    const matchingUsernames = [
+      generateUserDTO('matching1'),
+      generateUserDTO('matching2'),
+      generateUserDTO('matching3'),
+      generateUserDTO('matching4'),
+      generateUserDTO('matching5'),
+    ];
+    const users = [
+      generateUserDTO('not1'),
+      ...matchingUsernames,
+      generateUserDTO('not2'),
+    ];
+    await saveUser(users[0]);
+    await saveUser(users[1]);
+    await saveUser(users[2]);
+    await saveUser(users[3]);
+    await saveUser(users[4]);
+    await saveUser(users[5]);
+    await saveUser(users[6]);
 
-  // })
+    const page1 = await getUsersByUsername(repo, {
+      username: 'matching',
+      limit: 2,
+      offset: 0,
+    });
+    const page2 = await getUsersByUsername(repo, {
+      username: 'matching',
+      limit: 2,
+      offset: 1,
+    });
+    const page3 = await getUsersByUsername(repo, {
+      username: 'matching',
+      limit: 2,
+      offset: 2,
+    });
+
+    expect(page1).toHaveLength(2);
+    expect(page2).toHaveLength(2);
+    expect(page3).toHaveLength(1);
+    expect(
+      [...page1, ...page2, ...page3].map((user) => user.getId()).sort()
+    ).toStrictEqual(matchingUsernames.map((user) => user.id).sort());
+  });
 });
 
 function generateUserDTO(username: string): UserDTO {
   return {
-    id: 'userId1',
+    id: `${Math.floor(Math.random() * 100000)}`,
     username: username,
     displayName: 'displayName',
     profilePic: 'profilePic',

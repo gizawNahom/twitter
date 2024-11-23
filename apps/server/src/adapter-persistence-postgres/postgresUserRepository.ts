@@ -63,8 +63,11 @@ export class PostgresUserRepository implements UserRepository {
     limit: Limit,
     offset: Offset
   ): Promise<User[]> {
+    const take = limit.getLimit();
     return (
       await this.prismaClient.user.findMany({
+        take: take,
+        skip: offset.getOffset() * take,
         where: {
           username: {
             contains: username.getUsername(),
