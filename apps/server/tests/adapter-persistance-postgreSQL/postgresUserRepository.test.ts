@@ -50,7 +50,7 @@ async function saveUsers(users: UserDTO[]) {
     await saveUser(users[index]);
 }
 
-function generateUserDTO(username: string): UserDTO {
+function generateUserDTO(username = 'Username'): UserDTO {
   return {
     id: `${Math.floor(Math.random() * 100000)}`,
     username: username,
@@ -86,26 +86,16 @@ describe('getById', () => {
 
   test('returns user', async () => {
     const repo = createRepository();
-    const savedUser = await saveUser({
-      id: 'userId1',
-      username: 'Username',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    });
+    const savedUser = await saveUser(generateUserDTO());
 
-    const user = await getById(repo, 'userId1');
+    const user = await getById(repo, savedUser.id);
 
     expect(user).toStrictEqual(buildUser(savedUser));
   });
 
   test('throws if an unexpected error occurs', async () => {
     const repo = createRepository({} as PrismaClient);
-    const savedUser = await saveUser({
-      id: 'userId1',
-      username: 'Username',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    });
+    const savedUser = await saveUser(generateUserDTO());
 
     await expect(async () => {
       await getById(repo, savedUser.id);
@@ -128,18 +118,8 @@ describe('getByUsername', () => {
 
   test('returns user with the correct username', async () => {
     const repo = createRepository();
-    const savedUser1 = await saveUser({
-      id: 'userId1',
-      username: 'username1',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    });
-    await saveUser({
-      id: 'userId2',
-      username: 'username2',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    });
+    const savedUser1 = await saveUser(generateUserDTO('username1'));
+    await saveUser(generateUserDTO('username2'));
 
     const user = await getByUsername(repo, savedUser1.username);
 
@@ -148,12 +128,7 @@ describe('getByUsername', () => {
 
   test('throws if an unexpected error occurs', async () => {
     const repo = createRepository({} as PrismaClient);
-    const savedUser = await saveUser({
-      id: 'userId1',
-      username: 'Username',
-      displayName: 'displayName',
-      profilePic: 'profilePic',
-    });
+    const savedUser = await saveUser(generateUserDTO());
 
     await expect(async () => {
       await getByUsername(repo, savedUser.username);
@@ -187,7 +162,7 @@ describe('getUsersByUsername', () => {
 
   test('returns empty array if saved user does not match the username', async () => {
     const repo = createRepository();
-    await saveUser(generateUserDTO('Username'));
+    await saveUser(generateUserDTO());
 
     const users = await getUsersByUsername(repo, {
       username: 'test1',
