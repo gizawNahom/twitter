@@ -206,39 +206,27 @@ describe('getUsersByUsername', () => {
   });
 
   test('paginates users', async () => {
+    const usernameQuery = 'matching';
     const repo = createRepository();
-    const matchingUsernames = [
-      generateUserDTO('matching1'),
-      generateUserDTO('matching2'),
-      generateUserDTO('matching3'),
-      generateUserDTO('matching4'),
-      generateUserDTO('matching5'),
-    ];
-    const users = [
+    const matchingUsers = generateMatchingUsers(usernameQuery, 5);
+    await saveUsers([
       generateUserDTO('not1'),
-      ...matchingUsernames,
+      ...matchingUsers,
       generateUserDTO('not2'),
-    ];
-    await saveUser(users[0]);
-    await saveUser(users[1]);
-    await saveUser(users[2]);
-    await saveUser(users[3]);
-    await saveUser(users[4]);
-    await saveUser(users[5]);
-    await saveUser(users[6]);
+    ]);
 
     const page1 = await getUsersByUsername(repo, {
-      username: 'matching',
+      username: usernameQuery,
       limit: 2,
       offset: 0,
     });
     const page2 = await getUsersByUsername(repo, {
-      username: 'matching',
+      username: usernameQuery,
       limit: 2,
       offset: 1,
     });
     const page3 = await getUsersByUsername(repo, {
-      username: 'matching',
+      username: usernameQuery,
       limit: 2,
       offset: 2,
     });
@@ -246,11 +234,27 @@ describe('getUsersByUsername', () => {
     expect(page1).toHaveLength(2);
     expect(page2).toHaveLength(2);
     expect(page3).toHaveLength(1);
-    expect(
-      [...page1, ...page2, ...page3].map((user) => user.getId()).sort()
-    ).toStrictEqual(matchingUsernames.map((user) => user.id).sort());
+    assertPagesContainAllMatchingUsers();
+
+    function assertPagesContainAllMatchingUsers() {
+      expect(
+        [...page1, ...page2, ...page3].map((user) => user.getId()).sort()
+      ).toStrictEqual(matchingUsers.map((user) => user.id).sort());
+    }
   });
 });
+
+function generateMatchingUsers(usernameQuery: string, count: number) {
+  const users: UserDTO[] = [];
+  for (let i = 0; i < count; i++)
+    users.push(generateUserDTO(usernameQuery + `${i + 1}`));
+  return users;
+}
+
+async function saveUsers(users: UserDTO[]) {
+  for (let index = 0; index < users.length; index++)
+    await saveUser(users[index]);
+}
 
 function generateUserDTO(username: string): UserDTO {
   return {
