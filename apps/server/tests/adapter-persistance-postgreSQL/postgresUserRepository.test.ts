@@ -238,4 +238,16 @@ describe('getUsersByUsername', () => {
       ).toStrictEqual(matchingUsers.map((user) => user.id).sort());
     }
   });
+
+  test('throws if an unexpected error occurs', async () => {
+    const repo = createRepository({} as PrismaClient);
+
+    await expect(async () => {
+      await getUsersByUsername(repo, {
+        username: 'test1',
+        limit: 1,
+        offset: 0,
+      });
+    }).rejects.toThrow();
+  });
 });
