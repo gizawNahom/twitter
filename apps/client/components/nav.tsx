@@ -16,7 +16,7 @@ export function Nav() {
   return (
     <nav
       data-testid="nav"
-      className="sm:border-r-[1px] sm:flex sm:flex-col sm:items-center sm:pt-1 sm:h-screen md:items-end md:pr-5 xl:pl-6"
+      className="sm:border-r-[1px] sm:flex sm:flex-col sm:items-center sm:pt-1 sm:h-screen md:items-end md:pr-5 xl:pl-12"
     >
       <ul className="fixed bg-white bottom-0 left-0 w-full flex justify-around border-t-[1px] sm:flex-col sm:static sm:w-min sm:border-none xl:w-full">
         {createNavLink({
