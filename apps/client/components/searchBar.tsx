@@ -18,7 +18,7 @@ export function SearchBar({
         focused
           ? `border-cyan-400 bg-inherit`
           : `border-transparent bg-slate-100`
-      } sm:pb-3 sm:pt-2 sm:pr-3`}
+      } sm:py-2 sm:pr-3`}
     >
       <div className=" flex items-center gap-x-3 grow sm:gap-x-5">
         {renderIcon()}
