@@ -16,9 +16,20 @@ export function Nav() {
   return (
     <nav
       data-testid="nav"
-      className="sm:border-r-[1px] sm:flex sm:flex-col sm:items-center sm:pt-14 sm:h-screen md:items-end md:pr-5 xl:pl-6"
+      className="sm:border-r-[1px] sm:flex sm:flex-col sm:items-center sm:pt-1 sm:h-screen md:items-end md:pr-5 xl:pl-6"
     >
       <ul className="fixed bg-white bottom-0 left-0 w-full flex justify-around border-t-[1px] sm:flex-col sm:static sm:w-min sm:border-none xl:w-full">
+        {createNavLink({
+          href: HOME_ROUTE,
+          label: '',
+          icon: (
+            <svg viewBox="0 0 24 24" aria-hidden="true" className="w-8 h-8">
+              <g>
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+              </g>
+            </svg>
+          ),
+        })}
         {createNavLink({
           href: HOME_ROUTE,
           label: 'Home',
@@ -111,13 +122,15 @@ export function Nav() {
       <Link href={href} aria-label={label}>
         <li className="text-xl flex gap-4 hover:bg-slate-200 rounded-full p-3 transition lg:w-min">
           {icon}
-          <span
-            className={`${
-              pathname === href ? 'font-bold' : ''
-            } hidden xl:inline-block`}
-          >
-            {label}
-          </span>
+          {label && (
+            <span
+              className={`${
+                pathname === href ? 'font-bold' : ''
+              } hidden xl:inline-block`}
+            >
+              {label}
+            </span>
+          )}
         </li>
       </Link>
     );
