@@ -34,9 +34,22 @@ export function SearchBar({
     const [focused, setFocused] = useState(false);
 
     useEffect(() => {
-      inputRef.current?.addEventListener('focus', () => {
+      const handleFocus = () => {
         setFocused(true);
-      });
+      };
+
+      const handleBlur = () => {
+        setFocused(false);
+      };
+
+      const currentInput = inputRef.current;
+      currentInput?.addEventListener('focus', handleFocus);
+      currentInput?.addEventListener('blur', handleBlur);
+
+      return () => {
+        currentInput?.removeEventListener('focus', handleFocus);
+        currentInput?.removeEventListener('blur', handleBlur);
+      };
     }, [inputRef]);
 
     return { focused };
