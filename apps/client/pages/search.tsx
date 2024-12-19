@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { Page, createDefaultHeader } from '../components/page';
+import { Page } from '../components/page';
 import { SearchBar } from '../components/searchBar';
 import { Posts } from '../components/posts';
 import { searchPosts } from '../lib/redux/slices/postsSlice/searchPosts';
@@ -7,6 +7,7 @@ import { Spinner } from '../components/spinner';
 import { useEffect, useState } from 'react';
 import { Error } from '../components/error';
 import { Post } from '../lib/redux/slices/postsSlice/post';
+import { BackButton } from '../components/backButton';
 
 export default function Search() {
   const LIMIT = 20;
@@ -21,12 +22,21 @@ export default function Search() {
   useSearch(query);
 
   return (
-    <Page header={createDefaultHeader(renderSearchBar())}>
+    <Page header={renderHeader()}>
       {status === 'loading' && <Spinner />}
       {status === 'error' && <Error />}
       {status === 'success' && renderPosts()}
     </Page>
   );
+
+  function renderHeader() {
+    return (
+      <div className="flex justify-between items-center gap-x-9">
+        <BackButton />
+        <div className="grow">{renderSearchBar()}</div>
+      </div>
+    );
+  }
 
   function useQuery(queryParam: string) {
     const [query, setQuery] = useState('');
