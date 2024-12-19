@@ -41,9 +41,24 @@ export default function Search() {
             }}
           />
         )}
-        <div className="grow">{renderSearchBar()}</div>
+        <div className="grow">
+          <SearchBar
+            value={query}
+            onSubmit={onSubmit}
+            key={query}
+            onFocusChange={(isFocused) => {
+              setIsFocused(isFocused);
+            }}
+          />
+        </div>
       </div>
     );
+
+    async function onSubmit(query: string) {
+      setQuery(query);
+      router.push(`/search?q=${query}`);
+      await search(query);
+    }
   }
 
   function useQuery(queryParam: string) {
@@ -60,25 +75,6 @@ export default function Search() {
     useEffect(() => {
       if (query) search(query);
     }, [query]);
-  }
-
-  function renderSearchBar() {
-    return (
-      <SearchBar
-        value={query}
-        onSubmit={onSubmit}
-        key={query}
-        onFocusChange={(isFocused) => {
-          setIsFocused(isFocused);
-        }}
-      />
-    );
-
-    async function onSubmit(query: string) {
-      setQuery(query);
-      router.push(`/search?q=${query}`);
-      await search(query);
-    }
   }
 
   async function search(query: string) {
