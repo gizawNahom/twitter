@@ -14,6 +14,11 @@ export function SearchBar({
   const [query, setQuery] = useState(value);
   const { focused } = useFocused(inputRef);
 
+  useEffect(() => {
+    onFocusChange(focused);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div
       data-testid="searchBar"

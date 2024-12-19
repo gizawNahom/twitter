@@ -16,7 +16,7 @@ export default function Search() {
     'idle' | 'loading' | 'error' | 'success'
   >('idle');
   const [initialPosts, setInitialPosts] = useState<Post[]>();
-  const [isFocused, setIsFocused] = useState<boolean>();
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const router = useRouter();
   const { query, setQuery } = useQuery(router.query?.q as string);
@@ -33,7 +33,14 @@ export default function Search() {
   function renderHeader() {
     return (
       <div className="flex justify-between items-center gap-x-9">
-        {isFocused && <BackButton />}
+        {(isFocused || query) && (
+          <BackButton
+            canGoBack={() => {
+              if (!query) return false;
+              return true;
+            }}
+          />
+        )}
         <div className="grow">{renderSearchBar()}</div>
       </div>
     );
