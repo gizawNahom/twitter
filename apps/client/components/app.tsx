@@ -14,9 +14,9 @@ export function App({ children }: { children: ReactNode }) {
       <div className="w-full sm:grow sm:max-w-xl sm:border-r-[1px] lg:max-w-[600px] lg:min-w-[600px]">
         {children}
       </div>
-      <div className="hidden grow items-start pt-1 lg:flex lg:px-5 xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
+      <div className="hidden grow items-start pt-1 lg:flex lg:justify-start lg:px-5 xl:justify-center xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
         {router.pathname !== '/search' && (
-          <div className="w-full">
+          <div className="w-full max-w-[350px]">
             <SearchBar onSubmit={pushToSearchPage} />
           </div>
         )}
