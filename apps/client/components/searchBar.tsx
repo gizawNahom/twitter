@@ -94,7 +94,7 @@ export function SearchBar({
   }
 
   function canRenderClearTextButton() {
-    return !isEmpty(query) && focused == true;
+    return !isEmpty(query);
   }
 
   function isEmpty(query: string) {
