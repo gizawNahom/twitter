@@ -26,7 +26,7 @@ export default function Search() {
     <Page header={renderHeader()}>
       {status === 'loading' && <Spinner />}
       {status === 'error' && <Error />}
-      {status === 'success' && renderPosts()}
+      {status === 'success' && query && renderPosts()}
     </Page>
   );
 
