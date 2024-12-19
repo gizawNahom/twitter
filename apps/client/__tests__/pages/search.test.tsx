@@ -61,7 +61,6 @@ function assertTwoAPICallsUsingSampleQuery() {
 }
 
 function assertStaticComponents() {
-  expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
   expect(getByTestId(SEARCH_BAR_TEST_ID)).toBeInTheDocument();
 }
 
@@ -139,6 +138,7 @@ describe('Search from typing', () => {
     await typeQueryOnSearchInput(sampleQuery);
     await pressEnterOnInput();
 
+    expect(getByTestId(BACK_BUTTON_TEST_ID)).toBeInTheDocument();
     await waitForSpinnerToBeInTheDocument();
     await waitTillAllSearchResultsAreRendered();
     assertErrorIsNotShown();

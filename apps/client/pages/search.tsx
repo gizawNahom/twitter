@@ -16,6 +16,7 @@ export default function Search() {
     'idle' | 'loading' | 'error' | 'success'
   >('idle');
   const [initialPosts, setInitialPosts] = useState<Post[]>();
+  const [isFocused, setIsFocused] = useState<boolean>();
 
   const router = useRouter();
   const { query, setQuery } = useQuery(router.query?.q as string);
@@ -32,7 +33,7 @@ export default function Search() {
   function renderHeader() {
     return (
       <div className="flex justify-between items-center gap-x-9">
-        <BackButton />
+        {isFocused && <BackButton />}
         <div className="grow">{renderSearchBar()}</div>
       </div>
     );
@@ -55,7 +56,16 @@ export default function Search() {
   }
 
   function renderSearchBar() {
-    return <SearchBar value={query} onSubmit={onSubmit} key={query} />;
+    return (
+      <SearchBar
+        value={query}
+        onSubmit={onSubmit}
+        key={query}
+        onFocusChange={(isFocused) => {
+          setIsFocused(isFocused);
+        }}
+      />
+    );
 
     async function onSubmit(query: string) {
       setQuery(query);

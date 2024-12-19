@@ -3,9 +3,12 @@ import { KeyboardEvent, RefObject, useEffect, useRef, useState } from 'react';
 export function SearchBar({
   value = '',
   onSubmit,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  onFocusChange = () => {},
 }: {
   value?: string;
   onSubmit: (value: string) => void;
+  onFocusChange?: (isFocused: boolean) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [query, setQuery] = useState(value);
@@ -36,10 +39,12 @@ export function SearchBar({
     useEffect(() => {
       const handleFocus = () => {
         setFocused(true);
+        onFocusChange(true);
       };
 
       const handleBlur = () => {
         setFocused(false);
+        onFocusChange(false);
       };
 
       const currentInput = inputRef.current;
