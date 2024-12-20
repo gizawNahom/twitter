@@ -9,7 +9,7 @@ const plugins = [
   withNx,
 ];
 
-module.exports = (phase, context) => {
+module.exports = (/** @type {string} */ phase, /** @type {any} */ context) => {
   /**
    * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
    **/

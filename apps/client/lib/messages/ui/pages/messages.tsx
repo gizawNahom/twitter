@@ -90,14 +90,23 @@ export default function Messages() {
             <div
               key={chat.id}
               onClick={() => router.push(`${MESSAGES_CHAT_ROUTE}/${chat.id}`)}
+              className="flex gap-2 py-4 justify-start cursor-pointer"
             >
-              <p>{chat.participant.displayName}</p>
-              <Image
-                src={chat.participant.profilePic}
-                alt={`${chat.participant.displayName}'s profile pic`}
-                width={100}
-                height={100}
-              />
+              <div className=" rounded-full">
+                <Image
+                  src={chat.participant.profilePic}
+                  alt={`${chat.participant.displayName}'s profile pic`}
+                  width={100}
+                  height={100}
+                  className="rounded-full object-cover w-10 h-10"
+                />
+              </div>
+              <p className="text-sm flex gap-1">
+                <p className="font-semibold">{chat.participant.displayName} </p>
+                <span className="text-slate-500">
+                  @{chat.participant.username}
+                </span>
+              </p>
             </div>
           );
         })}
