@@ -26,7 +26,11 @@ export default function Chat() {
   const { handleSendMessage } = useSendMessage();
 
   return (
-    <Page1 header={renderHeader()} isPadded={false}>
+    <Page1
+      header={renderHeader()}
+      isPadded={false}
+      className=" z-[1000] bg-white h-screen"
+    >
       <>
         <div className="h-[94%]">
           {canRenderMessages(messagesByDay)
