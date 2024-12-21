@@ -4,14 +4,16 @@ import { BackButton } from './backButton';
 export function Page({
   children,
   header = createDefaultHeader(),
-  isPadded: isPadded = true,
+  isPadded = true,
+  className = '',
 }: {
   children: ReactNode;
   header?: ReactNode;
   isPadded?: boolean;
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col gap-y-2 pt-4 relative">
+    <div className={`flex flex-col gap-y-2 pt-4 relative ${className}`}>
       <div className="px-4">{header}</div>
       <div className={isPadded ? 'px-4' : ''}>{children}</div>
     </div>
