@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { BackButton } from './backButton';
+import { PageContainer } from './app';
 
 export function Page({
   children,
@@ -13,10 +14,12 @@ export function Page({
   className?: string;
 }) {
   return (
-    <div className={`flex flex-col gap-y-2 pt-4 relative ${className}`}>
-      <div className="px-4">{header}</div>
-      <div className={isPadded ? 'px-4' : ''}>{children}</div>
-    </div>
+    <PageContainer>
+      <div className={`flex flex-col gap-y-2 pt-4 relative ${className}`}>
+        <div className="px-4">{header}</div>
+        <div className={isPadded ? 'px-4' : ''}>{children}</div>
+      </div>
+    </PageContainer>
   );
 }
 
