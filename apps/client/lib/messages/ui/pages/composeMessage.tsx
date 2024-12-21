@@ -77,14 +77,15 @@ export default function ComposeMessage() {
 
   function renderSelectedUser(selectedUser: User) {
     return (
-      <div>
+      <div className=" flex gap-2 border border-slate-300 rounded-full w-fit p-1 my-1">
         <Image
           src={selectedUser.profilePic}
           alt={`${selectedUser.username}'s profile picture`}
           width={200}
           height={200}
+          className="w-6 h-6 rounded-full"
         />
-        {selectedUser.displayName}
+        <p className=" font-semibold">{selectedUser.displayName}</p>
       </div>
     );
   }
