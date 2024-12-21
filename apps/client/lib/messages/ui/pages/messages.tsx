@@ -27,15 +27,13 @@ export default function Messages() {
       <div className={`flex flex-col gap-y-2 pt-4 relative`}>
         <div className="px-4">{<h2 className="text-center">Messages</h2>}</div>
         <div>
-          <>
-            {isLoadingFirstPage && <Spinner />}
-            {canRenderPlaceholders() && renderPlaceholders()}
-            {canRenderInfiniteScroll() && renderInfiniteScroll()}
-            {isError && <Error />}
-            <div className="fixed bottom-24 right-5 sm:static xl:hidden">
-              <ComposeMessageFAB />
-            </div>
-          </>
+          {isLoadingFirstPage && <Spinner />}
+          {canRenderPlaceholders() && renderPlaceholders()}
+          {canRenderInfiniteScroll() && renderInfiniteScroll()}
+          {isError && <Error />}
+          <div className="fixed bottom-24 right-5 sm:static sm:hidden">
+            <ComposeMessageFAB />
+          </div>
         </div>
       </div>
     </div>
