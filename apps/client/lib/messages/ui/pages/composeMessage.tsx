@@ -39,10 +39,10 @@ export default function ComposeMessage() {
   function renderHeader() {
     return (
       <div className="flex justify-between items-center gap-x-9">
-        <div className="flex gap-x-10 items-center">
-          <CloseMessagePageButton />
-          <h1 className=" font-semibold">New message</h1>
-        </div>
+        <CloseMessagePageButton />
+        <h1 className=" text-xl font-semibold text-zinc-800 grow">
+          New message
+        </h1>
         {renderNextButton(selectedUser ? false : true)}
       </div>
     );
