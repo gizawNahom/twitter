@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Page } from '../../../../components/page';
 import {
   MESSAGES_CHAT_ROUTE,
   MESSAGES_COMPOSE_ROUTE,
@@ -24,15 +23,22 @@ export default function Messages() {
   useFetchChatsOnMount();
 
   return (
-    <Page header={<h2 className="text-center">Messages</h2>}>
-      {isLoadingFirstPage && <Spinner />}
-      {canRenderPlaceholders() && renderPlaceholders()}
-      {canRenderInfiniteScroll() && renderInfiniteScroll()}
-      {isError && <Error />}
-      <div className="fixed bottom-24 right-5 sm:static xl:hidden">
-        <ComposeMessageFAB />
+    <div className="w-full sm:grow sm:max-w-xl sm:border-r-[1px] lg:max-w-xs">
+      <div className={`flex flex-col gap-y-2 pt-4 relative`}>
+        <div className="px-4">{<h2 className="text-center">Messages</h2>}</div>
+        <div>
+          <>
+            {isLoadingFirstPage && <Spinner />}
+            {canRenderPlaceholders() && renderPlaceholders()}
+            {canRenderInfiniteScroll() && renderInfiniteScroll()}
+            {isError && <Error />}
+            <div className="fixed bottom-24 right-5 sm:static xl:hidden">
+              <ComposeMessageFAB />
+            </div>
+          </>
+        </div>
       </div>
-    </Page>
+    </div>
   );
 
   function useFetchChatsOnMount() {
