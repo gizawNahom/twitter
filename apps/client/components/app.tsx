@@ -12,13 +12,13 @@ export function App({ children }: { children: ReactNode }) {
         <Nav></Nav>
       </div>
       {children}
-      <div className="hidden grow items-start pt-1 lg:flex lg:justify-start lg:px-5 xl:justify-center xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
-        {router.pathname !== '/search' && router.pathname !== '/messages' && (
+      {router.pathname !== '/search' && router.pathname !== '/messages' && (
+        <div className="hidden grow items-start pt-1 lg:flex lg:justify-start lg:px-5 xl:justify-center xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
           <div className="w-full max-w-[350px]">
             <SearchBar onSubmit={pushToSearchPage} />
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 
