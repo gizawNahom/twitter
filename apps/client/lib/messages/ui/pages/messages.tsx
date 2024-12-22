@@ -12,7 +12,7 @@ import { useRouter } from 'next/router';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Chat } from '../../core/domain/chat';
 import { useGetChats } from '../hooks/useGetChats';
-import { ActionItem } from '../../../../components/backButton';
+import { ActionItem } from '../../../../components/actionItem';
 
 export default function Messages() {
   const router = useRouter();

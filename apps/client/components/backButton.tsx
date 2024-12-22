@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { HOME_ROUTE } from '../utilities/constants';
-import { ReactNode } from 'react';
+import { ActionItem } from './actionItem';
 
 export function BackButton({
   canGoBack = () => true,
@@ -38,12 +38,4 @@ export function BackButton({
   function isFirstPageToBeLoaded() {
     return window.history.length === 1;
   }
-}
-
-export function ActionItem({ children }: { children: ReactNode }) {
-  return (
-    <div className="relative before:transition before:block before:absolute before:hover:bg-slate-200 before:active:bg-slate-300 before:w-full before:h-full before:-z-10 before:rounded-full before:p-4 before:-top-[6px] before:-left-[6px]">
-      {children}
-    </div>
-  );
 }
