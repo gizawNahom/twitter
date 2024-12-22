@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import InfiniteScroll from 'react-infinite-scroller';
 import { Chat } from '../../core/domain/chat';
 import { useGetChats } from '../hooks/useGetChats';
+import { ActionItem } from '../../../../components/backButton';
 
 export default function Messages() {
   const router = useRouter();
@@ -27,15 +28,14 @@ export default function Messages() {
       <div className={`flex flex-col gap-y-2 pt-4 relative`}>
         <div className="px-4 flex justify-between">
           <h2 className="text-center font-bold text-xl">Messages</h2>
-          <Link
-            href="messages/compose/"
-            className="relative hidden sm:block before:block before:absolute before:hover:bg-slate-200 before:active:bg-slate-300 before:w-full before:h-full before:-z-10 before:rounded-full before:p-4 before:-top-[6px] before:-left-[6px] before:transition"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true" className=" w-5 h-5">
-              <g>
-                <path d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5V12h-2v-1.537l-8 3.635-8-3.635V18.5c0 .276.224.5.5.5H13v2H4.498c-1.381 0-2.5-1.119-2.5-2.5v-13zm2 2.766l8 3.635 8-3.635V5.5c0-.276-.224-.5-.5-.5h-15c-.276 0-.5.224-.5.5v2.766zM19 18v-3h2v3h3v2h-3v3h-2v-3h-3v-2h3z"></path>
-              </g>
-            </svg>
+          <Link href="messages/compose/" className="hidden sm:block">
+            <ActionItem>
+              <svg viewBox="0 0 24 24" aria-hidden="true" className=" w-5 h-5">
+                <g>
+                  <path d="M1.998 5.5c0-1.381 1.119-2.5 2.5-2.5h15c1.381 0 2.5 1.119 2.5 2.5V12h-2v-1.537l-8 3.635-8-3.635V18.5c0 .276.224.5.5.5H13v2H4.498c-1.381 0-2.5-1.119-2.5-2.5v-13zm2 2.766l8 3.635 8-3.635V5.5c0-.276-.224-.5-.5-.5h-15c-.276 0-.5.224-.5.5v2.766zM19 18v-3h2v3h3v2h-3v3h-2v-3h-3v-2h3z"></path>
+                </g>
+              </svg>
+            </ActionItem>
           </Link>
         </div>
         <div>
