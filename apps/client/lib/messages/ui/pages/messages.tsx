@@ -106,7 +106,7 @@ export default function Messages() {
             <div
               key={chat.id}
               onClick={() => router.push(`${MESSAGES_CHAT_ROUTE}/${chat.id}`)}
-              className="flex gap-2 py-4 justify-start cursor-pointer"
+              className="flex gap-2 px-4 py-3 justify-start cursor-pointer hover:bg-slate-100"
             >
               <div className=" rounded-full">
                 <Image
