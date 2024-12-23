@@ -14,6 +14,7 @@ import { Message as Msg } from '../../core/domain/message';
 import { User } from '../../../../utilities/getUsers';
 import { MessagesByDay, useReadMessages } from '../hooks/useReadMessages';
 import { Infinite } from '../../../../components/infinite';
+import { ActionItem } from '../../../../components/actionItem';
 
 export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
@@ -29,7 +30,7 @@ export default function Chat() {
     <Page1
       header={renderHeader()}
       isPadded={false}
-      className=" z-[1000] bg-white h-screen"
+      className=" z-[1000] bg-white h-screen w-full"
     >
       <>
         <div className="h-[94%]">
@@ -37,7 +38,7 @@ export default function Chat() {
             ? renderMessages()
             : renderPlaceholder()}
         </div>
-        <div className="h-[6%]">
+        <div className="px-3 py-2 border-t-[1px] fixed bottom-0 w-full z-[2000]">
           <MessageSendInput
             onSend={sendMessage}
             messageInput={messageInput}
@@ -93,7 +94,13 @@ export default function Chat() {
   }
 
   function renderPlaceholder() {
-    return <p>No messages</p>;
+    return (
+      <div className=" h-full flex justify-center items-center">
+        <p className=" px-2 py-1 bg-black/40 rounded-full text-white">
+          No messages
+        </p>
+      </div>
+    );
   }
 
   function renderMessages() {
@@ -165,12 +172,16 @@ export function MessageSendInput({
   const trimmedMessage = messageInput.trim();
 
   return (
-    <div data-testid="message-send-input">
+    <div
+      data-testid="message-send-input"
+      className=" w-full bg-slate-200 rounded-full flex justify-between px-4 py-2 gap-6"
+    >
       <input
         type="text"
         placeholder="Start a new message"
         value={messageInput}
         onChange={(e) => onChange(e.target.value)}
+        className=" bg-transparent placeholder:text-slate-600 outline-none grow"
       />
       <button
         aria-label="send"
@@ -179,7 +190,19 @@ export function MessageSendInput({
           onSend(trimmedMessage);
         }}
       >
-        send
+        <ActionItem>
+          <svg
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+            className={` transition h-5 w-5 ${
+              isEmpty(trimmedMessage) ? 'fill-sky-300' : 'fill-sky-500'
+            }`}
+          >
+            <g>
+              <path d="M2.504 21.866l.526-2.108C3.04 19.719 4 15.823 4 12s-.96-7.719-.97-7.757l-.527-2.109L22.236 12 2.504 21.866zM5.981 13c-.072 1.962-.34 3.833-.583 5.183L17.764 12 5.398 5.818c.242 1.349.51 3.221.583 5.183H10v2H5.981z"></path>
+            </g>
+          </svg>
+        </ActionItem>
       </button>
     </div>
   );
