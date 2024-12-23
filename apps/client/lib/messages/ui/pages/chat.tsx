@@ -73,7 +73,7 @@ export default function Chat() {
     return createDefaultHeader1(
       <div>
         {user && (
-          <div>
+          <div className=" flex gap-3 items-center">
             <div className="w-10 h-10 relative rounded-full overflow-hidden">
               <Image
                 src={user.profilePic}
@@ -82,7 +82,7 @@ export default function Chat() {
                 className="object-cover"
               />
             </div>
-            <p>{user.displayName}</p>
+            <p className=" text-xl font-semibold">{user.displayName}</p>
           </div>
         )}
       </div>
