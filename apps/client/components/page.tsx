@@ -44,7 +44,6 @@ export function Page1({
   className?: string;
 }) {
   return (
-    // <div className="relative h-screen max-h-screen min-h-screen pt-1">
     <div
       className={`relative h-screen max-h-screen min-h-screen pt-1 ${className}`}
     >
