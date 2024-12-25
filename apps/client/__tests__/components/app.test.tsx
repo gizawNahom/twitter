@@ -29,7 +29,7 @@ function renderSUT() {
   );
 }
 
-setUpMockRouter({ push });
+setUpMockRouter({ push, pathname: '/test' });
 
 test('initial', () => {
   renderSUT();

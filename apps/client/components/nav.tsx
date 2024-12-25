@@ -151,7 +151,7 @@ export function Nav() {
   }
 
   function isMessages(pathname: string) {
-    return pathname.includes(MESSAGES_ROUTE);
+    return pathname?.includes(MESSAGES_ROUTE);
   }
 
   function canPostFABBeDisplayed(pathname: string) {
