@@ -30,6 +30,15 @@ test('fetches chats', async () => {
   expect(chats2).toStrictEqual(generatedChats);
 });
 
+test('returns empty when chat is empty', async () => {
+  const result = await getChats(0);
+
+  expect(result).toStrictEqual([]);
+});
+
 test('throws if it is the end of the list', async () => {
-  await expect(async () => await getChats(0)).rejects.toThrow(EndOfListError);
+  await chatsDB.create(generatedChats[0]);
+  await getChats(0);
+
+  await expect(async () => await getChats(1)).rejects.toThrow(EndOfListError);
 });
