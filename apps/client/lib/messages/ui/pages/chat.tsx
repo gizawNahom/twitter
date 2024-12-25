@@ -55,20 +55,20 @@ export default function Chat() {
       isPadded={false}
       className=" z-[1000] bg-white h-screen w-full"
     >
-      <>
+      <div className=" relative h-full">
         <div className="h-[94%]">
           {canRenderMessages(messagesByDay)
             ? renderMessages()
             : renderPlaceholder()}
         </div>
-        <div className="px-3 py-2 border-t-[1px] fixed bottom-0 w-full z-[2000]">
+        <div className="px-3 py-2 border-t-[1px] absolute bottom-0 w-full z-[2000]">
           <MessageSendInput
             onSend={sendMessage}
             messageInput={messageInput}
             onChange={setMessageInput}
           />
         </div>
-      </>
+      </div>
     </Page1>
   );
 
