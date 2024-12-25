@@ -44,7 +44,7 @@ export function createClient(httpLink: HttpLink): ApolloClient<object> {
             chats: {
               keyArgs: false,
               merge(existing, incoming) {
-                return merger(existing, incoming);
+                return merger1(existing, incoming);
               },
             },
             messages: {
