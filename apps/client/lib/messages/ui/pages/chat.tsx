@@ -53,7 +53,7 @@ export default function Chat() {
     <Page1
       header={renderHeader()}
       isPadded={false}
-      className=" z-[1000] bg-white h-screen w-full"
+      className=" z-[1000] bg-white h-screen w-full lg:border-r-[1px]"
     >
       <div className=" relative h-full">
         <div className="h-[94%]">
