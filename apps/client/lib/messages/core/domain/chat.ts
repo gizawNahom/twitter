@@ -6,4 +6,5 @@ export interface Chat {
     displayName: string;
     profilePic: string;
   };
+  __typename?: string;
 }

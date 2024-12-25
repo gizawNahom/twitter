@@ -11,6 +11,7 @@ export function buildChat(): Chat {
       displayName: faker.internet.displayName(),
       profilePic: faker.image.avatarGitHub(),
     },
+    __typename: 'Chat',
   };
 }
 

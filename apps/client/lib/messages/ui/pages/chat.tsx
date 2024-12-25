@@ -6,7 +6,6 @@ import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { useSelector } from 'react-redux';
 import { selectSelectedUser } from '../../../redux';
 import { formatTimeForMessage } from '../utilities';
-import { Spinner } from '../../../../components/spinner';
 import { useGetOrCreateChat } from '../hooks/useGetOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useSendMessage } from '../hooks/useSendMessage';
@@ -15,16 +14,41 @@ import { User } from '../../../../utilities/getUsers';
 import { MessagesByDay, useReadMessages } from '../hooks/useReadMessages';
 import { Infinite } from '../../../../components/infinite';
 import { ActionItem } from '../../../../components/actionItem';
+import { Client } from '../../../../utilities/client';
+import { gql } from '@apollo/client';
 
 export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
 
   const router = useRouter();
-  const user = useSelector(selectSelectedUser);
+  const [user, setUser] = useState<User | null>(
+    useSelector(selectSelectedUser)
+  );
   const { handleGetOrCreateChat } = useGetOrCreateChat();
   const { chatId, setChatId } = useChatGuard(router, user);
   const { messagesByDay, readMessages, hasMore } = useReadMessages(chatId);
   const { handleSendMessage } = useSendMessage();
+
+  useEffect(() => {
+    (async () => {
+      if (chatId) {
+        const res = await Client.client.readFragment({
+          fragment: gql`
+            fragment ChatDetails on Chat {
+              participant {
+                username
+                displayName
+                profilePic
+              }
+            }
+          `,
+          id: `Chat:${chatId}`,
+        });
+
+        setUser(res?.participant);
+      }
+    })();
+  }, [chatId]);
 
   return (
     <Page1
@@ -109,8 +133,12 @@ export default function Chat() {
         <Infinite fetchMethod={readMessages} hasMore={hasMore}>
           {Array.from(messagesByDay.entries()).map(([day, messages], index) => {
             return (
-              <div key={day}>
-                <h3>{day}</h3>
+              <div key={day} className=" flex flex-col gap-3 pt-3 px-3">
+                <div className="flex justify-center">
+                  <h3 className=" text-center w-fit px-3 py-1 bg-black/20 text-white rounded-full text-sm">
+                    {day}
+                  </h3>
+                </div>
                 {messages.map((message) => {
                   return <Message key={message.id} message={message} />;
                 })}
@@ -147,17 +175,38 @@ export default function Chat() {
 
 function Message({ message }: { message: Msg }) {
   return (
-    <div data-testid="message">
-      <p>{message.text}</p>
-      <p>{formatTimeForMessage(new Date(message.createdAt))}</p>
-      {renderStatus(message.isLoading)}
+    <div data-testid="message" className=" flex flex-col items-end gap-2">
+      <p className=" bg-sky-500 py-2 px-3 w-fit text-white rounded-tl-full rounded-tr-full rounded-bl-full rounded-br-md">
+        {message.text}
+      </p>
+      <div className=" flex text-slate-500 text-xs gap-1">
+        <p>{formatTimeForMessage(new Date(message.createdAt))}</p>
+        <span className="-mt-1 block">.</span>
+        {renderStatus(message.isLoading)}
+      </div>
     </div>
   );
 
   function renderStatus(isLoading: boolean | undefined) {
-    if (isLoading) return <Spinner />;
-    else return <div aria-label="sent"></div>;
+    if (isLoading) return <MessageSpinner />;
+    else return <div aria-label="sent">Sent</div>;
   }
+}
+
+function MessageSpinner() {
+  return (
+    <div
+      data-testid="spinner"
+      className={
+        'border-cyan-500 align-middle inline-block h-3 w-3 animate-spin rounded-full border-[2px] border-solid border-current border-r-transparent motion-reduce:animate-[spin_1.5s_linear_infinite]'
+      }
+      role="status"
+    >
+      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+        Loading...
+      </span>
+    </div>
+  );
 }
 
 export function MessageSendInput({

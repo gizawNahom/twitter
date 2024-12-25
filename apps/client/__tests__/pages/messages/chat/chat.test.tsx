@@ -322,6 +322,11 @@ describe('Given the user has navigated to an existing chat', () => {
     test('Then initial elements are displayed', () => {
       assertInitialElementsAreDisplayed();
       expect(push).toHaveBeenCalledTimes(0);
+      expect(getByRole('img')).toHaveAttribute(
+        'src',
+        expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
+      );
+      expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument();
     });
   });
 
