@@ -44,7 +44,6 @@ export default function Chat() {
           `,
           id: `Chat:${chatId}`,
         });
-
         setUser(res?.participant);
       }
     })();

@@ -37,6 +37,9 @@ import {
 import messagesDB from '../../../../test/data/messages';
 import { buildMessage } from '../../../../test/generator';
 import { Message } from '../../../../lib/messages/core/domain/message';
+import { Client } from '../../../../utilities/client';
+import { gql } from '@apollo/client';
+import { Chat as Ch } from '../../../../lib/messages/core/domain/chat';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -312,6 +315,35 @@ describe('Given the user has navigated to an existing chat', () => {
       },
       push,
     });
+
+    saveChatToCache(sampleChatResponse);
+
+    function saveChatToCache(chat: Ch) {
+      Client.client.writeQuery({
+        query: gql`
+          query WriteChat($id: String!) {
+            chat(id: $id) {
+              id
+              createdAtISO
+              participant {
+                username
+                displayName
+                profilePic
+              }
+            }
+          }
+        `,
+        data: {
+          chat: {
+            __typename: 'Chat',
+            ...chat,
+          },
+        },
+        variables: {
+          id: 5,
+        },
+      });
+    }
   });
 
   describe('And there are no messages', () => {
@@ -319,13 +351,17 @@ describe('Given the user has navigated to an existing chat', () => {
       renderSUT();
     });
 
-    test('Then initial elements are displayed', () => {
+    test('Then initial elements are displayed', async () => {
       assertInitialElementsAreDisplayed();
       expect(push).toHaveBeenCalledTimes(0);
-      expect(getByRole('img')).toHaveAttribute(
-        'src',
-        expect.stringMatching(encodeURIComponent(sampleUserResponse.profilePic))
-      );
+      await waitFor(() => {
+        expect(getByRole('img')).toHaveAttribute(
+          'src',
+          expect.stringMatching(
+            encodeURIComponent(sampleUserResponse.profilePic)
+          )
+        );
+      });
       expect(getByText(sampleUserResponse.displayName)).toBeInTheDocument();
     });
   });
