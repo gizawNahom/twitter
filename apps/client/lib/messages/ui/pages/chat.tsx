@@ -51,9 +51,9 @@ export default function Chat() {
 
     useEffect(() => {
       if (router.isReady) {
-        if (!participant && !getChatId(router.query?.chatId))
+        if (!participant && !getChatId1()) {
           router.push(MESSAGES_ROUTE);
-        else if (!chatId) setChatId(getChatId(router.query?.chatId));
+        } else if (!chatId) setChatId(getChatId(router.query?.chatId));
       }
     }, [router, participant, chatId]);
 
@@ -63,6 +63,11 @@ export default function Chat() {
       chatId: string[] | string | undefined
     ): string | undefined {
       return Array.isArray(chatId) ? chatId[0] : chatId;
+    }
+
+    function getChatId1(): string | undefined {
+      const pathSegments = window.location.pathname.split('/');
+      return pathSegments[pathSegments.length - 1];
     }
   }
 
