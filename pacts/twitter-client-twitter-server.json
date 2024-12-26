@@ -402,7 +402,7 @@
       "request": {
         "body": {
           "operationName": "GetOrCreateChat",
-          "query": "mutation GetOrCreateChat($username: String!) {\n          chat(username: $username) {\n            id\n            createdAt\n            __typename\n          }\n        }",
+          "query": "mutation GetOrCreateChat($username: String!) {\n          chat(username: $username) {\n            id\n            createdAtISO\n            participant {\n              username\n              displayName\n              profilePic\n              __typename\n            }\n            __typename\n          }\n        }",
           "variables": {
             "username": "1"
           }
@@ -414,7 +414,7 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "mutation\\s*GetOrCreateChat\\(\\$username:\\s*String!\\)\\s*\\{\\s*chat\\(username:\\s*\\$username\\)\\s*\\{\\s*id\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+            "regex": "mutation\\s*GetOrCreateChat\\(\\$username:\\s*String!\\)\\s*\\{\\s*chat\\(username:\\s*\\$username\\)\\s*\\{\\s*id\\s*createdAtISO\\s*participant\\s*\\{\\s*username\\s*displayName\\s*profilePic\\s*__typename\\s*\\}\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.username": {
             "match": "type"
@@ -936,6 +936,7 @@
           "data": {
             "chats": [
               {
+                "__typename": "Chat",
                 "createdAtISO": "2024-07-05T15:11:55.306Z",
                 "id": "chatId124",
                 "participant": {
@@ -1026,7 +1027,7 @@
       "request": {
         "body": {
           "operationName": "GetOrCreateChat",
-          "query": "mutation GetOrCreateChat($username: String!) {\n          chat(username: $username) {\n            id\n            createdAt\n            __typename\n          }\n        }",
+          "query": "mutation GetOrCreateChat($username: String!) {\n          chat(username: $username) {\n            id\n            createdAtISO\n            participant {\n              username\n              displayName\n              profilePic\n              __typename\n            }\n            __typename\n          }\n        }",
           "variables": {
             "username": "johnDoe"
           }
@@ -1038,7 +1039,7 @@
         "matchingRules": {
           "$.body.query": {
             "match": "regex",
-            "regex": "mutation\\s*GetOrCreateChat\\(\\$username:\\s*String!\\)\\s*\\{\\s*chat\\(username:\\s*\\$username\\)\\s*\\{\\s*id\\s*createdAt\\s*__typename\\s*\\}\\s*\\}"
+            "regex": "mutation\\s*GetOrCreateChat\\(\\$username:\\s*String!\\)\\s*\\{\\s*chat\\(username:\\s*\\$username\\)\\s*\\{\\s*id\\s*createdAtISO\\s*participant\\s*\\{\\s*username\\s*displayName\\s*profilePic\\s*__typename\\s*\\}\\s*__typename\\s*\\}\\s*\\}"
           },
           "$.body.variables.username": {
             "match": "type"
@@ -1055,8 +1056,13 @@
           "data": {
             "chat": {
               "__typename": "Chat",
-              "createdAt": "2024-07-05T15:11:55.306Z",
-              "id": "chatId124"
+              "createdAtISO": "2024-07-05T15:11:55.306Z",
+              "id": "chatId124",
+              "participant": {
+                "displayName": "Jonny",
+                "profilePic": "https://images.unsplash.com/photo-1457449940276-e8deed18bfff?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
+                "username": "johnDoe"
+              }
             }
           }
         },

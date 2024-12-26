@@ -8,7 +8,7 @@ import {
 } from '../../testUtilities';
 import {
   GENERIC_SERVER_ERROR,
-  samplePartialChatResponse,
+  sampleChatResponse,
   sampleUserResponse,
 } from '../../../mocks/values';
 import { getOrCreateChat } from '../../../lib/messages/adapters/api/getOrCreateChat';
@@ -22,7 +22,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
     test('gets chat', async () => {
       const interaction = createInteraction({
         data: {
-          chat: like(samplePartialChatResponse),
+          chat: like(sampleChatResponse),
         },
       })
         .uponReceiving('a request to get or create chat with a valid username')
@@ -34,7 +34,7 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
 
       const chat = await sendRequest(sampleUserResponse.username);
 
-      expect(chat).toStrictEqual(samplePartialChatResponse);
+      expect(chat).toStrictEqual(sampleChatResponse);
     });
   });
 
@@ -66,7 +66,13 @@ export function testGetOrCreateChat(provider: Pact, baseUrl: URL) {
         `mutation ${Operations.GetOrCreateChat}($username: String!) {
           chat(username: $username) {
             id
-            createdAt
+            createdAtISO
+            participant {
+              username
+              displayName
+              profilePic
+              __typename
+            }
             __typename
           }
         }`

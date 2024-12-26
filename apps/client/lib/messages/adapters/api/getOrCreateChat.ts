@@ -1,15 +1,15 @@
 import { gql } from '@apollo/client';
 import { Client } from '../../../../utilities/client';
-import { PartialChat } from '../../core/domain/partialChat';
+import { Chat } from '../../core/domain/chat';
 
-export async function getOrCreateChat(username: string): Promise<PartialChat> {
+export async function getOrCreateChat(username: string): Promise<Chat> {
   try {
     const res = await Client.client.mutate({
       mutation: getMutation(),
       variables: getVariables(username),
     });
 
-    return res.data.chat as PartialChat;
+    return res.data.chat as Chat;
   } catch (error) {
     throw new Error();
   }
@@ -29,7 +29,12 @@ export const GET_OR_CREATE_CHAT = gql`
   mutation GetOrCreateChat($username: String!) {
     chat(username: $username) {
       id
-      createdAt
+      createdAtISO
+      participant {
+        username
+        displayName
+        profilePic
+      }
     }
   }
 `;
