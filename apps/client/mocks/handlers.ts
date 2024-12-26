@@ -2,7 +2,6 @@ import { GraphQLVariables, graphql } from 'msw';
 import {
   GENERIC_SERVER_ERROR,
   sampleChatResponse,
-  samplePartialChatResponse,
   samplePostResponse,
   sampleUserResponse,
   searchPostsResponse,
@@ -111,7 +110,7 @@ export const handlers = [
       return res(
         ctx.delay(1),
         ctx.data({
-          chat: samplePartialChatResponse,
+          chat: sampleChatResponse,
         })
       );
     }

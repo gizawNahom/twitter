@@ -38,6 +38,7 @@ export const sampleChatResponse = {
     displayName: sampleUserResponse.displayName,
     profilePic: sampleUserResponse.profilePic,
   },
+  __typename: 'Chat',
 };
 
 export const sampleMessageResponse = {

@@ -1,17 +1,17 @@
 import { useMutation } from '@apollo/client';
 import { GET_OR_CREATE_CHAT } from '../../adapters/api/getOrCreateChat';
-import { PartialChat } from '../../core/domain/partialChat';
 import { useState } from 'react';
 import { Client } from '../../../../utilities/client';
 import { GetOrCreateChatUseCase } from '../../core/useCases/getOrCreateChatUseCase';
 import { GetOrCreateChatGateway } from '../../core/ports/getOrCreateChatGateway';
 import { GetOrCreateChatGatewayImpl } from '../../adapters/gateways/getOrCreateChatGatewayImpl';
+import { Chat } from '../../core/domain/chat';
 
 export function useGetOrCreateChat() {
   const [error, setError] = useState('');
 
   const [getOrCreateChat, { data: chat, loading }] = useMutation<{
-    chat: PartialChat;
+    chat: Chat;
   }>(GET_OR_CREATE_CHAT, {
     onError: (error) => {
       setError('error');
@@ -27,7 +27,7 @@ export function useGetOrCreateChat() {
   };
 
   async function handleGetOrCreateChat(username: string) {
-    return new GetOrCreateChatUseCase(buildGateway()).execute(username);
+    return await new GetOrCreateChatUseCase(buildGateway()).execute(username);
   }
 
   function buildGateway(): GetOrCreateChatGateway {
@@ -38,7 +38,7 @@ export function useGetOrCreateChat() {
             username,
           },
         })
-      ).data?.chat as PartialChat | null;
+      ).data?.chat as Chat | null;
     });
   }
 }

@@ -1,5 +1,5 @@
-import { PartialChat } from '../domain/partialChat';
+import { Chat } from '../domain/chat';
 
 export interface GetOrCreateChatGateway {
-  getOrCreateChat(username: string): Promise<PartialChat | null>;
+  getOrCreateChat(username: string): Promise<Chat | null>;
 }
