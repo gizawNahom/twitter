@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { createDefaultHeader1, Page1 } from '../../../../components/page';
-import { NextRouter, useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { formatTimeForMessage } from '../utilities';
 import { useGetOrCreateChat } from '../hooks/useGetOrCreateChat';
@@ -16,9 +16,8 @@ import { useGetParticipant } from '../hooks/useGetParticipant';
 export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
 
-  const router = useRouter();
+  const { participant, chatId, setChatId } = useChatGuard();
   const { handleGetOrCreateChat } = useGetOrCreateChat();
-  const { participant, chatId, setChatId } = useChatGuard(router);
   const { messagesByDay, readMessages, hasMore } = useReadMessages(chatId);
   const { handleSendMessage } = useSendMessage();
 
@@ -45,7 +44,8 @@ export default function Chat() {
     </Page1>
   );
 
-  function useChatGuard(router: NextRouter) {
+  function useChatGuard() {
+    const router = useRouter();
     const [chatId, setChatId] = useState<string | undefined>();
     const { participant } = useGetParticipant(chatId);
 
