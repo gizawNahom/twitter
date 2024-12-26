@@ -22,7 +22,7 @@ export default function Chat() {
 
   const router = useRouter();
   const { handleGetOrCreateChat } = useGetOrCreateChat();
-  const { user, chatId, setChatId } = useChatGuard(router);
+  const { participant, chatId, setChatId } = useChatGuard(router);
   const { messagesByDay, readMessages, hasMore } = useReadMessages(chatId);
   const { handleSendMessage } = useSendMessage();
 
@@ -51,17 +51,17 @@ export default function Chat() {
 
   function useChatGuard(router: NextRouter) {
     const [chatId, setChatId] = useState<string | undefined>();
-    const { participant: user } = useGetParticipant(chatId);
+    const { participant } = useGetParticipant(chatId);
 
     useEffect(() => {
       if (router.isReady) {
-        if (!user && !getChatId(router.query?.chatId))
+        if (!participant && !getChatId(router.query?.chatId))
           router.push(MESSAGES_ROUTE);
         else if (!chatId) setChatId(getChatId(router.query?.chatId));
       }
-    }, [router, user, chatId]);
+    }, [router, participant, chatId]);
 
-    return { user, chatId, setChatId };
+    return { participant, chatId, setChatId };
 
     function getChatId(
       chatId: string[] | string | undefined
@@ -101,17 +101,17 @@ export default function Chat() {
   function renderHeader() {
     return createDefaultHeader1(
       <div>
-        {user && (
+        {participant && (
           <div className=" flex gap-3 items-center">
             <div className="w-10 h-10 relative rounded-full overflow-hidden">
               <Image
-                src={user.profilePic}
-                alt={`${user.username}'s profile picture`}
+                src={participant.profilePic}
+                alt={`${participant.username}'s profile picture`}
                 fill
                 className="object-cover"
               />
             </div>
-            <p className=" text-xl font-semibold">{user.displayName}</p>
+            <p className=" text-xl font-semibold">{participant.displayName}</p>
           </div>
         )}
       </div>
@@ -158,7 +158,7 @@ export default function Chat() {
   async function sendMessage(text: string) {
     if (!chatId) {
       const chat = (await handleGetOrCreateChat(
-        user?.username as string
+        participant?.username as string
       )) as PartialChat;
       if (chat) {
         window.history.replaceState(
