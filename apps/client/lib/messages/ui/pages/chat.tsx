@@ -3,19 +3,15 @@ import { useEffect, useState } from 'react';
 import { createDefaultHeader1, Page1 } from '../../../../components/page';
 import { NextRouter, useRouter } from 'next/router';
 import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
-import { useSelector } from 'react-redux';
-import { selectSelectedUser } from '../../../redux';
 import { formatTimeForMessage } from '../utilities';
 import { useGetOrCreateChat } from '../hooks/useGetOrCreateChat';
 import { PartialChat } from '../../core/domain/partialChat';
 import { useSendMessage } from '../hooks/useSendMessage';
 import { Message as Msg } from '../../core/domain/message';
-import { User } from '../../../../utilities/getUsers';
 import { MessagesByDay, useReadMessages } from '../hooks/useReadMessages';
 import { Infinite } from '../../../../components/infinite';
 import { ActionItem } from '../../../../components/actionItem';
-import { Client } from '../../../../utilities/client';
-import { gql } from '@apollo/client';
+import { useGetParticipant } from '../hooks/useGetParticipant';
 
 export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
@@ -68,34 +64,6 @@ export default function Chat() {
     ): string | undefined {
       return Array.isArray(chatId) ? chatId[0] : chatId;
     }
-  }
-
-  function useGetParticipant(chatId: string | undefined) {
-    const [participant, setParticipant] = useState<User | null>(
-      useSelector(selectSelectedUser)
-    );
-
-    useEffect(() => {
-      (async () => {
-        if (chatId) {
-          const res = await Client.client.readFragment({
-            fragment: gql`
-              fragment ChatDetails on Chat {
-                participant {
-                  username
-                  displayName
-                  profilePic
-                }
-              }
-            `,
-            id: `Chat:${chatId}`,
-          });
-          setParticipant(res?.participant);
-        }
-      })();
-    }, [chatId]);
-
-    return { participant };
   }
 
   function renderHeader() {
