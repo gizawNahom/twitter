@@ -1,6 +1,7 @@
 import { GraphQLVariables, graphql } from 'msw';
 import {
   GENERIC_SERVER_ERROR,
+  sampleChatResponse,
   samplePartialChatResponse,
   samplePostResponse,
   sampleUserResponse,
@@ -102,15 +103,19 @@ export const handlers = [
       })
     );
   }),
-  graphql.mutation(Operations.GetOrCreateChat, ({ variables }, res, ctx) => {
-    getOrCreateChatCalls.push(variables);
-    return res(
-      ctx.delay(1),
-      ctx.data({
-        chat: samplePartialChatResponse,
-      })
-    );
-  }),
+  graphql.mutation(
+    Operations.GetOrCreateChat,
+    async ({ variables }, res, ctx) => {
+      getOrCreateChatCalls.push(variables);
+      await chatsDB.create(sampleChatResponse);
+      return res(
+        ctx.delay(1),
+        ctx.data({
+          chat: samplePartialChatResponse,
+        })
+      );
+    }
+  ),
   graphql.query(Operations.GetChats, async ({ variables }, res, ctx) => {
     return res(
       ctx.delay(1),
