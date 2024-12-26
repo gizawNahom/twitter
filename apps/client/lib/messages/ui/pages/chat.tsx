@@ -21,33 +21,10 @@ export default function Chat() {
   const [messageInput, setMessageInput] = useState('');
 
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(
-    useSelector(selectSelectedUser)
-  );
   const { handleGetOrCreateChat } = useGetOrCreateChat();
-  const { chatId, setChatId } = useChatGuard(router, user);
+  const { user, chatId, setChatId } = useChatGuard(router);
   const { messagesByDay, readMessages, hasMore } = useReadMessages(chatId);
   const { handleSendMessage } = useSendMessage();
-
-  useEffect(() => {
-    (async () => {
-      if (chatId) {
-        const res = await Client.client.readFragment({
-          fragment: gql`
-            fragment ChatDetails on Chat {
-              participant {
-                username
-                displayName
-                profilePic
-              }
-            }
-          `,
-          id: `Chat:${chatId}`,
-        });
-        setUser(res?.participant);
-      }
-    })();
-  }, [chatId]);
 
   return (
     <Page1
@@ -72,8 +49,9 @@ export default function Chat() {
     </Page1>
   );
 
-  function useChatGuard(router: NextRouter, user: User | null) {
+  function useChatGuard(router: NextRouter) {
     const [chatId, setChatId] = useState<string | undefined>();
+    const { participant: user } = useGetParticipant(chatId);
 
     useEffect(() => {
       if (router.isReady) {
@@ -83,13 +61,41 @@ export default function Chat() {
       }
     }, [router, user, chatId]);
 
-    return { chatId, setChatId };
+    return { user, chatId, setChatId };
 
     function getChatId(
       chatId: string[] | string | undefined
     ): string | undefined {
       return Array.isArray(chatId) ? chatId[0] : chatId;
     }
+  }
+
+  function useGetParticipant(chatId: string | undefined) {
+    const [participant, setParticipant] = useState<User | null>(
+      useSelector(selectSelectedUser)
+    );
+
+    useEffect(() => {
+      (async () => {
+        if (chatId) {
+          const res = await Client.client.readFragment({
+            fragment: gql`
+              fragment ChatDetails on Chat {
+                participant {
+                  username
+                  displayName
+                  profilePic
+                }
+              }
+            `,
+            id: `Chat:${chatId}`,
+          });
+          setParticipant(res?.participant);
+        }
+      })();
+    }, [chatId]);
+
+    return { participant };
   }
 
   function renderHeader() {
