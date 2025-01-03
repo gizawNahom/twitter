@@ -2,24 +2,33 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { createDefaultHeader1, Page1 } from '../../../../components/page';
 import { useRouter } from 'next/router';
-import { MESSAGES_CHAT_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
+import { MESSAGES_ROUTE } from '../utilities/routes';
 import { formatTimeForMessage } from '../utilities';
 import { useGetOrCreateChat } from '../hooks/useGetOrCreateChat';
-import { PartialChat } from '../../core/domain/partialChat';
 import { useSendMessage } from '../hooks/useSendMessage';
 import { Message as Msg } from '../../core/domain/message';
 import { MessagesByDay, useReadMessages } from '../hooks/useReadMessages';
 import { Infinite } from '../../../../components/infinite';
 import { ActionItem } from '../../../../components/actionItem';
 import { useGetParticipant } from '../hooks/useGetParticipant';
+import { Chat as Ch } from '../../core/domain/chat';
 
-export default function Chat() {
+export default function Chat({
+  chatId: initialChatId,
+}: {
+  chatId: string | undefined;
+}) {
   const [messageInput, setMessageInput] = useState('');
-
-  const { participant, chatId, setChatId } = useChatGuard();
+  const [chatId, setChatId] = useState<string | undefined>(initialChatId);
+  useEffect(() => {
+    setChatId(initialChatId);
+  }, [initialChatId]);
+  const { participant } = useGetParticipant(chatId);
+  useChatGuard(chatId);
   const { handleGetOrCreateChat } = useGetOrCreateChat();
   const { messagesByDay, readMessages, hasMore } = useReadMessages(chatId);
   const { handleSendMessage } = useSendMessage();
+  const router = useRouter();
 
   return (
     <Page1
@@ -44,31 +53,15 @@ export default function Chat() {
     </Page1>
   );
 
-  function useChatGuard() {
+  function useChatGuard(chatId: string | undefined) {
     const router = useRouter();
-    const [chatId, setChatId] = useState<string | undefined>();
-    const { participant } = useGetParticipant(chatId);
 
     useEffect(() => {
-      if (router.isReady) {
-        if (!participant && !getChatId1()) {
-          router.push(MESSAGES_ROUTE);
-        } else if (!chatId) setChatId(getChatId(router.query?.chatId));
+      if (!chatId && !participant) {
+        router.push(MESSAGES_ROUTE);
       }
-    }, [router, participant, chatId]);
-
-    return { participant, chatId, setChatId };
-
-    function getChatId(
-      chatId: string[] | string | undefined
-    ): string | undefined {
-      return Array.isArray(chatId) ? chatId[0] : chatId;
-    }
-
-    function getChatId1(): string | undefined {
-      const pathSegments = window.location.pathname.split('/');
-      return pathSegments[pathSegments.length - 1];
-    }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [chatId]);
   }
 
   function renderHeader() {
@@ -132,15 +125,11 @@ export default function Chat() {
     if (!chatId) {
       const chat = (await handleGetOrCreateChat(
         participant?.username as string
-      )) as PartialChat;
+      )) as Ch;
       if (chat) {
-        window.history.replaceState(
-          null,
-          '',
-          `${MESSAGES_CHAT_ROUTE}/${chat.id}`
-        );
-        setChatId(chat.id);
+        router.push(`${MESSAGES_ROUTE}/${chat.id}`);
         send(text, chat.id);
+        setChatId(chat.id);
       }
     } else send(text, chatId as string);
 

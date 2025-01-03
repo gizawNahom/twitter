@@ -1,13 +1,13 @@
-import Chat from '../../../lib/messages/ui/pages/chat';
 import { useRouter } from 'next/router';
+import Messages from '../../lib/messages/ui/pages/messages';
 
 export default function Page() {
   const router = useRouter();
-  const chatIdString = router.query.chatId;
+  const chatId = router.query.id;
 
-  return <Chat chatId={extractChatId(chatIdString)} />;
+  return <Messages chatId={getChatId(chatId)} />;
 
-  function extractChatId(
+  function getChatId(
     chatId: string[] | string | undefined
   ): string | undefined {
     return Array.isArray(chatId) ? chatId[0] : chatId;

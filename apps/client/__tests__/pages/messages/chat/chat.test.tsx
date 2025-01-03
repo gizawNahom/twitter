@@ -15,7 +15,7 @@ import {
   setUpApi,
   SPINNER_TEST_ID,
 } from '../../../testUtilities';
-import { MESSAGES, MESSAGES_CHAT } from '../../../testUtilities/routes';
+import { MESSAGES } from '../../../testUtilities/routes';
 import {
   sampleChatResponse,
   sampleUserResponse,
@@ -49,8 +49,14 @@ const NO_MESSAGES_TEXT = /no messages/i;
 const messageText = 'test';
 const chatId = sampleChatResponse.id;
 
-function renderSUT(store?: ReduxStore) {
-  renderElement(<Chat />, store);
+function renderSUT({
+  store,
+  chatId = '',
+}: {
+  store?: ReduxStore;
+  chatId?: string;
+}) {
+  renderElement(<Chat chatId={chatId} />, store);
 }
 
 function assertInitialElementsAreDisplayed() {
@@ -165,7 +171,7 @@ describe('Given user has navigated to a new chat page', () => {
 
   describe('And user did not select a participant', () => {
     beforeEach(() => {
-      renderSUT();
+      renderSUT({});
     });
 
     test(`Then user gets redirected to ${MESSAGES}`, () => {
@@ -178,7 +184,7 @@ describe('Given user has navigated to a new chat page', () => {
     beforeEach(() => {
       const store = createNewStore();
       store.dispatch(userSelected(sampleUserResponse));
-      renderSUT(store);
+      renderSUT({ store });
     });
 
     test(`Then user does not get redirected to ${MESSAGES}`, () => {
@@ -218,7 +224,7 @@ describe('Given user has navigated to a new chat page', () => {
 
           assertASingleApiCallToGetOrCreateChat();
 
-          expect(window.location.pathname).toBe(MESSAGES_CHAT + `/${chatId}`);
+          expect(push).toHaveBeenCalledWith(MESSAGES + `/${chatId}`);
 
           assertMessageInputIsCleared();
         });
@@ -348,7 +354,7 @@ describe('Given the user has navigated to an existing chat', () => {
 
   describe('And there are no messages', () => {
     beforeEach(() => {
-      renderSUT();
+      renderSUT({ chatId: sampleChatResponse.id });
     });
 
     test('Then initial elements are displayed', async () => {
@@ -373,7 +379,7 @@ describe('Given the user has navigated to an existing chat', () => {
     beforeEach(async () => {
       await messagesDB.create(chatId[0], message1);
       await messagesDB.create(chatId[0], message2);
-      renderSUT();
+      renderSUT({ chatId: sampleChatResponse.id });
     });
 
     test('Then the messages and the dates are displayed', async () => {

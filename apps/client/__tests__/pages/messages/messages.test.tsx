@@ -13,12 +13,12 @@ import {
   clickElement,
   waitForErrorToBeInTheDocument,
   setUpMockRouter,
-  MESSAGES_CHAT,
 } from '../../testUtilities';
 import { buildChat } from '../../../test/generator';
 import { server } from '../../../mocks/server';
 import { genericErrorHandler } from '../../../mocks/handlers';
 import { Chat } from '../../../lib/messages/core/domain/chat';
+import { MESSAGES_ROUTE } from '../../../lib/messages/ui/utilities/routes';
 
 jest.mock('next/router', () => ({
   useRouter: jest.fn(),
@@ -46,7 +46,7 @@ describe('Given the user has navigated to the page', () => {
 
   describe('And the user has no chats', () => {
     beforeEach(() => {
-      renderElement(<Messages />);
+      renderElement(<Messages chatId={''} />);
     });
 
     function assertPlaceholdersAreDisplayed() {
@@ -82,7 +82,7 @@ describe('Given the user has navigated to the page', () => {
     });
 
     beforeEach(async () => {
-      renderElement(<Messages />);
+      renderElement(<Messages chatId="" />);
     });
 
     async function assertChatsAreDisplayed() {
@@ -126,7 +126,7 @@ describe('Given the user has navigated to the page', () => {
 
       test('Then the user is redirected to the chat page', async () => {
         expect(push).toHaveBeenCalledTimes(1);
-        expect(push).toHaveBeenCalledWith(`${MESSAGES_CHAT}/${chat1.id}`);
+        expect(push).toHaveBeenCalledWith(`${MESSAGES_ROUTE}/${chat1.id}`);
       });
     });
   });
@@ -134,7 +134,7 @@ describe('Given the user has navigated to the page', () => {
   describe('And there is an error when fetching chats', () => {
     beforeEach(async () => {
       server.use(genericErrorHandler);
-      renderElement(<Messages />);
+      renderElement(<Messages chatId="" />);
     });
 
     test('Then error is displayed', async () => {

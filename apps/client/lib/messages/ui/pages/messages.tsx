@@ -1,8 +1,5 @@
 import Link from 'next/link';
-import {
-  MESSAGES_CHAT_ROUTE,
-  MESSAGES_COMPOSE_ROUTE,
-} from '../utilities/routes';
+import { MESSAGES_COMPOSE_ROUTE, MESSAGES_ROUTE } from '../utilities/routes';
 import { FAB } from '../../../../components/fab';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
@@ -13,8 +10,9 @@ import InfiniteScroll from 'react-infinite-scroller';
 import { Chat } from '../../core/domain/chat';
 import { useGetChats } from '../hooks/useGetChats';
 import { ActionItem } from '../../../../components/actionItem';
+import Ch from './chat';
 
-export default function Messages() {
+export default function Messages({ chatId }: { chatId: string | undefined }) {
   const router = useRouter();
   const [offset, setOffset] = useState(0);
   const [isLoadingFirstPage, setIsLoadingFirstPage] = useState(true);
@@ -29,7 +27,7 @@ export default function Messages() {
         <div className={`flex flex-col gap-y-2 pt-4 relative`}>
           <div className="px-4 flex justify-between">
             <h2 className="text-center font-bold text-xl">Messages</h2>
-            <Link href="messages/compose/" className="hidden sm:block">
+            <Link href={MESSAGES_COMPOSE_ROUTE} className="hidden sm:block">
               <ActionItem>
                 <svg
                   viewBox="0 0 24 24"
@@ -55,19 +53,23 @@ export default function Messages() {
         </div>
       </div>
       <div className="hidden max-w-[600px] min-w-[600px] border-r-[1px] h-screen justify-center items-center lg:flex">
-        <div className=" w-96">
-          <h1 className=" text-3xl font-bold">Select a message</h1>
-          <p className=" text-slate-500 mt-1">
-            Choose from your existing conversations, start a new one, or just
-            keep swimming.
-          </p>
-          <Link
-            href="/messages/compose"
-            className=" bg-sky-500 hover:bg-sky-600 transition rounded-full text-white py-3 px-8 text-lg mt-7 inline-block"
-          >
-            New message
-          </Link>
-        </div>
+        {chatId ? (
+          <Ch chatId={chatId} />
+        ) : (
+          <div className=" w-96">
+            <h1 className=" text-3xl font-bold">Select a message</h1>
+            <p className=" text-slate-500 mt-1">
+              Choose from your existing conversations, start a new one, or just
+              keep swimming.
+            </p>
+            <Link
+              href="/messages/compose"
+              className=" bg-sky-500 hover:bg-sky-600 transition rounded-full text-white py-3 px-8 text-lg mt-7 inline-block"
+            >
+              New message
+            </Link>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -126,7 +128,7 @@ export default function Messages() {
           return (
             <div
               key={chat.id}
-              onClick={() => router.push(`${MESSAGES_CHAT_ROUTE}/${chat.id}`)}
+              onClick={() => router.push(`${MESSAGES_ROUTE}/${chat.id}`)}
               className="flex gap-2 px-4 py-3 justify-start cursor-pointer hover:bg-slate-100"
             >
               <div className=" rounded-full">
