@@ -67,7 +67,7 @@ export default function Chat({
 
   function renderHeader() {
     return (
-      <div className="flex justify-between items-center gap-x-9 h-full">
+      <div className="flex justify-between items-center gap-x-9 h-full pt-4">
         <div className="lg:hidden">
           <BackButton />
         </div>
