@@ -52,13 +52,13 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
           </div>
         </div>
       </div>
-      <>
+      <div className="lg:max-w-[600px] lg:min-w-[500px] md:border-r-[1px] h-screen">
         {chatId ? (
-          <div className="w-full z-[1000] absolute left-0 top-0 h-screen md:border-r-[1px] lg:static lg:max-w-[600px] lg:min-w-[500px] lg:justify-center lg:items-center lg:flex">
+          <div className="w-full z-[1000] absolute left-0 top-0 lg:static">
             <Ch chatId={chatId} />
           </div>
         ) : (
-          <div className="hidden max-w-[600px] min-w-[500px] border-r-[1px] h-screen justify-center items-center lg:flex">
+          <div className="hidden lg:justify-center lg:items-center lg:flex h-full">
             <div className=" w-96">
               <h1 className=" text-3xl font-bold">Select a message</h1>
               <p className=" text-slate-500 mt-1">
@@ -74,7 +74,7 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
             </div>
           </div>
         )}
-      </>
+      </div>
     </div>
   );
 
