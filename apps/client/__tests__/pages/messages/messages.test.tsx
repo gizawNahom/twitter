@@ -76,6 +76,10 @@ describe('Given the user has navigated to the page', () => {
     let chat1: Chat;
     let chat2: Chat;
 
+    const push = jest.fn();
+
+    setUpMockRouter({ push });
+
     beforeAll(async () => {
       chat1 = await chatsDB.create(buildChat());
       chat2 = await chatsDB.create(buildChat());
@@ -102,6 +106,10 @@ describe('Given the user has navigated to the page', () => {
           'src',
           expect.stringMatching(encodeURIComponent(participant.profilePic))
         );
+        expect(getByText(displayName).closest('a')).toHaveAttribute(
+          'href',
+          `${MESSAGES_ROUTE}/${chat.id}`
+        );
       }
     }
 
@@ -113,22 +121,6 @@ describe('Given the user has navigated to the page', () => {
       await assertPlaceholdersAreNotDisplayed();
       await assertChatsAreDisplayed();
     }, 15000);
-
-    describe('When the user clicks a chat', () => {
-      const push = jest.fn();
-
-      setUpMockRouter({ push });
-
-      beforeEach(async () => {
-        await assertChatsAreDisplayed();
-        await clickElement(getByText(chat1.participant.displayName));
-      });
-
-      test('Then the user is redirected to the chat page', async () => {
-        expect(push).toHaveBeenCalledTimes(1);
-        expect(push).toHaveBeenCalledWith(`${MESSAGES_ROUTE}/${chat1.id}`);
-      });
-    });
   });
 
   describe('And there is an error when fetching chats', () => {

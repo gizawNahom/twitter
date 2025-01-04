@@ -129,11 +129,15 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
     return (
       <>
         {chats.map((chat: Chat) => {
+          const path = `${MESSAGES_ROUTE}/${chat.id}`;
           return (
-            <div
+            <Link
               key={chat.id}
-              onClick={() => router.push(`${MESSAGES_ROUTE}/${chat.id}`)}
-              className="flex gap-2 px-4 py-3 justify-start cursor-pointer hover:bg-slate-100"
+              href={path}
+              className={`flex gap-2 px-4 py-3 justify-start hover:bg-slate-100 relative${
+                router.asPath === path &&
+                ' bg-slate-100 after:w-1 after:h-full after:absolute after:right-0 after:top-0 after:bg-sky-500'
+              }`}
             >
               <div className=" rounded-full">
                 <Image
@@ -150,7 +154,7 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
                   @{chat.participant.username}
                 </span>
               </p>
-            </div>
+            </Link>
           );
         })}
       </>
