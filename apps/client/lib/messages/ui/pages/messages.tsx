@@ -22,8 +22,8 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
   useFetchChatsOnMount();
 
   return (
-    <div className=" w-full flex">
-      <div className="w-full sm:grow sm:max-w-xl sm:border-r-[1px] lg:max-w-[390px]">
+    <div className=" w-full relative sm:max-w-xl sm:h-screen lg:flex lg:max-w-5xl">
+      <div className="w-full sm:grow sm:max-w-xl sm:border-r-[1px] lg:max-w-[390px] lg:min-w-[300px]">
         <div className={`flex flex-col gap-y-2 pt-4 relative`}>
           <div className="px-4 flex justify-between">
             <h2 className="text-center font-bold text-xl">Messages</h2>
@@ -52,25 +52,29 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
           </div>
         </div>
       </div>
-      <div className="hidden max-w-[600px] min-w-[600px] border-r-[1px] h-screen justify-center items-center lg:flex">
+      <>
         {chatId ? (
-          <Ch chatId={chatId} />
+          <div className="w-full z-[1000] absolute left-0 top-0 h-screen md:border-r-[1px] lg:static lg:max-w-[600px] lg:min-w-[500px] lg:justify-center lg:items-center lg:flex">
+            <Ch chatId={chatId} />
+          </div>
         ) : (
-          <div className=" w-96">
-            <h1 className=" text-3xl font-bold">Select a message</h1>
-            <p className=" text-slate-500 mt-1">
-              Choose from your existing conversations, start a new one, or just
-              keep swimming.
-            </p>
-            <Link
-              href="/messages/compose"
-              className=" bg-sky-500 hover:bg-sky-600 transition rounded-full text-white py-3 px-8 text-lg mt-7 inline-block"
-            >
-              New message
-            </Link>
+          <div className="hidden max-w-[600px] min-w-[500px] border-r-[1px] h-screen justify-center items-center lg:flex">
+            <div className=" w-96">
+              <h1 className=" text-3xl font-bold">Select a message</h1>
+              <p className=" text-slate-500 mt-1">
+                Choose from your existing conversations, start a new one, or
+                just keep swimming.
+              </p>
+              <Link
+                href="/messages/compose"
+                className=" bg-sky-500 hover:bg-sky-600 transition rounded-full text-white py-3 px-8 text-lg mt-7 inline-block"
+              >
+                New message
+              </Link>
+            </div>
           </div>
         )}
-      </div>
+      </>
     </div>
   );
 
