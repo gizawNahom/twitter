@@ -12,7 +12,7 @@ export function App({ children }: { children: ReactNode }) {
         <Nav></Nav>
       </div>
       {children}
-      {router.pathname !== '/search' && router.pathname !== '/messages' && (
+      {canShowSearchBar() && (
         <div className="hidden grow items-start pt-1 lg:flex lg:justify-start lg:px-5 xl:justify-center xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
           <div className="w-full max-w-[350px]">
             <SearchBar onSubmit={pushToSearchPage} />
@@ -21,6 +21,12 @@ export function App({ children }: { children: ReactNode }) {
       )}
     </div>
   );
+
+  function canShowSearchBar() {
+    return (
+      router.pathname !== '/search' && !router.pathname.includes('/messages')
+    );
+  }
 
   function pushToSearchPage(value: string) {
     router.push(`/search?q=${value}`);
