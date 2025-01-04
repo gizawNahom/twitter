@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { createDefaultHeader1, Page1 } from '../../../../components/page';
+import { Page1 } from '../../../../components/page';
 import { useRouter } from 'next/router';
 import { MESSAGES_ROUTE } from '../utilities/routes';
 import { formatTimeForMessage } from '../utilities';
@@ -12,6 +12,7 @@ import { Infinite } from '../../../../components/infinite';
 import { ActionItem } from '../../../../components/actionItem';
 import { useGetParticipant } from '../hooks/useGetParticipant';
 import { Chat as Ch } from '../../core/domain/chat';
+import { BackButton } from '../../../../components/backButton';
 
 export default function Chat({
   chatId: initialChatId,
@@ -65,21 +66,30 @@ export default function Chat({
   }
 
   function renderHeader() {
-    return createDefaultHeader1(
-      <div>
-        {participant && (
-          <div className=" flex gap-3 items-center">
-            <div className="w-10 h-10 relative rounded-full overflow-hidden">
-              <Image
-                src={participant.profilePic}
-                alt={`${participant.username}'s profile picture`}
-                fill
-                className="object-cover"
-              />
-            </div>
-            <p className=" text-xl font-semibold">{participant.displayName}</p>
+    return (
+      <div className="flex justify-between items-center gap-x-9 h-full">
+        <div className="lg:hidden">
+          <BackButton />
+        </div>
+        <div className="grow">
+          <div>
+            {participant && (
+              <div className=" flex gap-3 items-center">
+                <div className="w-10 h-10 relative rounded-full overflow-hidden">
+                  <Image
+                    src={participant.profilePic}
+                    alt={`${participant.username}'s profile picture`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <p className=" text-xl font-semibold">
+                  {participant.displayName}
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     );
   }
