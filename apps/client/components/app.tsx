@@ -23,8 +23,9 @@ export function App({ children }: { children: ReactNode }) {
         )}
       </div>
       <Marquee
-        text="test"
-        className="absolute bottom-12 left-0 w-full text-slate-400 text-3xl sm:bottom-0"
+        text="The network requests are mocked."
+        className="absolute bottom-12 left-0 w-full text-slate-400 text-2xl sm:bottom-0"
+        speed={40}
       ></Marquee>
     </div>
   );
