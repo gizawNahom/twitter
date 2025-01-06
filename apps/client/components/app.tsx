@@ -7,7 +7,7 @@ export function App({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   return (
-    <div className="flex 2xl:justify-center max-w-7xl">
+    <div className="flex 2xl:justify-center max-w-7xl mx-auto">
       <div className="sm:basis-1/6 lg:basis-28 xl:basis-1/4 2xl:basis-72">
         <Nav></Nav>
       </div>
