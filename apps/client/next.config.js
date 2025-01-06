@@ -2,7 +2,6 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
-const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 
 const plugins = [
   // Add more Next.js plugins to this list if needed.
@@ -30,26 +29,45 @@ module.exports = (/** @type {string} */ phase, /** @type {any} */ context) => {
     },
   };
 
-  if (phase === PHASE_DEVELOPMENT_SERVER)
-    productionNextConfig = {
-      ...productionNextConfig,
-      images: {
-        remotePatterns: [
-          {
-            protocol: 'https',
-            hostname: 'images.unsplash.com',
-          },
-          {
-            protocol: 'https',
-            hostname: 'cloudflare-ipfs.com',
-          },
-          {
-            protocol: 'https',
-            hostname: 'avatars.githubusercontent.com',
-          },
-        ],
-      },
-    };
+  // if (phase === PHASE_DEVELOPMENT_SERVER)
+  //   productionNextConfig = {
+  //     ...productionNextConfig,
+  //     images: {
+  //       remotePatterns: [
+  //         {
+  //           protocol: 'https',
+  //           hostname: 'images.unsplash.com',
+  //         },
+  //         {
+  //           protocol: 'https',
+  //           hostname: 'cloudflare-ipfs.com',
+  //         },
+  //         {
+  //           protocol: 'https',
+  //           hostname: 'avatars.githubusercontent.com',
+  //         },
+  //       ],
+  //     },
+  //   };
+  productionNextConfig = {
+    ...productionNextConfig,
+    images: {
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'images.unsplash.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'cloudflare-ipfs.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'avatars.githubusercontent.com',
+        },
+      ],
+    },
+  };
 
   return composePlugins(...plugins)(productionNextConfig)(phase, context);
 };
