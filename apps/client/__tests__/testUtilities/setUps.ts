@@ -16,7 +16,7 @@ export function setUpMockRouter({
   pathname?: string;
 }) {
   beforeEach(() => {
-    mockRouter({ back, push, query });
+    mockRouter({ back, push, query, pathname });
   });
 
   afterEach(() => {
