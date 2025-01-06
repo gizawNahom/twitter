@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 import { Nav } from './nav';
 import { SearchBar } from './searchBar';
 import { useRouter } from 'next/router';
+import Marquee from './marquee';
 
 export function App({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -21,6 +22,10 @@ export function App({ children }: { children: ReactNode }) {
           </div>
         )}
       </div>
+      <Marquee
+        text="test"
+        className="absolute bottom-12 left-0 w-full text-slate-400 text-3xl sm:bottom-0"
+      ></Marquee>
     </div>
   );
 
