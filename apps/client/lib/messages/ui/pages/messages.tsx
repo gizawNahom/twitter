@@ -54,7 +54,7 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
       </div>
       <div className="lg:max-w-[600px] lg:min-w-[500px] md:border-r-[1px] h-screen">
         {chatId ? (
-          <div className="w-full z-[1000] absolute left-0 top-0 lg:static">
+          <div className="w-full z-[1000] fixed left-0 top-0 lg:static">
             <Ch chatId={chatId} />
           </div>
         ) : (
