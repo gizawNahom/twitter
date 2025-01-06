@@ -7,18 +7,20 @@ export function App({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   return (
-    <div className="flex 2xl:justify-center">
+    <div className="flex 2xl:justify-center max-w-7xl">
       <div className="sm:basis-1/6 lg:basis-28 xl:basis-1/4 2xl:basis-72">
         <Nav></Nav>
       </div>
-      {children}
-      {canShowSearchBar() && (
-        <div className="hidden grow items-start pt-1 lg:flex lg:justify-start lg:px-5 xl:justify-center xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
-          <div className="w-full max-w-[350px]">
-            <SearchBar onSubmit={pushToSearchPage} />
+      <div className=" flex basis-full">
+        {children}
+        {canShowSearchBar() && (
+          <div className="hidden grow items-start pt-1 lg:flex lg:justify-start lg:px-5 xl:justify-center xl:px-8 xl:max-w-[412px] xl:min-w-[412px]">
+            <div className="w-full max-w-[350px]">
+              <SearchBar onSubmit={pushToSearchPage} />
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 
