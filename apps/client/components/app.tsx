@@ -23,9 +23,9 @@ export function App({ children }: { children: ReactNode }) {
         )}
       </div>
       <Marquee
-        text="The network requests are mocked."
+        text="The network responses are mocked. The backend can be found on Github."
         className="fixed bottom-12 left-0 w-full text-slate-400 text-2xl sm:bottom-0"
-        speed={40}
+        speed={30}
       ></Marquee>
     </div>
   );

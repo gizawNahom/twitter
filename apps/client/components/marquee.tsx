@@ -33,7 +33,7 @@ function Marquee({
         {`
           @keyframes marquee {
               0% { transform: translateX(${parentWidth}px); }
-              100% { transform: translateX(-${contentWidth * 10}px); }
+              100% { transform: translateX(-${contentWidth * 3}px); }
           }
         `}
       </style>
