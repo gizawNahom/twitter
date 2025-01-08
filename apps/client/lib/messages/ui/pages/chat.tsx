@@ -38,7 +38,7 @@ export default function Chat({
       className=" z-[1000] bg-white h-screen w-full md:border-r-[1px] lg:border-r-0"
     >
       <div className=" relative h-full">
-        <div className="h-[94%]">
+        <div className="h-[87%] h-sm:h-[90%] h-md:h-[91%] h-lg:h-[94%] h-xl:h-[95%]">
           {canRenderMessages(messagesByDay)
             ? renderMessages()
             : renderPlaceholder()}

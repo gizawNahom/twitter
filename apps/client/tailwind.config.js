@@ -12,7 +12,14 @@ module.exports = {
     './node_modules/tw-elements/dist/js/**/*.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        'h-sm': { raw: '(min-height: 640px)' },
+        'h-md': { raw: '(min-height: 800px)' },
+        'h-lg': { raw: '(min-height: 1024px)' },
+        'h-xl': { raw: '(min-height: 1300px)' },
+      },
+    },
   },
   plugins: [require('tw-elements/dist/plugin.cjs')],
 };
