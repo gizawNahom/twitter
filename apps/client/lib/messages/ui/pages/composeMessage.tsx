@@ -20,11 +20,7 @@ export default function ComposeMessage() {
   const dispatch = useDispatch();
 
   return (
-    <Page
-      header={renderHeader()}
-      isPadded
-      className=" z-[1000] h-screen bg-white"
-    >
+    <Page header={renderHeader()} isPadded className=" z-[1000] h-dvh bg-white">
       <div className="pb-2 pt-4">
         <UserSearchInput
           onThrottledChange={onChange}

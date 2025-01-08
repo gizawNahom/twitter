@@ -22,7 +22,7 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
   useFetchChatsOnMount();
 
   return (
-    <div className=" w-full relative sm:max-w-xl sm:h-screen lg:flex lg:max-w-5xl">
+    <div className=" w-full relative sm:max-w-xl sm:h-dvh lg:flex lg:max-w-5xl">
       <div className="w-full sm:grow sm:max-w-xl sm:border-r-[1px] lg:max-w-[390px] lg:min-w-[300px]">
         <div className={`flex flex-col gap-y-2 pt-4 relative`}>
           <div className="px-4 flex justify-between">
@@ -54,11 +54,11 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
       </div>
       <div className="md:border-r-[1px] lg:max-w-[600px] lg:min-w-[500px]">
         {chatId ? (
-          <div className="h-screen w-full z-[1000] fixed left-0 top-0 lg:static">
+          <div className=" h-dvh w-full z-[1000] fixed left-0 top-0 lg:static">
             <Ch chatId={chatId} />
           </div>
         ) : (
-          <div className="hidden h-screen lg:justify-center lg:items-center lg:flex">
+          <div className="hidden h-dvh lg:justify-center lg:items-center lg:flex">
             <div className=" w-96">
               <h1 className=" text-3xl font-bold">Select a message</h1>
               <p className=" text-slate-500 mt-1">

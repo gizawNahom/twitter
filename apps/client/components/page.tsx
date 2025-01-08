@@ -44,9 +44,7 @@ export function Page1({
   className?: string;
 }) {
   return (
-    <div
-      className={`relative h-screen max-h-screen min-h-screen pt-1 ${className}`}
-    >
+    <div className={`relative h-dvh max-h-dvh min-h-dvh pt-1 ${className}`}>
       <div className="px-4 h-[6%] w-full pb-1">{header}</div>
       <div className={`h-[94%] w-full ${isPadded ? 'px-4' : ''}`}>
         {children}
