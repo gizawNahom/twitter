@@ -52,13 +52,13 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
           </div>
         </div>
       </div>
-      <div className="lg:max-w-[600px] lg:min-w-[500px] md:border-r-[1px] h-screen">
+      <div className="md:border-r-[1px] lg:max-w-[600px] lg:min-w-[500px]">
         {chatId ? (
-          <div className="w-full z-[1000] fixed left-0 top-0 lg:static">
+          <div className="h-screen w-full z-[1000] fixed left-0 top-0 lg:static">
             <Ch chatId={chatId} />
           </div>
         ) : (
-          <div className="hidden lg:justify-center lg:items-center lg:flex h-full">
+          <div className="hidden h-screen lg:justify-center lg:items-center lg:flex">
             <div className=" w-96">
               <h1 className=" text-3xl font-bold">Select a message</h1>
               <p className=" text-slate-500 mt-1">
