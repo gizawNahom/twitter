@@ -27,6 +27,8 @@ function getSendButton(): HTMLElement {
   return getByRole('button', { name: /send/i });
 }
 
+afterEach(() => jest.clearAllMocks());
+
 describe('Given the component is rendered', () => {
   beforeEach(() => {
     renderElement(<Container />);
@@ -72,6 +74,25 @@ describe('Given the component is rendered', () => {
       });
 
       test(`Then the message is stripped from white space`, () => {
+        expect(onSend).toHaveBeenCalledTimes(1);
+        expect(onSend).toHaveBeenCalledWith(sampleText);
+      });
+    });
+  });
+
+  describe('When the user types text', () => {
+    const sampleText = 'sample';
+
+    beforeEach(async () => {
+      await typeText(sampleText, getMessageInput());
+    });
+
+    describe('And clicks enter', () => {
+      beforeEach(async () => {
+        await typeText('{enter}', getMessageInput());
+      });
+
+      test('Then the message is sent', () => {
         expect(onSend).toHaveBeenCalledTimes(1);
         expect(onSend).toHaveBeenCalledWith(sampleText);
       });

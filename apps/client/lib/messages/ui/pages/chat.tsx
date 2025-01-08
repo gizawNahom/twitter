@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, KeyboardEvent } from 'react';
 import { Page1 } from '../../../../components/page';
 import { useRouter } from 'next/router';
 import { MESSAGES_ROUTE } from '../utilities/routes';
@@ -208,6 +208,7 @@ export function MessageSendInput({
         value={messageInput}
         onChange={(e) => onChange(e.target.value)}
         className=" bg-transparent placeholder:text-slate-600 outline-none grow"
+        onKeyDown={onKeyDown}
       />
       <button
         aria-label="send"
@@ -235,5 +236,13 @@ export function MessageSendInput({
 
   function isEmpty(message: string) {
     return message.length == 0;
+  }
+
+  function onKeyDown(e: KeyboardEvent) {
+    if (isEnterKey(e.key)) onSend(trimmedMessage);
+
+    function isEnterKey(key: string) {
+      return key === 'Enter';
+    }
   }
 }
