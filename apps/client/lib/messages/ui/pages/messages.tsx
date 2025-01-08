@@ -148,12 +148,12 @@ export default function Messages({ chatId }: { chatId: string | undefined }) {
                   className="rounded-full object-cover w-10 h-10"
                 />
               </div>
-              <p className="text-sm flex gap-1">
+              <div className="text-sm flex gap-1">
                 <p className="font-semibold">{chat.participant.displayName} </p>
                 <span className="text-slate-500">
                   @{chat.participant.username}
                 </span>
-              </p>
+              </div>
             </Link>
           );
         })}
