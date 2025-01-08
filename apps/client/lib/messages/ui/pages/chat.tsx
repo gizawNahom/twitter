@@ -43,7 +43,7 @@ export default function Chat({
             ? renderMessages()
             : renderPlaceholder()}
         </div>
-        <div className="px-3 py-2 border-t-[1px] fixed bottom-0 w-full z-[2000] bg-white">
+        <div className="px-3 py-2 border-t-[1px] absolute bottom-0 w-full z-[2000] bg-white">
           <MessageSendInput
             onSend={sendMessage}
             messageInput={messageInput}
