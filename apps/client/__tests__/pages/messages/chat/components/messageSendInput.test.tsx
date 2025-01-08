@@ -6,6 +6,7 @@ import {
   getByRole,
   typeText,
   clickElement,
+  pressEnterOnInput,
 } from '../../../../testUtilities';
 
 const onSend = jest.fn();
@@ -89,7 +90,7 @@ describe('Given the component is rendered', () => {
 
     describe('And clicks enter', () => {
       beforeEach(async () => {
-        await typeText('{enter}', getMessageInput());
+        await pressEnterOnInput(getMessageInput());
       });
 
       test('Then the message is sent', () => {

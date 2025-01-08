@@ -44,8 +44,8 @@ export async function typeQueryOnSearchInput(query: string) {
   await typeText(query, getSearchInput());
 }
 
-export async function pressEnterOnInput() {
-  await typeText('{enter}', getSearchInput());
+export async function pressEnterOnInput(input = getSearchInput()) {
+  await typeText('{enter}', input);
 }
 
 export async function clickElement(element: HTMLElement) {
